@@ -1,0 +1,106 @@
+html {
+  position: relative;
+}
+html::before {
+  content: "AB test pilot CSS";
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 99999999999;
+  background: #ff0000;
+  color: #ffffff;
+  padding: 10px;
+  border: 7px solid #269b11;
+}
+
+.filter-nav-wrapper {
+  background-color: #f5f5f5;
+}
+
+.filter-container {
+  margin: 0 auto;
+}
+
+.filter-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  flex-wrap: wrap;
+}
+
+.filter-btn-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.filter-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 18px;
+  border: 1px solid #dcdcdc;
+  background: white;
+  border-radius: 50px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s ease;
+  position: relative;
+  overflow: visible;
+}
+
+.filter-btn:hover {
+  background: #f5f5f5;
+}
+
+.filter-btn.active {
+  border-color: #0077a5;
+  color: #0077a5;
+  box-shadow: 0 0 0 2px rgba(0, 119, 165, 0.15);
+}
+
+.icon {
+  font-size: 14px;
+}
+
+.filter-btn .arrow {
+  display: inline-block;
+  transition: transform 0.1s ease;
+  transform: rotate(180deg);
+}
+
+.filter-btn .arrow.up {
+  transform: rotate(0deg); /* flips the arrow */
+}
+
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  width: 252px;
+  top: 28px;
+  left: 0;
+  background: white;
+  border: 1px solid #dcdcdc;
+  border-radius: 8px;
+  min-width: 250px;
+  margin-top: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+  white-space: normal;
+}
+
+.dropdown-menu.active {
+  display: block;
+}
+
+.dropdown-content {
+  padding: 16px;
+  font-size: 16px;
+  line-height: 1.6;
+  color: #545454;
+}
+
+.deals-dropdown .deals-dropdown-content {
+  display: flex;
+  gap: 10px;
+}

@@ -1,0 +1,13 @@
+{
+  "id": "1765461187661_1611_stickyFilter",
+  "name": "stickyFilter",
+  "type": "A/B",
+  "website": "dominos",
+  "variations": [
+    "control",
+    "v1"
+  ],
+  "createdAt": "2025-12-11T13:53:07.661Z",
+  "createdAtReadable": "12/11/2025, 7:53:07 PM",
+  "lastUpdated": "2025-12-11T13:53:07.807Z"
+}
