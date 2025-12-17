@@ -100,7 +100,13 @@ html::before {
   color: #545454;
 }
 
+.deals-dropdown {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
 .deals-dropdown .deals-dropdown-content {
   display: flex;
   gap: 10px;
+  cursor: pointer;
 }

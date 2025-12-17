@@ -60,6 +60,11 @@
       <div class="base-container--main-nav filter-container">
         <div class="filter-bar">
 
+        <button class="filter-btn" data-content="all-filters">
+
+            All Filters
+          </button>
+
           <button class="filter-btn" data-content="deal-contains-only">
             Deal contains only
             ${arrowSvg}
@@ -100,8 +105,32 @@
       dealsList: [
         { name: "Pizza", slug: "pizza" },
         { name: "Side", slug: "side" },
-        { name: "Drink", slug: "drink" },
+        { name: "Wrap", slug: "wrap" },
         { name: "Dessert", slug: "dessert" },
+        { name: "Drink", slug: "drink" },
+      ],
+      selectedPizzaSizes: [],
+      pizzaSizes: [
+        {
+          id: 0,
+          label: 'Personal 7"',
+        },
+        {
+          id: 1,
+          label: 'Small 9.5"',
+        },
+        {
+          id: 2,
+          label: 'Medium 11.5"',
+        },
+        {
+          id: 3,
+          label: 'Large 13.5"',
+        },
+        {
+          id: 4,
+          label: "I don't mind",
+        },
       ],
     };
   }
@@ -234,36 +263,28 @@
   }
 
   function updateDealCardsUI(filteredDeals) {
-  const allowedCardIds = new Set(
-    filteredDeals.map((deal) => deal.cardId)
-  );
+    const allowedCardIds = new Set(filteredDeals.map((deal) => deal.cardId));
 
-  const allCards = document.querySelectorAll(
-    ".base-cards-tray__card--deal"
-  );
+    const allCards = document.querySelectorAll(".base-cards-tray__card--deal");
 
-  allCards.forEach((card) => {
-    const cardId = card.id;
+    allCards.forEach((card) => {
+      const cardId = card.id;
 
-    if (!cardId) return;
+      if (!cardId) return;
 
-    card.style.display = allowedCardIds.has(cardId)
-      ? ""
-      : "none";
-  });
-}
-
+      card.style.display = allowedCardIds.has(cardId) ? "" : "none";
+    });
+  }
 
   function filterDealsBySelection(deals, selectedDeals) {
-  if (!selectedDeals.length) return deals;
+    if (!selectedDeals.length) return deals;
 
-  return deals.filter((deal) =>
-    deal.items?.some((item) =>
-      selectedDeals.includes(item.productType.toLowerCase())
-    )
-  );
-}
-
+    return deals.filter((deal) =>
+      deal.items?.some((item) =>
+        selectedDeals.includes(item.productType.toLowerCase())
+      )
+    );
+  }
 
   function applyDealFilters(state) {
     const allDeals = getDealCardsSafe();
@@ -312,7 +333,7 @@
     if (window.$nuxt && window.$nuxt.$store) {
       console.log(
         window.$nuxt.$store.getters["deals/getDealCards"],
-        "Line 259"
+        "Initial Deals"
       );
     }
   }

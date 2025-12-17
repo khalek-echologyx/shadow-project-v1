@@ -14,10 +14,10 @@ html {
   }
 }
 
-.filter-nav-wrapper{
+.filter-nav-wrapper {
   background-color: #f5f5f5;
 }
-.filter-container{
+.filter-container {
   margin: 0 auto;
 }
 
@@ -33,8 +33,6 @@ html {
   position: relative;
   display: inline-block;
 }
-
-
 
 .filter-btn {
   display: flex;
@@ -69,13 +67,11 @@ html {
   display: inline-block;
   transition: transform 0.1s ease;
   transform: rotate(180deg);
-
 }
 
 .filter-btn .arrow.up {
   transform: rotate(0deg); /* flips the arrow */
 }
-
 
 .dropdown-menu {
   display: none;
@@ -103,11 +99,13 @@ html {
   line-height: 1.6;
   color: #545454;
 }
-.deals-dropdown{
-    .deals-dropdown-content {
+.deals-dropdown {
   display: flex;
-  gap: 10px;
+  flex-direction: column;
+  gap: 18px;
+  .deals-dropdown-content {
+    display: flex;
+    gap: 10px;
+    cursor: pointer;
   }
 }
-
-
