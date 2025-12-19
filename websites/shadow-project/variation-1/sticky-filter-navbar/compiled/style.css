@@ -19,6 +19,9 @@ html::before {
 
 .filter-container {
   margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .filter-bar {
@@ -100,12 +103,12 @@ html::before {
   color: #545454;
 }
 
-.deals-dropdown {
+.dropdown-items {
   display: flex;
   flex-direction: column;
   gap: 18px;
 }
-.deals-dropdown .deals-dropdown-content {
+.dropdown-items .dropdown-item {
   display: flex;
   gap: 10px;
   cursor: pointer;
