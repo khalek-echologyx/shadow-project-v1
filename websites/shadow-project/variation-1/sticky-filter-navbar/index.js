@@ -15,31 +15,6 @@
     check();
   }
 
-  function waitForElements(selector, timeout = 2000) {
-    return new Promise((resolve) => {
-      const el = document.querySelector(selector);
-      if (el) return resolve(el);
-
-      const observer = new MutationObserver(() => {
-        const el = document.querySelector(selector);
-        if (el) {
-          observer.disconnect();
-          resolve(el);
-        }
-      });
-
-      observer.observe(document.body, {
-        childList: true,
-        subtree: true,
-      });
-
-      setTimeout(() => {
-        observer.disconnect();
-        resolve(null);
-      }, timeout);
-    });
-  }
-
   /* ------------------ WORKER FUNCTIONS ------------------ */
   function logExperiment() {
     console.log(
@@ -193,7 +168,21 @@
           label: "3+",
         },
       ],
-      sortList: [],
+      sortList: [
+        {
+          label: "Price high to low",
+          value: "high-to-low",
+        },
+        {
+          label: "Price low to high",
+          value: "low-to-high",
+        },
+        {
+          label: "Popularity",
+          value: "popularity",
+        },
+      ],
+      sort: "",
     };
   }
   // DEALS UI
@@ -308,6 +297,31 @@
       </div>
     `;
   }
+  //SORTING UI
+  function generateSortContent(state) {
+    return `
+      <div class="dropdown-items">
+        ${state.sortList
+          .map(
+            (sortItem) => `
+          <div class="dropdown-item" data-content="${sortItem.value}">
+          <div>${sortItem.label}</div>
+          <div>
+            ${
+              state.sort === sortItem.value
+                ? `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="15" viewBox="0 0 20 15" fill="none">
+                      <path fill-rule="evenodd" clip-rule="evenodd" d="M19.6584 0.349246C19.2038 -0.116415 18.5042 -0.116415 18.0488 0.349246L6.46439 12.1941L1.95143 7.57964C1.496 7.11482 0.79637 7.11482 0.340948 7.57964C-0.113649 8.0453 -0.113649 8.76151 0.340948 9.22632L5.6476 14.6523C5.65008 14.6557 5.71113 14.7156 5.71113 14.7156C6.16491 15.1019 6.83896 15.1036 7.26716 14.6658L19.6584 1.99593C20.1139 1.53027 20.1139 0.814906 19.6584 0.349246Z" fill="#006491"/>
+                    </svg>`
+                : ""
+            }
+          </div>
+        </div>
+    `
+          )
+          .join("")}
+      </div>
+    `;
+  }
 
   function setupDropdowns(state) {
     const buttons = document.querySelectorAll(
@@ -333,7 +347,7 @@
       }
       dropdown.innerHTML = `
       <div class="dropdown-content">
-        ${type === "deal-contains-only" ? generateDealsContent(state) : type === "pizza-size" ? generatePizzaSizeContent(state) : type === "pizza-quantity" ? generatePizzaQty(state) : type === "side-quantity" ? generateSidesContent(state) : type}
+        ${type === "deal-contains-only" ? generateDealsContent(state) : type === "pizza-size" ? generatePizzaSizeContent(state) : type === "pizza-quantity" ? generatePizzaQty(state) : type === "side-quantity" ? generateSidesContent(state) : type === "sort" ? generateSortContent(state) : type}
       </div>
     `;
 
@@ -343,7 +357,8 @@
         type === "deal-contains-only" ||
         type === "pizza-size" ||
         type === "pizza-quantity" ||
-        type === "side-quantity"
+        type === "side-quantity" ||
+        type === "sort"
       ) {
         dropdown.addEventListener("click", (e) =>
           handleDropdownItemClick(e, dropdown, state, type)
@@ -481,6 +496,21 @@
         groupBtn._groupClickLogged = true;
       }
     });
+
+    // Reorder DOM cards to match filteredDeals order (if possible)
+    try {
+      const first = document.querySelector(".base-cards-tray__card--deal");
+      const parent = first ? first.parentNode : null;
+      if (parent && Array.isArray(filteredDeals) && filteredDeals.length) {
+        filteredDeals.forEach((deal) => {
+          if (!deal || !deal.cardId) return;
+          const el = document.getElementById(deal.cardId);
+          if (el && el.parentNode === parent) parent.appendChild(el);
+        });
+      }
+    } catch (err) {
+      // ignore DOM reordering errors
+    }
   }
 
   function filterDealsRecursively(deals, predicate) {
@@ -557,7 +587,6 @@
     if (!selectedSides.length || selectedSides.includes(0)) {
       return deals; // "Any"
     }
-
     return filterDealsRecursively(deals, (deal) => {
       const sideCount =
         deal.items?.filter((item) => item.productType === "Side").length || 0;
@@ -567,6 +596,46 @@
         return sideCount === qty;
       });
     });
+  }
+
+  // SORT HELPERS (top-level)
+  function getDealPrice(deal) {
+    if (!deal) return Infinity;
+    const direct = deal.indicativePrice?.payable?.amount;
+    if (typeof direct === "number") return direct;
+
+    // Try matchedDeals or deals inside group
+    const inner = Array.isArray(deal.deals) ? deal.deals : [];
+    const prices = inner
+      .map((d) => d.indicativePrice?.payable?.amount)
+      .filter((p) => typeof p === "number");
+    if (prices.length) return Math.min(...prices);
+
+    return Infinity;
+  }
+
+  function getDealPopularity(deal) {
+    if (!deal) return 0;
+    if (typeof deal.feeds === "number") return deal.feeds;
+
+    const inner = Array.isArray(deal.deals) ? deal.deals : [];
+    return inner.reduce((sum, d) => sum + (Number(d.feeds) || 0), 0);
+  }
+
+  function sortDeals(deals, sortKey) {
+    if (!sortKey) return deals;
+    // create shallow copy to avoid mutating original
+    const arr = Array.isArray(deals) ? deals.slice() : [];
+
+    if (sortKey === "high-to-low") {
+      arr.sort((a, b) => getDealPrice(b) - getDealPrice(a));
+    } else if (sortKey === "low-to-high") {
+      arr.sort((a, b) => getDealPrice(a) - getDealPrice(b));
+    } else if (sortKey === "popularity") {
+      arr.sort((a, b) => getDealPopularity(b) - getDealPopularity(a));
+    }
+
+    return arr;
   }
 
   function applyDealFilters(state) {
@@ -587,9 +656,12 @@
 
     console.log(filteredDeals, "line 346");
 
+    // Apply sorting if selected
+    const sorted = sortDeals(filteredDeals, state.sort);
+
     // Always store the latest filteredDeals in state
-    state.filteredDeals = filteredDeals;
-    updateDealCardsUI(filteredDeals);
+    state.filteredDeals = sorted;
+    updateDealCardsUI(sorted);
   }
 
   function handleDropdownItemClick(e, dropdown, state, type) {
@@ -619,7 +691,6 @@
       const sizeIndex = state.selectedPizzaSizes.indexOf(sizeId);
 
       if (sizeId === 4) {
-        console.log("line 378", sizeId);
         state.selectedPizzaSizes = [];
         const content = dropdown.querySelector(".dropdown-content");
         if (content) {
@@ -691,6 +762,20 @@
           document
             .createRange()
             .createContextualFragment(generateSidesContent(state))
+        );
+      }
+
+      applyDealFilters(state);
+    } else if (type === "sort") {
+      // store selected sort option
+      state.sort = data;
+
+      const content = dropdown.querySelector(".dropdown-content");
+      if (content) {
+        content.replaceChildren(
+          document
+            .createRange()
+            .createContextualFragment(generateSortContent(state))
         );
       }
 
