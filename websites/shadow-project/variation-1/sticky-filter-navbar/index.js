@@ -60,6 +60,9 @@
       <div class="base-container--main-nav filter-container">
         <div class="filter-bar">
           <button class="filter-btn" data-content="all-filters">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="14" viewBox="0 0 16 14" fill="none">
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M8.5 4C8.775 4 9 3.775 9 3.5V3H15C15.55 3 16 2.55 16 2C16 1.45 15.55 1 15 1H9V0.5C9 0.225 8.775 0 8.5 0H7.5C7.225 0 7 0.225 7 0.5V1H1C0.45 1 0 1.45 0 2C0 2.55 0.45 3 1 3H7V3.5C7 3.775 7.225 4 7.5 4H8.5ZM12.5 9C12.775 9 13 8.775 13 8.5V8H15C15.55 8 16 7.55 16 7C16 6.45 15.55 6 15 6H13V5.5C13 5.225 12.775 5 12.5 5H11.5C11.225 5 11 5.225 11 5.5V6H1C0.45 6 0 6.45 0 7C0 7.55 0.45 8 1 8H11V8.5C11 8.775 11.225 9 11.5 9H12.5ZM4.5 14C4.775 14 5 13.775 5 13.5V13H15C15.55 13 16 12.55 16 12C16 11.45 15.55 11 15 11H5V10.5C5 10.225 4.775 10 4.5 10H3.5C3.225 10 3 10.225 3 10.5V11H1C0.45 11 0 11.45 0 12C0 12.55 0.45 13 1 13H3V13.5C3 13.775 3.225 14 3.5 14H4.5Z" fill="#545454"/>
+              </svg>
             All Filters
           </button>
 
@@ -338,6 +341,16 @@
       btn.parentNode.insertBefore(wrapper, btn);
       wrapper.appendChild(btn);
 
+      // Special-case: `all-filters` - no dropdown, just log the click
+      if (type === "all-filters") {
+        btn.classList.add("no-dropdown");
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          console.log(type);
+        });
+        return; // skip dropdown creation
+      }
+
       // ✅ Create dropdown as SIBLING (not inside button)
       const dropdown = document.createElement("div");
       dropdown.className = "dropdown-menu";
@@ -399,6 +412,8 @@
     const buttons = document.querySelectorAll(".filter-btn");
 
     buttons.forEach((btn) => {
+      // Skip buttons that explicitly have no dropdown behavior
+      if (btn.classList.contains("no-dropdown")) return;
       const arrow = btn.querySelector(".arrow"); // target the arrow span
 
       btn.addEventListener("click", (e) => {
