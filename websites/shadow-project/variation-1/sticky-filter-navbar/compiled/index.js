@@ -87,7 +87,7 @@
           </button>
         </div>
         <div class="sort-btn">
-          <button class="filter-btn" data-content="sort">
+          <button class="filter-btn sort-btn-inner" data-content="sort">
             Sort
             ${arrowSvg}
           </button>
@@ -103,6 +103,8 @@
   function createState() {
     return {
       selectedDeals: [],
+      // price range: [min, max]
+      selectedPriceRange: [2, 45],
       dealsList: [
         { name: "Pizza", slug: "pizza" },
         { name: "Side", slug: "side" },
@@ -187,6 +189,17 @@
       ],
       sort: "",
     };
+  }
+
+  // FILTERS BY PRICE RANGE
+  function filterDealsByPrice(deals, selectedRange) {
+    if (!selectedRange || selectedRange.length !== 2) return deals;
+    const [min, max] = selectedRange;
+    return filterDealsRecursively(deals, (deal) => {
+      const price = getDealPrice(deal);
+      if (typeof price !== "number" || !isFinite(price)) return false;
+      return price >= min && price <= max;
+    });
   }
   // DEALS UI
   function generateDealsContent(state) {
@@ -341,12 +354,12 @@
       btn.parentNode.insertBefore(wrapper, btn);
       wrapper.appendChild(btn);
 
-      // Special-case: `all-filters` - no dropdown, just log the click
+      // Special-case: `all-filters` - open sidebar
       if (type === "all-filters") {
         btn.classList.add("no-dropdown");
         btn.addEventListener("click", (e) => {
           e.stopPropagation();
-          console.log(type);
+          openFilterSidebar(state);
         });
         return; // skip dropdown creation
       }
@@ -384,6 +397,431 @@
         dropdown.classList.toggle("active");
       });
     });
+  }
+
+  /* ---------- Filter Sidebar (All Filters) ---------- */
+  function createFilterSidebar(state) {
+    if (document.querySelector(".ab-filter-overlay")) return;
+
+    // Styles moved to style.scss; no inline injection here
+
+    const overlay = document.createElement("div");
+    overlay.className = "ab-filter-overlay";
+    overlay.setAttribute("role", "dialog");
+    overlay.setAttribute("aria-hidden", "true");
+
+    const sidebar = document.createElement("aside");
+    sidebar.className = "ab-filter-sidebar";
+
+    sidebar.innerHTML = `
+      <div class="ab-filter-header">
+        <h2>Filter deals</h2>
+        <button class="ab-filter-close" aria-label="Close">×</button>
+      </div>
+      <div class="ab-filter-body">
+        <!-- Filters can be inserted here if desired -->
+      </div>
+    `;
+
+    overlay.appendChild(sidebar);
+    document.body.appendChild(overlay);
+
+    // Close when clicking outside sidebar (on overlay)
+    overlay.addEventListener("click", (ev) => {
+      if (ev.target === overlay) closeFilterSidebar();
+    });
+
+    // Close button
+    const closeBtn = sidebar.querySelector(".ab-filter-close");
+    if (closeBtn) closeBtn.addEventListener("click", closeFilterSidebar);
+
+    // Esc key handler (attach once)
+    function escHandler(e) {
+      if (e.key === "Escape") closeFilterSidebar();
+    }
+    overlay._escHandler = escHandler;
+    // body badge click handler (delegated) - handle many filter badge types
+    overlay._badgeClickHandler = function (ev) {
+      const btn = ev.target.closest(".ab-filter-badge, .ab-deal-badge");
+      if (!btn) return;
+      ev.stopPropagation();
+      const filter = btn.dataset.filter || btn.dataset.type || "deals";
+      const value = btn.dataset.value || btn.dataset.content;
+      if (typeof value === "undefined") return;
+      if (!window.__abTestLabState) return;
+      const st = window.__abTestLabState;
+
+      if (filter === "deals") {
+        const slug = String(value);
+        const idx = st.selectedDeals.indexOf(slug);
+        if (idx === -1) st.selectedDeals.push(slug);
+        else st.selectedDeals.splice(idx, 1);
+      } else if (filter === "pizzaSize") {
+        const id = Number(value);
+        const idx = st.selectedPizzaSizes.indexOf(id);
+        if (idx === -1) st.selectedPizzaSizes.push(id);
+        else st.selectedPizzaSizes.splice(idx, 1);
+      } else if (filter === "pizzaQty") {
+        const id = Number(value);
+        if (id === 0) {
+          st.selectedPizzaQty = [];
+        } else {
+          const idx = st.selectedPizzaQty.indexOf(id);
+          if (idx === -1) st.selectedPizzaQty.push(id);
+          else st.selectedPizzaQty.splice(idx, 1);
+        }
+      } else if (filter === "sides") {
+        const id = Number(value);
+        if (id === 0) {
+          st.selectedSides = [];
+        } else {
+          const idx = st.selectedSides.indexOf(id);
+          if (idx === -1) st.selectedSides.push(id);
+          else st.selectedSides.splice(idx, 1);
+        }
+      } else if (filter === "sort") {
+        const val = String(value);
+        if (st.sort === val) st.sort = "";
+        else st.sort = val;
+      }
+
+      // re-render sidebar UI and apply filters
+      renderDealsInSidebar(st);
+      applyDealFilters(st);
+    };
+    // attach delegated listener to overlay
+    overlay.addEventListener("click", overlay._badgeClickHandler);
+  }
+
+  function openFilterSidebar(state) {
+    createFilterSidebar();
+    const overlay = document.querySelector(".ab-filter-overlay");
+    if (!overlay) return;
+    overlay.classList.add("active");
+    overlay.setAttribute("aria-hidden", "false");
+
+    // Attach keydown if not attached
+    if (!overlay._escAttached) {
+      document.addEventListener("keydown", overlay._escHandler);
+      overlay._escAttached = true;
+    }
+    // render current deals into sidebar
+    renderDealsInSidebar(state);
+  }
+
+  function renderDealsInSidebar(state) {
+    const body = document.querySelector(".ab-filter-body");
+    if (!body) return;
+
+    const container = document.createElement("div");
+    container.className = "ab-deal-badges";
+
+    (state.dealsList || []).forEach((deal) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "ab-deal-badge";
+      btn.dataset.content = deal.slug || (deal.name || "").toLowerCase();
+      btn.textContent = deal.name;
+      if ((state.selectedDeals || []).includes(btn.dataset.content)) {
+        btn.classList.add("selected");
+      }
+      container.appendChild(btn);
+    });
+
+    // replace body content but keep existing informative text if present
+    const existingText = body.querySelector("p");
+    body.innerHTML = "";
+
+    // Heading
+    const heading = document.createElement("div");
+    heading.className = "ab-deals-heading";
+    heading.textContent = "Deal contains only";
+    body.appendChild(heading);
+
+    if (existingText) body.appendChild(existingText);
+    body.appendChild(container);
+
+    // separator between deals and sizes
+    const sep1 = document.createElement("div");
+    sep1.className = "ab-filter-separator";
+    body.appendChild(sep1);
+
+    // -- Pizza Size badges
+    const sizeHeading = document.createElement("div");
+    sizeHeading.className = "ab-deals-heading";
+    sizeHeading.textContent = "Pizza size";
+    body.appendChild(sizeHeading);
+
+    const sizeContainer = document.createElement("div");
+    sizeContainer.className = "ab-deal-badges";
+    (state.pizzaSizes || []).forEach((size) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "ab-deal-badge ab-filter-badge";
+      btn.dataset.filter = "pizzaSize";
+      btn.dataset.value = String(size.id);
+      btn.textContent = size.label;
+      if ((state.selectedPizzaSizes || []).includes(size.id))
+        btn.classList.add("selected");
+      sizeContainer.appendChild(btn);
+    });
+    body.appendChild(sizeContainer);
+
+    // separator between sizes and quantity
+    const sep2 = document.createElement("div");
+    sep2.className = "ab-filter-separator";
+    body.appendChild(sep2);
+
+    // -- Pizza Quantity badges
+    const qtyHeading = document.createElement("div");
+    qtyHeading.className = "ab-deals-heading";
+    qtyHeading.textContent = "How many pizzas?";
+    body.appendChild(qtyHeading);
+
+    const qtyContainer = document.createElement("div");
+    qtyContainer.className = "ab-deal-badges ab-deal-badges-qty";
+    (state.pizzaQty || []).forEach((q) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "ab-deal-badge ab-filter-badge ab-filter-badge-qty";
+      btn.dataset.filter = "pizzaQty";
+      btn.dataset.value = String(q.id);
+      btn.textContent = q.label;
+      if ((state.selectedPizzaQty || []).includes(q.id))
+        btn.classList.add("selected");
+      qtyContainer.appendChild(btn);
+    });
+    body.appendChild(qtyContainer);
+
+    // separator between quantity and sides
+    const sep3 = document.createElement("div");
+    sep3.className = "ab-filter-separator";
+    body.appendChild(sep3);
+
+    // -- Sides badges
+    const sidesHeading = document.createElement("div");
+    sidesHeading.className = "ab-deals-heading";
+    sidesHeading.textContent = "How many sides?";
+    body.appendChild(sidesHeading);
+
+    const sidesContainer = document.createElement("div");
+    sidesContainer.className = "ab-deal-badges ab-deal-badges-side";
+    (state.sidesList || []).forEach((s) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "ab-deal-badge ab-filter-badge ab-filter-badge-side";
+      btn.dataset.filter = "sides";
+      btn.dataset.value = String(s.id);
+      btn.textContent = s.label;
+      if ((state.selectedSides || []).includes(s.id))
+        btn.classList.add("selected");
+      sidesContainer.appendChild(btn);
+    });
+    body.appendChild(sidesContainer);
+
+    // separator between sides and price
+    const sep4 = document.createElement("div");
+    sep4.className = "ab-filter-separator";
+    body.appendChild(sep4);
+
+    // PRICE RANGE UI
+    const priceWrapper = document.createElement("div");
+    priceWrapper.style.marginTop = "18px";
+
+    // fixed bounds: min 2, max 45
+    const globalMin = 2;
+    const globalMax = 45;
+
+    // initialize state price range if not set
+    if (!state.selectedPriceRange || state.selectedPriceRange.length !== 2) {
+      state.selectedPriceRange = [globalMin, globalMax];
+    }
+
+    const [selMin, selMax] = state.selectedPriceRange;
+
+    priceWrapper.innerHTML = `
+      <div class="ab-deals-heading" style="margin:0 0 8px;">How much would you like to spend?</div>
+      <div style="padding:8px 0 6px;">
+        <div class="ab-price-slider" style="position:relative;height:36px;">
+          <div class="ab-price-track" style="position:absolute;left:0;right:0;top:18px;height:6px;background:#e6e6e6;border-radius:999px;"></div>
+          <div class="ab-price-fill" style="position:absolute;top:18px;height:6px;background:#006491;border-radius:999px;left:0;width:0;"></div>
+          <div class="ab-price-handle ab-price-handle-min" role="slider" tabindex="0" aria-valuemin="${globalMin}" aria-valuemax="${globalMax}" aria-valuenow="${selMin}" style="position:absolute;top:6px;width:28px;height:28px;border-radius:50%;background:#fff;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.15);transform:translateX(-50%);cursor:pointer;"></div>
+          <div class="ab-price-handle ab-price-handle-max" role="slider" tabindex="0" aria-valuemin="${globalMin}" aria-valuemax="${globalMax}" aria-valuenow="${selMax}" style="position:absolute;top:6px;width:28px;height:28px;border-radius:50%;background:#fff;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.15);transform:translateX(-50%);cursor:pointer;"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;padding-top:8px;font-size:14px;color:#444">
+          <div class="ab-price-min-label">£${selMin}</div>
+          <div class="ab-price-max-label">£${selMax}</div>
+        </div>
+      </div>
+    `;
+
+    body.appendChild(priceWrapper);
+
+    priceWrapper.querySelector(".ab-price-slider");
+    const track = priceWrapper.querySelector(".ab-price-track");
+    const fill = priceWrapper.querySelector(".ab-price-fill");
+    const handleMin = priceWrapper.querySelector(".ab-price-handle-min");
+    const handleMax = priceWrapper.querySelector(".ab-price-handle-max");
+    const minLabel = priceWrapper.querySelector(".ab-price-min-label");
+    const maxLabel = priceWrapper.querySelector(".ab-price-max-label");
+
+    function valueToPercent(v) {
+      return ((v - globalMin) / (globalMax - globalMin)) * 100;
+    }
+    function percentToValue(p) {
+      const v = globalMin + (p / 100) * (globalMax - globalMin);
+      return Math.round(v);
+    }
+
+    function updateUI(minV, maxV) {
+      const minP = valueToPercent(minV);
+      const maxP = valueToPercent(maxV);
+      handleMin.style.left = minP + "%";
+      handleMax.style.left = maxP + "%";
+      fill.style.left = minP + "%";
+      fill.style.width = Math.max(0, maxP - minP) + "%";
+      minLabel.textContent = "£" + minV;
+      maxLabel.textContent = "£" + maxV;
+      handleMin.setAttribute("aria-valuenow", minV);
+      handleMax.setAttribute("aria-valuenow", maxV);
+    }
+
+    // initial render
+    updateUI(state.selectedPriceRange[0], state.selectedPriceRange[1]);
+
+    let activeHandle = null;
+
+    function onPointerMove(e) {
+      if (!activeHandle) return;
+      const rect = track.getBoundingClientRect();
+      let p = ((e.clientX - rect.left) / rect.width) * 100;
+      p = Math.max(0, Math.min(100, p));
+      let v = percentToValue(p);
+      if (activeHandle === "min") {
+        v = Math.min(v, state.selectedPriceRange[1]);
+        state.selectedPriceRange[0] = v;
+      } else {
+        v = Math.max(v, state.selectedPriceRange[0]);
+        state.selectedPriceRange[1] = v;
+      }
+      updateUI(state.selectedPriceRange[0], state.selectedPriceRange[1]);
+      applyDealFilters(state);
+    }
+
+    function onPointerUp(e) {
+      if (!activeHandle) return;
+      document.removeEventListener("pointermove", onPointerMove);
+      document.removeEventListener("pointerup", onPointerUp);
+      activeHandle = null;
+    }
+
+    function onPointerDownHandle(e, which) {
+      e.preventDefault();
+      activeHandle = which;
+      e.target.setPointerCapture && e.target.setPointerCapture(e.pointerId);
+      document.addEventListener("pointermove", onPointerMove);
+      document.addEventListener("pointerup", onPointerUp);
+      // immediately move to pointer position
+      onPointerMove(e);
+    }
+
+    handleMin.addEventListener("pointerdown", (e) =>
+      onPointerDownHandle(e, "min")
+    );
+    handleMax.addEventListener("pointerdown", (e) =>
+      onPointerDownHandle(e, "max")
+    );
+
+    // --- SORT UI (below price range)
+    const sepSort = document.createElement("div");
+    sepSort.className = "ab-filter-separator";
+    body.appendChild(sepSort);
+
+    const sortHeading = document.createElement("div");
+    sortHeading.className = "ab-deals-heading";
+    sortHeading.textContent = "Sort";
+    body.appendChild(sortHeading);
+
+    const sortContainer = document.createElement("div");
+    sortContainer.className = "ab-deal-badges ab-deal-badges-sort";
+
+    (state.sortList || []).forEach((s) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "ab-deal-badge ab-filter-badge ab-filter-badge-sort";
+      btn.dataset.filter = "sort";
+      btn.dataset.value = String(s.value);
+      btn.textContent = s.label;
+      if (state.sort === s.value) btn.classList.add("selected");
+
+      btn.addEventListener("click", (ev) => {
+        ev.stopPropagation();
+        // toggle sort: selecting same option clears it
+        if (state.sort === s.value) state.sort = "";
+        else state.sort = s.value;
+        // re-render sidebar and re-apply filters
+        renderDealsInSidebar(state);
+        applyDealFilters(state);
+      });
+
+      sortContainer.appendChild(btn);
+    });
+
+    body.appendChild(sortContainer);
+
+    // --- FOOTER: Clear + Count
+    const sepFooter = document.createElement("div");
+    sepFooter.className = "ab-filter-separator";
+    body.appendChild(sepFooter);
+    const footer = document.createElement("div");
+    footer.className = "ab-filter-footer";
+
+    const clearBtn = document.createElement("button");
+    clearBtn.type = "button";
+    clearBtn.className = "ab-filter-clear";
+    clearBtn.textContent = "Clear all filters";
+
+    const countBtn = document.createElement("button");
+    countBtn.type = "button";
+    countBtn.className = "ab-filter-count";
+    const currentCount = (state.filteredDeals || []).length || 0;
+    countBtn.textContent = `Showing ${currentCount} deals`;
+
+    footer.appendChild(clearBtn);
+    footer.appendChild(countBtn);
+    body.appendChild(footer);
+
+    // Clear handler: reset selections and price range, then re-render/apply
+    clearBtn.addEventListener("click", (ev) => {
+      ev.stopPropagation();
+      state.selectedDeals = [];
+      state.selectedPizzaSizes = [];
+      state.selectedPizzaQty = [];
+      state.selectedSides = [];
+      state.sort = "";
+      state.selectedPriceRange = [globalMin, globalMax];
+      renderDealsInSidebar(state);
+      applyDealFilters(state);
+    });
+
+    // Count button closes the sidebar when clicked
+    countBtn.addEventListener("click", (ev) => {
+      ev.stopPropagation();
+      closeFilterSidebar();
+    });
+  }
+
+  function closeFilterSidebar() {
+    const overlay = document.querySelector(".ab-filter-overlay");
+    if (!overlay) return;
+    overlay.classList.remove("active");
+    overlay.setAttribute("aria-hidden", "true");
+
+    // detach esc
+    if (overlay._escAttached && overlay._escHandler) {
+      document.removeEventListener("keydown", overlay._escHandler);
+      overlay._escAttached = false;
+    }
   }
 
   function openDropdownFor(btn) {
@@ -554,19 +992,25 @@
   function filterDealsBySelection(deals, selectedDeals) {
     if (!selectedDeals.length) return deals;
 
-    return filterDealsRecursively(deals, (deal) =>
-      deal.items?.some((item) => {
-        if (!item.productType || typeof item.productType !== "string")
-          return false;
-        return selectedDeals.includes(item.productType.toLowerCase());
-      })
-    );
+    // Require that every selected deal type is present in the deal's items
+    return filterDealsRecursively(deals, (deal) => {
+      if (!deal.items || !deal.items.length) return false;
+
+      return selectedDeals.every((sel) =>
+        deal.items.some((item) => {
+          if (!item.productType || typeof item.productType !== "string")
+            return false;
+          return item.productType.toLowerCase() === sel;
+        })
+      );
+    });
   }
 
   // FILTERS BY SIZES
   function filterDealsByPizzaSize(deals, selectedSizes) {
     if (!selectedSizes.length) return deals;
 
+    // Require that all selected sizes are present in the deal's pizza sizes
     return filterDealsRecursively(deals, (deal) => {
       const pizzaItems = deal.items?.filter(
         (item) => item.productType === "Pizza"
@@ -576,7 +1020,7 @@
 
       const dealSizes = pizzaItems.flatMap((item) => item.sizes || []);
 
-      return selectedSizes.some((sizeId) => dealSizes.includes(sizeId));
+      return selectedSizes.every((sizeId) => dealSizes.includes(sizeId));
     });
   }
 
@@ -586,11 +1030,12 @@
       return deals; // "Any"
     }
 
+    // Require that every selected qty condition is satisfied by the deal
     return filterDealsRecursively(deals, (deal) => {
       const pizzaCount =
         deal.items?.filter((item) => item.productType === "Pizza").length || 0;
 
-      return selectedQty.some((qty) => {
+      return selectedQty.every((qty) => {
         if (qty === 3) return pizzaCount >= 3;
         return pizzaCount === qty;
       });
@@ -602,11 +1047,12 @@
     if (!selectedSides.length || selectedSides.includes(0)) {
       return deals; // "Any"
     }
+    // Require that every selected side-quantity condition is satisfied
     return filterDealsRecursively(deals, (deal) => {
       const sideCount =
         deal.items?.filter((item) => item.productType === "Side").length || 0;
 
-      return selectedSides.some((qty) => {
+      return selectedSides.every((qty) => {
         if (qty === 3) return sideCount >= 3;
         return sideCount === qty;
       });
@@ -668,8 +1114,8 @@
       state.selectedPizzaQty
     );
     filteredDeals = filterDealsBySideQty(filteredDeals, state.selectedSides);
-
-    console.log(filteredDeals, "line 346");
+    // Apply price filter
+    filteredDeals = filterDealsByPrice(filteredDeals, state.selectedPriceRange);
 
     // Apply sorting if selected
     const sorted = sortDeals(filteredDeals, state.sort);
@@ -677,6 +1123,17 @@
     // Always store the latest filteredDeals in state
     state.filteredDeals = sorted;
     updateDealCardsUI(sorted);
+
+    // Update sidebar footer count if present
+    try {
+      const countBtn = document.querySelector(".ab-filter-count");
+      if (countBtn) {
+        const cnt = Array.isArray(sorted) ? sorted.length : 0;
+        countBtn.textContent = `Showing ${cnt} deals`;
+      }
+    } catch (err) {
+      // ignore
+    }
   }
 
   function handleDropdownItemClick(e, dropdown, state, type) {

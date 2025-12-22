@@ -52,6 +52,10 @@ html::before {
   overflow: visible;
 }
 
+.sort-btn-inner {
+  white-space: nowrap;
+}
+
 .filter-btn:hover {
   background: #f5f5f5;
 }
@@ -112,4 +116,230 @@ html::before {
   display: flex;
   gap: 10px;
   cursor: pointer;
+}
+
+/* Sidebar styles moved from injected JS */
+.ab-filter-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  display: flex;
+  align-items: stretch;
+  z-index: 9999;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.22s ease;
+}
+
+.ab-filter-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.ab-filter-sidebar {
+  width: 380px;
+  max-width: 90%;
+  background: #fff;
+  height: 100vh;
+  transform: translateX(-100%);
+  transition: transform 0.28s cubic-bezier(0.2, 0.9, 0.2, 1);
+  box-shadow: 2px 0 12px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+}
+
+.ab-filter-overlay.active .ab-filter-sidebar {
+  transform: translateX(0);
+}
+
+.ab-filter-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 18px;
+  border-bottom: 1px solid #eee;
+}
+
+.ab-filter-header h2 {
+  margin: 0;
+  font-size: 18px;
+  color: #222;
+}
+
+.ab-filter-close {
+  background: transparent;
+  border: 0;
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.ab-filter-body {
+  padding: 16px;
+  overflow: auto;
+}
+
+.ab-deals-heading {
+  font-weight: 700;
+  margin: 0 0 16px;
+  font-size: 15px;
+  color: #222;
+}
+
+.ab-filter-separator {
+  height: 1px;
+  background: #eee;
+  margin: 16px 0;
+}
+
+.ab-deal-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ab-deal-badges.ab-deal-badges-qty {
+  flex-wrap: nowrap !important;
+}
+
+.ab-deal-badges.ab-deal-badges-side {
+  flex-wrap: nowrap !important;
+}
+
+.ab-deal-badge {
+  appearance: none;
+  border: 1px solid #d0d0d0;
+  background: #fff;
+  padding: 8px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  color: #333;
+  font-size: 14px;
+}
+
+.ab-filter-badge-size {
+  padding: 8px 0px;
+  width: 100%;
+}
+
+.ab-filter-badge-qty {
+  padding: 8px 0px;
+  width: 100%;
+}
+
+.ab-filter-badge-side {
+  padding: 8px 0px;
+  width: 100%;
+}
+
+.ab-deal-badge.selected {
+  background: #006491;
+  border-color: #006491;
+  color: #fff;
+}
+
+.ab-deal-badge:focus {
+  outline: 2px solid rgba(0, 100, 160, 0.14);
+}
+
+/* price slider base styles */
+.ab-price-slider {
+  position: relative;
+  height: 36px;
+}
+
+.ab-price-track {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 18px;
+  height: 6px;
+  background: #e6e6e6;
+  border-radius: 999px;
+}
+
+.ab-price-fill {
+  position: absolute;
+  top: 18px;
+  height: 6px;
+  background: #006491;
+  border-radius: 999px;
+  left: 0;
+  width: 0;
+}
+
+.ab-price-handle {
+  position: absolute;
+  top: 6px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transform: translateX(-50%);
+  cursor: pointer;
+}
+
+/* Footer: full-width twin buttons */
+.ab-filter-footer {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.ab-filter-footer button {
+  -webkit-appearance: none;
+  appearance: none;
+  border: 1px solid #d0d0d0;
+  color: #222;
+  border-radius: 28px;
+  cursor: pointer;
+  font-size: 15px;
+  box-sizing: border-box;
+  padding: 16px 0px;
+  flex: 1 1 50%;
+  min-height: 50px;
+}
+
+.ab-filter-clear {
+  background: #fff;
+}
+
+.ab-filter-count {
+  background: #006491; /* same as active badge bg */
+  border-color: #006491;
+  color: #fff !important;
+}
+
+@media (max-width: 480px) {
+  .ab-filter-footer button {
+    flex-basis: 100%;
+  }
+}
+@media (max-width: 1023px) {
+  .filter-container {
+    padding: 0 16px;
+  }
+}
+@media (max-width: 920px) {
+  .filter-btn-wrapper:has(.filter-btn[data-content=side-quantity]) {
+    display: none;
+  }
+}
+@media (max-width: 780px) {
+  .filter-btn-wrapper:has(.filter-btn[data-content=pizza-quantity]) {
+    display: none;
+  }
+}
+@media (max-width: 570px) {
+  .filter-btn-wrapper:has(.filter-btn[data-content=pizza-size]) {
+    display: none;
+  }
+}
+@media (max-width: 440px) {
+  .filter-btn-wrapper:has(.filter-btn[data-content=deal-contains-only]) {
+    display: none;
+  }
 }
