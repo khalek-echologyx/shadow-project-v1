@@ -925,32 +925,58 @@
           const groupDeal = state.filteredDeals.find(
             (deal) => deal && deal.cardId === cardId && deal.type === "group"
           );
+
+          console.log({ groupDeal, cardId }, "Line 930");
           if (!groupDeal) return;
 
           const innerDeals = Array.isArray(groupDeal.deals)
             ? groupDeal.deals
             : [];
 
-          const groupAllowedIds = new Set(
-            innerDeals.map((d) => d.cardId).filter(Boolean)
-          );
+          const orderedInnerIds = innerDeals
+            .map((d) => d.cardId)
+            .filter(Boolean);
 
           // ⏳ wait for Nuxt to finish rendering
           setTimeout(() => {
             const globalAllowed = window.__allowedDealCardIds || new Set();
 
-            const dealCards = document.querySelectorAll(
-              'section[data-ref-id="base-grid"] .base-deal-card'
+            const dealCards = Array.from(
+              document.querySelectorAll(
+                'section[data-ref-id="base-grid"] .base-deal-card'
+              )
             );
 
             if (!dealCards.length) return;
 
-            dealCards.forEach((card) => {
-              const isAllowed =
-                groupAllowedIds.has(card.id) && globalAllowed.has(card.id);
+            const parentEl = document.getElementById(cardId);
 
-              card.style.display = isAllowed ? "" : "none";
+            // First: hide everything except the parent and allowed inner deals
+            dealCards.forEach((cardEl) => {
+              if (!cardEl.id) return;
+              const shouldShow =
+                cardEl.id === cardId ||
+                (orderedInnerIds.includes(cardEl.id) &&
+                  globalAllowed.has(cardEl.id));
+              cardEl.style.display = shouldShow ? "" : "none";
             });
+
+            // Then: move inner deal cards so they appear directly after the parent card, preserving order
+            if (parentEl && parentEl.parentNode) {
+              let reference = parentEl.nextSibling;
+              orderedInnerIds.forEach((childId) => {
+                const childEl = document.getElementById(childId);
+                if (!childEl) return;
+                // only move if currently in the same container
+                try {
+                  parentEl.parentNode.insertBefore(childEl, reference);
+                  // advance reference to remain after the newly inserted child
+                  reference = childEl.nextSibling;
+                } catch (err) {
+                  // ignore insertion errors
+                }
+              });
+            }
           }, 0);
         });
 
@@ -1283,6 +1309,7 @@
   }
 
   /* ------------------ MAIN CONTROLLER ------------------ */
+
   function mainJs([body]) {
     logExperiment();
 
@@ -1301,7 +1328,86 @@
   }
 
   waitForNuxtReady(() => {
-    mainJs([document.body]);
-    setupFilterButtons();
+    let lastPath = window.location.pathname;
+
+    function normalizePath(p) {
+      try {
+        return String(p || "").replace(/\/+$|^\s+|\s+$/g, "");
+      } catch (err) {
+        return p;
+      }
+    }
+
+    function isDealsRoute() {
+      // Exact-matching path for this install — adjust if needed
+      return (
+        normalizePath(window.location.pathname) ===
+        normalizePath("/store/28484/hatfield/deals")
+      );
+    }
+
+    function cleanupABTest() {
+      // Remove injected nav
+      const injected = document.querySelector("[data-ab-test='filter-nav-v1']");
+      if (injected) injected.remove();
+
+      // Remove overlay/sidebar and detach its handlers if present
+      const overlay = document.querySelector(".ab-filter-overlay");
+      if (overlay) {
+        if (overlay._escHandler)
+          document.removeEventListener("keydown", overlay._escHandler);
+        if (overlay._badgeClickHandler)
+          overlay.removeEventListener("click", overlay._badgeClickHandler);
+        overlay.remove();
+      }
+
+      // Attempt to remove global click handlers added by setupFilterButtons
+      try {
+        document.removeEventListener("click", closeAllFilters);
+      } catch (err) {
+        // ignore
+      }
+
+      // Clear global state
+      try {
+        delete window.__abTestLabState;
+        delete window.__allowedDealCardIds;
+      } catch (err) {
+        // ignore
+      }
+    }
+
+    function handleRouteChange() {
+      const currentPath = window.location.pathname;
+
+      if (currentPath === lastPath) return;
+      lastPath = currentPath;
+
+      if (isDealsRoute()) {
+        // Only inject when the route matches
+        mainJs([document.body]);
+        setupFilterButtons();
+      } else {
+        // Remove the UI when leaving the deals page
+        cleanupABTest();
+      }
+    }
+
+    // Initial load: inject only if current route matches
+    if (isDealsRoute()) {
+      mainJs([document.body]);
+      setupFilterButtons();
+    } else {
+      // Ensure nothing is present from previous runs
+      cleanupABTest();
+    }
+
+    const pushState = history.pushState;
+    history.pushState = function () {
+      pushState.apply(history, arguments);
+      handleRouteChange();
+    };
+
+    window.addEventListener("popstate", handleRouteChange);
   });
 })();
