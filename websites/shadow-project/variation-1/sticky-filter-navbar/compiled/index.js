@@ -907,73 +907,37 @@
       if (!cardId) return;
       card.style.display = allowedCardIds.has(cardId) ? "" : "none";
 
-      // Add click listener to group deal card's button
-      const groupBtn = card.querySelector(".base-button__container");
-      if (groupBtn && !groupBtn._groupClickLogged) {
-        groupBtn.addEventListener("click", function () {
-          const state = window.__abTestLabState;
-          if (!state || !state.filteredDeals) return;
+      document.addEventListener("click", function (e) {
+        const groupBtn = e.target.closest(".base-button__container");
+        if (!groupBtn) return;
 
-          const groupDeal = state.filteredDeals.find(
-            (deal) => deal && deal.cardId === cardId && deal.type === "group"
-          );
+        const card = groupBtn.closest(".base-cards-tray__card--deal");
+        if (!card) return;
+        card.style.order = "-1";
 
-          console.log({ groupDeal, cardId }, "Line 930");
-          if (!groupDeal) return;
+        const state = window.__abTestLabState;
+        if (!state || !state.filteredDeals) return;
 
-          const innerDeals = Array.isArray(groupDeal.deals)
-            ? groupDeal.deals
-            : [];
+        const groupDeal = state.filteredDeals.find(
+          (deal) => deal && deal.cardId === card.id && deal.type === "group"
+        );
+        if (!groupDeal) return;
 
-          const orderedInnerIds = innerDeals
-            .map((d) => d.cardId)
-            .filter(Boolean);
+        const innerDeals = Array.isArray(groupDeal.deals)
+          ? groupDeal.deals
+          : [];
+        const innerIds = innerDeals.map((d) => d.cardId).filter(Boolean);
 
-          // ⏳ wait for Nuxt to finish rendering
-          setTimeout(() => {
-            const globalAllowed = window.__allowedDealCardIds || new Set();
-
-            const dealCards = Array.from(
-              document.querySelectorAll(
-                'section[data-ref-id="base-grid"] .base-deal-card'
-              )
-            );
-
-            if (!dealCards.length) return;
-
-            const parentEl = document.getElementById(cardId);
-
-            // First: hide everything except the parent and allowed inner deals
-            dealCards.forEach((cardEl) => {
-              if (!cardEl.id) return;
-              const shouldShow =
-                cardEl.id === cardId ||
-                (orderedInnerIds.includes(cardEl.id) &&
-                  globalAllowed.has(cardEl.id));
-              cardEl.style.display = shouldShow ? "" : "none";
-            });
-
-            // Then: move inner deal cards so they appear directly after the parent card, preserving order
-            if (parentEl && parentEl.parentNode) {
-              let reference = parentEl.nextSibling;
-              orderedInnerIds.forEach((childId) => {
-                const childEl = document.getElementById(childId);
-                if (!childEl) return;
-                // only move if currently in the same container
-                try {
-                  parentEl.parentNode.insertBefore(childEl, reference);
-                  // advance reference to remain after the newly inserted child
-                  reference = childEl.nextSibling;
-                } catch (err) {
-                  // ignore insertion errors
-                }
-              });
-            }
-          }, 0);
+        // Show child deals directly after parent
+        let reference = card.nextSibling;
+        innerIds.forEach((id) => {
+          const childEl = document.getElementById(id);
+          if (!childEl) return;
+          card.parentNode.insertBefore(childEl, reference);
+          reference = childEl.nextSibling;
+          childEl.style.display = ""; // make visible if hidden
         });
-
-        groupBtn._groupClickLogged = true;
-      }
+      });
     });
 
     // Reorder DOM cards to match filteredDeals order (if possible)
@@ -1168,117 +1132,114 @@
     e.stopPropagation();
 
     const data = item.dataset.content;
-    const dealIndex = state.selectedDeals.indexOf(data);
+
+    /* ------------------ UPDATE STATE ------------------ */
 
     if (type === "deal-contains-only") {
-      dealIndex === -1
+      const idx = state.selectedDeals.indexOf(data);
+      idx === -1
         ? state.selectedDeals.push(data)
-        : state.selectedDeals.splice(dealIndex, 1);
+        : state.selectedDeals.splice(idx, 1);
 
-      const content = dropdown.querySelector(".dropdown-content");
-      if (content) {
-        content.replaceChildren(
+      dropdown
+        .querySelector(".dropdown-content")
+        ?.replaceChildren(
           document
             .createRange()
             .createContextualFragment(generateDealsContent(state))
         );
-      }
-      applyDealFilters(state);
     } else if (type === "pizza-size") {
       const sizeId = Number(data);
-      const sizeIndex = state.selectedPizzaSizes.indexOf(sizeId);
+      const idx = state.selectedPizzaSizes.indexOf(sizeId);
 
       if (sizeId === 4) {
         state.selectedPizzaSizes = [];
-        const content = dropdown.querySelector(".dropdown-content");
-        if (content) {
-          content.replaceChildren(
-            document
-              .createRange()
-              .createContextualFragment(generatePizzaSizeContent(state))
-          );
-        }
-        applyDealFilters(state);
-        return;
+      } else {
+        idx === -1
+          ? state.selectedPizzaSizes.push(sizeId)
+          : state.selectedPizzaSizes.splice(idx, 1);
       }
 
-      sizeIndex === -1
-        ? state.selectedPizzaSizes.push(sizeId)
-        : state.selectedPizzaSizes.splice(sizeIndex, 1);
-      // 🔁 RE-RENDER dropdown UI
-      const content = dropdown.querySelector(".dropdown-content");
-      if (content) {
-        content.replaceChildren(
+      dropdown
+        .querySelector(".dropdown-content")
+        ?.replaceChildren(
           document
             .createRange()
             .createContextualFragment(generatePizzaSizeContent(state))
         );
-      }
-
-      applyDealFilters(state);
     } else if (type === "pizza-quantity") {
       const qtyId = Number(data);
-      const index = state.selectedPizzaQty.indexOf(qtyId);
+      const idx = state.selectedPizzaQty.indexOf(qtyId);
 
-      // "Any"
-      if (qtyId === 0) {
-        state.selectedPizzaQty = [];
-      } else {
-        index === -1
+      qtyId === 0
+        ? (state.selectedPizzaQty = [])
+        : idx === -1
           ? state.selectedPizzaQty.push(qtyId)
-          : state.selectedPizzaQty.splice(index, 1);
-      }
+          : state.selectedPizzaQty.splice(idx, 1);
 
-      // 🔁 Re-render dropdown UI
-      const content = dropdown.querySelector(".dropdown-content");
-      if (content) {
-        content.replaceChildren(
+      dropdown
+        .querySelector(".dropdown-content")
+        ?.replaceChildren(
           document
             .createRange()
             .createContextualFragment(generatePizzaQty(state))
         );
-      }
-
-      applyDealFilters(state);
     } else if (type === "side-quantity") {
       const sideId = Number(data);
-      const index = state.selectedSides.indexOf(sideId);
+      const idx = state.selectedSides.indexOf(sideId);
 
-      // "Any"
-      if (sideId === 0) {
-        state.selectedSides = [];
-      } else {
-        index === -1
+      sideId === 0
+        ? (state.selectedSides = [])
+        : idx === -1
           ? state.selectedSides.push(sideId)
-          : state.selectedSides.splice(index, 1);
-      }
+          : state.selectedSides.splice(idx, 1);
 
-      // 🔁 Re-render dropdown UI
-      const content = dropdown.querySelector(".dropdown-content");
-      if (content) {
-        content.replaceChildren(
+      dropdown
+        .querySelector(".dropdown-content")
+        ?.replaceChildren(
           document
             .createRange()
             .createContextualFragment(generateSidesContent(state))
         );
-      }
-
-      applyDealFilters(state);
     } else if (type === "sort") {
-      // store selected sort option
       state.sort = data;
 
-      const content = dropdown.querySelector(".dropdown-content");
-      if (content) {
-        content.replaceChildren(
+      dropdown
+        .querySelector(".dropdown-content")
+        ?.replaceChildren(
           document
             .createRange()
             .createContextualFragment(generateSortContent(state))
         );
-      }
-
-      applyDealFilters(state);
     }
+
+    /* ------------------ CHECK FILTER STATE ------------------ */
+
+    const hasAnyFilter =
+      state.selectedDeals.length ||
+      state.selectedPizzaSizes.length ||
+      state.selectedPizzaQty.length ||
+      state.selectedSides.length ||
+      state.sort;
+
+    /* ------------------ APPLY OR RESTORE ------------------ */
+
+    if (!hasAnyFilter) {
+      const cards = document.querySelectorAll(".base-cards-tray__card--deal");
+
+      cards.forEach((card) => {
+        // 🔥 Reset ALL layout control
+        card.style.order = "";
+        // card.style.display = "";
+        card.style.visibility = "";
+        card.style.position = "";
+        card.style.top = "";
+        card.style.left = "";
+      });
+    }
+
+    // ✅ Filters exist → apply normal filtering
+    applyDealFilters(state);
   }
 
   function closeAllDropdowns(current = null) {
@@ -1317,6 +1278,12 @@
     setupDropdowns(state);
     setupGlobalListeners();
     safeNuxtLog();
+
+    if (!window.__initialDealOrder) {
+      window.__initialDealOrder = Array.from(
+        document.querySelectorAll(".base-cards-tray__card--deal")
+      ).map((el) => el.id);
+    }
   }
 
   waitForNuxtReady(() => {
