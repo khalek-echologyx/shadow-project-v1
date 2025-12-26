@@ -1,0 +1,13 @@
+{
+  "id": "1766746627595_9315_basket_ui_change",
+  "name": "basket-ui-change",
+  "type": "A/B",
+  "website": "shadow-project-2",
+  "variations": [
+    "control",
+    "variation-1"
+  ],
+  "createdAt": "2025-12-26T10:57:07.595Z",
+  "createdAtReadable": "12/26/2025, 4:57:07 PM",
+  "lastUpdated": "2025-12-26T10:57:08.037Z"
+}
