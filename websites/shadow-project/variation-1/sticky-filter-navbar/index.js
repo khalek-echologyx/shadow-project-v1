@@ -108,7 +108,7 @@
       dealsList: [
         { name: "Pizza", slug: "pizza" },
         { name: "Side", slug: "side" },
-        { name: "Wrap", slug: "wrap" },
+        { name: "Wrap", slug: "wraps" },
         { name: "Dessert", slug: "dessert" },
         { name: "Drink", slug: "drink" },
       ],
@@ -864,7 +864,6 @@
 
       btn.addEventListener("click", (e) => {
         e.stopPropagation();
-
         const isOpen = btn.classList.contains("is-open");
 
         closeAllFilters();
@@ -893,7 +892,113 @@
     return [];
   }
 
+  // Store original card order on first run
+  if (!window.__originalCardOrder) {
+    window.__originalCardOrder = Array.from(
+      document.querySelectorAll(".base-cards-tray__card--deal")
+    ).map((card) => card.id);
+  }
+
   function updateDealCardsUI(filteredDeals) {
+    const allCards = Array.from(
+      document.querySelectorAll(".base-cards-tray__card--deal")
+    );
+    const parent = allCards[0]?.parentNode;
+    const isFilterActive =
+      window.__abTestLabState &&
+      ((window.__abTestLabState.selectedDeals &&
+        window.__abTestLabState.selectedDeals.length > 0) ||
+        (window.__abTestLabState.selectedPizzaSizes &&
+          window.__abTestLabState.selectedPizzaSizes.length > 0) ||
+        (window.__abTestLabState.selectedPizzaQty &&
+          window.__abTestLabState.selectedPizzaQty.length > 0) ||
+        (window.__abTestLabState.selectedSides &&
+          window.__abTestLabState.selectedSides.length > 0) ||
+        (window.__abTestLabState.selectedPriceRange &&
+          (window.__abTestLabState.selectedPriceRange[0] > 2 ||
+            window.__abTestLabState.selectedPriceRange[1] < 45)));
+
+    // Remove any existing empty state message
+    const existingEmptyState = document.querySelector(".no-deals-message");
+    if (existingEmptyState) {
+      existingEmptyState.remove();
+    }
+
+    // If no filters are applied, reset all cards to their original state and order
+    if (!isFilterActive) {
+      // First hide all cards
+      allCards.forEach((card) => {
+        card.style.display = "none";
+        card.style.order = "";
+      });
+
+      // Then show and reorder cards to match original order
+      if (parent && window.__originalCardOrder) {
+        window.__originalCardOrder.forEach((cardId) => {
+          const card = document.getElementById(cardId);
+          if (card) {
+            card.style.display = "";
+            parent.appendChild(card);
+          }
+        });
+      }
+      return;
+    }
+
+    // If filters are active but no deals match, show empty state
+    if ((!filteredDeals || filteredDeals.length === 0) && isFilterActive) {
+      // Hide all cards
+      allCards.forEach((card) => {
+        card.style.display = "none";
+      });
+
+      // Create and show empty state message
+      if (parent && !document.querySelector(".no-deals-message")) {
+        const emptyState = document.createElement("div");
+        emptyState.className = "no-deals-message";
+        emptyState.style.textAlign = "center";
+        emptyState.style.padding = "40px 20px";
+        emptyState.style.gridColumn = "1 / -1";
+        emptyState.innerHTML = `
+          <div style="font-size: 18px; font-weight: 500; margin-bottom: 10px;">
+            No deals match your filters
+          </div>
+          <div style="color: #666; margin-bottom: 20px;">
+            Try adjusting your filters to see more results
+          </div>
+          <button class="clear-filters-btn" style="
+            background: #006491;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+          ">Clear all filters</button>
+        `;
+
+        parent.appendChild(emptyState);
+
+        // Add click handler for clear filters button
+        const clearBtn = emptyState.querySelector(".clear-filters-btn");
+        if (clearBtn) {
+          clearBtn.addEventListener("click", () => {
+            const state = window.__abTestLabState;
+            if (state) {
+              state.selectedDeals = [];
+              state.selectedPizzaSizes = [];
+              state.selectedPizzaQty = [];
+              state.selectedSides = [];
+              state.selectedPriceRange = [2, 45];
+              state.sort = "";
+              applyDealFilters(state);
+            }
+          });
+        }
+      }
+      return;
+    }
+
     const allowedCardIds = new Set();
 
     filteredDeals.forEach((deal) => {
@@ -902,27 +1007,78 @@
         inner.forEach((d) => d.cardId && allowedCardIds.add(d.cardId));
         // also allow group's own card if present
         if (deal.cardId) allowedCardIds.add(deal.cardId);
-      } else {
-        if (deal.cardId) allowedCardIds.add(deal.cardId);
+      } else if (deal.cardId) {
+        allowedCardIds.add(deal.cardId);
       }
-      window.__allowedDealCardIds = allowedCardIds;
     });
 
-    const allCards = document.querySelectorAll(".base-cards-tray__card--deal");
+    window.__allowedDealCardIds = allowedCardIds;
 
+    // First, hide all cards and reset their order
     allCards.forEach((card) => {
-      const cardId = card.id;
-      if (!cardId) return;
-      card.style.display = allowedCardIds.has(cardId) ? "" : "none";
+      card.style.display = "none";
+      card.style.order = "";
 
-      document.addEventListener("click", function (e) {
-        const groupBtn = e.target.closest(".base-button__container");
-        if (!groupBtn) return;
+      // Remove any group expansion attributes
+      card.removeAttribute("data-group-expanded");
+      card.removeAttribute("data-group-id");
+    });
 
-        const card = groupBtn.closest(".base-cards-tray__card--deal");
-        if (!card) return;
-        card.style.order = "-1";
+    // Then show only the allowed cards
+    filteredDeals.forEach((deal) => {
+      if (!deal || !deal.cardId) return;
 
+      const card = document.getElementById(deal.cardId);
+      if (card) {
+        card.style.display = "";
+
+        // If this is a group deal, set its attributes
+        if (deal.type === "group") {
+          card.setAttribute("data-group-id", deal.id || deal.cardId);
+
+          // Show all child deals directly after the group
+          const innerDeals = deal.deals || deal.matchedDeals || [];
+          let reference = card.nextSibling;
+
+          innerDeals.forEach((innerDeal) => {
+            if (!innerDeal.cardId) return;
+            const childCard = document.getElementById(innerDeal.cardId);
+            if (childCard && childCard.parentNode === parent) {
+              parent.insertBefore(childCard, reference);
+              reference = childCard.nextSibling;
+              childCard.style.display = "";
+              childCard.setAttribute(
+                "data-parent-group",
+                deal.id || deal.cardId
+              );
+            }
+          });
+        }
+      }
+    });
+
+    // Handle group button clicks
+    document.addEventListener("click", function (e) {
+      const groupBtn = e.target.closest(".base-button__container");
+      if (!groupBtn) return;
+
+      const card = groupBtn.closest(".base-cards-tray__card--deal");
+      if (!card) return;
+
+      const isExpanded = card.getAttribute("data-group-expanded") === "true";
+      const groupId = card.getAttribute("data-group-id");
+
+      if (isExpanded) {
+        // Collapse the group
+        card.setAttribute("data-group-expanded", "false");
+        document
+          .querySelectorAll(`[data-parent-group="${groupId}"]`)
+          .forEach((child) => {
+            child.style.display = "none";
+          });
+      } else {
+        // Expand the group
+        card.setAttribute("data-group-expanded", "true");
         const state = window.__abTestLabState;
         if (!state || !state.filteredDeals) return;
 
@@ -934,33 +1090,41 @@
         const innerDeals = Array.isArray(groupDeal.deals)
           ? groupDeal.deals
           : [];
-        const innerIds = innerDeals.map((d) => d.cardId).filter(Boolean);
-
-        // Show child deals directly after parent
         let reference = card.nextSibling;
-        innerIds.forEach((id) => {
-          const childEl = document.getElementById(id);
-          if (!childEl) return;
-          card.parentNode.insertBefore(childEl, reference);
-          reference = childEl.nextSibling;
-          childEl.style.display = ""; // make visible if hidden
-        });
-      });
-    });
 
-    // Reorder DOM cards to match filteredDeals order (if possible)
-    try {
-      const first = document.querySelector(".base-cards-tray__card--deal");
-      const parent = first ? first.parentNode : null;
-      if (parent && Array.isArray(filteredDeals) && filteredDeals.length) {
-        filteredDeals.forEach((deal) => {
-          if (!deal || !deal.cardId) return;
-          const el = document.getElementById(deal.cardId);
-          if (el && el.parentNode === parent) parent.appendChild(el);
+        innerDeals.forEach((innerDeal) => {
+          if (!innerDeal.cardId) return;
+          const childCard = document.getElementById(innerDeal.cardId);
+          if (childCard && childCard.parentNode === card.parentNode) {
+            card.parentNode.insertBefore(childCard, reference);
+            reference = childCard.nextSibling;
+            childCard.style.display = "";
+            childCard.setAttribute("data-parent-group", groupId);
+          }
         });
       }
+    });
+
+    // Handle group expansion
+    try {
+      const expandedGroups = document.querySelectorAll(
+        '.base-cards-tray__card--deal[data-group-expanded="true"]'
+      );
+      expandedGroups.forEach((groupCard) => {
+        const groupId = groupCard.getAttribute("data-group-id");
+        if (groupId) {
+          const childCards = document.querySelectorAll(
+            `[data-parent-group="${groupId}"]`
+          );
+          childCards.forEach((card) => {
+            if (card.parentNode === groupCard.parentNode) {
+              groupCard.parentNode.insertBefore(card, groupCard.nextSibling);
+            }
+          });
+        }
+      });
     } catch (err) {
-      // ignore DOM reordering errors
+      console.error("Error handling group expansion:", err);
     }
   }
 
