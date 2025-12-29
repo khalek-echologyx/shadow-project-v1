@@ -13,3 +13,140 @@ html {
     border: 7px solid #269b11;
   }
 }
+
+// Product Grid Styles
+.product-grid {
+  margin: 2rem auto;
+  padding: 0 1rem;
+  max-width: 1400px;
+  width: 100%;
+
+  &__title {
+    font-size: 1.8rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    color: #333;
+    font-weight: 600;
+  }
+
+  &__container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+    width: 100%;
+  }
+}
+
+// Product Card Styles
+.product-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  &:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  }
+
+  &__image {
+    height: 180px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    background-color: #f8f8f8;
+
+    &-placeholder {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(45deg, #f5f5f5 25%, #e0e0e0 50%, #f5f5f5 75%);
+      background-size: 200% 200%;
+      animation: shimmer 1.5s infinite;
+    }
+  }
+
+  &__content {
+    padding: 1.25rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__name {
+    margin: 0 0 0.75rem 0;
+    font-size: 1.1rem;
+    color: #222;
+    font-weight: 500;
+    line-height: 1.4;
+  }
+
+  &__price {
+    font-size: 1.25rem;
+    color: #e31837;
+    font-weight: 700;
+    margin-top: auto;
+  }
+}
+
+// Animation for placeholder
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 1024px) {
+  .product-grid {
+    &__container {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .product-grid {
+    &__container {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .product-grid {
+    padding: 0 0.75rem;
+    
+    &__container {
+      grid-template-columns: 1fr;
+    }
+    
+    &__title {
+      font-size: 1.5rem;
+    }
+  }
+  
+  .product-card {
+    &__image {
+      height: 160px;
+    }
+    
+    &__name {
+      font-size: 1rem;
+    }
+    
+    &__price {
+      font-size: 1.1rem;
+    }
+  }
+}
