@@ -1,0 +1,38 @@
+html {
+  position: relative;
+}
+html::before {
+  content: "AB test pilot CSS";
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 99999999999;
+  background: #ff0000;
+  color: #ffffff;
+  padding: 10px;
+  border: 7px solid #269b11;
+}
+
+.base-menu-card__new-section {
+  margin: 20px 0;
+}
+
+.variation-has-active-flag {
+  position: relative;
+}
+
+.variation-subnav-active-flag {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 0;
+  background: #006491;
+  opacity: 0;
+  transition: transform 200ms ease, width 200ms ease, opacity 200ms ease;
+  pointer-events: none;
+}
+
+.variation-subnav-active-flag.is-visible {
+  opacity: 1;
+}

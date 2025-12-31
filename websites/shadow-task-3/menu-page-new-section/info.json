@@ -1,0 +1,13 @@
+{
+  "id": "1767105460581_4244_menu_page_new_section",
+  "name": "menu-page-new-section",
+  "type": "A/B",
+  "website": "shadow-task-3",
+  "variations": [
+    "control",
+    "variation-1"
+  ],
+  "createdAt": "2025-12-30T14:37:40.581Z",
+  "createdAtReadable": "12/30/2025, 8:37:40 PM",
+  "lastUpdated": "2025-12-30T14:37:40.720Z"
+}

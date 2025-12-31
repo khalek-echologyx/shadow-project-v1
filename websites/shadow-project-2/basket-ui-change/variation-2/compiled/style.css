@@ -1,0 +1,43 @@
+html {
+  position: relative;
+}
+html::before {
+  content: "AB test pilot CSS";
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 99999999999;
+  background: #ff0000;
+  color: #ffffff;
+  padding: 10px;
+  border: 7px solid #269b11;
+}
+
+.ab-grid-section {
+  width: 100%;
+  padding: 16px 0;
+}
+
+.ab-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}
+.ab-grid > * {
+  width: 100% !important;
+  max-width: 100%;
+  position: static !important;
+  transform: none !important;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .ab-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 640px) {
+  .ab-grid {
+    grid-template-columns: 1fr;
+  }
+}
