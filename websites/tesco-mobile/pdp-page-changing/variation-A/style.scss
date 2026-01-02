@@ -1,0 +1,62 @@
+html {
+  position: relative;
+
+  &::before {
+    content: "AB test pilot CSS";
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 99999999999;
+    background: #ff0000;
+    color: #ffffff;
+    padding: 10px;
+    border: 7px solid #269b11;
+  }
+}
+
+.promo-section{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  background: #fff;
+}
+.promo-item{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.promo-item-content{
+  color: #00539F;
+  font-size: 14px;
+}
+
+.promo-item-img{
+  height: 28px;
+  width: 28px;
+}
+
+.promo-img-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.promo-group-img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+.promo-more-count {
+  font-size: 12px;
+  font-weight: 500;
+  color: #333;
+  margin-top: 5px;
+}
+
+.promo-item-img-group{
+  display: flex;
+  gap: 8px;
+}
+
+

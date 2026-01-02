@@ -1,0 +1,13 @@
+{
+  "id": "1767280011869_2489_pdp_page_changing",
+  "name": "pdp-page-changing",
+  "type": "A/B",
+  "website": "tesco-mobile",
+  "variations": [
+    "control",
+    "variation-A"
+  ],
+  "createdAt": "2026-01-01T15:06:51.869Z",
+  "createdAtReadable": "1/1/2026, 9:06:51 PM",
+  "lastUpdated": "2026-01-01T15:06:52.026Z"
+}
