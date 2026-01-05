@@ -58,3 +58,51 @@ html::before {
   display: flex;
   gap: 8px;
 }
+
+.custom-sidebar-content {
+  margin-top: 20px;
+}
+
+.custom-sidebar-accordion {
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  background: #fff;
+  padding: 10px;
+}
+
+.custom-sidebar-accordion-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.custom-sidebar-accordion-icon {
+  transition: transform 0.3s ease;
+}
+
+.custom-sidebar-accordion-title {
+  font-size: 18px;
+  color: #00539F;
+  font-weight: 600;
+}
+
+.custom-sidebar-accordion-btn {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cust-sidebar-accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease;
+}
+
+.custom-sidebar-accordion-content-text {
+  color: #666666;
+}
+
+.custom-sidebar-accordion-content-inner {
+  padding: 8px 0;
+}
