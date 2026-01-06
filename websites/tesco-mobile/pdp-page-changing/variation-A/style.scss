@@ -100,3 +100,61 @@ color: #666666;
 .custom-sidebar-accordion-content-inner {
   padding: 8px 0;
 }
+
+.payment-select-wrapper {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.payment-select {
+  width: 100%;
+  max-width: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.custom-color-storage-container {
+  display: flex;
+  gap: 16px;
+  margin: 16px 0;
+}
+
+.custom-color,
+.custom-storage {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.custom-color-title,
+.custom-storage-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+.custom-color-options,
+.custom-storage-options {
+  width: 100%;
+  padding: 8px 32px 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  background: #fff;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  
+  // Custom dropdown arrow
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23333' d='M1.41 0L6 4.58 10.59 0 12 1.41l-6 6-6-6z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 12px;
+  
+  &:focus {
+    outline: 2px solid #00539F;
+    outline-offset: 2px;
+  }
+}
