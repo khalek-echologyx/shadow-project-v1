@@ -162,3 +162,80 @@ html::before {
   outline: 2px solid #00539F;
   outline-offset: 2px;
 }
+
+.custom-grid-system {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+}
+
+.custom-cc-savings {
+  display: block !important;
+  flex: 0 0 100%;
+}
+.custom-cc-savings .clubcard-stripe {
+  display: flex;
+  justify-content: flex-start;
+  background-color: #fcd700;
+  color: #333;
+  width: 100%;
+  border-radius: 12px;
+  margin: 5px 0 28px;
+}
+.custom-cc-savings .clubcard-stripe .clubcard-stripe__logo {
+  padding: 0;
+  display: flex;
+  width: 56px;
+  min-height: 56px;
+  background-color: #00539f;
+  border-radius: 12px 0 0 12px;
+  flex: 0 0 56px;
+  border-right: 4px solid #fff;
+}
+.custom-cc-savings .clubcard-stripe .clubcard-stripe__logo span {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  text-align: center;
+  align-items: center;
+  font-size: 10px;
+  line-height: 1;
+  font-weight: 400;
+  font-family: "TESCOModern-Bold", Tahoma, sans-serif;
+  background-color: #00539f;
+  color: #fff;
+}
+.custom-cc-savings .clubcard-stripe .clubcard-stripe__info {
+  font-size: 16px;
+  font-weight: 400;
+  font-family: "TESCOModern-Bold", Tahoma, sans-serif;
+  display: flex;
+  padding: 0 10px;
+  line-height: 1.25;
+  align-content: center;
+  flex-wrap: wrap;
+}
+
+.custom-cc-wrapper {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+}
+.custom-cc-wrapper .field {
+  height: 96px !important;
+}
+.custom-cc-wrapper .field .label {
+  flex-direction: column !important;
+  align-items: start !important;
+}
+.custom-cc-wrapper .field .label .allowance {
+  flex-direction: row !important;
+  align-items: flex-start !important;
+  position: static !important;
+}
+.custom-cc-wrapper .field .label .allowance span {
+  margin-top: -2px !important;
+  margin-left: 4px !important;
+}
+.custom-cc-wrapper .field .label .price .clubcard-price-wrapper .clubcard-price-label {
+  display: none;
+}

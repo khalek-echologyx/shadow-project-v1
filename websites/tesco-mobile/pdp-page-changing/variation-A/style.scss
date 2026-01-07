@@ -14,23 +14,23 @@ html {
   }
 }
 
-.promo-section{
+.promo-section {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   background: #fff;
 }
-.promo-item{
+.promo-item {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.promo-item-content{
+.promo-item-content {
   color: #00539F;
   font-size: 14px;
 }
 
-.promo-item-img{
+.promo-item-img {
   height: 28px;
   width: 28px;
 }
@@ -54,49 +54,52 @@ html {
   margin-top: 5px;
 }
 
-.promo-item-img-group{
+.promo-item-img-group {
   display: flex;
   gap: 8px;
 }
-.custom-sidebar-content{
+.custom-sidebar-content {
   margin-top: 20px;
 }
 
-.custom-sidebar-accordion{
+.custom-sidebar-accordion {
   border-top: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
   background: #fff;
   padding: 10px;
 }
-.custom-sidebar-accordion-header{
+.custom-sidebar-accordion-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   cursor: pointer;
 }
+
 .custom-sidebar-accordion-icon {
   transition: transform 0.3s ease;
 }
 
-.custom-sidebar-accordion-title{
+.custom-sidebar-accordion-title {
   font-size: 18px;
   color: #00539F;
   font-weight: 600;
 }
 
-.custom-sidebar-accordion-btn{
+.custom-sidebar-accordion-btn {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
+
 .cust-sidebar-accordion-content {
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.35s ease;
 }
-.custom-sidebar-accordion-content-text{
-color: #666666;
+.custom-sidebar-accordion-content-text {
+  color: #666666;
 }
+
 .custom-sidebar-accordion-content-inner {
   padding: 8px 0;
 }
@@ -146,15 +149,107 @@ color: #666666;
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-  
+
   // Custom dropdown arrow
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23333' d='M1.41 0L6 4.58 10.59 0 12 1.41l-6 6-6-6z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 12px center;
   background-size: 12px;
-  
+
   &:focus {
     outline: 2px solid #00539F;
     outline-offset: 2px;
+  }
+}
+
+.custom-grid-system {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+
+}
+
+.custom-cc-savings {
+  display: block !important;
+  flex: 0 0 100%;
+
+  .clubcard-stripe {
+    display: flex;
+    justify-content: flex-start;
+    background-color: #fcd700;
+    color: #333;
+    width: 100%;
+    border-radius: 12px;
+    margin: 5px 0 28px;
+  }
+
+  .clubcard-stripe .clubcard-stripe__logo {
+    padding: 0;
+    display: flex;
+    width: 56px;
+    min-height: 56px;
+    background-color: #00539f;
+    border-radius: 12px 0 0 12px;
+    flex: 0 0 56px;
+    border-right: 4px solid #fff;
+  }
+
+  .clubcard-stripe .clubcard-stripe__logo span {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    text-align: center;
+    align-items: center;
+    font-size: 10px;
+    line-height: 1;
+    font-weight: 400;
+    font-family: 'TESCOModern-Bold', Tahoma, sans-serif;
+    background-color: #00539f;
+    color: #fff;
+  }
+
+  .clubcard-stripe .clubcard-stripe__info {
+    font-size: 16px;
+    font-weight: 400;
+    font-family: 'TESCOModern-Bold', Tahoma, sans-serif;
+    display: flex;
+    padding: 0 10px;
+    line-height: 1.25;
+    align-content: center;
+    flex-wrap: wrap;
+  }
+}
+
+.custom-cc-wrapper {
+
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+
+  .field {
+    height: 96px !important;
+
+    .label {
+      flex-direction: column !important;
+      align-items: start !important;
+
+      .allowance {
+        flex-direction: row !important;
+        align-items: flex-start !important;
+        position: static !important;
+
+        span {
+          margin-top: -2px !important;
+          margin-left: 4px !important;
+        }
+      }
+
+      .price {
+        .clubcard-price-wrapper {
+          .clubcard-price-label {
+            display: none;
+          }
+        }
+      }
+    }
   }
 }

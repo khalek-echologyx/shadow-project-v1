@@ -19,6 +19,9 @@
     });
   }
 
+  function poll(t, i, o = !1, e = 10000, a = 25) { e < 0 || (t() ? i() : setTimeout(() => { poll(t, i, o, o ? e : e - a, a) }, a)) }
+
+
   function createObserver(selector, onFound, options = {}) {
     const { root = document.documentElement, timeout = 10000 } = options;
     const el = document.querySelector(selector);
@@ -43,7 +46,7 @@
      TASK 1: APPLE PROMO SIDEBAR
   ========================= */
   function initApplePromo() {
-  /* --- SELECTORS --- */
+    /* --- SELECTORS --- */
     const SELECTORS = {
       promoItems: ".promo-items",
       promoTargetSection: ".view-phone-details",
@@ -530,9 +533,53 @@
      TASK 3: NEW TASK
   ========================= */
   function taskThree() {
-    const chooseDataLabel = document.querySelector(".field.option.required");
-    console.log(chooseDataLabel, "534");
+    // CUSTOM CC WRAPPER SECTIONS
+    poll(
+      () => document.querySelector('.custom-cc-wrapper') && document.querySelector('.cc-savings') && document.querySelector('.tm-option-wrapper.option-type-tariff'),
+      () => {
+        const customCCWrapper = document.querySelector('.custom-cc-wrapper');
+        if (customCCWrapper) {
+          const ccSaving = customCCWrapper.querySelector('.cc-savings');
+          if (!document.querySelector(".custom-cc-savings")) {
+            ccSaving.classList.add('custom-cc-savings');
+            document.querySelector(".tm-option-wrapper.option-type-tariff").insertAdjacentElement("beforebegin", ccSaving);
+          }
+          if (!customCCWrapper.classList.contains("new-cc-wrapper")) {
+            customCCWrapper.classList.add("new-cc-wrapper");
+            const regularPriceWrapper = customCCWrapper.querySelectorAll('.field .label .price .regular-price-wrapper > span');
+            regularPriceWrapper.forEach((price) => {
+              price.innerText = "/month";
+            });
+            const clubPriceWrapper = customCCWrapper.querySelectorAll('.field .label .price .clubcard-price-wrapper .clubcard-price-value');
+            clubPriceWrapper.forEach((span) => {
+              span.innerHTML = span.innerHTML.replace(' a month', '/month');
+            });
+
+          }
+        }
+      }
+    )
+
+    // REGULAR SECTION
+    poll(() => document.querySelector(".nested.options-list") && document.querySelector(".custom-cc-wrapper"), () => {
+      const optionsList = document.querySelector(".nested.options-list");
+      const filteredDataChoices = optionsList.querySelectorAll(".field.choice");
+      const targetccWraper = optionsList.querySelector(".custom-cc-wrapper");
+
+      if (targetccWraper && !optionsList.querySelector(".custom-cc-grid")) {
+        const newGridSection = document.createElement('div');
+        newGridSection.className = 'custom-cc-wrapper custom-cc-grid';
+
+        filteredDataChoices.forEach(choice => {
+          newGridSection.appendChild(choice);
+        });
+
+        targetccWraper.insertAdjacentElement("afterend", newGridSection);
+      }
+    })
   }
+
+
 
 
   /* =========================
