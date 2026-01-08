@@ -253,3 +253,37 @@ html {
     }
   }
 }
+.new-grid-section {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+
+  .field {
+    height: 96px !important;
+
+    .label {
+      flex-direction: column !important;
+      align-items: start !important;
+
+      .allowance {
+        flex-direction: row !important;
+        align-items: flex-start !important;
+        position: static !important;
+
+        span {
+          margin-top: -2px !important;
+          margin-left: 4px !important;
+        }
+      }
+
+      .price {
+        .clubcard-price-wrapper {
+          .clubcard-price-label {
+            display: none;
+          }
+        }
+      }
+    }
+  }
+}

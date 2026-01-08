@@ -561,22 +561,73 @@
     );
 
     // REGULAR SECTION
-    poll(() => document.querySelector(".nested.options-list") && document.querySelector(".custom-cc-wrapper"), () => {
-      const optionsList = document.querySelector(".nested.options-list");
-      const filteredDataChoices = optionsList.querySelectorAll(".field.choice");
-      const targetccWraper = optionsList.querySelector(".custom-cc-wrapper");
+    poll(
+      () =>
+        document.querySelector(".nested.options-list") &&
+        document.querySelector(".custom-cc-wrapper"),
+      () => {
+        const optionsList = document.querySelector(".nested.options-list");
+        const targetccWraper = optionsList.querySelector(".custom-cc-wrapper");
+        const filteredDataChoices = optionsList.querySelectorAll(".field.choice");
 
-      if (targetccWraper && !optionsList.querySelector(".custom-cc-grid")) {
-        const newGridSection = document.createElement('div');
-        newGridSection.className = 'custom-cc-wrapper custom-cc-grid';
+        // 1️⃣ insert template string
+        targetccWraper.insertAdjacentHTML(
+          "afterend",
+          `<div class="new-grid-section"></div>`
+        );
 
-        filteredDataChoices.forEach(choice => {
+        // 2️⃣ get the newly inserted element
+        const newGridSection = optionsList.querySelector(".new-grid-section");
+
+        // 3️⃣ move each choice into the new grid section
+        filteredDataChoices.forEach((choice) => {
           newGridSection.appendChild(choice);
         });
 
-        targetccWraper.insertAdjacentElement("afterend", newGridSection);
+        const regularPriceWrapper = newGridSection.querySelectorAll('.field .label .price .regular-price-wrapper > span');
+        regularPriceWrapper.forEach((price) => {
+          price.innerText = "/month";
+        });
+        const clubPriceWrapper = newGridSection.querySelectorAll('.field .label .price .clubcard-price-wrapper .clubcard-price-value');
+        clubPriceWrapper.forEach((span) => {
+          span.innerHTML = span.innerHTML.replace(' a month', '/month');
+        });
       }
-    });
+    );
+
+    poll(
+      () =>
+        document.querySelector(".nested.options-list"),
+      () => {
+        const optionsList = document.querySelector(".nested.options-list");
+        const filteredDataChoices = optionsList.querySelectorAll(".field.choice");
+
+        // 1️⃣ insert template string
+        optionsList.insertAdjacentHTML(
+          "afterend",
+          `<div class="new-grid-section"></div>`
+        );
+
+        // 2️⃣ get the newly inserted element
+        const newGridSection = optionsList.querySelector(".new-grid-section");
+
+        // 3️⃣ move each choice into the new grid section
+        filteredDataChoices.forEach((choice) => {
+          newGridSection.appendChild(choice);
+        });
+
+        const regularPriceWrapper = newGridSection.querySelectorAll('.field .label .price .regular-price-wrapper > span');
+        regularPriceWrapper.forEach((price) => {
+          price.innerText = "/month";
+        });
+        const clubPriceWrapper = newGridSection.querySelectorAll('.field .label .price .clubcard-price-wrapper .clubcard-price-value');
+        clubPriceWrapper.forEach((span) => {
+          span.innerHTML = span.innerHTML.replace(' a month', '/month');
+        });
+      }
+    );
+
+
   }
 
 

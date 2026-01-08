@@ -239,3 +239,29 @@ html::before {
 .custom-cc-wrapper .field .label .price .clubcard-price-wrapper .clubcard-price-label {
   display: none;
 }
+
+.new-grid-section {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+.new-grid-section .field {
+  height: 96px !important;
+}
+.new-grid-section .field .label {
+  flex-direction: column !important;
+  align-items: start !important;
+}
+.new-grid-section .field .label .allowance {
+  flex-direction: row !important;
+  align-items: flex-start !important;
+  position: static !important;
+}
+.new-grid-section .field .label .allowance span {
+  margin-top: -2px !important;
+  margin-left: 4px !important;
+}
+.new-grid-section .field .label .price .clubcard-price-wrapper .clubcard-price-label {
+  display: none;
+}
