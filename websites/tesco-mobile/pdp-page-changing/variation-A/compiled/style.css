@@ -141,7 +141,8 @@ html::before {
 }
 
 .custom-color-options,
-.custom-storage-options {
+.custom-storage-options,
+.custom-select-ui {
   width: 100%;
   padding: 8px 32px 8px 12px;
   border: 1px solid #ccc;
@@ -152,15 +153,84 @@ html::before {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
+  position: relative;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23333' d='M1.41 0L6 4.58 10.59 0 12 1.41l-6 6-6-6z'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 12px center;
   background-size: 12px;
 }
 .custom-color-options:focus,
-.custom-storage-options:focus {
-  outline: 2px solid #00539F;
+.custom-storage-options:focus,
+.custom-select-ui:focus {
+  outline: 2px solid #00539f;
   outline-offset: 2px;
+}
+
+.custom-select-ui {
+  padding: 0;
+  background-image: none;
+  height: 38px;
+}
+.custom-select-ui .custom-select-selected {
+  padding: 8px 32px 8px 12px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23333' d='M1.41 0L6 4.58 10.59 0 12 1.41l-6 6-6-6z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 12px;
+}
+.custom-select-ui .custom-select-options {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: -1px;
+  right: -1px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-top: none;
+  z-index: 100;
+  max-height: 250px;
+  overflow-y: auto;
+  border-radius: 0 0 4px 4px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.custom-select-ui._open {
+  border-radius: 4px 4px 0 0;
+}
+.custom-select-ui._open .custom-select-options {
+  display: block;
+}
+.custom-select-ui .custom-select-option {
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background 0.2s;
+}
+.custom-select-ui .custom-select-option:hover {
+  background: #f0f7ff;
+}
+.custom-select-ui .custom-select-option.selected {
+  background: #e6f2ff;
+  font-weight: 600;
+}
+.custom-select-ui .color-dot,
+.custom-select-ui .selected-color-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
+.color-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
 }
 
 .custom-grid-system {
@@ -264,4 +334,83 @@ html::before {
 }
 .new-grid-section .field .label .price .clubcard-price-wrapper .clubcard-price-label {
   display: none;
+}
+
+.data-cal-section {
+  margin-top: 20px;
+}
+
+.custom-data-calculator .custom-data-calculator__header-container h1 {
+  color: #00539f;
+  font-size: 24px;
+  line-height: normal;
+  margin: 0 0 8px;
+  font-weight: bold;
+}
+.custom-data-calculator .custom-data-calculator__header-container .subtitle {
+  font-size: 18px;
+}
+.custom-data-calculator .custom-data-calculator__header-container .description {
+  font-size: 13px;
+}
+.custom-data-calculator .custom-data-calculator__content .data-calculator__context {
+  flex-basis: 100%;
+  margin: 0px !important;
+}
+.custom-data-calculator .custom-data-calculator__content .data-calculator__context__row {
+  display: flex;
+  margin: 12px 0;
+}
+.custom-data-calculator .custom-data-calculator__content .data-calculator__context__label {
+  display: block;
+  width: 100%;
+}
+.custom-data-calculator .custom-data-calculator__content .data-calculator__context__label--layout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.custom-data-calculator .custom-data-calculator__content .data-calculator__context__icon {
+  display: initial;
+  margin-right: 3px;
+  width: 27px;
+}
+.custom-data-calculator .custom-data-calculator__content .data-calculator__context__values {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+  border-bottom: 5px solid transparent;
+}
+.custom-data-calculator .custom-data-calculator__content .data-calculator__context__values label {
+  width: 50%;
+}
+.custom-data-calculator .custom-data-calculator__content label {
+  display: unset;
+  margin-bottom: unset;
+}
+.custom-data-calculator .custom-data-calculator__content input {
+  display: none;
+}
+.custom-data-calculator .custom-data-calculator__content input.calc__input {
+  border-color: #00539f;
+  margin-top: 10px;
+  margin-bottom: 18px;
+  padding: 3px;
+  width: 170px;
+}
+.custom-data-calculator .custom-data-calculator__content input:not([disabled], [type=checkbox]),
+.custom-data-calculator .custom-data-calculator__content textarea:not([disabled]) {
+  outline: 2px transparent;
+  background-color: #fff;
+}
+.custom-data-calculator .custom-data-calculator__content .data-calculator__context .button {
+  border-radius: 5px 0 0 0;
+  display: inline-block;
+  width: 100%;
+  border: 1px solid #d9e5eb;
+  background: #ffffff;
+  color: #00539f;
+  font-weight: medium;
+  text-align: center;
+  padding: 6px 0;
 }

@@ -236,6 +236,8 @@
 
     function closeSidebar() {
       const sidebar = document.getElementById("promo-custom-sidebar");
+      if (!sidebar || !sidebar.classList.contains("_show")) return;
+
       const backdrop = document.querySelector("[data-promo-backdrop]");
       const modalWrapper = document.querySelector(".modals-wrapper");
       if (!sidebar || !backdrop || !modalWrapper) return;
@@ -308,7 +310,7 @@
     attachPromoClick("no-eu-roaming", "promotion-trigger-49845199458", "roamingListener");
 
     document.body.addEventListener("click", (e) => {
-      if (e.target.closest(".action-close") || e.target.hasAttribute("data-promo-backdrop")) {
+      if (e.target.closest("#promo-custom-sidebar .action-close") || e.target.hasAttribute("data-promo-backdrop")) {
         closeSidebar();
       }
     });
@@ -423,100 +425,170 @@
         ? [...storageSwatchAttribute.querySelectorAll(".swatch-option")]
         : [];
 
-      // Filter out disabled options and keep track of original indices
+      // Filter out disabled options and keep track of original indices, colors, and labels
       const enabledColorOptions = colorSwatchOptions
-        .map((option, originalIndex) => ({ element: option, originalIndex }))
-        .filter(({ element }) => !element.classList.contains('disabled'));
+        .map((option, originalIndex) => {
+          const colorSpan = option.querySelector(".swatch-color");
+          const bgColor = colorSpan ? colorSpan.style.backgroundColor || getComputedStyle(colorSpan).backgroundColor : "";
+          const label = option.querySelector("span:not(.swatch-color)")?.textContent.trim() || option.textContent.trim();
+          return { element: option, originalIndex, bgColor, label };
+        })
+        .filter(({ element }) => !element.classList.contains("disabled"));
 
       const enabledStorageOptions = storageSwatchOptions
-        .map((option, originalIndex) => ({ element: option, originalIndex }))
-        .filter(({ element }) => !element.classList.contains('disabled'));
+        .map((option, originalIndex) => ({
+          element: option,
+          originalIndex,
+          label: option.textContent.trim(),
+        }))
+        .filter(({ element }) => !element.classList.contains("disabled"));
 
       // Create custom color and storage select dropdowns
       const customColorStorageContainer = `
         <div class="custom-color-storage-container">
           <div class="custom-color">
             <div class="custom-color-title">Colour</div>
-            <select name="color-select" class="custom-color-options">
-              ${enabledColorOptions.map(({ element, originalIndex }) => `
-                <option value="${originalIndex}" ${element.classList.contains('selected') ? 'selected' : ''}>
-                  ${element.textContent.trim()}
-                </option>
-              `).join("")}
-            </select>
+            <div class="custom-select-ui" id="custom-color-select">
+              <div class="custom-select-selected" style="height: auto;">
+                ${enabledColorOptions
+          .filter(({ element }) => element.classList.contains("selected"))
+          .map(
+            (opt) => `
+                  <span class="selected-color-dot" style="background: ${opt.bgColor}"></span>
+                  <span class="selected-label">${opt.label}</span>
+                `
+          )
+          .join("")}
+              </div>
+              <div class="custom-select-options">
+                ${enabledColorOptions
+          .map(
+            (opt) => `
+                  <div class="custom-select-option ${opt.element.classList.contains("selected") ? "selected" : ""}" data-value="${opt.originalIndex}">
+                    <span class="color-dot" style="background: ${opt.bgColor}"></span>
+                    <span class="option-label">${opt.label}</span>
+                  </div>
+                `
+          )
+          .join("")}
+              </div>
+            </div>
           </div>
           <div class="custom-storage">
             <div class="custom-storage-title">Storage</div>
             <select name="storage-select" class="custom-storage-options">
-              ${enabledStorageOptions.map(({ element, originalIndex }) => `
-                <option value="${originalIndex}" ${element.classList.contains('selected') ? 'selected' : ''}>
+              ${enabledStorageOptions
+          .map(
+            ({ element, originalIndex }) => `
+                <option value="${originalIndex}" ${element.classList.contains("selected") ? "selected" : ""}>
                   ${element.textContent.trim()}
                 </option>
-              `).join("")}
+              `
+          )
+        .join("")}
             </select>
           </div>
         </div>
       `;
 
       // Inject custom container before firstChild
-      firstChild.insertAdjacentHTML('beforebegin', customColorStorageContainer);
+      firstChild.insertAdjacentHTML("beforebegin", customColorStorageContainer);
 
       // Get references to the custom select elements
-      const colorSelectEl = document.querySelector('.custom-color-options');
-      const storageSelectEl = document.querySelector('.custom-storage-options');
+      const colorSelectUI = document.getElementById("custom-color-select");
+      const storageSelectEl = document.querySelector(".custom-storage-options");
 
       // Function to update select options based on current enabled/disabled state
       function updateSelectOptions() {
-        // Re-check current state of swatches
+        // Re-check current state of color swatches
         const currentColorOptions = colorSwatchOptions
-          .map((option, originalIndex) => ({ element: option, originalIndex }))
-          .filter(({ element }) => !element.classList.contains('disabled'));
+          .map((option, originalIndex) => {
+            const colorSpan = option.querySelector(".swatch-color");
+            const bgColor = colorSpan ? colorSpan.style.backgroundColor || getComputedStyle(colorSpan).backgroundColor : "";
+            const label = option.querySelector("span:not(.swatch-color)")?.textContent.trim() || option.textContent.trim();
+            return { element: option, originalIndex, bgColor, label };
+          })
+          .filter(({ element }) => !element.classList.contains("disabled"));
 
+        // Update Color UI Options
+        const optionsContainer = colorSelectUI.querySelector(".custom-select-options");
+        optionsContainer.innerHTML = currentColorOptions
+          .map(
+            (opt) => `
+          <div class="custom-select-option ${opt.element.classList.contains("selected") ? "selected" : ""}" data-value="${opt.originalIndex}">
+            <span class="color-dot" style="background: ${opt.bgColor}"></span>
+            <span class="option-label">${opt.label}</span>
+          </div>
+        `
+          )
+          .join("");
+
+        // Update Color UI Selected State
+        const selectedDisplay = colorSelectUI.querySelector(".custom-select-selected");
+        const activeOpt = currentColorOptions.find(({ element }) => element.classList.contains("selected"));
+        if (activeOpt) {
+          selectedDisplay.innerHTML = `
+            <span class="selected-color-dot" style="background: ${activeOpt.bgColor}"></span>
+            <span class="selected-label">${activeOpt.label}</span>
+          `;
+        }
+
+        // Re-check storage swatches
         const currentStorageOptions = storageSwatchOptions
           .map((option, originalIndex) => ({ element: option, originalIndex }))
-          .filter(({ element }) => !element.classList.contains('disabled'));
-
-        // Get currently selected values
-        const selectedColorIndex = colorSelectEl.value;
-        const selectedStorageIndex = storageSelectEl.value;
-
-        // Rebuild color options
-        colorSelectEl.innerHTML = currentColorOptions.map(({ element, originalIndex }) => `
-          <option value="${originalIndex}" ${element.classList.contains('selected') ? 'selected' : ''}>
-            ${element.textContent.trim()}
-          </option>
-        `).join('');
+          .filter(({ element }) => !element.classList.contains("disabled"));
 
         // Rebuild storage options
-        storageSelectEl.innerHTML = currentStorageOptions.map(({ element, originalIndex }) => `
-          <option value="${originalIndex}" ${element.classList.contains('selected') ? 'selected' : ''}>
+        storageSelectEl.innerHTML = currentStorageOptions
+          .map(
+            ({ element, originalIndex }) => `
+          <option value="${originalIndex}" ${element.classList.contains("selected") ? "selected" : ""}>
             ${element.textContent.trim()}
           </option>
-        `).join('');
+        `
+          )
+          .join("");
       }
 
-      // Color select change handler
-      if (colorSelectEl) {
-        colorSelectEl.addEventListener('change', (e) => {
-          const selectedIndex = parseInt(e.target.value, 10);
-          const targetSwatch = colorSwatchOptions[selectedIndex];
-          if (targetSwatch) {
-            targetSwatch.click();
-            // Update options after a short delay to allow DOM to update
-            setTimeout(() => updateSelectOptions(), 100);
+      // Color select UI click handlers
+      if (colorSelectUI) {
+        const selectedDisplay = colorSelectUI.querySelector(".custom-select-selected");
+        selectedDisplay.addEventListener("click", () => {
+          colorSelectUI.classList.toggle("_open");
+        });
+
+        colorSelectUI.addEventListener("click", (e) => {
+          const optionEl = e.target.closest(".custom-select-option");
+          if (optionEl) {
+            const selectedIndex = parseInt(optionEl.dataset.value, 10);
+            const targetSwatch = colorSwatchOptions[selectedIndex];
+            if (targetSwatch) {
+              targetSwatch.click();
+              colorSelectUI.classList.remove("_open");
+              // Update options after a short delay to allow DOM to update
+              setTimeout(() => updateSelectOptions(), 150);
+            }
+          }
+        });
+
+        // Close when clicking outside
+        document.addEventListener("click", (e) => {
+          if (!colorSelectUI.contains(e.target)) {
+            colorSelectUI.classList.remove("_open");
           }
         });
       }
 
       // Storage select change handler
       if (storageSelectEl) {
-        storageSelectEl.addEventListener('change', (e) => {
+        storageSelectEl.addEventListener("change", (e) => {
           const selectedIndex = parseInt(e.target.value, 10);
           const targetSwatch = storageSwatchOptions[selectedIndex];
           if (targetSwatch) {
             targetSwatch.click();
-            // Update options after a short delay to allow DOM to update
-            setTimeout(() => updateSelectOptions(), 100);
+            // IMPORTANT: When storage changes, available colors often change.
+            // We wait for the DOM to update then refresh the color dropdown.
+            setTimeout(() => updateSelectOptions(), 200);
           }
         });
       }
@@ -626,7 +698,203 @@
         });
       }
     );
+  }
 
+  // DATA CALCULATOR
+  function taskFour() {
+    const DATA_CALCULATOR_ITEMS = [
+      {
+        key: "browsing",
+        name: "Browsing",
+        icon: "click.png",
+        rate: 0.015,
+        unit: "hours",
+        options: [
+          { label: "Never", value: 0 },
+          { label: "30 mins", value: 30 },
+          { label: "1 hour", value: 60 },
+          { label: "2 hours", value: 120 },
+          { label: "4 hours", value: 240 }
+        ]
+      },
+      {
+        key: "social",
+        name: "Social",
+        icon: "facebook.png",
+        rate: 0.018,
+        options: [
+          { label: "Never", value: 0 },
+          { label: "30 mins", value: 30 },
+          { label: "1 hour", value: 60 },
+          { label: "2 hours", value: 120 },
+          { label: "4 hours", value: 240 }
+        ]
+      },
+      {
+        key: "music",
+        name: "Music",
+        icon: "headphone.png",
+        rate: 0.16,
+        options: [
+          { label: "Never", value: 0 },
+          { label: "30 mins", value: 30 },
+          { label: "1 hour", value: 60 },
+          { label: "2 hours", value: 120 },
+          { label: "4 hours", value: 240 }
+        ]
+      },
+      {
+        key: "emails",
+        name: "Emails",
+        icon: "email.png",
+        rate: 0.003,
+        options: [
+          { label: "0", value: 0 },
+          { label: "20", value: 20 },
+          { label: "100", value: 100 },
+          { label: "200", value: 200 },
+          { label: "300", value: 300 }
+        ]
+      },
+      {
+        key: "apps",
+        name: "Apps",
+        icon: "apps.png",
+        rate: 0.098,
+        options: [
+          { label: "0", value: 0 },
+          { label: "5", value: 5 },
+          { label: "10", value: 10 },
+          { label: "20", value: 20 },
+          { label: "30", value: 30 }
+        ]
+      }
+    ];
+
+    const iconBasePath =
+      "/etc.clientlibs/tescomobile/clientlibs/clientlib-site/resources/images";
+
+    function renderOptions({ key, options, unit }) {
+      return options
+        .map(
+          ({ label, value }) => `
+        <label>
+          <input type="radio"
+                 class="calc__input"
+                 name="${key}"
+                 value="${value}"
+                 ${unit ? `data-unit="${unit}"` : ""}>
+          <span class="button button--alpha">${label}</span>
+        </label>
+      `
+        )
+        .join("");
+    }
+
+    function renderRow(item) {
+      return `
+        <div class="data-calculator__context__row">
+          <div class="data-calculator__context__label">
+            <div class="data-calculator__context__label--layout">
+              <img class="data-calculator__context__icon"
+                  src="${iconBasePath}/${item.icon}"
+                  alt="${item.name}">
+              <strong class="data-calculator__context__name">${item.name}</strong>
+            </div>
+          </div>
+
+          <div class="data-calculator__context__values button-group"
+              data-group="${item.key}"
+              data-value="${item.rate}">
+            ${renderOptions(item)}
+          </div>
+        </div>
+      `;
+    }
+    function dataCalculatorSidebarTemplate() {
+      return `
+        <aside id="data-cal-sidebar"
+              class="modal-slide spotify cart-slider show-close _inner-scroll"
+              tabindex="0"
+              role="dialog"
+              data-role="modal"
+              data-type="slide">
+
+          <div class="modal-inner-wrap">
+            <header class="modal-header">
+              <button class="action-close" data-role="closeBtn" type="button">
+                <span>Close</span>
+              </button>
+            </header>
+
+            <div class="modal-content" data-role="content">
+              <div class="custom-data-calculator">
+                <section class="custom-data-calculator__header-container">
+                  <div>
+                    <h1>How much data do I need?</h1>
+                    <p class="subtitle">Select your typical <strong>daily internet usage</strong> from the options
+                      below</p>
+                    <p class="description">We’ll then estimate your monthly mobile data usage to help find the
+                      right tariff for you</p>
+                  </div>
+                </section>
+                <section class="custom-data-calculator__content">
+                  <div class="data-calculator__context">
+                    ${DATA_CALCULATOR_ITEMS.map(renderRow).join("")}
+                  </div>
+              </div>
+            </div>
+          </div>
+        </aside>
+
+        <div class="promo-sidebar-backdrop" data-promo-backdrop style="display:none"></div>
+      `;
+    }
+
+
+    document.body.insertAdjacentHTML("beforeend", dataCalculatorSidebarTemplate());
+
+    function openDataCalculatorSidebar() {
+      const sidebar = document.getElementById("data-cal-sidebar");
+      const backdrop = document.querySelector("[data-promo-backdrop]");
+      const modalWrapper = document.querySelector(".modals-wrapper");
+      if (!sidebar || !backdrop || !modalWrapper) return;
+      if (!document.querySelector(".modals-overlay")) {
+        modalWrapper.insertAdjacentHTML("beforebegin", `<div class="modals-overlay" style="z-index: 901;"></div>`);
+      }
+      document.body.classList.add("_has-modal");
+      sidebar.classList.add("_show");
+      sidebar.style.zIndex = "902";
+    }
+
+    function closeDataCalculatorSidebar() {
+      const sidebar = document.getElementById("data-cal-sidebar");
+      if (!sidebar || !sidebar.classList.contains("_show")) return;
+
+      const backdrop = document.querySelector("[data-promo-backdrop]");
+      const modalWrapper = document.querySelector(".modals-wrapper");
+      if (!sidebar || !backdrop || !modalWrapper) return;
+      const overlay = document.querySelector(".modals-overlay");
+      if (overlay) overlay.remove();
+      document.body.classList.remove("_has-modal");
+      sidebar.classList.remove("_show");
+    }
+
+    document.body.addEventListener("click", (e) => {
+      if (e.target.closest(".modals-overlay") || e.target.closest("#data-cal-sidebar .action-close")) {
+        closeDataCalculatorSidebar();
+      }
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeDataCalculatorSidebar();
+    });
+
+    const targetDataCalculator = document.getElementById("tariff-hint");
+    targetDataCalculator.addEventListener("click", (e) => {
+      e.preventDefault();
+      openDataCalculatorSidebar();
+    })
 
   }
 
@@ -651,6 +919,12 @@
 
     try {
       taskThree();
+    } catch (e) {
+      console.error("Error in New Task Init:", e);
+    }
+
+    try {
+      taskFour();
     } catch (e) {
       console.error("Error in New Task Init:", e);
     }
