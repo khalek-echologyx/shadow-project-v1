@@ -19,8 +19,14 @@
     });
   }
 
-  function poll(t, i, o = !1, e = 10000, a = 25) { e < 0 || (t() ? i() : setTimeout(() => { poll(t, i, o, o ? e : e - a, a) }, a)) }
-
+  function poll(t, i, o = !1, e = 10000, a = 25) {
+    e < 0 ||
+      (t()
+        ? i()
+        : setTimeout(() => {
+          poll(t, i, o, o ? e : e - a, a);
+        }, a));
+  }
 
   function createObserver(selector, onFound, options = {}) {
     const { root = document.documentElement, timeout = 10000 } = options;
@@ -60,36 +66,36 @@
         accrodionState: [
           {
             title: "Apple TV+",
-            content: `Eligible Handsets:\niPhone 17\niPhone 17 Pro\niPhone 17 Pro Max\niPhone Air\niPhone 16 with Apple iPad A16\niPhone 16e\niPhone 16 Pro Max\niPhone 16 Pro Max with Apple Watch Series 10\niPhone 16 Pro\niPhone 16 Plus\niPhone 16\niPhone 15 Pro Max\niPhone 15\niPhone 14\niPhone 13\n\nHow to claim 3 months of Apple TV+\n\nTurn on your new iPhone and sign in with your Apple ID.\nOpen the Apple TV app. Make sure your eligible device is running the latest version of iOS, iPad OS, tvOS, or macOS.\nThe offer should appear immediately after you launch the Apple TV app. If not, scroll down in Watch Now until the offer appears.\nTap Enjoy 3 months Free. You might be asked to enter your Apple ID password, confirm your billing information, or add a valid payment method.\nNew subscribers get three months of Apple News+ free when you buy a new iPhone, subject to the terms and conditions.\n\nClick Here for Full Terms & Conditions.\n\n£9.99/month after free trial. One subscription per Family Sharing group. Offer good for 3 months after eligible device activation. Plan automatically renews until cancelled. Restrictions and other terms apply. See apple.com/uk/promo for more information.`
+            content: `Eligible Handsets:\niPhone 17\niPhone 17 Pro\niPhone 17 Pro Max\niPhone Air\niPhone 16 with Apple iPad A16\niPhone 16e\niPhone 16 Pro Max\niPhone 16 Pro Max with Apple Watch Series 10\niPhone 16 Pro\niPhone 16 Plus\niPhone 16\niPhone 15 Pro Max\niPhone 15\niPhone 14\niPhone 13\n\nHow to claim 3 months of Apple TV+\n\nTurn on your new iPhone and sign in with your Apple ID.\nOpen the Apple TV app. Make sure your eligible device is running the latest version of iOS, iPad OS, tvOS, or macOS.\nThe offer should appear immediately after you launch the Apple TV app. If not, scroll down in Watch Now until the offer appears.\nTap Enjoy 3 months Free. You might be asked to enter your Apple ID password, confirm your billing information, or add a valid payment method.\nNew subscribers get three months of Apple News+ free when you buy a new iPhone, subject to the terms and conditions.\n\nClick Here for Full Terms & Conditions.\n\n£9.99/month after free trial. One subscription per Family Sharing group. Offer good for 3 months after eligible device activation. Plan automatically renews until cancelled. Restrictions and other terms apply. See apple.com/uk/promo for more information.`,
           },
           {
             title: "Apple Music",
-            content: `Eligible Handsets:\niPhone 17\niPhone 17 Pro\niPhone 17 Pro Max\niPhone Air\niPhone 16 with Apple iPad A16\niPhone 16e\niPhone 16 Pro Max\niPhone 16 Pro Max with Apple Watch Series 10\niPhone 16 Pro\niPhone 16 Plus\niPhone 16\niPhone 15 Pro Max\niPhone 15\niPhone 14\niPhone 13\n\nHow to claim 3 months of Apple TV+\n\nTurn on your new iPhone and sign in with your Apple ID.\nOpen the Apple TV app. Make sure your eligible device is running the latest version of iOS, iPad OS, tvOS, or macOS.\nThe offer should appear immediately after you launch the Apple TV app. If not, scroll down in Watch Now until the offer appears.\nTap Enjoy 3 months Free. You might be asked to enter your Apple ID password, confirm your billing information, or add a valid payment method.\nNew subscribers get three months of Apple News+ free when you buy a new iPhone, subject to the terms and conditions.\n\nClick Here for Full Terms & Conditions.\n\n£9.99/month after free trial. One subscription per Family Sharing group. Offer good for 3 months after eligible device activation. Plan automatically renews until cancelled. Restrictions and other terms apply. See apple.com/uk/promo for more information.`
+            content: `Eligible Handsets:\niPhone 17\niPhone 17 Pro\niPhone 17 Pro Max\niPhone Air\niPhone 16 with Apple iPad A16\niPhone 16e\niPhone 16 Pro Max\niPhone 16 Pro Max with Apple Watch Series 10\niPhone 16 Pro\niPhone 16 Plus\niPhone 16\niPhone 15 Pro Max\niPhone 15\niPhone 14\niPhone 13\n\nHow to claim 3 months of Apple TV+\n\nTurn on your new iPhone and sign in with your Apple ID.\nOpen the Apple TV app. Make sure your eligible device is running the latest version of iOS, iPad OS, tvOS, or macOS.\nThe offer should appear immediately after you launch the Apple TV app. If not, scroll down in Watch Now until the offer appears.\nTap Enjoy 3 months Free. You might be asked to enter your Apple ID password, confirm your billing information, or add a valid payment method.\nNew subscribers get three months of Apple News+ free when you buy a new iPhone, subject to the terms and conditions.\n\nClick Here for Full Terms & Conditions.\n\n£9.99/month after free trial. One subscription per Family Sharing group. Offer good for 3 months after eligible device activation. Plan automatically renews until cancelled. Restrictions and other terms apply. See apple.com/uk/promo for more information.`,
           },
           {
             title: "Apple Fintess +",
-            content: "Lorem"
+            content: "Lorem",
           },
           {
             title: "Apple Arcade",
-            content: "Lorem"
+            content: "Lorem",
           },
           {
             title: "Apple News +",
-            content: "Lorem"
-          }
-        ]
+            content: "Lorem",
+          },
+        ],
       };
     }
 
     /* --- HELPERS --- */
     function renderPromoImages(items) {
       if (!Array.isArray(items) || items.length <= 2) return "";
-      const usableItems = items.slice(2).filter(item => item.image);
+      const usableItems = items.slice(2).filter((item) => item.image);
       const displayItems = usableItems.slice(0, 3);
       const remaining = usableItems.length - displayItems.length;
       let html = "";
-      displayItems.forEach(item => {
+      displayItems.forEach((item) => {
         if (item.image) {
           html += `<img class="promo-item-img" src="${item.image}" alt="" loading="lazy">`;
         }
@@ -139,36 +145,43 @@
           <path d="M18.3026 14.6047L12.0003 8.06909L5.69238 14.6044L6.77166 15.6462L11.9998 10.2295L17.2228 15.6459L18.3026 14.6047Z" fill="#00539F"/>
         </svg>`;
 
-      const accordions = document.querySelectorAll('.custom-sidebar-accordion');
+      const accordions = document.querySelectorAll(".custom-sidebar-accordion");
       if (!accordions.length) return;
 
       accordions.forEach((acc, index) => {
-        const content = acc.querySelector('.cust-sidebar-accordion-content');
-        const icon = acc.querySelector('.custom-sidebar-accordion-icon');
+        const content = acc.querySelector(".cust-sidebar-accordion-content");
+        const icon = acc.querySelector(".custom-sidebar-accordion-icon");
         if (index === 0) {
-          acc.classList.add('_open');
-          content.style.maxHeight = content.scrollHeight + 'px';
+          acc.classList.add("_open");
+          content.style.maxHeight = content.scrollHeight + "px";
           icon.innerHTML = ACCORDION_ICON_EXPANDED;
         } else {
           icon.innerHTML = ACCORDION_ICON_COLLAPSED;
         }
       });
 
-      accordions.forEach(accordion => {
-        const header = accordion.querySelector('.custom-sidebar-accordion-header');
-        const content = accordion.querySelector('.cust-sidebar-accordion-content');
-        const icon = accordion.querySelector('.custom-sidebar-accordion-icon');
+      accordions.forEach((accordion) => {
+        const header = accordion.querySelector(
+          ".custom-sidebar-accordion-header"
+        );
+        const content = accordion.querySelector(
+          ".cust-sidebar-accordion-content"
+        );
+        const icon = accordion.querySelector(".custom-sidebar-accordion-icon");
 
-        header.addEventListener('click', () => {
-          const isOpen = accordion.classList.contains('_open');
-          accordions.forEach(acc => {
-            acc.classList.remove('_open');
-            acc.querySelector('.cust-sidebar-accordion-content').style.maxHeight = null;
-            acc.querySelector('.custom-sidebar-accordion-icon').innerHTML = ACCORDION_ICON_COLLAPSED;
+        header.addEventListener("click", () => {
+          const isOpen = accordion.classList.contains("_open");
+          accordions.forEach((acc) => {
+            acc.classList.remove("_open");
+            acc.querySelector(
+              ".cust-sidebar-accordion-content"
+            ).style.maxHeight = null;
+            acc.querySelector(".custom-sidebar-accordion-icon").innerHTML =
+              ACCORDION_ICON_COLLAPSED;
           });
           if (!isOpen) {
-            accordion.classList.add('_open');
-            content.style.maxHeight = content.scrollHeight + 'px';
+            accordion.classList.add("_open");
+            content.style.maxHeight = content.scrollHeight + "px";
             icon.innerHTML = ACCORDION_ICON_EXPANDED;
           }
         });
@@ -227,7 +240,10 @@
       const modalWrapper = document.querySelector(".modals-wrapper");
       if (!sidebar || !backdrop || !modalWrapper) return;
       if (!document.querySelector(".modals-overlay")) {
-        modalWrapper.insertAdjacentHTML("beforebegin", `<div class="modals-overlay" style="z-index: 901;"></div>`);
+        modalWrapper.insertAdjacentHTML(
+          "beforebegin",
+          `<div class="modals-overlay" style="z-index: 901;"></div>`
+        );
       }
       document.body.classList.add("_has-modal");
       sidebar.classList.add("_show");
@@ -260,7 +276,10 @@
     if (!target || document.querySelector(".promo-section")) return;
 
     if (!document.getElementById("promo-custom-sidebar")) {
-      document.body.insertAdjacentHTML("beforeend", sidebarTemplate(globalState));
+      document.body.insertAdjacentHTML(
+        "beforeend",
+        sidebarTemplate(globalState)
+      );
     }
     target.insertAdjacentHTML("afterend", promoSection());
 
@@ -274,8 +293,8 @@
 
     createObserver(SELECTORS.promoItems, (promoItems) => {
       const formatted = [...promoItems.querySelectorAll(".sale-type")]
-        .filter(item => item.offsetParent !== null)
-        .map(item => {
+        .filter((item) => item.offsetParent !== null)
+        .map((item) => {
           const img = item.querySelector("img");
           const text = item.querySelector(".promo-content");
           return {
@@ -297,20 +316,39 @@
       el.dataset[flag] = "1";
       el.addEventListener("click", () => {
         const clickIt = (node) => {
-          try { node.click(); }
-          catch { node.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true })); }
+          try {
+            node.click();
+          } catch {
+            node.dispatchEvent(
+              new MouseEvent("click", { bubbles: true, cancelable: true })
+            );
+          }
         };
         const trigger = document.getElementById(triggerId);
-        if (trigger) { clickIt(trigger); return; }
+        if (trigger) {
+          clickIt(trigger);
+          return;
+        }
         createObserver(`#${triggerId}`, clickIt, { timeout: 5000 });
       });
     }
 
-    attachPromoClick("frozen-prices", "promotion-trigger-49632199458", "frozenListener");
-    attachPromoClick("no-eu-roaming", "promotion-trigger-49845199458", "roamingListener");
+    attachPromoClick(
+      "frozen-prices",
+      "promotion-trigger-49632199458",
+      "frozenListener"
+    );
+    attachPromoClick(
+      "no-eu-roaming",
+      "promotion-trigger-49845199458",
+      "roamingListener"
+    );
 
     document.body.addEventListener("click", (e) => {
-      if (e.target.closest("#promo-custom-sidebar .action-close") || e.target.hasAttribute("data-promo-backdrop")) {
+      if (
+        e.target.closest("#promo-custom-sidebar .action-close") ||
+        e.target.hasAttribute("data-promo-backdrop")
+      ) {
         closeSidebar();
       }
     });
@@ -327,33 +365,40 @@
     const labelSpan = document.querySelector(
       ".product-type-switcher .swatch-attribute > .swatch-attribute-label"
     );
-    const paymentOptionsWrapper = document.querySelector(".swatch-attribute-options");
+    const paymentOptionsWrapper = document.querySelector(
+      ".swatch-attribute-options"
+    );
 
     if (!labelSpan || !paymentOptionsWrapper) return;
     if (document.querySelector(".payment-select-wrapper")) return;
 
-    const paymentOptions = [...paymentOptionsWrapper.querySelectorAll(".swatch-option-item")]
-      .map(item => ({
-        label: item.querySelector("span")?.textContent.trim(),
-        value: item.dataset.name,
-        el: item
-      }));
+    const paymentOptions = [
+      ...paymentOptionsWrapper.querySelectorAll(".swatch-option-item"),
+    ].map((item) => ({
+      label: item.querySelector("span")?.textContent.trim(),
+      value: item.dataset.name,
+      el: item,
+    }));
 
-    const selectedText = paymentOptionsWrapper.querySelector(
-      ".swatch-option-item.selected span"
-    )?.textContent.trim();
+    const selectedText = paymentOptionsWrapper
+      .querySelector(".swatch-option-item.selected span")
+      ?.textContent.trim();
 
     const paymentSelect = `
     <div class="payment-select-wrapper">
       <select name="payment-select" class="payment-select">
-        ${paymentOptions.map(option => `
+        ${paymentOptions
+        .map(
+          (option) => `
           <option 
             value="${option.value}" 
             ${option.label === selectedText ? "selected" : ""}
           >
             ${option.label}
           </option>
-        `).join("")}
+        `
+        )
+      .join("")}
       </select>
     </div>
   `;
@@ -366,7 +411,7 @@
       const selectedValue = e.target.value;
 
       const targetSwatch = paymentOptions.find(
-        opt => opt.value === selectedValue
+        (opt) => opt.value === selectedValue
       )?.el;
 
       if (targetSwatch) {
@@ -374,9 +419,7 @@
       }
     });
 
-    paymentOptionsWrapper.style.display = "none"
-
-
+    paymentOptionsWrapper.style.display = "none";
 
     // COLOR AND STORAGE SELECT FUNCTIONALITY
     function waitForFirstElement(parent, cb) {
@@ -397,7 +440,9 @@
       observer.observe(parent, { childList: true });
     }
 
-    const colorAndStorageSelect = document.getElementById("tm-deal-device-wrapper");
+    const colorAndStorageSelect = document.getElementById(
+      "tm-deal-device-wrapper"
+    );
     if (!colorAndStorageSelect) return;
 
     waitForFirstElement(colorAndStorageSelect, (firstChild) => {
@@ -406,8 +451,10 @@
       let colorSwatchAttribute = null;
       let storageSwatchAttribute = null;
 
-      swatchAttributes.forEach(attr => {
-        const label = attr.querySelector(".swatch-attribute-label")?.textContent.trim();
+      swatchAttributes.forEach((attr) => {
+        const label = attr
+          .querySelector(".swatch-attribute-label")
+          ?.textContent.trim();
         if (label === "Colour" || label === "Color") {
           colorSwatchAttribute = attr;
         } else if (label === "Storage") {
@@ -429,8 +476,14 @@
       const enabledColorOptions = colorSwatchOptions
         .map((option, originalIndex) => {
           const colorSpan = option.querySelector(".swatch-color");
-          const bgColor = colorSpan ? colorSpan.style.backgroundColor || getComputedStyle(colorSpan).backgroundColor : "";
-          const label = option.querySelector("span:not(.swatch-color)")?.textContent.trim() || option.textContent.trim();
+          const bgColor = colorSpan
+            ? colorSpan.style.backgroundColor ||
+            getComputedStyle(colorSpan).backgroundColor
+            : "";
+          const label =
+            option
+              .querySelector("span:not(.swatch-color)")
+              ?.textContent.trim() || option.textContent.trim();
           return { element: option, originalIndex, bgColor, label };
         })
         .filter(({ element }) => !element.classList.contains("disabled"));
@@ -451,26 +504,28 @@
             <div class="custom-select-ui" id="custom-color-select">
               <div class="custom-select-selected" style="height: auto;">
                 ${enabledColorOptions
-          .filter(({ element }) => element.classList.contains("selected"))
-          .map(
-            (opt) => `
+        .filter(({ element }) =>
+          element.classList.contains("selected")
+        )
+        .map(
+          (opt) => `
                   <span class="selected-color-dot" style="background: ${opt.bgColor}"></span>
                   <span class="selected-label">${opt.label}</span>
                 `
-          )
-          .join("")}
+      )
+        .join("")}
               </div>
               <div class="custom-select-options">
                 ${enabledColorOptions
-          .map(
-            (opt) => `
+        .map(
+          (opt) => `
                   <div class="custom-select-option ${opt.element.classList.contains("selected") ? "selected" : ""}" data-value="${opt.originalIndex}">
                     <span class="color-dot" style="background: ${opt.bgColor}"></span>
                     <span class="option-label">${opt.label}</span>
                   </div>
                 `
-          )
-          .join("")}
+      )
+        .join("")}
               </div>
             </div>
           </div>
@@ -478,13 +533,13 @@
             <div class="custom-storage-title">Storage</div>
             <select name="storage-select" class="custom-storage-options">
               ${enabledStorageOptions
-          .map(
-            ({ element, originalIndex }) => `
+        .map(
+          ({ element, originalIndex }) => `
                 <option value="${originalIndex}" ${element.classList.contains("selected") ? "selected" : ""}>
                   ${element.textContent.trim()}
                 </option>
               `
-          )
+      )
         .join("")}
             </select>
           </div>
@@ -504,14 +559,22 @@
         const currentColorOptions = colorSwatchOptions
           .map((option, originalIndex) => {
             const colorSpan = option.querySelector(".swatch-color");
-            const bgColor = colorSpan ? colorSpan.style.backgroundColor || getComputedStyle(colorSpan).backgroundColor : "";
-            const label = option.querySelector("span:not(.swatch-color)")?.textContent.trim() || option.textContent.trim();
+            const bgColor = colorSpan
+              ? colorSpan.style.backgroundColor ||
+              getComputedStyle(colorSpan).backgroundColor
+              : "";
+            const label =
+              option
+                .querySelector("span:not(.swatch-color)")
+                ?.textContent.trim() || option.textContent.trim();
             return { element: option, originalIndex, bgColor, label };
           })
           .filter(({ element }) => !element.classList.contains("disabled"));
 
         // Update Color UI Options
-        const optionsContainer = colorSelectUI.querySelector(".custom-select-options");
+        const optionsContainer = colorSelectUI.querySelector(
+          ".custom-select-options"
+        );
         optionsContainer.innerHTML = currentColorOptions
           .map(
             (opt) => `
@@ -524,8 +587,12 @@
           .join("");
 
         // Update Color UI Selected State
-        const selectedDisplay = colorSelectUI.querySelector(".custom-select-selected");
-        const activeOpt = currentColorOptions.find(({ element }) => element.classList.contains("selected"));
+        const selectedDisplay = colorSelectUI.querySelector(
+          ".custom-select-selected"
+        );
+        const activeOpt = currentColorOptions.find(({ element }) =>
+          element.classList.contains("selected")
+        );
         if (activeOpt) {
           selectedDisplay.innerHTML = `
             <span class="selected-color-dot" style="background: ${activeOpt.bgColor}"></span>
@@ -552,7 +619,9 @@
 
       // Color select UI click handlers
       if (colorSelectUI) {
-        const selectedDisplay = colorSelectUI.querySelector(".custom-select-selected");
+        const selectedDisplay = colorSelectUI.querySelector(
+          ".custom-select-selected"
+        );
         selectedDisplay.addEventListener("click", () => {
           colorSelectUI.classList.toggle("_open");
         });
@@ -594,11 +663,8 @@
       }
 
       // Hide the original firstChild
-      firstChild.style.display = 'none';
+      firstChild.style.display = "none";
     });
-
-
-
   }
 
   /* =========================
@@ -607,30 +673,38 @@
   function taskThree() {
     // CUSTOM CC WRAPPER SECTIONS
     poll(
-      () => document.querySelector('.custom-cc-wrapper') && document.querySelector('.cc-savings') && document.querySelector('.tm-option-wrapper.option-type-tariff'),
+      () =>
+        document.querySelector(".custom-cc-wrapper") &&
+        document.querySelector(".cc-savings") &&
+        document.querySelector(".tm-option-wrapper.option-type-tariff"),
       () => {
-        const customCCWrapper = document.querySelector('.custom-cc-wrapper');
+        const customCCWrapper = document.querySelector(".custom-cc-wrapper");
         if (customCCWrapper) {
-          const ccSaving = customCCWrapper.querySelector('.cc-savings');
+          const ccSaving = customCCWrapper.querySelector(".cc-savings");
           if (!document.querySelector(".custom-cc-savings")) {
-            ccSaving.classList.add('custom-cc-savings');
-            document.querySelector(".tm-option-wrapper.option-type-tariff").insertAdjacentElement("beforebegin", ccSaving);
+            ccSaving.classList.add("custom-cc-savings");
+            document
+              .querySelector(".tm-option-wrapper.option-type-tariff")
+              .insertAdjacentElement("beforebegin", ccSaving);
           }
           if (!customCCWrapper.classList.contains("new-cc-wrapper")) {
             customCCWrapper.classList.add("new-cc-wrapper");
-            const regularPriceWrapper = customCCWrapper.querySelectorAll('.field .label .price .regular-price-wrapper > span');
+            const regularPriceWrapper = customCCWrapper.querySelectorAll(
+              ".field .label .price .regular-price-wrapper > span"
+            );
             regularPriceWrapper.forEach((price) => {
               price.innerText = "/month";
             });
-            const clubPriceWrapper = customCCWrapper.querySelectorAll('.field .label .price .clubcard-price-wrapper .clubcard-price-value');
+            const clubPriceWrapper = customCCWrapper.querySelectorAll(
+              ".field .label .price .clubcard-price-wrapper .clubcard-price-value"
+            );
             clubPriceWrapper.forEach((span) => {
-              span.innerHTML = span.innerHTML.replace(' a month', '/month');
+              span.innerHTML = span.innerHTML.replace(" a month", "/month");
             });
-
           }
         }
       }
-    )
+    );
 
     // REGULAR SECTION
     poll(
@@ -640,7 +714,8 @@
       () => {
         const optionsList = document.querySelector(".nested.options-list");
         const targetccWraper = optionsList.querySelector(".custom-cc-wrapper");
-        const filteredDataChoices = optionsList.querySelectorAll(".field.choice");
+        const filteredDataChoices =
+          optionsList.querySelectorAll(".field.choice");
 
         // 1️⃣ insert template string
         targetccWraper.insertAdjacentHTML(
@@ -656,23 +731,27 @@
           newGridSection.appendChild(choice);
         });
 
-        const regularPriceWrapper = newGridSection.querySelectorAll('.field .label .price .regular-price-wrapper > span');
+        const regularPriceWrapper = newGridSection.querySelectorAll(
+          ".field .label .price .regular-price-wrapper > span"
+        );
         regularPriceWrapper.forEach((price) => {
           price.innerText = "/month";
         });
-        const clubPriceWrapper = newGridSection.querySelectorAll('.field .label .price .clubcard-price-wrapper .clubcard-price-value');
+        const clubPriceWrapper = newGridSection.querySelectorAll(
+          ".field .label .price .clubcard-price-wrapper .clubcard-price-value"
+        );
         clubPriceWrapper.forEach((span) => {
-          span.innerHTML = span.innerHTML.replace(' a month', '/month');
+          span.innerHTML = span.innerHTML.replace(" a month", "/month");
         });
       }
     );
 
     poll(
-      () =>
-        document.querySelector(".nested.options-list"),
+      () => document.querySelector(".nested.options-list"),
       () => {
         const optionsList = document.querySelector(".nested.options-list");
-        const filteredDataChoices = optionsList.querySelectorAll(".field.choice");
+        const filteredDataChoices =
+          optionsList.querySelectorAll(".field.choice");
 
         // 1️⃣ insert template string
         optionsList.insertAdjacentHTML(
@@ -688,13 +767,17 @@
           newGridSection.appendChild(choice);
         });
 
-        const regularPriceWrapper = newGridSection.querySelectorAll('.field .label .price .regular-price-wrapper > span');
+        const regularPriceWrapper = newGridSection.querySelectorAll(
+          ".field .label .price .regular-price-wrapper > span"
+        );
         regularPriceWrapper.forEach((price) => {
           price.innerText = "/month";
         });
-        const clubPriceWrapper = newGridSection.querySelectorAll('.field .label .price .clubcard-price-wrapper .clubcard-price-value');
+        const clubPriceWrapper = newGridSection.querySelectorAll(
+          ".field .label .price .clubcard-price-wrapper .clubcard-price-value"
+        );
         clubPriceWrapper.forEach((span) => {
-          span.innerHTML = span.innerHTML.replace(' a month', '/month');
+          span.innerHTML = span.innerHTML.replace(" a month", "/month");
         });
       }
     );
@@ -714,8 +797,8 @@
           { label: "30 mins", value: 30 },
           { label: "1 hour", value: 60 },
           { label: "2 hours", value: 120 },
-          { label: "4 hours", value: 240 }
-        ]
+          { label: "4 hours", value: 240 },
+        ],
       },
       {
         key: "social",
@@ -727,8 +810,8 @@
           { label: "30 mins", value: 30 },
           { label: "1 hour", value: 60 },
           { label: "2 hours", value: 120 },
-          { label: "4 hours", value: 240 }
-        ]
+          { label: "4 hours", value: 240 },
+        ],
       },
       {
         key: "music",
@@ -740,8 +823,8 @@
           { label: "30 mins", value: 30 },
           { label: "1 hour", value: 60 },
           { label: "2 hours", value: 120 },
-          { label: "4 hours", value: 240 }
-        ]
+          { label: "4 hours", value: 240 },
+        ],
       },
       {
         key: "emails",
@@ -753,8 +836,8 @@
           { label: "20", value: 20 },
           { label: "100", value: 100 },
           { label: "200", value: 200 },
-          { label: "300", value: 300 }
-        ]
+          { label: "300", value: 300 },
+        ],
       },
       {
         key: "apps",
@@ -766,10 +849,18 @@
           { label: "5", value: 5 },
           { label: "10", value: 10 },
           { label: "20", value: 20 },
-          { label: "30", value: 30 }
-        ]
-      }
+          { label: "30", value: 30 },
+        ],
+      },
     ];
+
+    const selectedValues = {
+      browsing: 0,
+      social: 0,
+      music: 0,
+      emails: 0,
+      apps: 0,
+    };
 
     const iconBasePath =
       "/etc.clientlibs/tescomobile/clientlibs/clientlib-site/resources/images";
@@ -851,8 +942,10 @@
       `;
     }
 
-
-    document.body.insertAdjacentHTML("beforeend", dataCalculatorSidebarTemplate());
+    document.body.insertAdjacentHTML(
+      "beforeend",
+      dataCalculatorSidebarTemplate()
+    );
 
     function openDataCalculatorSidebar() {
       const sidebar = document.getElementById("data-cal-sidebar");
@@ -860,7 +953,10 @@
       const modalWrapper = document.querySelector(".modals-wrapper");
       if (!sidebar || !backdrop || !modalWrapper) return;
       if (!document.querySelector(".modals-overlay")) {
-        modalWrapper.insertAdjacentHTML("beforebegin", `<div class="modals-overlay" style="z-index: 901;"></div>`);
+        modalWrapper.insertAdjacentHTML(
+          "beforebegin",
+          `<div class="modals-overlay" style="z-index: 901;"></div>`
+        );
       }
       document.body.classList.add("_has-modal");
       sidebar.classList.add("_show");
@@ -881,7 +977,10 @@
     }
 
     document.body.addEventListener("click", (e) => {
-      if (e.target.closest(".modals-overlay") || e.target.closest("#data-cal-sidebar .action-close")) {
+      if (
+        e.target.closest(".modals-overlay") ||
+        e.target.closest("#data-cal-sidebar .action-close")
+      ) {
         closeDataCalculatorSidebar();
       }
     });
@@ -894,12 +993,165 @@
     targetDataCalculator.addEventListener("click", (e) => {
       e.preventDefault();
       openDataCalculatorSidebar();
-    })
+    });
 
+    const dataContext = document.querySelector(".data-calculator__context");
+
+    dataContext.addEventListener("click", (e) => {
+      const label = e.target.closest("label");
+      if (!label) return;
+      const group = e.target.closest(".data-calculator__context__values");
+      if (!group) return;
+      const input = label.querySelector("input");
+      const groupKey = group.dataset.group;
+      const groupDataValue = Number(group.dataset.value);
+      const calcSelectedValue = groupDataValue * Number(input.value);
+
+      selectedValues[groupKey] = calcSelectedValue.toFixed(2);
+
+      group.querySelectorAll("span.button").forEach((span) => {
+        span.classList.add("button--alpha");
+      });
+
+      const clickedSpan = label.querySelector("span.button");
+      if (clickedSpan) {
+        clickedSpan.classList.remove("button--alpha");
+      }
+
+      const total = Object.values(selectedValues).reduce(
+        (sum, v) => sum + Number(v || 0),
+        0
+      );
+      const totalFixed = Math.ceil(total);
+
+      let estimationEl = document.getElementById("data-estimation-value");
+
+      // If element doesn't exist, try to find or create it
+      if (!estimationEl) {
+        const estSection = document.querySelector(".estimation-section");
+        if (estSection) {
+          estimationEl = estSection.querySelector("h2");
+          if (!estimationEl) {
+            // Create it if missing
+            const contentPart = estSection.querySelector(".content-part");
+            if (contentPart) {
+              estimationEl = document.createElement("h2");
+              estimationEl.id = "data-estimation-value";
+              contentPart.appendChild(estimationEl);
+            }
+          }
+        }
+      }
+
+      if (estimationEl) {
+        estimationEl.textContent = (total < 0.5 ? 500 : totalFixed) + (total < 0.5 ? "MB" : "GB");
+
+
+      }
+
+    });
+
+    // Estimation section
+    const estimationSectionTarget = document.querySelector(
+      ".custom-data-calculator__content"
+    );
+    if (!estimationSectionTarget) {
+      console.warn("Estimation target not found");
+      return;
+    }
+    const estimationSection = `
+    <div class="estimation-section">
+      <div class="text-part">
+        Estimated usage
+      </div>
+      <div class="content-part">
+        <h2 id="data-estimation-value">0MB</h2>
+      </div>
+    </div>
+    `;
+    estimationSectionTarget.insertAdjacentHTML("afterend", estimationSection);
+
+    // Verify element was created
+    setTimeout(() => {
+      const testEl = document.getElementById("data-estimation-value");
+      console.log("Estimation element found:", testEl ? "yes" : "no");
+    }, 100);
+
+    // TARIFF CTA BUTTON SECTION
+    const targetForTariffButton = document.querySelector(".estimation-section");
+    const tariffSection = `
+      <div class="tariff-section">
+        <div class="tariff-cta-btn">
+          <button class="button tariff-btn">
+            Select Tariff
+        </button>
+        </div>
+        <p>
+          This is a rough guide, based on average data uses, and all amounts are rounded up. Your actual data usage may be higher. According to Ofcom, customers tend to increase their data usage each year. Think about future-proofing your data allowance so you don’t run out of data later down the line.
+        </p>
+      </div>
+    `;
+    targetForTariffButton.insertAdjacentHTML("afterend", tariffSection);
+
+    const tariffBtn = document.querySelector(".tariff-btn");
+    if (tariffBtn) {
+      tariffBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+
+        // Recalculate total to be safe, though selectedValues is up to date
+        const total = Object.values(selectedValues).reduce(
+          (sum, v) => sum + Number(v || 0),
+          0
+        );
+        const totalFixed = Math.ceil(total);
+
+        // Select the nearest match tariff
+        const tariffInputs = document.querySelectorAll(
+          '.option-type-tariff .field.choice input[type="radio"]'
+        );
+        const targetUsage = total < 0.5 ? 0.5 : totalFixed; // Target in GB
+
+        let closestInput = null;
+        let minDiff = Infinity;
+
+        tariffInputs.forEach((input) => {
+          // Find the label text. Typically follows the input.
+          const label = input.nextElementSibling;
+          const text = label ? label.textContent.trim().toLowerCase() : "";
+
+          let itemValue = 0;
+
+          // Parse value from text
+          if (text.includes("unlimited")) {
+            itemValue = 10000; // Large number for unlimited
+          } else {
+            const match = text.match(/(\d+(\.\d+)?)\s*(gb|mb)/i);
+            if (match) {
+              const val = parseFloat(match[1]);
+              const unit = match[3].toLowerCase();
+              itemValue = unit === "gb" ? val : val / 1000;
+            }
+          }
+
+          if (itemValue > 0) {
+            const diff = Math.abs(itemValue - targetUsage);
+            if (diff < minDiff) {
+              minDiff = diff;
+              closestInput = input;
+            }
+          }
+        });
+
+        if (closestInput) {
+          closestInput.click();
+          closestInput.scrollIntoView({ behavior: "smooth", block: "center" });
+
+          // Close the sidebar to show the user the selected tariff
+          closeDataCalculatorSidebar();
+        }
+      });
+    }
   }
-
-
-
 
   /* =========================
      MAIN EXECUTION
@@ -929,5 +1181,4 @@
       console.error("Error in New Task Init:", e);
     }
   });
-
 })();
