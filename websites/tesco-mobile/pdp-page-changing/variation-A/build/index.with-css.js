@@ -1,3 +1,552 @@
+(function () {
+  var interval = setInterval(function () {
+    if (document.head) {
+      // Check if <head> exists
+      clearInterval(interval); // Stop checking once found
+      var style = document.createElement("style");
+      style.innerHTML = `html {
+  position: relative;
+}
+html::before {
+  content: "AB test pilot CSS";
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 99999999999;
+  background: #ff0000;
+  color: #ffffff;
+  padding: 10px;
+  border: 7px solid #269b11;
+}
+
+.promo-section {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  background: #fff;
+}
+
+.promo-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.promo-item-content {
+  color: #00539f;
+  font-size: 14px;
+}
+
+.promo-item-img {
+  height: 28px;
+  width: 28px;
+}
+
+.promo-img-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.promo-group-img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+}
+
+.promo-more-count {
+  font-size: 12px;
+  font-weight: 500;
+  color: #333;
+  margin-top: 5px;
+}
+
+.promo-item-img-group {
+  display: flex;
+  gap: 8px;
+}
+
+.custom-sidebar-content {
+  margin-top: 20px;
+}
+
+.custom-sidebar-accordion {
+  border-top: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
+  background: #fff;
+  padding: 10px;
+}
+
+.custom-sidebar-accordion-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+}
+
+.custom-sidebar-accordion-icon {
+  transition: transform 0.3s ease;
+}
+
+.custom-sidebar-accordion-title {
+  font-size: 18px;
+  color: #00539f;
+  font-weight: 600;
+}
+
+.custom-sidebar-accordion-btn {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cust-sidebar-accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.35s ease;
+}
+
+.custom-sidebar-accordion-content-text {
+  color: #666666;
+}
+
+.custom-sidebar-accordion-content-inner {
+  padding: 8px 0;
+}
+
+.payment-select-wrapper {
+  width: 100%;
+  margin-top: 8px;
+}
+
+.payment-select {
+  width: 100%;
+  max-width: 100%;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.custom-color-storage-container {
+  display: flex;
+  gap: 16px;
+  margin: 16px 0;
+}
+
+.custom-color,
+.custom-storage {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.custom-color-title,
+.custom-storage-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+.custom-color-options,
+.custom-storage-options,
+.custom-select-ui {
+  width: 100%;
+  padding: 8px 32px 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  background: #fff;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  position: relative;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23333' d='M1.41 0L6 4.58 10.59 0 12 1.41l-6 6-6-6z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 12px;
+}
+.custom-color-options:focus,
+.custom-storage-options:focus,
+.custom-select-ui:focus {
+  outline: 2px solid #00539f;
+  outline-offset: 2px;
+}
+
+.custom-select-ui {
+  padding: 0;
+  background-image: none;
+  height: 38px;
+}
+.custom-select-ui .custom-select-selected {
+  padding: 8px 32px 8px 12px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23333' d='M1.41 0L6 4.58 10.59 0 12 1.41l-6 6-6-6z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 12px;
+}
+.custom-select-ui .custom-select-options {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: -1px;
+  right: -1px;
+  background: #fff;
+  border: 1px solid #ccc;
+  border-top: none;
+  z-index: 100;
+  max-height: 250px;
+  overflow-y: auto;
+  border-radius: 0 0 4px 4px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.custom-select-ui._open {
+  border-radius: 4px 4px 0 0;
+}
+.custom-select-ui._open .custom-select-options {
+  display: block;
+}
+.custom-select-ui .custom-select-option {
+  padding: 10px 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  transition: background 0.2s;
+}
+.custom-select-ui .custom-select-option:hover {
+  background: #f0f7ff;
+}
+.custom-select-ui .custom-select-option.selected {
+  background: #e6f2ff;
+  font-weight: 600;
+}
+.custom-select-ui .color-dot,
+.custom-select-ui .selected-color-dot {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+}
+
+.color-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.custom-grid-system {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+}
+
+.custom-cc-savings {
+  display: block !important;
+  flex: 0 0 100%;
+}
+.custom-cc-savings .clubcard-stripe {
+  display: flex;
+  justify-content: flex-start;
+  background-color: #fcd700;
+  color: #333;
+  width: 100%;
+  border-radius: 12px;
+  margin: 5px 0 28px;
+}
+.custom-cc-savings .clubcard-stripe .clubcard-stripe__logo {
+  padding: 0;
+  display: flex;
+  width: 56px;
+  min-height: 56px;
+  background-color: #00539f;
+  border-radius: 12px 0 0 12px;
+  flex: 0 0 56px;
+  border-right: 4px solid #fff;
+}
+.custom-cc-savings .clubcard-stripe .clubcard-stripe__logo span {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  text-align: center;
+  align-items: center;
+  font-size: 10px;
+  line-height: 1;
+  font-weight: 400;
+  font-family: "TESCOModern-Bold", Tahoma, sans-serif;
+  background-color: #00539f;
+  color: #fff;
+}
+.custom-cc-savings .clubcard-stripe .clubcard-stripe__info {
+  font-size: 16px;
+  font-weight: 400;
+  font-family: "TESCOModern-Bold", Tahoma, sans-serif;
+  display: flex;
+  padding: 0 10px;
+  line-height: 1.25;
+  align-content: center;
+  flex-wrap: wrap;
+}
+
+.custom-cc-wrapper {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+}
+.custom-cc-wrapper .field {
+  height: 96px !important;
+}
+.custom-cc-wrapper .field .label {
+  flex-direction: column !important;
+  align-items: start !important;
+}
+.custom-cc-wrapper .field .label .allowance {
+  flex-direction: row !important;
+  align-items: flex-start !important;
+  position: static !important;
+}
+.custom-cc-wrapper .field .label .allowance span {
+  margin-top: -2px !important;
+  margin-left: 4px !important;
+}
+.custom-cc-wrapper
+  .field
+  .label
+  .price
+  .clubcard-price-wrapper
+  .clubcard-price-label {
+  display: none;
+}
+
+.new-grid-section {
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+}
+.new-grid-section .field {
+  height: 96px !important;
+}
+.new-grid-section .field .label {
+  flex-direction: column !important;
+  align-items: start !important;
+}
+.new-grid-section .field .label .allowance {
+  flex-direction: row !important;
+  align-items: flex-start !important;
+  position: static !important;
+}
+.new-grid-section .field .label .allowance span {
+  margin-top: -2px !important;
+  margin-left: 4px !important;
+}
+.new-grid-section
+  .field
+  .label
+  .price
+  .clubcard-price-wrapper
+  .clubcard-price-label {
+  display: none;
+}
+
+._has-modal .modal-slide {
+  max-width: 320px;
+}
+
+.data-cal-section {
+  margin-top: 20px;
+}
+
+.custom-data-calculator {
+  padding-bottom: 10px;
+}
+.custom-data-calculator .custom-data-calculator__header-container h1 {
+  color: #00539f;
+  font-size: 24px;
+  line-height: normal;
+  margin: 0 0 8px;
+  font-weight: bold;
+}
+.custom-data-calculator .custom-data-calculator__header-container .subtitle {
+  font-size: 18px;
+}
+.custom-data-calculator .custom-data-calculator__header-container .description {
+  font-size: 13px;
+}
+.custom-data-calculator
+  .custom-data-calculator__content
+  .data-calculator__context {
+  flex-basis: 100%;
+  margin: 0px !important;
+}
+.custom-data-calculator
+  .custom-data-calculator__content
+  .data-calculator__context
+  input {
+  display: none;
+}
+.custom-data-calculator
+  .custom-data-calculator__content
+  .data-calculator__context
+  input.calc__input {
+  border-color: #00539f;
+  margin-top: 10px;
+  margin-bottom: 18px;
+  padding: 3px;
+  width: 170px;
+}
+.custom-data-calculator
+  .custom-data-calculator__content
+  .data-calculator__context__row {
+  display: flex;
+  margin: 12px 0;
+  gap: 20px;
+}
+.custom-data-calculator
+  .custom-data-calculator__content
+  .data-calculator__context__row
+  .data-calculator__context__label {
+  display: block;
+  width: 40%;
+}
+.custom-data-calculator
+  .custom-data-calculator__content
+  .data-calculator__context__row
+  .data-calculator__context__values {
+  display: flex;
+  flex-wrap: wrap;
+  width: 100%;
+}
+.custom-data-calculator
+  .custom-data-calculator__content
+  .data-calculator__context__row
+  .data-calculator__context__values
+  label {
+  display: block;
+  width: 50%;
+}
+.custom-data-calculator
+  .custom-data-calculator__content
+  .data-calculator__context__row
+  .data-calculator__context__values
+  label
+  .button {
+  text-align: center;
+  width: 100%;
+  color: #f7f5f5;
+  text-decoration: none;
+  border: 1px solid transparent;
+  background-color: #00539f;
+  padding: 10px 0;
+  height: auto;
+  display: inline-block !important;
+  align-self: flex-start;
+  cursor: pointer;
+  transition: background-color 0.25s;
+}
+.custom-data-calculator
+  .custom-data-calculator__content
+  .data-calculator__context__row
+  .data-calculator__context__values
+  label
+  .button--alpha {
+  border: 1px solid #d9e5eb;
+  background: #ffffff;
+  color: #00539f;
+  font-weight: bold;
+}
+
+.custom-data-calculator__content .data-calculator__context__label--layout {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.custom-data-calculator__content
+  .data-calculator__context__values
+  label:first-child
+  .button {
+  border-radius: 5px 0 0 0;
+  border-bottom: none;
+}
+
+.custom-data-calculator__content
+  .data-calculator__context__values
+  label:nth-child(2)
+  .button {
+  border-bottom: none;
+  border-radius: 0 5px 0 0;
+}
+
+.custom-data-calculator__content
+  .data-calculator__context__values
+  label:nth-child(4)
+  .button {
+  border-radius: 0 0 5px 0;
+}
+
+.custom-data-calculator__content
+  .data-calculator__context__values
+  label:last-child
+  .button {
+  border-top: none;
+  border-radius: 0 0 5px 5px;
+}
+
+.estimation-section {
+  padding: 16px;
+  background-color: #fff;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  margin-top: 30px;
+}
+
+.estimation-section .text-part {
+  width: 100%;
+}
+
+.estimation-section .content-part {
+  width: 100%;
+}
+
+.estimation-section .content-part h2 {
+  color: #00539f;
+  text-align: center;
+  width: 100%;
+}
+
+.tariff-section {
+  margin-top: 30px;
+}
+
+.tariff-section .tariff-cta-btn {
+  width: 100%;
+  display: flex;
+  justify-content: end;
+}
+
+.tariff-section .tariff-cta-btn .tariff-btn {
+  border-radius: 20px;
+  padding: 10px 20px;
+  background-color: #00539f;
+  color: #fff;
+}
+
+.tariff-section p {
+  margin: 20px 0;
+}
+`;
+      document.head.appendChild(style);
+      setTimeout(() => {
+        clearInterval(interval); // Clear the interval after 5 seconds
+      }, 5000);
+    }
+  }, 100); // Check every 100ms for <head>
+})();
 (() => {
   /* =========================
      SHARED UTILITIES
@@ -24,8 +573,8 @@
       (t()
         ? i()
         : setTimeout(() => {
-          poll(t, i, o, o ? e : e - a, a);
-        }, a));
+            poll(t, i, o, o ? e : e - a, a);
+          }, a));
   }
 
   function createObserver(selector, onFound, options = {}) {
@@ -74,28 +623,15 @@
           },
           {
             title: "Apple Fintess +",
-            content: `Claim 3 months of Apple Fitness+ free
-                    Get 3 months of Apple Fitness+ free, when you purchase any iPhone. Claim your 3 months free Apple Fitness+ subscription in the Apple Fitness+ app on your iPhone within 3 months after first activating your Eligible Device.
-                    Eligible Handsets:
-                    iPhone 17
-                    iPhone 17 Pro
-                    iPhone 17 Pro Max
-                    iPhone Air
-                    iPhone 16 with Apple iPad A16
-                    iPhone 16eiPhone 16 Pro MaxiPhone 16 Pro Max with Apple Watch Series 10iPhone 16 ProiPhone 16 PlusiPhone 16iPhone 15 Pro MaxiPhone 15iPhone 14iPhone 13
-                    How to claim 3 months of Apple Fitness+ free
-                    Open the Apple Fitness+ app. Tap Enjoy 3 months Free. You might be asked to enter your Apple ID password, confirm your billing information, or add a valid payment method.
-                    Subscribing to Apple Fitness+ requires an iPhone 8 or later, or Apple Watch Series 3 or later paired with an iPhone 6s or later. Apple Fitness+ is only available in select regions.
-                    New subscribers get three months of Apple Fitness+ free when you buy a new eligible Apple iPhone, subject to the terms and conditions.
-                  Click Here for Full Terms & Conditions.`,
+            content: "Lorem",
           },
           {
             title: "Apple Arcade",
-            content: `'Enjoy unlimited access to over 200 incredibly fun games, including Arcade Originals, App Store Greats, and Timeless Classics, with no ads and no in-app purchases. Up to six people can play across their Apple devices.¹ Try it free on the App Store.²\nEligible Handsets:\niPhone 17iPhone 17 ProiPhone 17 Pro MaxiPhone AiriPhone 16 with Apple iPad A16\niPhone 16eiPhone 16 Pro MaxiPhone 16 Pro Max with Apple Watch Series 10iPhone 16 ProiPhone 16 PlusiPhone 16iPhone 15 Pro MaxiPhone 15iPhone 14iPhone 13\nOffer ends 90 days after your device activation\n*£6.99/month after free trial. Only one offer per Apple ID and only one offer per family if you’re part of a Family Sharing group, regardless of the number of devices you or your family purchase. Offer good for 3 months after eligible device activation. Plan automatically renews until cancelled. Restrictions and other terms apply.¹Requires iCloud Family Sharing. See apple.com/family-sharing for more information.²New subscribers only. £6.99/month after trial. The plan automatically renews after the trial until cancelled. Terms apply.'`,
+            content: "Lorem",
           },
           {
             title: "Apple News +",
-            content: "Get 3 months of AppleNews+ when you purchase any Apple device. Claim your 3 months free Apple News+ subscription in the Apple News app.\nEligible Handsets:\niPhone 17\niPhone 17 Pro\niPhone 17 Pro Max\niPhone Air\niPhone 16 with Apple iPad A16\niPhone 16eiPhone 16 Pro MaxiPhone 16 Pro Max with Apple Watch Series 10iPhone 16 ProiPhone 16 PlusiPhone 16iPhone 15 Pro MaxiPhone 15iPhone 14iPhone 13Offer must be claimed in the Apple News app within 3 months after first activating your Eligible Device. To see the offer appear, you will need to sign in with your Apple ID on your Eligible Device.Click Here for Full Terms & Conditions.How to claim 3 months of Apple News+:\n\nOpen the News app.\nTouch, tap News+ at the bottom of the screen.\nTap or click the trial subscription offer. One trial per Apple ID.\nIf asked, sign in with the Apple ID that you use for App Store and iTunes Store purchases. If you don't have an Apple ID, follow the prompts to create one. Find out what to do if you've forgotten your Apple ID or you're not sure whether you have one.\nIf asked, confirm your billing information. You may need to add a valid payment method.\nIf asked, agree to the terms and conditions.\n",
+            content: "Lorem",
           },
         ],
       };
@@ -161,17 +697,24 @@
       const accordions = document.querySelectorAll(".custom-sidebar-accordion");
       if (!accordions.length) return;
 
-      accordions.forEach((acc) => {
+      accordions.forEach((acc, index) => {
+        const content = acc.querySelector(".cust-sidebar-accordion-content");
         const icon = acc.querySelector(".custom-sidebar-accordion-icon");
-        icon.innerHTML = ACCORDION_ICON_COLLAPSED;
+        if (index === 0) {
+          acc.classList.add("_open");
+          content.style.maxHeight = content.scrollHeight + "px";
+          icon.innerHTML = ACCORDION_ICON_EXPANDED;
+        } else {
+          icon.innerHTML = ACCORDION_ICON_COLLAPSED;
+        }
       });
 
       accordions.forEach((accordion) => {
         const header = accordion.querySelector(
-          ".custom-sidebar-accordion-header"
+          ".custom-sidebar-accordion-header",
         );
         const content = accordion.querySelector(
-          ".cust-sidebar-accordion-content"
+          ".cust-sidebar-accordion-content",
         );
         const icon = accordion.querySelector(".custom-sidebar-accordion-icon");
 
@@ -180,7 +723,7 @@
           accordions.forEach((acc) => {
             acc.classList.remove("_open");
             acc.querySelector(
-              ".cust-sidebar-accordion-content"
+              ".cust-sidebar-accordion-content",
             ).style.maxHeight = null;
             acc.querySelector(".custom-sidebar-accordion-icon").innerHTML =
               ACCORDION_ICON_COLLAPSED;
@@ -248,7 +791,7 @@
       if (!document.querySelector(".modals-overlay")) {
         modalWrapper.insertAdjacentHTML(
           "beforebegin",
-          `<div class="modals-overlay" style="z-index: 901;"></div>`
+          `<div class="modals-overlay" style="z-index: 901;"></div>`,
         );
       }
       document.body.classList.add("_has-modal");
@@ -284,7 +827,7 @@
     if (!document.getElementById("promo-custom-sidebar")) {
       document.body.insertAdjacentHTML(
         "beforeend",
-        sidebarTemplate(globalState)
+        sidebarTemplate(globalState),
       );
     }
     target.insertAdjacentHTML("afterend", promoSection());
@@ -326,7 +869,7 @@
             node.click();
           } catch {
             node.dispatchEvent(
-              new MouseEvent("click", { bubbles: true, cancelable: true })
+              new MouseEvent("click", { bubbles: true, cancelable: true }),
             );
           }
         };
@@ -342,12 +885,12 @@
     attachPromoClick(
       "frozen-prices",
       "promotion-trigger-49632199458",
-      "frozenListener"
+      "frozenListener",
     );
     attachPromoClick(
       "no-eu-roaming",
       "promotion-trigger-49845199458",
-      "roamingListener"
+      "roamingListener",
     );
 
     document.body.addEventListener("click", (e) => {
@@ -369,10 +912,10 @@
   ========================= */
   function taskTwo() {
     const labelSpan = document.querySelector(
-      ".product-type-switcher .swatch-attribute > .swatch-attribute-label"
+      ".product-type-switcher .swatch-attribute > .swatch-attribute-label",
     );
     const paymentOptionsWrapper = document.querySelector(
-      ".swatch-attribute-options"
+      ".swatch-attribute-options",
     );
 
     if (!labelSpan || !paymentOptionsWrapper) return;
@@ -394,17 +937,17 @@
     <div class="payment-select-wrapper">
       <select name="payment-select" class="payment-select">
         ${paymentOptions
-        .map(
-          (option) => `
+          .map(
+            (option) => `
           <option 
             value="${option.value}" 
             ${option.label === selectedText ? "selected" : ""}
           >
             ${option.label}
           </option>
-        `
-        )
-      .join("")}
+        `,
+          )
+          .join("")}
       </select>
     </div>
   `;
@@ -417,7 +960,7 @@
       const selectedValue = e.target.value;
 
       const targetSwatch = paymentOptions.find(
-        (opt) => opt.value === selectedValue
+        (opt) => opt.value === selectedValue,
       )?.el;
 
       if (targetSwatch) {
@@ -447,7 +990,7 @@
     }
 
     const colorAndStorageSelect = document.getElementById(
-      "tm-deal-device-wrapper"
+      "tm-deal-device-wrapper",
     );
     if (!colorAndStorageSelect) return;
 
@@ -484,7 +1027,7 @@
           const colorSpan = option.querySelector(".swatch-color");
           const bgColor = colorSpan
             ? colorSpan.style.backgroundColor ||
-            getComputedStyle(colorSpan).backgroundColor
+              getComputedStyle(colorSpan).backgroundColor
             : "";
           const label =
             option
@@ -506,47 +1049,47 @@
       const customColorStorageContainer = `
         <div class="custom-color-storage-container">
           <div class="custom-color">
-            <div class="custom-color-title">Colour(${enabledColorOptions.length || 0})</div>
+            <div class="custom-color-title">Colour</div>
             <div class="custom-select-ui" id="custom-color-select">
               <div class="custom-select-selected" style="height: auto;">
                 ${enabledColorOptions
-        .filter(({ element }) =>
-          element.classList.contains("selected")
-        )
-        .map(
-          (opt) => `
+                  .filter(({ element }) =>
+                    element.classList.contains("selected"),
+                  )
+                  .map(
+                    (opt) => `
                   <span class="selected-color-dot" style="background: ${opt.bgColor}"></span>
                   <span class="selected-label">${opt.label}</span>
-                `
-      )
-        .join("")}
+                `,
+                  )
+                  .join("")}
               </div>
               <div class="custom-select-options">
                 ${enabledColorOptions
-        .map(
-          (opt) => `
+                  .map(
+                    (opt) => `
                   <div class="custom-select-option ${opt.element.classList.contains("selected") ? "selected" : ""}" data-value="${opt.originalIndex}">
                     <span class="color-dot" style="background: ${opt.bgColor}"></span>
                     <span class="option-label">${opt.label}</span>
                   </div>
-                `
-      )
-        .join("")}
+                `,
+                  )
+                  .join("")}
               </div>
             </div>
           </div>
           <div class="custom-storage">
-            <div class="custom-storage-title">Storage(${enabledStorageOptions.length || 0})</div>
+            <div class="custom-storage-title">Storage</div>
             <select name="storage-select" class="custom-storage-options">
               ${enabledStorageOptions
-        .map(
-          ({ element, originalIndex }) => `
+                .map(
+                  ({ element, originalIndex }) => `
                 <option value="${originalIndex}" ${element.classList.contains("selected") ? "selected" : ""}>
                   ${element.textContent.trim()}
                 </option>
-              `
-      )
-        .join("")}
+              `,
+                )
+                .join("")}
             </select>
           </div>
         </div>
@@ -567,7 +1110,7 @@
             const colorSpan = option.querySelector(".swatch-color");
             const bgColor = colorSpan
               ? colorSpan.style.backgroundColor ||
-              getComputedStyle(colorSpan).backgroundColor
+                getComputedStyle(colorSpan).backgroundColor
               : "";
             const label =
               option
@@ -579,14 +1122,8 @@
 
         // Update Color UI Options
         const optionsContainer = colorSelectUI.querySelector(
-          ".custom-select-options"
+          ".custom-select-options",
         );
-
-        // Update Color Title with new count
-        const colorTitle = document.querySelector(".custom-color-title");
-        if (colorTitle) {
-          colorTitle.textContent = `Colour(${currentColorOptions.length})`;
-        }
         optionsContainer.innerHTML = currentColorOptions
           .map(
             (opt) => `
@@ -594,16 +1131,16 @@
             <span class="color-dot" style="background: ${opt.bgColor}"></span>
             <span class="option-label">${opt.label}</span>
           </div>
-        `
+        `,
           )
           .join("");
 
         // Update Color UI Selected State
         const selectedDisplay = colorSelectUI.querySelector(
-          ".custom-select-selected"
+          ".custom-select-selected",
         );
         const activeOpt = currentColorOptions.find(({ element }) =>
-          element.classList.contains("selected")
+          element.classList.contains("selected"),
         );
         if (activeOpt) {
           selectedDisplay.innerHTML = `
@@ -617,12 +1154,6 @@
           .map((option, originalIndex) => ({ element: option, originalIndex }))
           .filter(({ element }) => !element.classList.contains("disabled"));
 
-        // Update Storage Title with new count
-        const storageTitle = document.querySelector(".custom-storage-title");
-        if (storageTitle) {
-          storageTitle.textContent = `Storage(${currentStorageOptions.length})`;
-        }
-
         // Rebuild storage options
         storageSelectEl.innerHTML = currentStorageOptions
           .map(
@@ -630,7 +1161,7 @@
           <option value="${originalIndex}" ${element.classList.contains("selected") ? "selected" : ""}>
             ${element.textContent.trim()}
           </option>
-        `
+        `,
           )
           .join("");
       }
@@ -638,7 +1169,7 @@
       // Color select UI click handlers
       if (colorSelectUI) {
         const selectedDisplay = colorSelectUI.querySelector(
-          ".custom-select-selected"
+          ".custom-select-selected",
         );
         selectedDisplay.addEventListener("click", () => {
           colorSelectUI.classList.toggle("_open");
@@ -708,20 +1239,20 @@
           if (!customCCWrapper.classList.contains("new-cc-wrapper")) {
             customCCWrapper.classList.add("new-cc-wrapper");
             const regularPriceWrapper = customCCWrapper.querySelectorAll(
-              ".field .label .price .regular-price-wrapper > span"
+              ".field .label .price .regular-price-wrapper > span",
             );
             regularPriceWrapper.forEach((price) => {
               price.innerText = "/month";
             });
             const clubPriceWrapper = customCCWrapper.querySelectorAll(
-              ".field .label .price .clubcard-price-wrapper .clubcard-price-value"
+              ".field .label .price .clubcard-price-wrapper .clubcard-price-value",
             );
             clubPriceWrapper.forEach((span) => {
               span.innerHTML = span.innerHTML.replace(" a month", "/month");
             });
           }
         }
-      }
+      },
     );
 
     // REGULAR SECTION
@@ -738,7 +1269,7 @@
         // 1️⃣ insert template string
         targetccWraper.insertAdjacentHTML(
           "afterend",
-          `<div class="new-grid-section"></div>`
+          `<div class="new-grid-section"></div>`,
         );
 
         // 2️⃣ get the newly inserted element
@@ -750,35 +1281,35 @@
         });
 
         const regularPriceWrapper = newGridSection.querySelectorAll(
-          ".field .label .price .regular-price-wrapper > span"
+          ".field .label .price .regular-price-wrapper > span",
         );
         regularPriceWrapper.forEach((price) => {
           price.innerText = "/month";
         });
         const clubPriceWrapper = newGridSection.querySelectorAll(
-          ".field .label .price .clubcard-price-wrapper .clubcard-price-value"
+          ".field .label .price .clubcard-price-wrapper .clubcard-price-value",
         );
         clubPriceWrapper.forEach((span) => {
           span.innerHTML = span.innerHTML.replace(" a month", "/month");
         });
-      }
+      },
     );
 
     poll(
-      () => document.querySelector(".control .nested.options-list"),
+      () => document.querySelector(".nested.options-list"),
       () => {
-        const optionsList = document.querySelector(".control .nested.options-list");
+        const optionsList = document.querySelector(".nested.options-list");
         const filteredDataChoices =
           optionsList.querySelectorAll(".field.choice");
 
         // 1️⃣ insert template string
         optionsList.insertAdjacentHTML(
           "afterend",
-          `<div class="new-grid-section"></div>`
+          `<div class="new-grid-section"></div>`,
         );
 
         // 2️⃣ get the newly inserted element
-        const newGridSection = optionsList.nextElementSibling;
+        const newGridSection = optionsList.querySelector(".new-grid-section");
 
         // 3️⃣ move each choice into the new grid section
         filteredDataChoices.forEach((choice) => {
@@ -786,18 +1317,18 @@
         });
 
         const regularPriceWrapper = newGridSection.querySelectorAll(
-          ".field .label .price .regular-price-wrapper > span"
+          ".field .label .price .regular-price-wrapper > span",
         );
         regularPriceWrapper.forEach((price) => {
           price.innerText = "/month";
         });
         const clubPriceWrapper = newGridSection.querySelectorAll(
-          ".field .label .price .clubcard-price-wrapper .clubcard-price-value"
+          ".field .label .price .clubcard-price-wrapper .clubcard-price-value",
         );
         clubPriceWrapper.forEach((span) => {
           span.innerHTML = span.innerHTML.replace(" a month", "/month");
         });
-      }
+      },
     );
   }
 
@@ -895,7 +1426,7 @@
                  ${unit ? `data-unit="${unit}"` : ""}>
           <span class="button button--alpha">${label}</span>
         </label>
-      `
+      `,
         )
         .join("");
     }
@@ -962,7 +1493,7 @@
 
     document.body.insertAdjacentHTML(
       "beforeend",
-      dataCalculatorSidebarTemplate()
+      dataCalculatorSidebarTemplate(),
     );
 
     function openDataCalculatorSidebar() {
@@ -973,7 +1504,7 @@
       if (!document.querySelector(".modals-overlay")) {
         modalWrapper.insertAdjacentHTML(
           "beforebegin",
-          `<div class="modals-overlay" style="z-index: 901;"></div>`
+          `<div class="modals-overlay" style="z-index: 901;"></div>`,
         );
       }
       document.body.classList.add("_has-modal");
@@ -1038,7 +1569,7 @@
 
       const total = Object.values(selectedValues).reduce(
         (sum, v) => sum + Number(v || 0),
-        0
+        0,
       );
       const totalFixed = Math.ceil(total);
 
@@ -1048,12 +1579,12 @@
       if (!estimationEl) {
         const estSection = document.querySelector(".estimation-section");
         if (estSection) {
-          estimationEl = estSection.querySelector("p");
+          estimationEl = estSection.querySelector("h2");
           if (!estimationEl) {
             // Create it if missing
             const contentPart = estSection.querySelector(".content-part");
             if (contentPart) {
-              estimationEl = document.createElement("p");
+              estimationEl = document.createElement("h2");
               estimationEl.id = "data-estimation-value";
               contentPart.appendChild(estimationEl);
             }
@@ -1062,124 +1593,39 @@
       }
 
       if (estimationEl) {
-        estimationEl.textContent = (total > 0.5 ? totalFixed : total > 0 ? 500 : 0) + (total > 0.5 ? "GB" : "MB");
-        estimationEl.style.fontWeight = total > 0.5 ? "bold" : "normal";
+        estimationEl.textContent =
+          (total < 0.5 ? 500 : totalFixed) + (total < 0.5 ? "MB" : "GB");
       }
-      const targetTariffSection = document.querySelector(".recommended-tariff-section");
-
-      if (total > 0 && targetTariffSection) {
-        // Select the nearest match tariff
-        const tariffInputs = document.querySelectorAll(
-          '.option-type-tariff .field.choice input[type="radio"]'
-        );
-        const targetUsage = total < 0.5 ? 0.5 : totalFixed;
-        let closestInput = null;
-        let minDiff = Infinity;
-
-        tariffInputs.forEach((input) => {
-          // Find the label text. Typically follows the input.
-          const label = input.nextElementSibling;
-          const text = label ? label.textContent.trim().toLowerCase() : "";
-
-          let itemValue = 0;
-
-          // Parse value from text
-          if (text.includes("unlimited")) {
-            itemValue = 10000; // Large number for unlimited
-          } else {
-            const match = text.match(/(\d+(\.\d+)?)\s*(gb|mb)/i);
-            if (match) {
-              const val = parseFloat(match[1]);
-              const unit = match[3].toLowerCase();
-              itemValue = unit === "gb" ? val : val / 1000;
-            }
-          }
-
-          if (itemValue > 0) {
-            const diff = Math.abs(itemValue - targetUsage);
-            if (diff < minDiff) {
-              minDiff = diff;
-              closestInput = input;
-            }
-          }
-        });
-        targetTariffSection.style.display = "block";
-        if (closestInput) {
-          const sourceLabel = closestInput.nextElementSibling;
-          if (sourceLabel) {
-            const sourceAllowance = sourceLabel.querySelector(".allowance");
-            const sourcePrice = sourceLabel.querySelector(".price");
-            const targetAllowance = targetTariffSection.querySelector(".allowance");
-            const targetPrice = targetTariffSection.querySelector(".price");
-
-            if (sourceAllowance && targetAllowance) {
-              targetAllowance.innerHTML = sourceAllowance.innerHTML;
-            }
-            if (sourcePrice && targetPrice) {
-              targetPrice.innerHTML = sourcePrice.innerHTML;
-            }
-          }
-        }
-      } else {
-        targetTariffSection.style.display = "none";
-      }
-
     });
 
     // Estimation section
     const estimationSectionTarget = document.querySelector(
-      ".custom-data-calculator__content"
+      ".custom-data-calculator__content",
     );
     if (!estimationSectionTarget) {
       console.warn("Estimation target not found");
       return;
     }
     const estimationSection = `
-    <div class="estimation-section-wrapper">
-      <div class="estimation-section">
-        <div class="text-part">
-          Estimated usage
-        </div>
-        <div class="content-part">
-          <p id="data-estimation-value">0MB</>
-        </div>
+    <div class="estimation-section">
+      <div class="text-part">
+        Estimated usage
       </div>
-      <p>
-        This is a rough guide, based on average data uses, and all amounts are rounded up. Your actual data usage may be higher. According to Ofcom, customers tend to increase their data usage each year. Think about future-proofing your data allowance so you don’t run out of data later down the line.
-      </p>
+      <div class="content-part">
+        <h2 id="data-estimation-value">0MB</h2>
+      </div>
     </div>
     `;
     estimationSectionTarget.insertAdjacentHTML("afterend", estimationSection);
 
     // Verify element was created
     setTimeout(() => {
-      document.getElementById("data-estimation-value");
-    }, 100);
-
-    //RECOMMENDED TARIFF SECTION
-    const targetForRecommendedTariff = document.querySelector(".estimation-section-wrapper");
-    const recommendedTariffSection = `
-    <div class="recommended-tariff-section">
-      <div class="text-part">
-        <p>Recommended tariff</p>
-      </div>
-      <div class="field choice visible"><input type="radio" class="radio product bundle option change-container-classname" data-validate="{'validate-one-required-by-name':true}" name="bundle_option[301035]" data-selector="bundle_option[301035]" value="347667" checked="checked" aria-required="true"><label class="label" for="bundle-option-00000"><div class="allowance">50GB<span>data </span></div><div class="price"><div class="regular-price-wrapper">£40.49 <span>/month</span></div>
-        <span class="clubcard-price-wrapper">
-            <span class="clubcard-price-label">Clubcard Price</span>
-            <span class="clubcard-price-value"><span>£54.99</span>/month</span>
-      </span></div></label></div>
-      </div>
-    `;
-    targetForRecommendedTariff.insertAdjacentHTML("afterend", recommendedTariffSection);
-    console.log("Render 1116");
-
-    // Verify element was created
-    setTimeout(() => {
-      document.getElementById("recommended-tariff-value");
+      const testEl = document.getElementById("data-estimation-value");
+      console.log("Estimation element found:", testEl ? "yes" : "no");
     }, 100);
 
     // TARIFF CTA BUTTON SECTION
-    const targetForTariffButton = document.querySelector(".recommended-tariff-section");
+    const targetForTariffButton = document.querySelector(".estimation-section");
     const tariffSection = `
       <div class="tariff-section">
         <div class="tariff-cta-btn">
@@ -1187,6 +1633,9 @@
             Select Tariff
         </button>
         </div>
+        <p>
+          This is a rough guide, based on average data uses, and all amounts are rounded up. Your actual data usage may be higher. According to Ofcom, customers tend to increase their data usage each year. Think about future-proofing your data allowance so you don’t run out of data later down the line.
+        </p>
       </div>
     `;
     targetForTariffButton.insertAdjacentHTML("afterend", tariffSection);
@@ -1199,13 +1648,13 @@
         // Recalculate total to be safe, though selectedValues is up to date
         const total = Object.values(selectedValues).reduce(
           (sum, v) => sum + Number(v || 0),
-          0
+          0,
         );
         const totalFixed = Math.ceil(total);
 
         // Select the nearest match tariff
         const tariffInputs = document.querySelectorAll(
-          '.option-type-tariff .field.choice input[type="radio"]'
+          '.option-type-tariff .field.choice input[type="radio"]',
         );
         const targetUsage = total < 0.5 ? 0.5 : totalFixed; // Target in GB
 

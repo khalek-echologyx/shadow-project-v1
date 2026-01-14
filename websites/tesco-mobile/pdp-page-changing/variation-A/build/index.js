@@ -24,8 +24,8 @@
       (t()
         ? i()
         : setTimeout(() => {
-          poll(t, i, o, o ? e : e - a, a);
-        }, a));
+            poll(t, i, o, o ? e : e - a, a);
+          }, a));
   }
 
   function createObserver(selector, onFound, options = {}) {
@@ -74,28 +74,15 @@
           },
           {
             title: "Apple Fintess +",
-            content: `Claim 3 months of Apple Fitness+ free
-                    Get 3 months of Apple Fitness+ free, when you purchase any iPhone. Claim your 3 months free Apple Fitness+ subscription in the Apple Fitness+ app on your iPhone within 3 months after first activating your Eligible Device.
-                    Eligible Handsets:
-                    iPhone 17
-                    iPhone 17 Pro
-                    iPhone 17 Pro Max
-                    iPhone Air
-                    iPhone 16 with Apple iPad A16
-                    iPhone 16eiPhone 16 Pro MaxiPhone 16 Pro Max with Apple Watch Series 10iPhone 16 ProiPhone 16 PlusiPhone 16iPhone 15 Pro MaxiPhone 15iPhone 14iPhone 13
-                    How to claim 3 months of Apple Fitness+ free
-                    Open the Apple Fitness+ app. Tap Enjoy 3 months Free. You might be asked to enter your Apple ID password, confirm your billing information, or add a valid payment method.
-                    Subscribing to Apple Fitness+ requires an iPhone 8 or later, or Apple Watch Series 3 or later paired with an iPhone 6s or later. Apple Fitness+ is only available in select regions.
-                    New subscribers get three months of Apple Fitness+ free when you buy a new eligible Apple iPhone, subject to the terms and conditions.
-                  Click Here for Full Terms & Conditions.`,
+            content: "Lorem",
           },
           {
             title: "Apple Arcade",
-            content: `'Enjoy unlimited access to over 200 incredibly fun games, including Arcade Originals, App Store Greats, and Timeless Classics, with no ads and no in-app purchases. Up to six people can play across their Apple devices.¹ Try it free on the App Store.²\nEligible Handsets:\niPhone 17iPhone 17 ProiPhone 17 Pro MaxiPhone AiriPhone 16 with Apple iPad A16\niPhone 16eiPhone 16 Pro MaxiPhone 16 Pro Max with Apple Watch Series 10iPhone 16 ProiPhone 16 PlusiPhone 16iPhone 15 Pro MaxiPhone 15iPhone 14iPhone 13\nOffer ends 90 days after your device activation\n*£6.99/month after free trial. Only one offer per Apple ID and only one offer per family if you’re part of a Family Sharing group, regardless of the number of devices you or your family purchase. Offer good for 3 months after eligible device activation. Plan automatically renews until cancelled. Restrictions and other terms apply.¹Requires iCloud Family Sharing. See apple.com/family-sharing for more information.²New subscribers only. £6.99/month after trial. The plan automatically renews after the trial until cancelled. Terms apply.'`,
+            content: "Lorem",
           },
           {
             title: "Apple News +",
-            content: "Get 3 months of AppleNews+ when you purchase any Apple device. Claim your 3 months free Apple News+ subscription in the Apple News app.\nEligible Handsets:\niPhone 17\niPhone 17 Pro\niPhone 17 Pro Max\niPhone Air\niPhone 16 with Apple iPad A16\niPhone 16eiPhone 16 Pro MaxiPhone 16 Pro Max with Apple Watch Series 10iPhone 16 ProiPhone 16 PlusiPhone 16iPhone 15 Pro MaxiPhone 15iPhone 14iPhone 13Offer must be claimed in the Apple News app within 3 months after first activating your Eligible Device. To see the offer appear, you will need to sign in with your Apple ID on your Eligible Device.Click Here for Full Terms & Conditions.How to claim 3 months of Apple News+:\n\nOpen the News app.\nTouch, tap News+ at the bottom of the screen.\nTap or click the trial subscription offer. One trial per Apple ID.\nIf asked, sign in with the Apple ID that you use for App Store and iTunes Store purchases. If you don't have an Apple ID, follow the prompts to create one. Find out what to do if you've forgotten your Apple ID or you're not sure whether you have one.\nIf asked, confirm your billing information. You may need to add a valid payment method.\nIf asked, agree to the terms and conditions.\n",
+            content: "Lorem",
           },
         ],
       };
@@ -161,17 +148,24 @@
       const accordions = document.querySelectorAll(".custom-sidebar-accordion");
       if (!accordions.length) return;
 
-      accordions.forEach((acc) => {
+      accordions.forEach((acc, index) => {
+        const content = acc.querySelector(".cust-sidebar-accordion-content");
         const icon = acc.querySelector(".custom-sidebar-accordion-icon");
-        icon.innerHTML = ACCORDION_ICON_COLLAPSED;
+        if (index === 0) {
+          acc.classList.add("_open");
+          content.style.maxHeight = content.scrollHeight + "px";
+          icon.innerHTML = ACCORDION_ICON_EXPANDED;
+        } else {
+          icon.innerHTML = ACCORDION_ICON_COLLAPSED;
+        }
       });
 
       accordions.forEach((accordion) => {
         const header = accordion.querySelector(
-          ".custom-sidebar-accordion-header"
+          ".custom-sidebar-accordion-header",
         );
         const content = accordion.querySelector(
-          ".cust-sidebar-accordion-content"
+          ".cust-sidebar-accordion-content",
         );
         const icon = accordion.querySelector(".custom-sidebar-accordion-icon");
 
@@ -180,7 +174,7 @@
           accordions.forEach((acc) => {
             acc.classList.remove("_open");
             acc.querySelector(
-              ".cust-sidebar-accordion-content"
+              ".cust-sidebar-accordion-content",
             ).style.maxHeight = null;
             acc.querySelector(".custom-sidebar-accordion-icon").innerHTML =
               ACCORDION_ICON_COLLAPSED;
@@ -248,7 +242,7 @@
       if (!document.querySelector(".modals-overlay")) {
         modalWrapper.insertAdjacentHTML(
           "beforebegin",
-          `<div class="modals-overlay" style="z-index: 901;"></div>`
+          `<div class="modals-overlay" style="z-index: 901;"></div>`,
         );
       }
       document.body.classList.add("_has-modal");
@@ -284,7 +278,7 @@
     if (!document.getElementById("promo-custom-sidebar")) {
       document.body.insertAdjacentHTML(
         "beforeend",
-        sidebarTemplate(globalState)
+        sidebarTemplate(globalState),
       );
     }
     target.insertAdjacentHTML("afterend", promoSection());
@@ -326,7 +320,7 @@
             node.click();
           } catch {
             node.dispatchEvent(
-              new MouseEvent("click", { bubbles: true, cancelable: true })
+              new MouseEvent("click", { bubbles: true, cancelable: true }),
             );
           }
         };
@@ -342,12 +336,12 @@
     attachPromoClick(
       "frozen-prices",
       "promotion-trigger-49632199458",
-      "frozenListener"
+      "frozenListener",
     );
     attachPromoClick(
       "no-eu-roaming",
       "promotion-trigger-49845199458",
-      "roamingListener"
+      "roamingListener",
     );
 
     document.body.addEventListener("click", (e) => {
@@ -369,10 +363,10 @@
   ========================= */
   function taskTwo() {
     const labelSpan = document.querySelector(
-      ".product-type-switcher .swatch-attribute > .swatch-attribute-label"
+      ".product-type-switcher .swatch-attribute > .swatch-attribute-label",
     );
     const paymentOptionsWrapper = document.querySelector(
-      ".swatch-attribute-options"
+      ".swatch-attribute-options",
     );
 
     if (!labelSpan || !paymentOptionsWrapper) return;
@@ -394,17 +388,17 @@
     <div class="payment-select-wrapper">
       <select name="payment-select" class="payment-select">
         ${paymentOptions
-        .map(
-          (option) => `
+          .map(
+            (option) => `
           <option 
             value="${option.value}" 
             ${option.label === selectedText ? "selected" : ""}
           >
             ${option.label}
           </option>
-        `
-        )
-      .join("")}
+        `,
+          )
+          .join("")}
       </select>
     </div>
   `;
@@ -417,7 +411,7 @@
       const selectedValue = e.target.value;
 
       const targetSwatch = paymentOptions.find(
-        (opt) => opt.value === selectedValue
+        (opt) => opt.value === selectedValue,
       )?.el;
 
       if (targetSwatch) {
@@ -447,7 +441,7 @@
     }
 
     const colorAndStorageSelect = document.getElementById(
-      "tm-deal-device-wrapper"
+      "tm-deal-device-wrapper",
     );
     if (!colorAndStorageSelect) return;
 
@@ -484,7 +478,7 @@
           const colorSpan = option.querySelector(".swatch-color");
           const bgColor = colorSpan
             ? colorSpan.style.backgroundColor ||
-            getComputedStyle(colorSpan).backgroundColor
+              getComputedStyle(colorSpan).backgroundColor
             : "";
           const label =
             option
@@ -506,47 +500,47 @@
       const customColorStorageContainer = `
         <div class="custom-color-storage-container">
           <div class="custom-color">
-            <div class="custom-color-title">Colour(${enabledColorOptions.length || 0})</div>
+            <div class="custom-color-title">Colour</div>
             <div class="custom-select-ui" id="custom-color-select">
               <div class="custom-select-selected" style="height: auto;">
                 ${enabledColorOptions
-        .filter(({ element }) =>
-          element.classList.contains("selected")
-        )
-        .map(
-          (opt) => `
+                  .filter(({ element }) =>
+                    element.classList.contains("selected"),
+                  )
+                  .map(
+                    (opt) => `
                   <span class="selected-color-dot" style="background: ${opt.bgColor}"></span>
                   <span class="selected-label">${opt.label}</span>
-                `
-      )
-        .join("")}
+                `,
+                  )
+                  .join("")}
               </div>
               <div class="custom-select-options">
                 ${enabledColorOptions
-        .map(
-          (opt) => `
+                  .map(
+                    (opt) => `
                   <div class="custom-select-option ${opt.element.classList.contains("selected") ? "selected" : ""}" data-value="${opt.originalIndex}">
                     <span class="color-dot" style="background: ${opt.bgColor}"></span>
                     <span class="option-label">${opt.label}</span>
                   </div>
-                `
-      )
-        .join("")}
+                `,
+                  )
+                  .join("")}
               </div>
             </div>
           </div>
           <div class="custom-storage">
-            <div class="custom-storage-title">Storage(${enabledStorageOptions.length || 0})</div>
+            <div class="custom-storage-title">Storage</div>
             <select name="storage-select" class="custom-storage-options">
               ${enabledStorageOptions
-        .map(
-          ({ element, originalIndex }) => `
+                .map(
+                  ({ element, originalIndex }) => `
                 <option value="${originalIndex}" ${element.classList.contains("selected") ? "selected" : ""}>
                   ${element.textContent.trim()}
                 </option>
-              `
-      )
-        .join("")}
+              `,
+                )
+                .join("")}
             </select>
           </div>
         </div>
@@ -567,7 +561,7 @@
             const colorSpan = option.querySelector(".swatch-color");
             const bgColor = colorSpan
               ? colorSpan.style.backgroundColor ||
-              getComputedStyle(colorSpan).backgroundColor
+                getComputedStyle(colorSpan).backgroundColor
               : "";
             const label =
               option
@@ -579,14 +573,8 @@
 
         // Update Color UI Options
         const optionsContainer = colorSelectUI.querySelector(
-          ".custom-select-options"
+          ".custom-select-options",
         );
-
-        // Update Color Title with new count
-        const colorTitle = document.querySelector(".custom-color-title");
-        if (colorTitle) {
-          colorTitle.textContent = `Colour(${currentColorOptions.length})`;
-        }
         optionsContainer.innerHTML = currentColorOptions
           .map(
             (opt) => `
@@ -594,16 +582,16 @@
             <span class="color-dot" style="background: ${opt.bgColor}"></span>
             <span class="option-label">${opt.label}</span>
           </div>
-        `
+        `,
           )
           .join("");
 
         // Update Color UI Selected State
         const selectedDisplay = colorSelectUI.querySelector(
-          ".custom-select-selected"
+          ".custom-select-selected",
         );
         const activeOpt = currentColorOptions.find(({ element }) =>
-          element.classList.contains("selected")
+          element.classList.contains("selected"),
         );
         if (activeOpt) {
           selectedDisplay.innerHTML = `
@@ -617,12 +605,6 @@
           .map((option, originalIndex) => ({ element: option, originalIndex }))
           .filter(({ element }) => !element.classList.contains("disabled"));
 
-        // Update Storage Title with new count
-        const storageTitle = document.querySelector(".custom-storage-title");
-        if (storageTitle) {
-          storageTitle.textContent = `Storage(${currentStorageOptions.length})`;
-        }
-
         // Rebuild storage options
         storageSelectEl.innerHTML = currentStorageOptions
           .map(
@@ -630,7 +612,7 @@
           <option value="${originalIndex}" ${element.classList.contains("selected") ? "selected" : ""}>
             ${element.textContent.trim()}
           </option>
-        `
+        `,
           )
           .join("");
       }
@@ -638,7 +620,7 @@
       // Color select UI click handlers
       if (colorSelectUI) {
         const selectedDisplay = colorSelectUI.querySelector(
-          ".custom-select-selected"
+          ".custom-select-selected",
         );
         selectedDisplay.addEventListener("click", () => {
           colorSelectUI.classList.toggle("_open");
@@ -708,20 +690,20 @@
           if (!customCCWrapper.classList.contains("new-cc-wrapper")) {
             customCCWrapper.classList.add("new-cc-wrapper");
             const regularPriceWrapper = customCCWrapper.querySelectorAll(
-              ".field .label .price .regular-price-wrapper > span"
+              ".field .label .price .regular-price-wrapper > span",
             );
             regularPriceWrapper.forEach((price) => {
               price.innerText = "/month";
             });
             const clubPriceWrapper = customCCWrapper.querySelectorAll(
-              ".field .label .price .clubcard-price-wrapper .clubcard-price-value"
+              ".field .label .price .clubcard-price-wrapper .clubcard-price-value",
             );
             clubPriceWrapper.forEach((span) => {
               span.innerHTML = span.innerHTML.replace(" a month", "/month");
             });
           }
         }
-      }
+      },
     );
 
     // REGULAR SECTION
@@ -738,7 +720,7 @@
         // 1️⃣ insert template string
         targetccWraper.insertAdjacentHTML(
           "afterend",
-          `<div class="new-grid-section"></div>`
+          `<div class="new-grid-section"></div>`,
         );
 
         // 2️⃣ get the newly inserted element
@@ -750,35 +732,35 @@
         });
 
         const regularPriceWrapper = newGridSection.querySelectorAll(
-          ".field .label .price .regular-price-wrapper > span"
+          ".field .label .price .regular-price-wrapper > span",
         );
         regularPriceWrapper.forEach((price) => {
           price.innerText = "/month";
         });
         const clubPriceWrapper = newGridSection.querySelectorAll(
-          ".field .label .price .clubcard-price-wrapper .clubcard-price-value"
+          ".field .label .price .clubcard-price-wrapper .clubcard-price-value",
         );
         clubPriceWrapper.forEach((span) => {
           span.innerHTML = span.innerHTML.replace(" a month", "/month");
         });
-      }
+      },
     );
 
     poll(
-      () => document.querySelector(".control .nested.options-list"),
+      () => document.querySelector(".nested.options-list"),
       () => {
-        const optionsList = document.querySelector(".control .nested.options-list");
+        const optionsList = document.querySelector(".nested.options-list");
         const filteredDataChoices =
           optionsList.querySelectorAll(".field.choice");
 
         // 1️⃣ insert template string
         optionsList.insertAdjacentHTML(
           "afterend",
-          `<div class="new-grid-section"></div>`
+          `<div class="new-grid-section"></div>`,
         );
 
         // 2️⃣ get the newly inserted element
-        const newGridSection = optionsList.nextElementSibling;
+        const newGridSection = optionsList.querySelector(".new-grid-section");
 
         // 3️⃣ move each choice into the new grid section
         filteredDataChoices.forEach((choice) => {
@@ -786,18 +768,18 @@
         });
 
         const regularPriceWrapper = newGridSection.querySelectorAll(
-          ".field .label .price .regular-price-wrapper > span"
+          ".field .label .price .regular-price-wrapper > span",
         );
         regularPriceWrapper.forEach((price) => {
           price.innerText = "/month";
         });
         const clubPriceWrapper = newGridSection.querySelectorAll(
-          ".field .label .price .clubcard-price-wrapper .clubcard-price-value"
+          ".field .label .price .clubcard-price-wrapper .clubcard-price-value",
         );
         clubPriceWrapper.forEach((span) => {
           span.innerHTML = span.innerHTML.replace(" a month", "/month");
         });
-      }
+      },
     );
   }
 
@@ -895,7 +877,7 @@
                  ${unit ? `data-unit="${unit}"` : ""}>
           <span class="button button--alpha">${label}</span>
         </label>
-      `
+      `,
         )
         .join("");
     }
@@ -962,7 +944,7 @@
 
     document.body.insertAdjacentHTML(
       "beforeend",
-      dataCalculatorSidebarTemplate()
+      dataCalculatorSidebarTemplate(),
     );
 
     function openDataCalculatorSidebar() {
@@ -973,7 +955,7 @@
       if (!document.querySelector(".modals-overlay")) {
         modalWrapper.insertAdjacentHTML(
           "beforebegin",
-          `<div class="modals-overlay" style="z-index: 901;"></div>`
+          `<div class="modals-overlay" style="z-index: 901;"></div>`,
         );
       }
       document.body.classList.add("_has-modal");
@@ -1038,7 +1020,7 @@
 
       const total = Object.values(selectedValues).reduce(
         (sum, v) => sum + Number(v || 0),
-        0
+        0,
       );
       const totalFixed = Math.ceil(total);
 
@@ -1048,12 +1030,12 @@
       if (!estimationEl) {
         const estSection = document.querySelector(".estimation-section");
         if (estSection) {
-          estimationEl = estSection.querySelector("p");
+          estimationEl = estSection.querySelector("h2");
           if (!estimationEl) {
             // Create it if missing
             const contentPart = estSection.querySelector(".content-part");
             if (contentPart) {
-              estimationEl = document.createElement("p");
+              estimationEl = document.createElement("h2");
               estimationEl.id = "data-estimation-value";
               contentPart.appendChild(estimationEl);
             }
@@ -1062,124 +1044,39 @@
       }
 
       if (estimationEl) {
-        estimationEl.textContent = (total > 0.5 ? totalFixed : total > 0 ? 500 : 0) + (total > 0.5 ? "GB" : "MB");
-        estimationEl.style.fontWeight = total > 0.5 ? "bold" : "normal";
+        estimationEl.textContent =
+          (total < 0.5 ? 500 : totalFixed) + (total < 0.5 ? "MB" : "GB");
       }
-      const targetTariffSection = document.querySelector(".recommended-tariff-section");
-
-      if (total > 0 && targetTariffSection) {
-        // Select the nearest match tariff
-        const tariffInputs = document.querySelectorAll(
-          '.option-type-tariff .field.choice input[type="radio"]'
-        );
-        const targetUsage = total < 0.5 ? 0.5 : totalFixed;
-        let closestInput = null;
-        let minDiff = Infinity;
-
-        tariffInputs.forEach((input) => {
-          // Find the label text. Typically follows the input.
-          const label = input.nextElementSibling;
-          const text = label ? label.textContent.trim().toLowerCase() : "";
-
-          let itemValue = 0;
-
-          // Parse value from text
-          if (text.includes("unlimited")) {
-            itemValue = 10000; // Large number for unlimited
-          } else {
-            const match = text.match(/(\d+(\.\d+)?)\s*(gb|mb)/i);
-            if (match) {
-              const val = parseFloat(match[1]);
-              const unit = match[3].toLowerCase();
-              itemValue = unit === "gb" ? val : val / 1000;
-            }
-          }
-
-          if (itemValue > 0) {
-            const diff = Math.abs(itemValue - targetUsage);
-            if (diff < minDiff) {
-              minDiff = diff;
-              closestInput = input;
-            }
-          }
-        });
-        targetTariffSection.style.display = "block";
-        if (closestInput) {
-          const sourceLabel = closestInput.nextElementSibling;
-          if (sourceLabel) {
-            const sourceAllowance = sourceLabel.querySelector(".allowance");
-            const sourcePrice = sourceLabel.querySelector(".price");
-            const targetAllowance = targetTariffSection.querySelector(".allowance");
-            const targetPrice = targetTariffSection.querySelector(".price");
-
-            if (sourceAllowance && targetAllowance) {
-              targetAllowance.innerHTML = sourceAllowance.innerHTML;
-            }
-            if (sourcePrice && targetPrice) {
-              targetPrice.innerHTML = sourcePrice.innerHTML;
-            }
-          }
-        }
-      } else {
-        targetTariffSection.style.display = "none";
-      }
-
     });
 
     // Estimation section
     const estimationSectionTarget = document.querySelector(
-      ".custom-data-calculator__content"
+      ".custom-data-calculator__content",
     );
     if (!estimationSectionTarget) {
       console.warn("Estimation target not found");
       return;
     }
     const estimationSection = `
-    <div class="estimation-section-wrapper">
-      <div class="estimation-section">
-        <div class="text-part">
-          Estimated usage
-        </div>
-        <div class="content-part">
-          <p id="data-estimation-value">0MB</>
-        </div>
+    <div class="estimation-section">
+      <div class="text-part">
+        Estimated usage
       </div>
-      <p>
-        This is a rough guide, based on average data uses, and all amounts are rounded up. Your actual data usage may be higher. According to Ofcom, customers tend to increase their data usage each year. Think about future-proofing your data allowance so you don’t run out of data later down the line.
-      </p>
+      <div class="content-part">
+        <h2 id="data-estimation-value">0MB</h2>
+      </div>
     </div>
     `;
     estimationSectionTarget.insertAdjacentHTML("afterend", estimationSection);
 
     // Verify element was created
     setTimeout(() => {
-      document.getElementById("data-estimation-value");
-    }, 100);
-
-    //RECOMMENDED TARIFF SECTION
-    const targetForRecommendedTariff = document.querySelector(".estimation-section-wrapper");
-    const recommendedTariffSection = `
-    <div class="recommended-tariff-section">
-      <div class="text-part">
-        <p>Recommended tariff</p>
-      </div>
-      <div class="field choice visible"><input type="radio" class="radio product bundle option change-container-classname" data-validate="{'validate-one-required-by-name':true}" name="bundle_option[301035]" data-selector="bundle_option[301035]" value="347667" checked="checked" aria-required="true"><label class="label" for="bundle-option-00000"><div class="allowance">50GB<span>data </span></div><div class="price"><div class="regular-price-wrapper">£40.49 <span>/month</span></div>
-        <span class="clubcard-price-wrapper">
-            <span class="clubcard-price-label">Clubcard Price</span>
-            <span class="clubcard-price-value"><span>£54.99</span>/month</span>
-      </span></div></label></div>
-      </div>
-    `;
-    targetForRecommendedTariff.insertAdjacentHTML("afterend", recommendedTariffSection);
-    console.log("Render 1116");
-
-    // Verify element was created
-    setTimeout(() => {
-      document.getElementById("recommended-tariff-value");
+      const testEl = document.getElementById("data-estimation-value");
+      console.log("Estimation element found:", testEl ? "yes" : "no");
     }, 100);
 
     // TARIFF CTA BUTTON SECTION
-    const targetForTariffButton = document.querySelector(".recommended-tariff-section");
+    const targetForTariffButton = document.querySelector(".estimation-section");
     const tariffSection = `
       <div class="tariff-section">
         <div class="tariff-cta-btn">
@@ -1187,6 +1084,9 @@
             Select Tariff
         </button>
         </div>
+        <p>
+          This is a rough guide, based on average data uses, and all amounts are rounded up. Your actual data usage may be higher. According to Ofcom, customers tend to increase their data usage each year. Think about future-proofing your data allowance so you don’t run out of data later down the line.
+        </p>
       </div>
     `;
     targetForTariffButton.insertAdjacentHTML("afterend", tariffSection);
@@ -1199,13 +1099,13 @@
         // Recalculate total to be safe, though selectedValues is up to date
         const total = Object.values(selectedValues).reduce(
           (sum, v) => sum + Number(v || 0),
-          0
+          0,
         );
         const totalFixed = Math.ceil(total);
 
         // Select the nearest match tariff
         const tariffInputs = document.querySelectorAll(
-          '.option-type-tariff .field.choice input[type="radio"]'
+          '.option-type-tariff .field.choice input[type="radio"]',
         );
         const targetUsage = total < 0.5 ? 0.5 : totalFixed; // Target in GB
 
