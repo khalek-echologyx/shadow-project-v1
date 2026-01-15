@@ -1,0 +1,25 @@
+html {
+  position: relative;
+}
+html::before {
+  content: "AB test pilot CSS";
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 99999999999;
+  background: #ff0000;
+  color: #ffffff;
+  padding: 10px;
+  border: 7px solid #269b11;
+}
+
+.banner-section {
+  grid-column: 1/-1 !important;
+  overflow: hidden !important;
+}
+.banner-section .banner-image {
+  width: 100% !important;
+  height: auto !important;
+  object-fit: cover !important;
+  object-position: center !important;
+}
