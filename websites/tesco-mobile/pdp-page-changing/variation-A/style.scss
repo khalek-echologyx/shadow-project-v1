@@ -15,12 +15,11 @@ html {
 }
 
 .promo-section {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+    justify-content: space-between;
   background: #fff;
-  margin: 0 -12px;
-    padding: 0 12px;
-    padding-bottom: 12px;
+  margin: 16px -12px;
+    padding: 20px 12px;
 }
 
 .promo-item {
@@ -36,7 +35,7 @@ html {
 
 .promo-item-img {
   height: 28px;
-  width: 28px;
+    width: 28px;
 }
 
 .promo-img-group {
@@ -60,7 +59,7 @@ html {
 
 .promo-item-img-group {
   display: flex;
-  gap: 8px;
+  gap: 4px;
 }
 
 .custom-sidebar-content {
@@ -132,9 +131,15 @@ html {
   margin: 16px 0;
 }
 
+.custom-color-storage-container .custom-color {
+  width: 60%;
+}
+
+.custom-color-storage-container .custom-storage {
+  width: 40%;
+}
 .custom-color,
 .custom-storage {
-  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -353,6 +358,7 @@ html {
     .label {
       flex-direction: column !important;
       align-items: start !important;
+      padding: 12px 12px !important;
 
       .allowance {
         flex-direction: row !important;
@@ -366,6 +372,20 @@ html {
       }
 
       .price {
+        bottom: 12px !important;
+        
+          .regular-price-wrapper span {
+            visibility: hidden;
+            position: relative;
+            padding: 0 !important;
+          }
+        
+          .regular-price-wrapper span::after {
+            content: "/month";
+            visibility: visible;
+            position: absolute;
+            left: 0;
+          }
         .clubcard-price-wrapper {
           .clubcard-price-label {
             display: none;
@@ -375,7 +395,28 @@ html {
     }
   }
 }
+.clubcard-price-wrapper {
+  background-color: #fcd700;
+  padding: 0 5px;
+}
 
+.clubcard-price-value {
+  visibility: hidden;
+  padding: 0 !important;
+}
+
+.clubcard-price-value span {
+  position: relative;
+  visibility: visible;
+}
+
+.clubcard-price-value span::after {
+  content: "/month";
+  position: absolute;
+  left: 113%;
+  font-size: 14px;
+  font-family: 'TESCOModern-Regular', Tahoma, sans-serif;
+}
 // Data Calculator Sidebar
 ._has-modal .modal-slide {
   max-width: 320px;
@@ -613,6 +654,15 @@ input {
           span {
             font-size: 14px;
             font-family: 'TESCOModern-Regular', Tahoma, sans-serif;
+            visibility: hidden;
+              position: relative;
+            }
+            
+            span::after {
+              content: "/month";
+              visibility: visible;
+              position: absolute;
+              right: 0;
           }
         }
 

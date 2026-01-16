@@ -41,6 +41,10 @@
         const bannerImage =
           "https://www.rimowa.com/on/demandware.static/-/Sites-rimowa-storefront-final/default/dwbebe41fe/images/category_hero_desktop_3x1/PLP_H1_DESKTOP_CLASSICPLP_08012026.jpg";
         const bannerAlt = "Collection de valises Classic";
+        const bannerTitle = "Build your own Classic suitcase";
+        const bannerDescription = "Personalize your RIMOWA Classic suitcase with a selection of colors and accessories.";
+        const bannerLink = "https://www.rimowa.com/fr/fr/classic/";
+        const bannerButtonText = "Discover";
 
         let observer = null;
 
@@ -60,6 +64,12 @@
               const banner = `
               <div class="grid-tile banner-section">
                 <img class="banner-image" src="${bannerImage}" alt="${bannerAlt}" />
+                <div class="banner-wrapper">
+                  <div class="banner-content">
+                  <h3>${bannerTitle}</h3>
+                  <p>${bannerDescription}</p>
+                  <a class="a-btn m-fill-white bf-clp-button" href="${bannerLink}">${bannerButtonText}</a>
+                </div></div>
               </div>
             `;
               tiles[3].insertAdjacentHTML("afterend", banner);

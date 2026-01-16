@@ -17,9 +17,8 @@ html::before {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   background: #fff;
-  margin: 0 -12px;
-  padding: 0 12px;
-  padding-bottom: 12px;
+  margin: 16px -12px;
+  padding: 20px;
 }
 
 .promo-item {
@@ -132,9 +131,16 @@ html::before {
   margin: 16px 0;
 }
 
+.custom-color-storage-container .custom-color {
+  width: 60%;
+}
+
+.custom-color-storage-container .custom-storage {
+  width: 40%;
+}
+
 .custom-color,
 .custom-storage {
-  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -334,6 +340,7 @@ html::before {
 .new-grid-section .field .label {
   flex-direction: column !important;
   align-items: start !important;
+  padding: 12px 12px !important;
 }
 .new-grid-section .field .label .allowance {
   flex-direction: row !important;
@@ -344,6 +351,20 @@ html::before {
   margin-top: -2px !important;
   margin-left: 4px !important;
 }
+.new-grid-section .field .label .price {
+  bottom: 12px !important;
+}
+.new-grid-section .field .label .price .regular-price-wrapper span {
+  visibility: hidden;
+  position: relative;
+  padding: 0 !important;
+}
+.new-grid-section .field .label .price .regular-price-wrapper span::after {
+  content: "/month";
+  visibility: visible;
+  position: absolute;
+  left: 0;
+}
 .new-grid-section
   .field
   .label
@@ -351,6 +372,29 @@ html::before {
   .clubcard-price-wrapper
   .clubcard-price-label {
   display: none;
+}
+
+.clubcard-price-wrapper {
+  background-color: #fcd700;
+  padding: 0 5px;
+}
+
+.clubcard-price-value {
+  visibility: hidden;
+  padding: 0 !important;
+}
+
+.clubcard-price-value span {
+  position: relative;
+  visibility: visible;
+}
+
+.clubcard-price-value span::after {
+  content: "/month";
+  position: absolute;
+  left: 113%;
+  font-size: 14px;
+  font-family: "TESCOModern-Regular", Tahoma, sans-serif;
 }
 
 ._has-modal .modal-slide {
@@ -614,6 +658,19 @@ html::before {
 .recommended-tariff-section .field .label .price .regular-price-wrapper span {
   font-size: 14px;
   font-family: "TESCOModern-Regular", Tahoma, sans-serif;
+  visibility: hidden;
+  position: relative;
+}
+.recommended-tariff-section
+  .field
+  .label
+  .price
+  .regular-price-wrapper
+  span::after {
+  content: "/month";
+  visibility: visible;
+  position: absolute;
+  right: 0;
 }
 .recommended-tariff-section
   .field

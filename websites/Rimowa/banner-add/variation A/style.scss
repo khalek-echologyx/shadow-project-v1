@@ -17,10 +17,41 @@ html {
 .banner-section{
   grid-column: 1 / -1 !important;
   overflow: hidden !important;
+  position: relative;
   .banner-image{
-    width: 100% !important;
-    height: auto !important;
-    object-fit: cover !important;
-    object-position: center !important;
+    width: 100%;
+      height: auto;
+      object-fit: cover;
+      object-position: center;
+    }
+    
+    .banner-wrapper {
+      position: absolute;
+      top: 0;
+      left: 200px;
+      width: 50%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .banner-content {
+      color: #fff;
+    
+      h3 {
+        font-size: 56px;
+        font-weight: 700;
+        line-height: 1.2;
+        margin-bottom: 20px;
+        font-weight: 100;
+      }
+    
+      p {
+        font-size: 20px;
+        font-weight: 400;
+        line-height: 1.2;
+        margin-bottom: 20px;
+      }
   }
 }

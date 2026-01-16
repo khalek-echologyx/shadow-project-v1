@@ -99,6 +99,73 @@
               "Get 3 months of AppleNews+ when you purchase any Apple device. Claim your 3 months free Apple News+ subscription in the Apple News app.\nEligible Handsets:\niPhone 17\niPhone 17 Pro\niPhone 17 Pro Max\niPhone Air\niPhone 16 with Apple iPad A16\niPhone 16eiPhone 16 Pro MaxiPhone 16 Pro Max with Apple Watch Series 10iPhone 16 ProiPhone 16 PlusiPhone 16iPhone 15 Pro MaxiPhone 15iPhone 14iPhone 13Offer must be claimed in the Apple News app within 3 months after first activating your Eligible Device. To see the offer appear, you will need to sign in with your Apple ID on your Eligible Device.Click Here for Full Terms & Conditions.How to claim 3 months of Apple News+:\n\nOpen the News app.\nTouch, tap News+ at the bottom of the screen.\nTap or click the trial subscription offer. One trial per Apple ID.\nIf asked, sign in with the Apple ID that you use for App Store and iTunes Store purchases. If you don't have an Apple ID, follow the prompts to create one. Find out what to do if you've forgotten your Apple ID or you're not sure whether you have one.\nIf asked, confirm your billing information. You may need to add a valid payment method.\nIf asked, agree to the terms and conditions.\n",
           },
         ],
+        roaming: `<div data-content-type="text" data-appearance="default" data-element="main"><p>Join Tesco Mobile and take your UK data, minutes and texts with you to 48 destinations across the EU and beyond – at no extra cost – with Home From Home. Whether you’re sharing pics in Paris or using maps in Madrid, you’ll stay connected. No setup, no stress, no scary bills – just roam like you’re at home.&nbsp;</p>
+<p>To check how much it costs to use your phone in a specific destination, including our rest of the world destinations, you can use our <a tabindex="0" href="https://www.tescomobile.com/roaming" target="_blank" rel="noopener">helpful checker</a>. You can also see how much it costs to call or text another country from the UK.</p>
+<p>What destinations are included in Home From Home?</p>
+<ul>
+<li>Austria</li>
+<li>Azores</li>
+<li>Belgium</li>
+<li>Bulgaria</li>
+<li>Canary Islands</li>
+<li>Croatia</li>
+<li>Republic of Cyprus</li>
+<li>Czech Republic</li>
+<li>Denmark</li>
+<li>Estonia</li>
+<li>Finland</li>
+<li>France</li>
+<li>French Guiana</li>
+<li>Germany</li>
+<li>Gibraltar</li>
+<li>Greece</li>
+<li>Guadeloupe</li>
+<li>Guernsey</li>
+<li>Hungary</li>
+<li>Iceland</li>
+<li>Ireland (Republic of)</li>
+<li>Isle of Man</li>
+<li>Jersey</li>
+<li>Italy</li>
+<li>Latvia</li>
+<li>Liechtenstein</li>
+<li>Lithuania</li>
+<li>Luxembourg</li>
+<li>Madeira</li>
+<li>Malta</li>
+<li>Martinique</li>
+<li>Mayotte</li>
+<li>Monaco</li>
+<li>Netherlands</li>
+<li>Norway</li>
+<li>Poland</li>
+<li>Portugal</li>
+<li>Reunion</li>
+<li>Romania</li>
+<li>San Marino</li>
+<li>Slovakia</li>
+<li>Slovenia</li>
+<li>Spain</li>
+<li>St. Martin</li>
+<li>St. Barts</li>
+<li>Sweden</li>
+<li>Switzerland</li>
+<li>Vatican City</li>
+</ul>
+<p><a tabindex="0" href="https://www.tescomobile.com/why-tesco-mobile/award-winning-network/home-from-home">Find out more here</a></p></div>`,
+        frozenPrice: `<div data-enable-parallax="0" data-parallax-speed="0.5" data-background-images="{}" data-background-type="image" data-video-loop="true" data-video-play-only-visible="true" data-video-lazy-load="true" data-video-fallback-src="" data-element="inner" data-pb-style="A88VESI"><h2 data-content-type="heading" data-appearance="default" data-element="main">With Clubcard Prices, you’ll get fixed prices – so no mid-contract price increase&nbsp;</h2><div data-content-type="text" data-appearance="default" data-element="main"><p>Take out one of our exclusive Clubcard Price deals on a pay monthly phone or SIM, and we promise to freeze your basic monthly usage price for the length of your contract.</p>
+<p><span style="font-size: 14px;">A Clubcard number is required to get Clubcard Prices.&nbsp;<br></span></p>
+<p><a tabindex="0" href="https://www.tescomobile.com/shop/clubcard-prices"><span style="font-size: 14px;">View our full range of phones on Clubcard prices</span></a></p>
+<p><span style="font-size: 14px;">Learn more about <a tabindex="0" href="https://www.tescomobile.com/why-tesco-mobile/supermarket-value/clubcard-prices">Clubcard Prices&nbsp;</a></span></p>
+<p><span style="font-size: 14px;">Don’t have a Clubcard yet? It’s free, quick and easy to sign up. <a tabindex="0" href="https://www.tesco.com/account/register/en-GB?sc_cmp=ref*tm*stc*tm_clubcard_stamp_22_09_2022*tm_clubcard_register_page&amp;utm_source=tesco_mobile&amp;utm_medium=tm_clubcard_stamp_22_09_2022&amp;utm_campaign=tm_clubcard_register_page">Join Clubcard</a> to start saving now.<br><br></span></p>
+<p><span style="font-size: 16px;"><strong>How can I get Clubcard Prices?</strong></span></p>
+<p><span style="font-size: 14px;">To get Clubcard Prices on selected pay monthly deals, simply provide your Clubcard number when you’re checking out.<br><br></span><span style="font-size: 14px;">Current Clubcard Price deals available between 29th December 2025 and 1st February 2026.</span></p>
+<p>&nbsp;</p>
+<p><span style="font-size: 16px;"><strong>Where can I find my Clubcard number?</strong></span></p>
+<p><span style="font-size: 14px;"><span style="text-decoration: underline;">On your Clubcard</span>: It’s the long number on the front, below your name.</span></p>
+<p><span style="font-size: 14px;"><span style="text-decoration: underline;">On your key fob</span>: it’s on the back, near the QR code.</span></p>
+<p><span style="font-size: 14px;"><span style="text-decoration: underline;">In your Tesco app</span>: Select the Clubcard icon, and then ‘Tap to scan’ and your number will be displayed.</span></p>
+<p><span style="font-size: 14px;"><span style="text-decoration: underline;">On your Tesco Bank credit card</span>: It’s on the back, on the bottom left.</span></p></div></div>`,
       };
     }
 
@@ -241,11 +308,30 @@
       <div class="promo-sidebar-backdrop" data-promo-backdrop style="display:none"></div>`;
     }
 
-    function openSidebar() {
+    function openSidebar(contentKey = "apple") {
       const sidebar = document.getElementById("promo-custom-sidebar");
       const backdrop = document.querySelector("[data-promo-backdrop]");
       const modalWrapper = document.querySelector(".modals-wrapper");
-      if (!sidebar || !backdrop || !modalWrapper) return;
+      const contentContainer = document.querySelector(
+        ".custom-sidebar-content",
+      );
+
+      if (!sidebar || !backdrop || !modalWrapper || !contentContainer) return;
+
+      if (contentKey === "apple") {
+        contentContainer.innerHTML = `
+            <h2>Get 3 months free when you buy any iPhone.</h2>
+            <div class="custom-sidebar-accordion-section">
+              ${renderAccrodion(globalState)}
+            </div>
+            `;
+        initAccordion();
+      } else if (contentKey === "roaming") {
+        contentContainer.innerHTML = globalState.roaming;
+      } else if (contentKey === "frozenPrice") {
+        contentContainer.innerHTML = globalState.frozenPrice;
+      }
+
       if (!document.querySelector(".modals-overlay")) {
         modalWrapper.insertAdjacentHTML(
           "beforebegin",
@@ -293,7 +379,7 @@
     createObserver(SELECTORS.promoImageGroup, (imgGroup) => {
       if (imgGroup.dataset.sidebarBound) return;
       imgGroup.dataset.sidebarBound = "1";
-      imgGroup.addEventListener("click", () => openSidebar());
+      imgGroup.addEventListener("click", () => openSidebar("apple"));
     });
 
     initAccordion();
@@ -314,42 +400,20 @@
     });
 
     const promoItemsSection = document.querySelector(SELECTORS.promoItems);
+    console.log(promoItemsSection, "promoItemsSection");
     if (promoItemsSection) promoItemsSection.style.display = "none";
 
     // Click Handlers
-    function attachPromoClick(id, triggerId, flag) {
+    function attachSidebarTrigger(id, contentKey) {
       const el = document.getElementById(id);
-      if (!el || el.dataset[flag]) return;
-      el.dataset[flag] = "1";
-      el.addEventListener("click", () => {
-        const clickIt = (node) => {
-          try {
-            node.click();
-          } catch {
-            node.dispatchEvent(
-              new MouseEvent("click", { bubbles: true, cancelable: true }),
-            );
-          }
-        };
-        const trigger = document.getElementById(triggerId);
-        if (trigger) {
-          clickIt(trigger);
-          return;
-        }
-        createObserver(`#${triggerId}`, clickIt, { timeout: 5000 });
-      });
+      if (!el || el.dataset.sidebarBound) return;
+      el.dataset.sidebarBound = "1";
+      el.style.cursor = "pointer";
+      el.addEventListener("click", () => openSidebar(contentKey));
     }
 
-    attachPromoClick(
-      "frozen-prices",
-      "promotion-trigger-49632199458",
-      "frozenListener",
-    );
-    attachPromoClick(
-      "no-eu-roaming",
-      "promotion-trigger-49845199458",
-      "roamingListener",
-    );
+    attachSidebarTrigger("frozen-prices", "frozenPrice");
+    attachSidebarTrigger("no-eu-roaming", "roaming");
 
     document.body.addEventListener("click", (e) => {
       if (
@@ -787,19 +851,6 @@
         filteredDataChoices.forEach((choice) => {
           newGridSection.appendChild(choice);
         });
-
-        const regularPriceWrapper = newGridSection.querySelectorAll(
-          ".field .label .price .regular-price-wrapper > span",
-        );
-        regularPriceWrapper.forEach((price) => {
-          price.innerText = "/month";
-        });
-        const clubPriceWrapper = newGridSection.querySelectorAll(
-          ".field .label .price .clubcard-price-wrapper .clubcard-price-value",
-        );
-        clubPriceWrapper.forEach((span) => {
-          span.innerHTML = span.innerHTML.replace(" a month", "/month");
-        });
       },
     );
   }
@@ -1183,7 +1234,6 @@
       "afterend",
       recommendedTariffSection,
     );
-    console.log("Render 1116");
 
     // Verify element was created
     setTimeout(() => {
