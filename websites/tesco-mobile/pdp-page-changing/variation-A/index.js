@@ -958,7 +958,7 @@
               <img class="data-calculator__context__icon"
                   src="${iconBasePath}/${item.icon}"
                   alt="${item.name}">
-              <strong class="data-calculator__context__name">${item.name}</strong>
+              <span class="data-calculator__context__name">${item.name}</span>
             </div>
           </div>
 
