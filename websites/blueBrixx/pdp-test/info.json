@@ -1,0 +1,13 @@
+{
+  "id": "1768824822856_3917_pdp_test",
+  "name": "pdp-test",
+  "type": "A/B",
+  "website": "blueBrixx",
+  "variations": [
+    "control",
+    "variation A"
+  ],
+  "createdAt": "2026-01-19T12:13:42.856Z",
+  "createdAtReadable": "1/19/2026, 6:13:42 PM",
+  "lastUpdated": "2026-01-19T12:13:42.974Z"
+}

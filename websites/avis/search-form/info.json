@@ -1,0 +1,13 @@
+{
+  "id": "1768817467366_3890_search_form",
+  "name": "search-form",
+  "type": "A/B",
+  "website": "avis",
+  "variations": [
+    "control",
+    "variation A"
+  ],
+  "createdAt": "2026-01-19T10:11:07.367Z",
+  "createdAtReadable": "1/19/2026, 4:11:07 PM",
+  "lastUpdated": "2026-01-19T10:11:07.718Z"
+}

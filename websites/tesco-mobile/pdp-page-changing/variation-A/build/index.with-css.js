@@ -20,11 +20,11 @@ html::before {
 }
 
 .promo-section {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
+  justify-content: space-around;
   background: #fff;
   margin: 16px -12px;
-  padding: 20px;
+  padding: 20px 12px;
 }
 
 .promo-item {
@@ -64,7 +64,12 @@ html::before {
 
 .promo-item-img-group {
   display: flex;
-  gap: 8px;
+  gap: 4px;
+}
+
+.product-info-main .cc-savings .clubcard-stripe {
+  min-width: 0px;
+  margin: 0px;
 }
 
 .custom-sidebar-content {
@@ -380,22 +385,22 @@ html::before {
   display: none;
 }
 
-.clubcard-price-wrapper {
+.new-grid-section .clubcard-price-wrapper {
   background-color: #fcd700;
   padding: 0 5px;
 }
 
-.clubcard-price-value {
+.new-grid-section .clubcard-price-value {
   visibility: hidden;
   padding: 0 !important;
 }
 
-.clubcard-price-value span {
+.new-grid-section .clubcard-price-value span {
   position: relative;
   visibility: visible;
 }
 
-.clubcard-price-value span::after {
+.new-grid-section .clubcard-price-value span::after {
   content: "/month";
   position: absolute;
   left: 113%;
@@ -507,7 +512,6 @@ html::before {
   border: 1px solid #d9e5eb;
   background: #ffffff;
   color: #00539f;
-  font-weight: bold;
 }
 
 .custom-data-calculator__content .data-calculator__context__label--layout {
@@ -521,30 +525,30 @@ html::before {
   label:first-child
   .button {
   border-radius: 5px 0 0 0;
-  border-bottom: none;
+  border-bottom: none !important;
 }
 
 .custom-data-calculator__content
   .data-calculator__context__values
   label:nth-child(2)
   .button {
-  border-bottom: none;
-  border-radius: 0 5px 0 0;
+  border-bottom: none !important;
+  border-radius: 0 5px 0 0 !important;
 }
 
 .custom-data-calculator__content
   .data-calculator__context__values
   label:nth-child(4)
   .button {
-  border-radius: 0 0 5px 0;
+  border-radius: 0 0 5px 0 !important;
 }
 
 .custom-data-calculator__content
   .data-calculator__context__values
   label:last-child
   .button {
-  border-top: none;
-  border-radius: 0 0 5px 5px;
+  border-top: none !important;
+  border-radius: 0 0 5px 5px !important;
 }
 
 .estimation-section {
@@ -1679,7 +1683,7 @@ html::before {
               <img class="data-calculator__context__icon"
                   src="${iconBasePath}/${item.icon}"
                   alt="${item.name}">
-              <strong class="data-calculator__context__name">${item.name}</strong>
+              <span class="data-calculator__context__name">${item.name}</span>
             </div>
           </div>
 
