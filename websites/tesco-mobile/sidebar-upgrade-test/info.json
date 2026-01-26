@@ -1,0 +1,17 @@
+{
+  "id": "1769419705531_4192_sidebar_upgrade_test",
+  "name": "sidebar-upgrade-test",
+  "type": "A/B",
+  "website": "tesco-mobile",
+  "variations": [
+    "control",
+    "Variation A (Unauth)",
+    "Variation A (Auth)",
+    "Variation B (Unauth)",
+    "Variation B (Auth)",
+    "Variation C (Unauth)"
+  ],
+  "createdAt": "2026-01-26T09:28:25.533Z",
+  "createdAtReadable": "1/26/2026, 3:28:25 PM",
+  "lastUpdated": "2026-01-26T15:29:26.251Z"
+}

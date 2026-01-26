@@ -1,0 +1,46 @@
+.upgrade-li-added{
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.upgrade-li-added li{
+ width: 100%;
+}
+
+.upgrade-li-added .action.upgrade{
+    border: 2px solid #00539f;
+    color: #00539f;
+    cursor: pointer;
+    display: inline-block;
+    font-family: 'TESCOModern-Bold',Tahoma,sans-serif;
+    font-weight: 400;
+    padding: 8px 18px;
+    font-size: 1.6rem;
+    line-height: 2rem;
+    box-sizing: border-box;
+    vertical-align: middle;
+    -webkit-transition: all .15s;
+    -moz-transition: all .15s;
+    -ms-transition: all .15s;
+    -o-transition: all .15s;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px;
+    text-decoration: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    margin: 2px 0;
+    max-width: 480px;
+    width: 100%;
+    text-align: center;
+    margin: 0;
+  
+}
+
+.upgrade-li-added .action.upgrade i{
+  font-size: 16px;
+  display: inline;
+  margin-right: 5px;
+}
