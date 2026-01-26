@@ -26,7 +26,6 @@
           frequency,
         );
   }
-
   function mainJs([body]) {
     body.classList.add("BBX-218");
   }

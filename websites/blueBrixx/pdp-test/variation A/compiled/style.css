@@ -1,61 +1,73 @@
-.BBX-218 [itemprop=offers] > :nth-child(6) {
-  margin-bottom: 20px !important;
-}
-.BBX-218 [itemprop=offers] > .esbb-shipping-payment-area-below-wishlist {
+[itemprop=offers] > .esbb-shipping-payment-area-below-wishlist {
   display: none;
 }
-.BBX-218 [itemprop=offers] > :nth-child(8) {
-  border-bottom: 1px solid #F5F5F4;
+
+.BBX-218 [itemprop=offers] > .product-detail-form-container {
+  margin-bottom: 20px !important;
+}
+.BBX-218 [itemprop=offers] > .esbb-pp-pay-later-hint {
+  border-bottom: 1px solid #f5f5f4;
   padding-bottom: 12px;
   margin-top: 0px !important;
-  color: #494949;
+  color: #000;
   gap: 12px !important;
   align-items: center;
+  font-size: 14px;
 }
-.BBX-218 [itemprop=offers] > :nth-child(8) > img {
+.BBX-218 [itemprop=offers] > .esbb-pp-pay-later-hint > img {
   width: 54px !important;
   height: 14px !important;
 }
-.BBX-218 [itemprop=offers] > :nth-child(8) > span {
-  font-size: 16px !important;
+.BBX-218 [itemprop=offers] > .esbb-pp-pay-later-hint > span {
+  font-size: 14px !important;
   font-weight: 400;
   left: 0 !important;
+  top: 0 !important;
 }
-.BBX-218 [itemprop=offers] > :nth-child(9) + div {
+.BBX-218 [itemprop=offers] > .esbb-swallow-hint {
   justify-content: start !important;
   gap: 26px !important;
   margin: 0 !important;
   padding-top: 12px !important;
+  font-size: 14px;
 }
-.BBX-218 [itemprop=offers] > :nth-child(9) + div > span {
-  font-size: 16px !important;
+.BBX-218 [itemprop=offers] > .esbb-swallow-hint > span {
+  font-size: 14px !important;
   font-weight: 400;
 }
-.BBX-218 [itemprop=offers] > :nth-child(9) + div > img {
+.BBX-218 [itemprop=offers] > .esbb-swallow-hint > img {
   width: 40px !important;
   height: 40px !important;
 }
-.BBX-218 [itemprop=offers] > :nth-child(8) + div:not(.esbb-shallow-hint) {
-  order: 4 !important;
+.BBX-218 [itemprop=offers] > .BBX-14__esbb-product-specs-variant {
   border-bottom: 0 !important;
+  order: 4 !important;
 }
 @media screen and (max-width: 1024px) {
-  .BBX-218 [itemprop=offers] > :nth-child(8) > img {
+  .BBX-218 [itemprop=offers] > .esbb-pp-pay-later-hint {
+    padding-bottom: 10px;
+  }
+  .BBX-218 [itemprop=offers] > .esbb-pp-pay-later-hint > img {
     width: 35px !important;
     height: 9px !important;
   }
-  .BBX-218 [itemprop=offers] > :nth-child(8) > span.esbb-pp-pay-later-hint-text {
+  .BBX-218 [itemprop=offers] > .esbb-pp-pay-later-hint > span.esbb-pp-pay-later-hint-text {
     font-size: 14px !important;
     left: 0 !important;
+    top: 0 !important;
   }
-  .BBX-218 [itemprop=offers] > :nth-child(9) + div {
+  .BBX-218 [itemprop=offers] > .esbb-swallow-hint {
     gap: 19px !important;
+    padding-top: 10px !important;
   }
-  .BBX-218 [itemprop=offers] > :nth-child(9) + div > span {
+  .BBX-218 [itemprop=offers] > .esbb-swallow-hint > span {
     font-size: 14px !important;
   }
-  .BBX-218 [itemprop=offers] > :nth-child(9) + div > img {
+  .BBX-218 [itemprop=offers] > .esbb-swallow-hint > img {
     width: 28px !important;
     height: 28px !important;
+  }
+  .BBX-218 [itemprop=offers] > .BBX-14__esbb-product-specs-variant {
+    margin-top: 8px !important;
   }
 }
