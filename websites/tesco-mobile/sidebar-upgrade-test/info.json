@@ -9,9 +9,10 @@
     "Variation A (Auth)",
     "Variation B (Unauth)",
     "Variation B (Auth)",
-    "Variation C (Unauth)"
+    "Variation C (Unauth)",
+    "Variation C (Auth)"
   ],
   "createdAt": "2026-01-26T09:28:25.533Z",
   "createdAtReadable": "1/26/2026, 3:28:25 PM",
-  "lastUpdated": "2026-01-26T15:29:26.251Z"
+  "lastUpdated": "2026-01-27T08:48:26.394Z"
 }

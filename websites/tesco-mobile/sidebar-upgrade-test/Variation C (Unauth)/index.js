@@ -55,8 +55,65 @@
       () => {
         const targetLoginSection = document.querySelector(".account-links");
         targetLoginSection.insertAdjacentHTML("afterend", upgradeSection());
+        var upgradeBtn = document.querySelector(".upgrade-section > p > a")
+        upgradeBtn.addEventListener("click", function () {
+          utag.link({
+            event_name: "target_track-e241-2607_upgradeCta",
+          });
+        });
       }
     )
+    // Login btn tracker
+    poll(
+      () => document.querySelector(".account-links"),
+      () => {
+        const targetLoginSection = document.querySelector(".account-links");
+
+        var loginBtn = targetLoginSection.querySelector(".action.login");
+        loginBtn.addEventListener("click", function () {
+          utag.link({
+            event_name: "target_track-e241-2607_loginCta",
+          });
+        });
+      }
+    );
+
+    //MEGA MENU UPGREADE OPTIONS
+    poll(
+      function () {
+        return document.querySelector(
+          '.main-menu-custom.navigation > ul > li:nth-child(1)'
+        );
+      },
+      function () {
+        var container = document.querySelector(
+          '.main-menu-custom.navigation > ul > li:nth-child(1)'
+        );
+        var links = container.getElementsByTagName('a');
+
+        for (var i = 0; i < links.length; i++) {
+          if (links[i].textContent.trim() === 'Upgrade Options') {
+            var upgradeLink = links[i];
+
+            // change href
+            upgradeLink.setAttribute('href', '/customer/account/upgrades/');
+
+            // add click listener (only once)
+            if (!upgradeLink.__clickBound) {
+              upgradeLink.addEventListener('click', function () {
+                utag.link({
+                  event_name: "target_track-e241-2607_upgradeOpt",
+                });
+              });
+
+              upgradeLink.__clickBound = true;
+            }
+
+            break;
+          }
+        }
+      },
+    );
   }
 
   waitForElem("body", mainJs);

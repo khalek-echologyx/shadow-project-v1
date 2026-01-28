@@ -1,9 +1,3 @@
-var id = "1769419705636_3822_control";
-var name = "control";
-var testInfo = {
-	id: id,
-	name: name};
-
 (() => {
   function waitForElem(
     waitFor,
@@ -33,14 +27,70 @@ var testInfo = {
         );
   }
 
-  function mainJs([body]) {
-    console.table({ ID: testInfo.id, Variation: testInfo.name });
+  function poll(t, i, o, e, a) {
+    o = o || false;
+    e = e || 10000;
+    a = a || 25;
+    e < 0 ||
+      (t() ?
+        i() :
+        setTimeout(function () {
+          poll(t, i, o, o ? e : e - a, a);
+        }, a));
+  }
 
-    console.log(
-      "%cname: v-01",
-      "background: black;border: 2px solid green;color: white;display: block;text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);text-align: center;font-weight: bold;padding : 10px;margin : 10px"
+  function mainJs() {
+    // Login btn tracker
+    poll(
+      () => document.querySelector(".account-links"),
+      () => {
+        const targetLoginSection = document.querySelector(".account-links");
+
+        var loginBtn = targetLoginSection.querySelector(".action.login");
+        loginBtn.addEventListener("click", function () {
+          utag.link({
+            event_name: "target_track-e241-2607_loginCta",
+          });
+        });
+      }
     );
-    console.log("name: v-01");
+
+    //MEGA MENU UPGREADE OPTIONS
+    poll(
+      function () {
+        return document.querySelector(
+          '.main-menu-custom.navigation > ul > li:nth-child(1)'
+        );
+      },
+      function () {
+        var container = document.querySelector(
+          '.main-menu-custom.navigation > ul > li:nth-child(1)'
+        );
+        var links = container.getElementsByTagName('a');
+
+        for (var i = 0; i < links.length; i++) {
+          if (links[i].textContent.trim() === 'Upgrade Options') {
+            var upgradeLink = links[i];
+
+            // change href
+            upgradeLink.setAttribute('href', '/customer/account/upgrades/');
+
+            // add click listener (only once)
+            if (!upgradeLink.__clickBound) {
+              upgradeLink.addEventListener('click', function () {
+                utag.link({
+                  event_name: "target_track-e241-2607_upgradeOpt",
+                });
+              });
+
+              upgradeLink.__clickBound = true;
+            }
+
+            break;
+          }
+        }
+      },
+    );
   }
 
   waitForElem("body", mainJs);
