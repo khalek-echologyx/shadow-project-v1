@@ -12,19 +12,19 @@
       : document.querySelectorAll(waitFor);
     if (timer <= 0) return;
     (!isVariable && elements.length >= minElements) ||
-      (isVariable && typeof window[waitFor] !== "undefined")
+    (isVariable && typeof window[waitFor] !== "undefined")
       ? callback(elements)
       : setTimeout(
-        () =>
-          waitForElem(
-            waitFor,
-            callback,
-            minElements,
-            isVariable,
-            timer - frequency
-          ),
-        frequency
-      );
+          () =>
+            waitForElem(
+              waitFor,
+              callback,
+              minElements,
+              isVariable,
+              timer - frequency
+            ),
+          frequency
+        );
   }
 
   function poll(t, i, o, e, a) {
@@ -40,29 +40,20 @@
   }
 
   function mainJs() {
-    function upgradeSection() {
-      return `
-      <div class="upgrade-section">
-        <p class="upgrade-section-content">
-          <span>Ready to upgrade or buy an additional phone or SIM?</span>
-        <a href="https://www.tescomobile.com/customer/account/upgrades">Upgrade now</a>
-        </p>
-      </div>
-      `
-    }
+    // Login btn tracker
     poll(
       () => document.querySelector(".account-links"),
       () => {
         const targetLoginSection = document.querySelector(".account-links");
-        targetLoginSection.insertAdjacentHTML("afterend", upgradeSection());
-        var upgradeBtn = document.querySelector(".upgrade-section > p > a")
-        upgradeBtn.addEventListener("click", function () {
+
+        var loginBtn = targetLoginSection.querySelector(".action.login");
+        loginBtn.addEventListener("click", function () {
           utag.link({
-            event_name: "target_track-e241-2607_upgradeCta",
+            event_name: "target_track-e241-2607_loginCta",
           });
         });
       }
-    )
+    );
 
     //MEGA MENU UPGREADE OPTIONS
     poll(

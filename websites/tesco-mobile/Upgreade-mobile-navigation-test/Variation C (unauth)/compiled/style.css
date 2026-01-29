@@ -1,0 +1,28 @@
+.upgrade-section {
+  padding: 20px;
+}
+
+.upgrade-section .upgrade-section-content {
+  background-color: #F0EBEB;
+  border: 2px solid #00539F;
+  border-radius: 6px;
+  padding: 20px;
+  font-size: 20px;
+  line-height: 24px;
+  color: #666666;
+  margin-bottom: 0;
+}
+
+.upgrade-section .upgrade-section-content a {
+  color: #00539F;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+  font-family: "TESCOModern-bold", sans-serif;
+}
+
+@media (min-width: 1009px) {
+  .upgrade-section {
+    display: none !important;
+  }
+}

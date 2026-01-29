@@ -1,3 +1,5 @@
+import testInfo from "./info.json" assert { type: "json" };
+
 (() => {
   function waitForElem(
     waitFor,
@@ -40,40 +42,39 @@
   }
 
   function mainJs() {
-    function upgradeSection() {
+    function upgreadeLinkSection() {
       return `
-      <div class="upgrade-section">
-        <p class="upgrade-section-content">
-          <span>Ready to upgrade or buy an additional phone or SIM?</span>
+      <li class="upgrade-link">
+        <span>You’re free to upgrade today. To upgrade or buy an additional plan.</span>
         <a href="https://www.tescomobile.com/customer/account/upgrades">Upgrade now</a>
-        </p>
-      </div>
+      </li>
       `
     }
     poll(
-      () => document.querySelector(".account-links"),
+      () => document.querySelector(".account-links .logout-section"),
       () => {
-        const targetLoginSection = document.querySelector(".account-links");
-        targetLoginSection.insertAdjacentHTML("afterend", upgradeSection());
-        var upgradeBtn = document.querySelector(".upgrade-section > p > a")
-        upgradeBtn.addEventListener("click", function () {
+        var targetUserinSection = document.querySelector(".account-links .logout-section");
+        targetUserinSection.classList.add("upgrade-link-added");
+        targetUserinSection.insertAdjacentHTML("afterend", upgreadeLinkSection());
+        var upgradeLink = document.querySelector(".upgrade-link a");
+        upgradeLink.addEventListener("click", function () {
           utag.link({
             event_name: "target_track-e241-2607_upgradeCta",
           });
         });
       }
-    )
+    );
 
     //MEGA MENU UPGREADE OPTIONS
     poll(
       function () {
         return document.querySelector(
-          '.main-menu-custom.navigation > ul > li:nth-child(1)'
+          '.main-menu-custom.navigation > ul > li:first-child'
         );
       },
       function () {
         var container = document.querySelector(
-          '.main-menu-custom.navigation > ul > li:nth-child(1)'
+          '.main-menu-custom.navigation > ul > li:first-child'
         );
         var links = container.getElementsByTagName('a');
 
@@ -86,7 +87,7 @@
 
             // add click listener (only once)
             if (!upgradeLink.__clickBound) {
-              upgradeLink.addEventListener('click', function () {
+              upgradeLink.addEventListener('click', function (e) {
                 utag.link({
                   event_name: "target_track-e241-2607_upgradeOpt",
                 });

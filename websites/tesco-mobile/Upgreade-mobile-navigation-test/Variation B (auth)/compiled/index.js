@@ -12,19 +12,19 @@
       : document.querySelectorAll(waitFor);
     if (timer <= 0) return;
     (!isVariable && elements.length >= minElements) ||
-      (isVariable && typeof window[waitFor] !== "undefined")
+    (isVariable && typeof window[waitFor] !== "undefined")
       ? callback(elements)
       : setTimeout(
-        () =>
-          waitForElem(
-            waitFor,
-            callback,
-            minElements,
-            isVariable,
-            timer - frequency
-          ),
-        frequency
-      );
+          () =>
+            waitForElem(
+              waitFor,
+              callback,
+              minElements,
+              isVariable,
+              timer - frequency
+            ),
+          frequency
+        );
   }
 
   function poll(t, i, o, e, a) {
@@ -40,40 +40,40 @@
   }
 
   function mainJs() {
-    function upgradeSection() {
+    function upgradeLiTag() {
       return `
-      <div class="upgrade-section">
-        <p class="upgrade-section-content">
-          <span>Ready to upgrade or buy an additional phone or SIM?</span>
-        <a href="https://www.tescomobile.com/customer/account/upgrades">Upgrade now</a>
-        </p>
-      </div>
+        <li class="upgrade-li-added">
+          <a class="action upgrade" href="https://www.tescomobile.com/customer/account/upgrades/">Upgrade</a>
+        </li>
       `
     }
     poll(
-      () => document.querySelector(".account-links"),
       () => {
-        const targetLoginSection = document.querySelector(".account-links");
-        targetLoginSection.insertAdjacentHTML("afterend", upgradeSection());
-        var upgradeBtn = document.querySelector(".upgrade-section > p > a")
+        var targetNavSectionTrigger = document.querySelector(".main-menu-custom.navigation > ul > li:first-child > a > div");
+        return targetNavSectionTrigger ? targetNavSectionTrigger.innerText.trim() === "Phones" ? true : false : false
+      },
+      () => {
+        var targetNavSection = document.querySelector(".main-menu-custom.navigation > ul > li:first-child");
+        targetNavSection.insertAdjacentHTML("beforebegin", upgradeLiTag());
+        var upgradeBtn = document.querySelector(".main-menu-custom.navigation .upgrade-li-added");
         upgradeBtn.addEventListener("click", function () {
           utag.link({
             event_name: "target_track-e241-2607_upgradeCta",
           });
         });
       }
-    )
+    );
 
     //MEGA MENU UPGREADE OPTIONS
     poll(
       function () {
         return document.querySelector(
-          '.main-menu-custom.navigation > ul > li:nth-child(1)'
+          '.main-menu-custom.navigation > ul > li:nth-child(2)'
         );
       },
       function () {
         var container = document.querySelector(
-          '.main-menu-custom.navigation > ul > li:nth-child(1)'
+          '.main-menu-custom.navigation > ul > li:nth-child(2)'
         );
         var links = container.getElementsByTagName('a');
 

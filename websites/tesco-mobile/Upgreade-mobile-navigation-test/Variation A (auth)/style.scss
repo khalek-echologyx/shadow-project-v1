@@ -1,0 +1,21 @@
+.upgrade-link-added{
+  padding-bottom: 20px !important;
+}
+.upgrade-link {
+ background-color: #00539F;
+ color: #fff; 
+  font-size: 20px;
+  line-height: 24px;
+  letter-spacing: 0;
+  padding: 20px !important;
+  border-radius: 6px;
+}
+
+.upgrade-link a{
+  color: #fff;
+  display: inline-block;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+  font-family: 'TESCOModern-bold', sans-serif;
+}

@@ -55,14 +55,14 @@
       () => {
         const targetLoginSection = document.querySelector(".account-links");
         targetLoginSection.insertAdjacentHTML("afterend", upgradeSection());
-        var upgradeBtn = document.querySelector(".upgrade-section > p > a")
+        var upgradeBtn = document.querySelector(".upgrade-section > p > a");
         upgradeBtn.addEventListener("click", function () {
           utag.link({
             event_name: "target_track-e241-2607_upgradeCta",
           });
         });
       }
-    )
+    );
 
     //MEGA MENU UPGREADE OPTIONS
     poll(

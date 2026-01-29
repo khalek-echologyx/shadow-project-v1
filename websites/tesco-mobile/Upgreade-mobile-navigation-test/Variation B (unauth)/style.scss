@@ -1,0 +1,15 @@
+.upgrade-li-added{
+    padding: 12px 0;
+}
+.upgrade-li-added a{
+    padding: 0px !important;
+    color: #00539F;
+    font-family: 'TESCOModern-bold';
+    font-size: 16px;
+    line-height: 22.86px;
+}
+@media (min-width: 1009px) {
+    .upgrade-li-added {
+        display: none !important;
+    }
+}

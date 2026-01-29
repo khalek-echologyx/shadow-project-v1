@@ -26,7 +26,6 @@
         frequency
       );
   }
-
   function poll(t, i, o, e, a) {
     o = o || false;
     e = e || 10000;
@@ -40,40 +39,45 @@
   }
 
   function mainJs() {
-    function upgradeSection() {
+    function upgradeLiTag() {
       return `
-      <div class="upgrade-section">
-        <p class="upgrade-section-content">
-          <span>Ready to upgrade or buy an additional phone or SIM?</span>
-        <a href="https://www.tescomobile.com/customer/account/upgrades">Upgrade now</a>
-        </p>
-      </div>
+        <li>
+          <a class="action upgrade" href="https://www.tescomobile.com/customer/account/upgrades/"><i class="cmp-tilelink__item-icon icon icon icon-upgrade"></i> <span>Upgrade</span></a>
+        </li>
       `
     }
     poll(
       () => document.querySelector(".account-links"),
       () => {
         const targetLoginSection = document.querySelector(".account-links");
-        targetLoginSection.insertAdjacentHTML("afterend", upgradeSection());
-        var upgradeBtn = document.querySelector(".upgrade-section > p > a")
-        upgradeBtn.addEventListener("click", function () {
+        targetLoginSection.classList.add("upgrade-li-added");
+        targetLoginSection.insertAdjacentHTML("beforeend", upgradeLiTag());
+
+        var loginBtn = targetLoginSection.querySelector(".action.login");
+        loginBtn.addEventListener("click", function () {
+          utag.link({
+            event_name: "target_track-e241-2607_loginCta",
+          });
+        });
+        var upgradeCTA = targetLoginSection.querySelector(".action.upgrade");
+        upgradeCTA.addEventListener("click", function () {
           utag.link({
             event_name: "target_track-e241-2607_upgradeCta",
           });
         });
       }
-    )
+    );
 
     //MEGA MENU UPGREADE OPTIONS
     poll(
       function () {
         return document.querySelector(
-          '.main-menu-custom.navigation > ul > li:nth-child(1)'
+          '.main-menu-custom.navigation > ul > li:first-child'
         );
       },
       function () {
         var container = document.querySelector(
-          '.main-menu-custom.navigation > ul > li:nth-child(1)'
+          '.main-menu-custom.navigation > ul > li:first-child'
         );
         var links = container.getElementsByTagName('a');
 
@@ -100,6 +104,7 @@
         }
       },
     );
+
   }
 
   waitForElem("body", mainJs);

@@ -1,0 +1,18 @@
+{
+  "id": "1769590863586_9188_Upgreade_mobile_navigation_test",
+  "name": "Upgreade-mobile-navigation-test",
+  "type": "A/B",
+  "website": "tesco-mobile",
+  "variations": [
+    "control",
+    "Varitation A (unauth)",
+    "Variation A (auth)",
+    "Variation B (unauth)",
+    "Variation B (auth)",
+    "Variation C (unauth)",
+    "Variation C (auth)"
+  ],
+  "createdAt": "2026-01-28T09:01:03.586Z",
+  "createdAtReadable": "1/28/2026, 3:01:03 PM",
+  "lastUpdated": "2026-01-28T12:04:16.555Z"
+}

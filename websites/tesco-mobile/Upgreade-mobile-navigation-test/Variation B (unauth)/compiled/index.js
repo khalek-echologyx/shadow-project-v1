@@ -40,40 +40,54 @@
   }
 
   function mainJs() {
-    function upgradeSection() {
+    function upgradeLiTag() {
       return `
-      <div class="upgrade-section">
-        <p class="upgrade-section-content">
-          <span>Ready to upgrade or buy an additional phone or SIM?</span>
-        <a href="https://www.tescomobile.com/customer/account/upgrades">Upgrade now</a>
-        </p>
-      </div>
+        <li class="upgrade-li-added">
+          <a class="action upgrade" href="https://www.tescomobile.com/customer/account/upgrades/">Upgrade</a>
+        </li>
       `
     }
     poll(
-      () => document.querySelector(".account-links"),
       () => {
-        const targetLoginSection = document.querySelector(".account-links");
-        targetLoginSection.insertAdjacentHTML("afterend", upgradeSection());
-        var upgradeBtn = document.querySelector(".upgrade-section > p > a")
+        var targetNavSectionTrigger = document.querySelector(".main-menu-custom.navigation > ul > li:first-child > a > div");
+        return targetNavSectionTrigger ? targetNavSectionTrigger.innerText.trim() === "Phones" ? true : false : false
+      },
+      () => {
+        var targetNavSection = document.querySelector(".main-menu-custom.navigation > ul > li:first-child");
+        targetNavSection.insertAdjacentHTML("beforebegin", upgradeLiTag());
+        var upgradeBtn = document.querySelector(".main-menu-custom.navigation .upgrade-li-added");
         upgradeBtn.addEventListener("click", function () {
           utag.link({
             event_name: "target_track-e241-2607_upgradeCta",
           });
         });
       }
-    )
+    );
+
+    poll(
+      () => document.querySelector(".account-links"),
+      () => {
+        const targetLoginSection = document.querySelector(".account-links");
+
+        var loginBtn = targetLoginSection.querySelector(".action.login");
+        loginBtn.addEventListener("click", function () {
+          utag.link({
+            event_name: "target_track-e241-2607_loginCta",
+          });
+        });
+      }
+    );
 
     //MEGA MENU UPGREADE OPTIONS
     poll(
       function () {
         return document.querySelector(
-          '.main-menu-custom.navigation > ul > li:nth-child(1)'
+          '.main-menu-custom.navigation > ul > li:nth-child(2)'
         );
       },
       function () {
         var container = document.querySelector(
-          '.main-menu-custom.navigation > ul > li:nth-child(1)'
+          '.main-menu-custom.navigation > ul > li:nth-child(2)'
         );
         var links = container.getElementsByTagName('a');
 
