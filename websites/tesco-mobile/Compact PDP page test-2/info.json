@@ -1,0 +1,14 @@
+{
+  "id": "1769681941265_5819_Compact_PDP_page_test_2",
+  "name": "Compact PDP page test-2",
+  "type": "A/B",
+  "website": "tesco-mobile",
+  "variations": [
+    "control",
+    "Variation A",
+    "Variation B"
+  ],
+  "createdAt": "2026-01-29T10:19:01.266Z",
+  "createdAtReadable": "1/29/2026, 4:19:01 PM",
+  "lastUpdated": "2026-01-29T15:31:59.018Z"
+}
