@@ -882,6 +882,7 @@
       }
     );
 
+
     poll(
       () => document.querySelector(".control .nested.options-list"),
       () => {
@@ -959,218 +960,8 @@
         </div>
       `;
     }
-    function dataCalculatorSidebarTemplate() {
-      return `
-        <aside id="data-cal-sidebar"
-              class="modal-slide spotify cart-slider show-close _inner-scroll"
-              tabindex="0"
-              role="dialog"
-              data-role="modal"
-              data-type="slide">
 
-          <div class="modal-inner-wrap">
-            <header class="modal-header">
-              <button class="action-close" data-role="closeBtn" type="button">
-                <span>Close</span>
-              </button>
-            </header>
-
-            <div class="modal-content" data-role="content">
-              <div class="custom-data-calculator">
-                <section class="custom-data-calculator__header-container">
-                  <div>
-                    <h1>How much data do I need?</h1>
-                    <p class="subtitle">Select your typical daily internet usage from the options below</p>
-                    <p class="description">We’ll then estimate your monthly mobile data usage to help find the right tariff for you</p>
-                  </div>
-                </section>
-                <section class="custom-data-calculator__content">
-                  <div class="data-calculator__context">
-                    ${DATA_CALCULATOR_ITEMS.map(renderRow).join("")}
-                  </div>
-              </div>
-            </div>
-          </div>
-        </aside>
-
-        <div class="promo-sidebar-backdrop" data-promo-backdrop style="display:none"></div>
-      `;
-    }
-
-    document.body.insertAdjacentHTML(
-      "beforeend",
-      dataCalculatorSidebarTemplate()
-    );
-
-    function openDataCalculatorSidebar() {
-      const sidebar = document.getElementById("data-cal-sidebar");
-      const backdrop = document.querySelector("[data-promo-backdrop]");
-      const modalWrapper = document.querySelector(".modals-wrapper");
-      if (!sidebar || !backdrop || !modalWrapper) return;
-      if (!document.querySelector(".modals-overlay")) {
-        modalWrapper.insertAdjacentHTML(
-          "beforebegin",
-          `<div class="modals-overlay" style="z-index: 901;"></div>`
-        );
-      }
-      document.body.classList.add("_has-modal");
-      sidebar.classList.add("_show");
-      sidebar.style.zIndex = "902";
-    }
-
-    function closeDataCalculatorSidebar() {
-      const sidebar = document.getElementById("data-cal-sidebar");
-      if (!sidebar || !sidebar.classList.contains("_show")) return;
-
-      const backdrop = document.querySelector("[data-promo-backdrop]");
-      const modalWrapper = document.querySelector(".modals-wrapper");
-      if (!sidebar || !backdrop || !modalWrapper) return;
-      const overlay = document.querySelector(".modals-overlay");
-      if (overlay) overlay.remove();
-      document.body.classList.remove("_has-modal");
-      sidebar.classList.remove("_show");
-    }
-
-    document.body.addEventListener("click", (e) => {
-      if (
-        e.target.closest(".modals-overlay") ||
-        e.target.closest("#data-cal-sidebar .action-close")
-      ) {
-        closeDataCalculatorSidebar();
-      }
-    });
-
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") closeDataCalculatorSidebar();
-    });
-
-    const targetDataCalculator = document.getElementById("tariff-hint");
-    targetDataCalculator.addEventListener("click", (e) => {
-      e.preventDefault();
-      openDataCalculatorSidebar();
-    });
-
-    const dataContext = document.querySelector(".data-calculator__context");
-
-    dataContext.addEventListener("click", (e) => {
-      const label = e.target.closest("label");
-      if (!label) return;
-      const group = e.target.closest(".data-calculator__context__values");
-      if (!group) return;
-      const input = label.querySelector("input");
-      const groupKey = group.dataset.group;
-      const groupDataValue = Number(group.dataset.value);
-      const calcSelectedValue = groupDataValue * Number(input.value);
-
-      selectedValues[groupKey] = calcSelectedValue.toFixed(2);
-
-      group.querySelectorAll("span.button").forEach((span) => {
-        span.classList.add("button--alpha");
-      });
-
-      const clickedSpan = label.querySelector("span.button");
-      if (clickedSpan) {
-        clickedSpan.classList.remove("button--alpha");
-      }
-
-      const total = Object.values(selectedValues).reduce(
-        (sum, v) => sum + Number(v || 0),
-        0
-      );
-      const totalFixed = Math.ceil(total);
-
-      let estimationEl = document.getElementById("data-estimation-value");
-
-      // If element doesn't exist, try to find or create it
-      if (!estimationEl) {
-        const estSection = document.querySelector(".estimation-section");
-        if (estSection) {
-          estimationEl = estSection.querySelector("p");
-          if (!estimationEl) {
-            // Create it if missing
-            const contentPart = estSection.querySelector(".content-part");
-            if (contentPart) {
-              estimationEl = document.createElement("p");
-              estimationEl.id = "data-estimation-value";
-              contentPart.appendChild(estimationEl);
-            }
-          }
-        }
-      }
-
-      if (estimationEl) {
-        estimationEl.textContent = (total > 0.5 ? totalFixed : total > 0 ? 500 : 0) + (total > 0.5 ? "GB" : "MB");
-        estimationEl.style.fontWeight = total > 0.5 ? "bold" : "normal";
-      }
-      const targetTariffSection = document.querySelector(".recommended-tariff-section");
-
-      if (total > 0 && targetTariffSection) {
-        // Select the nearest match tariff
-        const tariffInputs = document.querySelectorAll(
-          '.option-type-tariff .field.choice input[type="radio"]'
-        );
-        const targetUsage = total < 0.5 ? 0.5 : totalFixed;
-        let closestInput = null;
-        let minDiff = Infinity;
-
-        tariffInputs.forEach((input) => {
-          // Find the label text. Typically follows the input.
-          const label = input.nextElementSibling;
-          const text = label ? label.textContent.trim().toLowerCase() : "";
-
-          let itemValue = 0;
-
-          // Parse value from text
-          if (text.includes("unlimited")) {
-            itemValue = 10000; // Large number for unlimited
-          } else {
-            const match = text.match(/(\d+(\.\d+)?)\s*(gb|mb)/i);
-            if (match) {
-              const val = parseFloat(match[1]);
-              const unit = match[3].toLowerCase();
-              itemValue = unit === "gb" ? val : val / 1000;
-            }
-          }
-
-          if (itemValue > 0) {
-            const diff = Math.abs(itemValue - targetUsage);
-            if (diff < minDiff) {
-              minDiff = diff;
-              closestInput = input;
-            }
-          }
-        });
-        targetTariffSection.style.display = "block";
-        if (closestInput) {
-          const sourceLabel = closestInput.nextElementSibling;
-          if (sourceLabel) {
-            const sourceAllowance = sourceLabel.querySelector(".allowance");
-            const sourcePrice = sourceLabel.querySelector(".price");
-            const targetAllowance = targetTariffSection.querySelector(".allowance");
-            const targetPrice = targetTariffSection.querySelector(".price");
-
-            if (sourceAllowance && targetAllowance) {
-              targetAllowance.innerHTML = sourceAllowance.innerHTML;
-            }
-            if (sourcePrice && targetPrice) {
-              targetPrice.innerHTML = sourcePrice.innerHTML;
-            }
-          }
-        }
-      } else {
-        targetTariffSection.style.display = "none";
-      }
-
-    });
-
-    // Estimation section
-    const estimationSectionTarget = document.querySelector(
-      ".custom-data-calculator__content"
-    );
-    if (!estimationSectionTarget) {
-      console.warn("Estimation target not found");
-      return;
-    }
+    // --- TEMPLATE STRINGS ---
     const estimationSection = `
     <div class="estimation-section-wrapper">
       <div class="estimation-section">
@@ -1178,25 +969,20 @@
           Estimated usage
         </div>
         <div class="content-part">
-          <p id="data-estimation-value">0MB</>
+          <p id="data-estimation-value">0MB</p>
         </div>
       </div>
-      <p>
-        This is a rough guide, based on average data uses, and all amounts are rounded up. Your actual data usage may be higher. According to Ofcom, customers tend to increase their data usage each year. Think about future-proofing your data allowance so you don’t run out of data later down the line.
-      </p>
     </div>
     `;
-    estimationSectionTarget.insertAdjacentHTML("afterend", estimationSection);
 
-    // Verify element was created
-    setTimeout(() => {
-      document.getElementById("data-estimation-value");
-    }, 100);
+    const disclaimerSection = `
+      <p class="data-calc-disclaimer">
+        This is a rough guide, based on average data uses, and all amounts are rounded up. Your actual data usage may be higher. According to Ofcom, customers tend to increase their data usage each year. Think about future-proofing your data allowance so you don’t run out of data later down the line.
+      </p>
+    `;
 
-    //RECOMMENDED TARIFF SECTION
-    const targetForRecommendedTariff = document.querySelector(".estimation-section-wrapper");
     const recommendedTariffSection = `
-    <div class="recommended-tariff-section">
+    <div class="recommended-tariff-section" style="display:none;">
       <div class="text-part">
         <p>Recommended tariff</p>
       </div>
@@ -1207,17 +993,9 @@
       </span></div></label></div>
       </div>
     `;
-    targetForRecommendedTariff.insertAdjacentHTML("afterend", recommendedTariffSection);
 
-    // Verify element was created
-    setTimeout(() => {
-      document.getElementById("recommended-tariff-value");
-    }, 100);
-
-    // TARIFF CTA BUTTON SECTION
-    const targetForTariffButton = document.querySelector(".recommended-tariff-section");
     const tariffSection = `
-      <div class="tariff-section">
+      <div class="tariff-section" style="display:none;">
         <div class="tariff-cta-btn">
           <button class="button tariff-btn">
             Select Tariff
@@ -1225,76 +1003,188 @@
         </div>
       </div>
     `;
-    targetForTariffButton.insertAdjacentHTML("afterend", tariffSection);
 
-    const tariffBtn = document.querySelector(".tariff-btn");
-    if (tariffBtn) {
-      tariffBtn.addEventListener("click", (e) => {
-        e.preventDefault();
+    // --- LOGIC SETUP ---
+    function setupCalculatorEvents() {
+      const dataContext = document.querySelector(".custom-data-calculator .data-calculator__context");
+      if (!dataContext) return;
 
-        // Recalculate total to be safe, though selectedValues is up to date
+      dataContext.addEventListener("click", (e) => {
+        const label = e.target.closest("label");
+        if (!label) return;
+        const group = e.target.closest(".data-calculator__context__values");
+        if (!group) return;
+        const input = label.querySelector("input");
+        const groupKey = group.dataset.group;
+        const groupDataValue = Number(group.dataset.value);
+        const calcSelectedValue = groupDataValue * Number(input.value);
+
+        selectedValues[groupKey] = calcSelectedValue.toFixed(2);
+
+        group.querySelectorAll("span.button").forEach((span) => {
+          span.classList.add("button--alpha");
+        });
+
+        const clickedSpan = label.querySelector("span.button");
+        if (clickedSpan) {
+          clickedSpan.classList.remove("button--alpha");
+        }
+
         const total = Object.values(selectedValues).reduce(
           (sum, v) => sum + Number(v || 0),
           0
         );
         const totalFixed = Math.ceil(total);
 
-        // Select the nearest match tariff
-        const tariffInputs = document.querySelectorAll(
-          '.option-type-tariff .field.choice input[type="radio"]'
-        );
-        const targetUsage = total < 0.5 ? 0.5 : totalFixed; // Target in GB
+        let estimationEl = document.getElementById("data-estimation-value");
+        if (estimationEl) {
+          estimationEl.textContent = (total > 0.5 ? totalFixed : total > 0 ? 500 : 0) + (total > 0.5 ? "GB" : "MB");
+          estimationEl.style.fontWeight = total > 0.5 ? "bold" : "normal";
+        }
 
-        let closestInput = null;
-        let minDiff = Infinity;
+        const targetTariffSection = document.querySelector(".recommended-tariff-section");
+        const tariffBtnSection = document.querySelector(".tariff-section");
+        const disclaimerEl = document.querySelector(".data-calc-disclaimer");
 
-        tariffInputs.forEach((input) => {
-          // Find the label text. Typically follows the input.
-          const label = input.nextElementSibling;
-          const text = label ? label.textContent.trim().toLowerCase() : "";
+        if (total > 0 && targetTariffSection) {
+          // Select the nearest match tariff
+          const tariffInputs = document.querySelectorAll(
+            '.option-type-tariff .field.choice input[type="radio"]'
+          );
+          const targetUsage = total < 0.5 ? 0.5 : totalFixed;
+          let closestInput = null;
+          let minDiff = Infinity;
 
-          let itemValue = 0;
+          tariffInputs.forEach((input) => {
+            const label = input.nextElementSibling;
+            const text = label ? label.textContent.trim().toLowerCase() : "";
+            let itemValue = 0;
 
-          // Parse value from text
-          if (text.includes("unlimited")) {
-            itemValue = 10000; // Large number for unlimited
-          } else {
-            const match = text.match(/(\d+(\.\d+)?)\s*(gb|mb)/i);
-            if (match) {
-              const val = parseFloat(match[1]);
-              const unit = match[3].toLowerCase();
-              itemValue = unit === "gb" ? val : val / 1000;
+            if (text.includes("unlimited")) {
+              itemValue = 10000;
+            } else {
+              const match = text.match(/(\d+(\.\d+)?)\s*(gb|mb)/i);
+              if (match) {
+                const val = parseFloat(match[1]);
+                const unit = match[3].toLowerCase();
+                itemValue = unit === "gb" ? val : val / 1000;
+              }
             }
+
+            if (itemValue > 0) {
+              const diff = Math.abs(itemValue - targetUsage);
+              if (diff < minDiff) {
+                minDiff = diff;
+                closestInput = input;
+              }
+            }
+          });
+
+          targetTariffSection.style.display = "block";
+          if (tariffBtnSection) tariffBtnSection.style.display = "block";
+
+          // Move disclaimer to bottom (after tariff section)
+          if (disclaimerEl) {
+            const container = document.querySelector(".custom-data-calculator");
+            if (container) container.appendChild(disclaimerEl);
           }
 
-          if (itemValue > 0) {
-            const diff = Math.abs(itemValue - targetUsage);
-            if (diff < minDiff) {
-              minDiff = diff;
-              closestInput = input;
+          if (closestInput) {
+            const sourceLabel = closestInput.nextElementSibling;
+            if (sourceLabel) {
+              const sourceAllowance = sourceLabel.querySelector(".allowance");
+              const sourcePrice = sourceLabel.querySelector(".price");
+              const targetAllowance = targetTariffSection.querySelector(".allowance");
+              const targetPrice = targetTariffSection.querySelector(".price");
+
+              if (sourceAllowance && targetAllowance) {
+                targetAllowance.innerHTML = sourceAllowance.innerHTML;
+              }
+              if (sourcePrice && targetPrice) {
+                targetPrice.innerHTML = sourcePrice.innerHTML;
+              }
             }
           }
-        });
+        } else if (targetTariffSection) {
+          targetTariffSection.style.display = "none";
+          if (tariffBtnSection) tariffBtnSection.style.display = "none";
 
-        if (closestInput) {
-          closestInput.click();
-          closestInput.scrollIntoView({ behavior: "smooth", block: "center" });
+          // Move disclaimer back after estimation section
+          const estimationWrapper = document.querySelector(".estimation-section-wrapper");
+          if (disclaimerEl && estimationWrapper) {
+            estimationWrapper.insertAdjacentElement("afterend", disclaimerEl);
+          }
+        }
 
-          // Close the sidebar to show the user the selected tariff
-          closeDataCalculatorSidebar();
+        // Recalculate Accordion Height if open
+        const dataCalculatorAccordion = document.querySelector(".data-calc-accordion");
+        const dataCalcAccordionContent = document.querySelector(".data-calc-accordion-content");
+        if (dataCalculatorAccordion && dataCalculatorAccordion.classList.contains("_open") && dataCalcAccordionContent) {
+          dataCalcAccordionContent.style.maxHeight = dataCalcAccordionContent.scrollHeight + "px";
         }
       });
+
+      const tariffBtn = document.querySelector(".tariff-btn");
+      if (tariffBtn) {
+        tariffBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+
+          const total = Object.values(selectedValues).reduce(
+            (sum, v) => sum + Number(v || 0),
+            0
+          );
+          const totalFixed = Math.ceil(total);
+          const targetUsage = total < 0.5 ? 0.5 : totalFixed;
+
+          const tariffInputs = document.querySelectorAll(
+            '.option-type-tariff .field.choice input[type="radio"]'
+          );
+
+          let closestInput = null;
+          let minDiff = Infinity;
+
+          tariffInputs.forEach((input) => {
+            const label = input.nextElementSibling;
+            const text = label ? label.textContent.trim().toLowerCase() : "";
+            let itemValue = 0;
+
+            if (text.includes("unlimited")) {
+              itemValue = 10000;
+            } else {
+              const match = text.match(/(\d+(\.\d+)?)\s*(gb|mb)/i);
+              if (match) {
+                const val = parseFloat(match[1]);
+                const unit = match[3].toLowerCase();
+                itemValue = unit === "gb" ? val : val / 1000;
+              }
+            }
+
+            if (itemValue > 0) {
+              const diff = Math.abs(itemValue - targetUsage);
+              if (diff < minDiff) {
+                minDiff = diff;
+                closestInput = input;
+              }
+            }
+          });
+
+          if (closestInput) {
+            closestInput.click();
+            closestInput.scrollIntoView({ behavior: "smooth", block: "center" });
+          }
+        });
+      }
     }
 
-    // ============================================
-   
+    // --- ACCORDION & MAIN INJECTION ---
     poll(
       () => document.getElementById("tm-deal-device-stock-wrapper"),
       () => {
         const targetSelectorSection = document.getElementById("tm-deal-device-stock-wrapper");
+
         function dataCalculatorTemplate() {
           return `
-              <div class="data-calc"> 
+              <div class="data-calc-accordion">
                 <div class="data-calc-header" data-accordion-header>
                   <p class="data-calc-title">Data Calculator</p>
                   <span class="data-calc-icon">
@@ -1307,24 +1197,70 @@
                 </div>
                 <div class="data-calc-accordion-content">
                   <div class="data-calc-accordion-content-inner">
-                    <p class="data-calc-accordion-content-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, quod.</p>
+                    <div class="modal-content" data-role="content">
+                      <div class="custom-data-calculator">
+                        <section class="custom-data-calculator__header-container">
+                          <div>
+                            <h1>How much data do I need?</h1>
+                            <p class="subtitle">Select your typical daily internet usage from the options below</p>
+                            <p class="description">We’ll then estimate your monthly mobile data usage to help find the right tariff for you</p>
+                          </div>
+                        </section>
+                        <section class="custom-data-calculator__content">
+                          <div class="data-calculator__context">
+                            ${DATA_CALCULATOR_ITEMS.map(renderRow).join("")}
+                          </div>
+                        </section>
+                        ${estimationSection}
+                        ${disclaimerSection}
+                        ${recommendedTariffSection}
+                        ${tariffSection}
+                      </div>
+                    </div>
                   </div>  
                 </div>
               </div>`
         }
-        targetSelectorSection.insertAdjacentHTML("afterend", dataCalculatorTemplate());
-        const dataCalcAccordionHeader = document.querySelector(".data-calc-header"); 
+
+        // Avoid double injection
+        if (!document.querySelector(".data-calc-accordion")) {
+          targetSelectorSection.insertAdjacentHTML("afterend", dataCalculatorTemplate());
+        }
+
+        const ACCORDION_ICON_COLLAPSED = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <rect x="1" y="1" width="22" height="22" rx="11" fill="white"/>
+          <rect x="1" y="1" width="22" height="22" rx="11" stroke="#00539F" stroke-width="2"/>
+          <path d="M17.2287 8.35382L12.0005 13.7705L6.77751 8.35407L5.69775 9.39528L12.0001 15.9309L18.3079 9.39553L17.2287 8.35382Z" fill="#00539F"/>
+        </svg>`;
+        const ACCORDION_ICON_EXPANDED = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <rect x="1" y="1" width="22" height="22" rx="11" fill="white"/>
+          <rect x="1" y="1" width="22" height="22" rx="11" stroke="#00539F" stroke-width="2"/>
+          <path d="M18.3026 14.6047L12.0003 8.06909L5.69238 14.6044L6.77166 15.6462L11.9998 10.2295L17.2228 15.6459L18.3026 14.6047Z" fill="#00539F"/>
+        </svg>`;
+        const dataCalculatorAccordion = document.querySelector(".data-calc-accordion");
+        const dataCalcAccordionHeader = document.querySelector(".data-calc-header");
+        const dataCalcAccordionContent = document.querySelector(".data-calc-accordion-content");
+
         if (dataCalcAccordionHeader) {
           dataCalcAccordionHeader.addEventListener("click", () => {
-            console.log("clicked");
-            const isOpen = dataCalcAccordionHeader.classList.contains("_open");
+            const isOpen = dataCalculatorAccordion.classList.contains("_open");
+            const icon = dataCalcAccordionHeader.querySelector(".data-calc-icon");
             if (isOpen) {
-              dataCalcAccordionHeader.classList.remove("_open");
+              dataCalculatorAccordion.classList.remove("_open");
+              dataCalcAccordionContent.style.maxHeight = null;
+              icon.innerHTML = ACCORDION_ICON_COLLAPSED;
             } else {
-              dataCalcAccordionHeader.classList.add("_open"); 
+              dataCalculatorAccordion.classList.add("_open");
+              dataCalcAccordionContent.style.maxHeight = dataCalcAccordionContent.scrollHeight + "px";
+              icon.innerHTML = ACCORDION_ICON_EXPANDED;
             }
           });
         }
+
+        // Setup Logic Event Listeners
+        setTimeout(setupCalculatorEvents, 100);
       }
     );
   }

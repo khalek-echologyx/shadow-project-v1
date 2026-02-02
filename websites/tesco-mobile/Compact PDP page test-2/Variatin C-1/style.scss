@@ -448,21 +448,25 @@
 }
 
 /* ============= DATA CALCULATOR STYLE ==============*/
+.tm-option-wrapper.option-type-tariff {
+  margin-top: 20px;
+}
 .option-type-tariff .field.option .label #tariff-hint{
-  font-size: 16px;
-  text-decoration: underline;
+  display: none;
 }
 
-.data-calc{
+.data-calc-accordion {
   padding: 10px 12px;
   border-top: 1px solid #00539F;
   background-color: #fff;
+  padding-bottom: 5px;
 }
-.data-calc .data-calc-header{
+.data-calc-accordion .data-calc-header {
   display: flex;
   justify-content: space-between;
+  // align-items: center;
 }
-.data-calc .data-calc-title{
+.data-calc-accordion .data-calc-title {
   font-size: 16px; 
   color: #00539F;
   margin: 0;
@@ -619,6 +623,9 @@ input {
     font-size: 24px;
   }
 
+.data-calc-disclaimer {
+  margin-top: 20px;
+}
 .tariff-section{
   margin-top: 30px;
 }
