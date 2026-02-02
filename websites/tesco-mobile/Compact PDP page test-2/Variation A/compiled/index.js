@@ -15,19 +15,19 @@
       : document.querySelectorAll(waitFor);
     if (timer <= 0) return;
     (!isVariable && elements.length >= minElements) ||
-    (isVariable && typeof window[waitFor] !== "undefined")
+      (isVariable && typeof window[waitFor] !== "undefined")
       ? callback(elements)
       : setTimeout(
-          () =>
-            waitForElem(
-              waitFor,
-              callback,
-              minElements,
-              isVariable,
-              timer - frequency
-            ),
-          frequency
-        );
+        () =>
+          waitForElem(
+            waitFor,
+            callback,
+            minElements,
+            isVariable,
+            timer - frequency
+          ),
+        frequency
+      );
   }
 
   function poll(t, i, o = false, e = 10000, a = 25) {
@@ -60,73 +60,73 @@
   }
 
   const DATA_CALCULATOR_ITEMS = [
-      {
-        key: "browsing",
-        name: "Browsing",
-        icon: "click.png",
-        rate: 0.015,
-        unit: "hours",
-        options: [
-          { label: "Never", value: 0 },
-          { label: "30 mins", value: 30 },
-          { label: "1 hour", value: 60 },
-          { label: "2 hours", value: 120 },
-          { label: "4 hours", value: 240 },
-        ],
-      },
-      {
-        key: "social",
-        name: "Social",
-        icon: "facebook.png",
-        rate: 0.018,
-        options: [
-          { label: "Never", value: 0 },
-          { label: "30 mins", value: 30 },
-          { label: "1 hour", value: 60 },
-          { label: "2 hours", value: 120 },
-          { label: "4 hours", value: 240 },
-        ],
-      },
-      {
-        key: "music",
-        name: "Music",
-        icon: "headphone.png",
-        rate: 0.16,
-        options: [
-          { label: "Never", value: 0 },
-          { label: "30 mins", value: 30 },
-          { label: "1 hour", value: 60 },
-          { label: "2 hours", value: 120 },
-          { label: "4 hours", value: 240 },
-        ],
-      },
-      {
-        key: "emails",
-        name: "Emails",
-        icon: "email.png",
-        rate: 0.003,
-        options: [
-          { label: "0", value: 0 },
-          { label: "20", value: 20 },
-          { label: "100", value: 100 },
-          { label: "200", value: 200 },
-          { label: "300", value: 300 },
-        ],
-      },
-      {
-        key: "apps",
-        name: "Apps",
-        icon: "apps.png",
-        rate: 0.098,
-        options: [
-          { label: "0", value: 0 },
-          { label: "5", value: 5 },
-          { label: "10", value: 10 },
-          { label: "20", value: 20 },
-          { label: "30", value: 30 },
-        ],
-      },
-    ];
+    {
+      key: "browsing",
+      name: "Browsing",
+      icon: "click.png",
+      rate: 0.015,
+      unit: "hours",
+      options: [
+        { label: "Never", value: 0 },
+        { label: "30 mins", value: 30 },
+        { label: "1 hour", value: 60 },
+        { label: "2 hours", value: 120 },
+        { label: "4 hours", value: 240 },
+      ],
+    },
+    {
+      key: "social",
+      name: "Social",
+      icon: "facebook.png",
+      rate: 0.018,
+      options: [
+        { label: "Never", value: 0 },
+        { label: "30 mins", value: 30 },
+        { label: "1 hour", value: 60 },
+        { label: "2 hours", value: 120 },
+        { label: "4 hours", value: 240 },
+      ],
+    },
+    {
+      key: "music",
+      name: "Music",
+      icon: "headphone.png",
+      rate: 0.16,
+      options: [
+        { label: "Never", value: 0 },
+        { label: "30 mins", value: 30 },
+        { label: "1 hour", value: 60 },
+        { label: "2 hours", value: 120 },
+        { label: "4 hours", value: 240 },
+      ],
+    },
+    {
+      key: "emails",
+      name: "Emails",
+      icon: "email.png",
+      rate: 0.003,
+      options: [
+        { label: "0", value: 0 },
+        { label: "20", value: 20 },
+        { label: "100", value: 100 },
+        { label: "200", value: 200 },
+        { label: "300", value: 300 },
+      ],
+    },
+    {
+      key: "apps",
+      name: "Apps",
+      icon: "apps.png",
+      rate: 0.098,
+      options: [
+        { label: "0", value: 0 },
+        { label: "5", value: 5 },
+        { label: "10", value: 10 },
+        { label: "20", value: 20 },
+        { label: "30", value: 30 },
+      ],
+    },
+  ];
 
   /* =========================
      OFFER REDESIGN
@@ -810,7 +810,7 @@
       // Storage select change handler
       if (storageSelectEl) {
         storageSelectEl.addEventListener("change", (e) => {
-          console.log("Storage changed", e.target.value); 
+          console.log("Storage changed", e.target.value);
           const selectedIndex = parseInt(e.target.value, 10);
           const targetSwatch = storageSwatchOptions[selectedIndex];
           if (targetSwatch) {
@@ -1311,10 +1311,10 @@
     }
   }
 
-  function mainJs() {
+  function mainJs([body]) {
     try {
       offerRedesign();
-    } catch (error) {      
+    } catch (error) {
       console.error("Error in offerRedesign", error);
     }
 
@@ -1335,6 +1335,82 @@
     } catch (error) {
       console.error("Error in dataCalculator", error);
     }
+
+    // PAYMENT & STORAGE SELECT TRACKER
+    body.addEventListener("change", function (e) {
+      var target = e.target;
+      if (!target) return;
+
+      // -----------------------------
+      // Payment select (Variation A)
+      // -----------------------------
+      var paymentSelect = target.closest("select.payment-select.custom-storage-options");
+      if (paymentSelect) {
+        var paymentValue = paymentSelect.value;
+
+        if (paymentValue === "paym") {
+          utag.link({
+            event_name: "target_track-e224-2163_paymentSelection_payMonthly"
+          });
+        }
+
+        if (paymentValue === "payg") {
+          utag.link({
+            event_name: "target_track-e224-2163_paymentSelection_payG"
+          });
+        }
+
+        if (paymentValue === "simo") {
+          utag.link({
+            event_name: "target_track-e224-2163_paymentSelection_SIMFREE"
+          });
+        }
+
+        return; // stop here so it doesn't fall into storage logic
+      }
+
+      // -----------------------------
+      // Storage select (Variation A)
+      // -----------------------------
+      var storageSelect = target.closest("select.tm-storage-select.custom-storage-options");
+      if (storageSelect) {
+        utag.link({
+          event_name: "target_track-e224-2163_storageSelection"
+        });
+      }
+
+    });
+
+
+    body.addEventListener("click", function (e) {
+      var target = e.target;
+      if (!target) return;
+
+      // Scope ONLY to Variation A colour options
+      var colorOption = target.closest(".custom-select-option");
+      if (colorOption) {
+        var wrapper = colorOption.closest(".custom-select-options");
+        if (!wrapper) return;
+        utag.link({
+          event_name: "target_track-e224-2163_colourSelection"
+        });
+      }
+      // Add to Tariff button tracking 
+      if (target.closest(".field.choice.visible")) {
+        utag.link({
+          event_name: "target_track-e224-2163_tariffSelection",
+        });
+      }
+
+      // SIDEBAR TARIFF BUTTON TRACKER
+      var tariffBtn = target.closest(".tariff-cta-btn");
+      if (tariffBtn) {
+        utag.link({
+          event_name: "target_track-e224-2163_dataCalculator_tariffSelected"
+        });
+      }
+    });
+
   }
 
   waitForElem("body", mainJs);
