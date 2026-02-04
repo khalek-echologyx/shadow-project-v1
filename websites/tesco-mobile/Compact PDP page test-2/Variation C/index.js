@@ -1287,7 +1287,7 @@
     }
   }
 
-  function mainJs() {
+  function mainJs([body]) {
     try {
       offerRedesign();
     } catch (error) {      
@@ -1311,6 +1311,79 @@
     } catch (error) {
       console.error("Error in dataCalculator", error);
     }
+
+    // PAYMENT & STORAGE SELECT TRACKER
+    body.addEventListener("change", function (e) {
+      var target = e.target;
+      if (!target) return;
+
+      // -----------------------------
+      // Payment select (Variation A)
+      // -----------------------------
+      var paymentSelect = target.closest("select.payment-select.custom-storage-options");
+      if (paymentSelect) {
+        var paymentValue = paymentSelect.value;
+
+        if (paymentValue === "paym") {
+          utag.link({
+            event_name: "target_track-e224-2163_paymentSelection_payMonthly"
+          });
+        }
+
+        if (paymentValue === "payg") {
+          utag.link({
+            event_name: "target_track-e224-2163_paymentSelection_payG"
+          });
+        }
+
+        if (paymentValue === "simo") {
+          utag.link({
+            event_name: "target_track-e224-2163_paymentSelection_SIMFREE"
+          });
+        }
+
+        return; // stop here so it doesn't fall into storage logic
+      }
+
+      // -----------------------------
+      // Storage select 
+      // -----------------------------
+      var storageSelect = target.closest("select.tm-storage-select.custom-storage-options");
+      if (storageSelect) {
+        utag.link({
+          event_name: "target_track-e224-2163_storageSelection"
+        });
+      }
+
+    });
+
+    // COLOR & TARIFF SELECT TRACKER
+    body.addEventListener("click", function (e) {
+      var target = e.target;
+      if (!target) return;
+
+      // Scope to colour options
+      var colorOption = target.closest(".custom-color-block");
+      if (colorOption) {
+        utag.link({
+          event_name: "target_track-e224-2163_colourSelection"
+        });
+      }
+      // Add to Tariff button tracking 
+      if (target.closest(".field.choice.visible")) {
+        utag.link({
+          event_name: "target_track-e224-2163_tariffSelection",
+        });
+      }
+
+      // SIDEBAR TARIFF BUTTON TRACKER
+      var tariffBtn = target.closest(".tariff-cta-btn");
+      if (tariffBtn) {
+        utag.link({
+          event_name: "target_track-e224-2163_dataCalculator_tariffSelected"
+        });
+      }
+    });
   }
 
   waitForElem("body", mainJs);
