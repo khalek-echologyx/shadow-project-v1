@@ -1,0 +1,14 @@
+{
+  "id": "1770214872530_1257_Protection_and_Add_ons_Redesign",
+  "name": "Protection and Add-ons Redesign",
+  "type": "A/B",
+  "website": "avis",
+  "variations": [
+    "control",
+    "Variation A",
+    "Variation C"
+  ],
+  "createdAt": "2026-02-04T14:21:12.530Z",
+  "createdAtReadable": "2/4/2026, 8:21:12 PM",
+  "lastUpdated": "2026-02-06T15:01:54.453Z"
+}
