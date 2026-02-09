@@ -1,11 +1,263 @@
+(function () {
+  var interval = setInterval(function () {
+    if (document.head) {
+      // Check if <head> exists
+      clearInterval(interval); // Stop checking once found
+      var style = document.createElement("style");
+      style.innerHTML = `.new-protection-section {
+  display: block;
+}
+
+.protection-cards-section {
+  width: 100%;
+  position: relative;
+}
+
+.protection-bg {
+  width: 100%;
+  height: 474px;
+  /* Reduced by approx 20% from 592px */
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+}
+
+.protection-cards-section-content {
+  position: relative;
+  z-index: 1;
+  width: calc(100% - 112px);
+  margin: 0 auto;
+}
+
+.protection-title {
+  text-align: center;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 0.3px !important;
+  margin: 0 !important;
+  padding-top: 25px;
+  padding-bottom: 50px;
+}
+
+.protection-cards {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.protection-card {
+  width: 100%;
+  color: #fff;
+  border-radius: 8px;
+  border: 1px solid #d4d4d4;
+  letter-spacing: 0.3px !important;
+  flex: 1;
+}
+
+.protection-card.highlight {
+  margin-top: -36px;
+}
+
+.protection-card.highlight .recomended {
+  background-color: #660014;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 100%;
+  letter-spacing: 0.84px;
+  text-align: center;
+  padding: 12px 0;
+  border-radius: 8px 8px 0 0;
+}
+
+.protection-card.highlight .card-content-header {
+  background: #88001b;
+  border-radius: 0;
+  min-height: 160px;
+}
+
+.card-content-header {
+  padding: 16px 24px;
+  background-color: #151d28;
+  border-radius: 8px 8px 0 0;
+  min-height: 140px;
+}
+
+.card-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 28px;
+  letter-spacing: 0.3px !important;
+  margin: 0;
+  margin-bottom: 6px;
+}
+
+.ancillary-bundle-rating {
+  margin: 0;
+  margin-bottom: 6px;
+}
+
+.ancillary-bundle-rating span {
+  width: 16px;
+  height: 9px;
+  background-color: rgba(225, 225, 225, 0.3019607843);
+  display: inline-block;
+  border-radius: 2px;
+}
+
+.ancillary-bundle-rating span.active {
+  background-color: #e86400;
+}
+
+.card-desc {
+  font-size: 14px;
+  line-height: 20px;
+  margin: 0;
+}
+
+.protection-card .features {
+  background-color: #fff;
+  margin-bottom: 0;
+  padding: 16px 12px;
+}
+
+.protection-card .features > div > div:last-child > svg {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.feature-list {
+  list-style: none;
+  padding: 16px 12px;
+  background-color: #fff;
+  margin: 0;
+}
+
+.feature-list li {
+  font-size: 14px;
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.feature-list li p {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* Gap between icon and text */
+  margin: 0;
+}
+
+.feature-list li p span:first-child {
+  margin-bottom: -5px;
+}
+
+.price {
+  background-color: #fff;
+  text-align: center;
+  padding: 16px 0;
+}
+
+.old-price {
+  text-decoration: line-through;
+  font-size: 14px;
+  color: rgba(31, 29, 29, 0.4);
+  line-height: 18px;
+  letter-spacing: 0.3px !important;
+  vertical-align: middle;
+}
+
+.new-price {
+  font-size: 30px;
+  font-weight: 500;
+  color: #000;
+  line-height: 28px;
+}
+
+.per-day {
+  font-size: 16px;
+  color: #000;
+  line-height: 20px;
+  vertical-align: text-bottom;
+  font-weight: 500;
+}
+
+.btn-container {
+  padding: 16px 24px;
+  background-color: #fff;
+  border-radius: 0 0 8px 8px;
+}
+
+.btn {
+  border: none;
+  padding: 16px 0;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+  font-weight: 500;
+}
+
+.btn.selected {
+  position: relative;
+}
+
+.btn.selected::after {
+  content: "Selected";
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: #e8e6e6;
+  color: #979696;
+  width: 100%;
+  height: 100%;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn.primary {
+  background: #d4002a;
+  color: #fff;
+}
+
+.btn.secondary {
+  background: #000;
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .protection-cards-section-content {
+    width: calc(100% - 32px);
+  }
+  .protection-cards {
+    flex-direction: column;
+  }
+  .protection-card.highlight {
+    margin-top: 0;
+  }
+}
+`;
+      document.head.appendChild(style);
+      setTimeout(() => {
+        clearInterval(interval); // Clear the interval after 5 seconds
+      }, 5000);
+    }
+  }, 100); // Check every 100ms for <head>
+})();
 (() => {
   function poll(t, i, o = false, e = 10000, a = 25) {
     e < 0 ||
       (t()
         ? i()
         : setTimeout(() => {
-          poll(t, i, o, o ? e : e - a, a);
-        }, a));
+            poll(t, i, o, o ? e : e - a, a);
+          }, a));
   }
   const EXP_ID = "avis-protection-variation-a";
   const TARGET_SELECTOR = '[data-testid="Protections-container"] > div > svg';
@@ -25,13 +277,17 @@
     }
 
     // Construct selector for multiple data-codes
-    const selector = dataCodes.map(code => `[data-testid="ancillaries-bundle"][data-code="${code}"]`).join(",");
+    const selector = dataCodes
+      .map((code) => `[data-testid="ancillaries-bundle"][data-code="${code}"]`)
+      .join(",");
     const bundle = document.querySelector(selector);
 
     if (!bundle) return null;
 
     // Feature list (UL > LI)
-    const body = bundle.querySelector('[data-testid="ancillaries-bundle-body"]');
+    const body = bundle.querySelector(
+      '[data-testid="ancillaries-bundle-body"]',
+    );
     const features = body ? body.firstElementChild : null;
     var addCta = null;
     if (body) {
@@ -40,47 +296,57 @@
         () => {
           addCta = body.querySelector(".add-cta");
           // console.log(addCta, "addCta for", dataCodes);
-        });
+        },
+      );
     }
 
     // Old / cut price
     const oldPriceEl = bundle.querySelector(
-      '[data-testid="ancillaries-bundle-strikethrough-price"]'
+      '[data-testid="ancillaries-bundle-strikethrough-price"]',
     );
     const oldPrice = oldPriceEl ? oldPriceEl.textContent.trim() : null;
 
     // Current price (prefer data-price)
     const newPrice =
       bundle.getAttribute("data-price") ||
-      bundle.querySelector('[data-testid="ancillaries-bundle-price"]')?.textContent?.trim();
+      bundle
+        .querySelector('[data-testid="ancillaries-bundle-price"]')
+        ?.textContent?.trim();
 
     return {
       features,
       oldPrice,
       newPrice,
-      addCta, // This will be null initially due to poll, but updated by poll later. 
+      addCta, // This will be null initially due to poll, but updated by poll later.
       // However, since we re-query in click handler, it might be fine.
-      element: bundle 
+      element: bundle,
     };
   }
 
   function bindCustomSelectButton() {
     const customBtns = document.querySelectorAll(
-      `#${EXP_ID} .custom-select-btn`
+      `#${EXP_ID} .custom-select-btn`,
     );
 
-    customBtns.forEach(customBtn => {
+    customBtns.forEach((customBtn) => {
       customBtn.addEventListener("click", () => {
         const targetCode = customBtn.getAttribute("data-target-code");
         // Handle split codes like "Ultimate Protection,Complete Protection"
-        const codes = targetCode.includes(",") ? targetCode.split(",") : targetCode;
+        const codes = targetCode.includes(",")
+          ? targetCode.split(",")
+          : targetCode;
 
         const data = getProtectionData(codes);
 
         let nativeBtn = data ? data.addCta : null;
         if (!nativeBtn && data && data.element) {
-          nativeBtn = data.element.querySelector('[data-testid="ancillaries-bundle-body"] .add-cta') ||
-            data.element.querySelector('[data-testid="ancillaries-bundle-body"] button');
+          nativeBtn =
+            data.element.querySelector(
+              '[data-testid="ancillaries-bundle-body"] .add-cta',
+            ) ||
+            data.element.querySelector(
+              '[data-testid="ancillaries-bundle-body"] button',
+            );
         }
 
         console.log(nativeBtn, "nativeBtn for", targetCode);
@@ -95,20 +361,19 @@
             bubbles: true,
             cancelable: true,
             view: window,
-          })
+          }),
         );
 
         // Toggle selected class on the clicked button
         if (customBtn.classList.contains("selected")) {
           customBtn.classList.remove("selected");
         } else {
-          customBtns.forEach(b => b.classList.remove("selected"));
+          customBtns.forEach((b) => b.classList.remove("selected"));
           customBtn.classList.add("selected");
         }
       });
     });
   }
-
 
   function injectSection() {
     if (document.getElementById(EXP_ID)) return;
@@ -210,30 +475,35 @@
 
     insertionPoint.insertAdjacentHTML("beforebegin", html);
     insertionPoint.style.display = "none";
-    var targetContainer = document.querySelector('[data-testid="Protections-container"] > div > div');
+    var targetContainer = document.querySelector(
+      '[data-testid="Protections-container"] > div > div',
+    );
     targetContainer.style.display = "none";
 
     const protections = [
       {
         codes: "Essential Protection",
-        cardTitle: "Basic Protection"
+        cardTitle: "Basic Protection",
       },
       {
         codes: "Enhanced Protection",
-        cardTitle: "Standard Protection"
+        cardTitle: "Standard Protection",
       },
       {
         codes: ["Ultimate Protection", "Complete Protection"],
-        cardTitle: "Complete Protection"
-      }
+        cardTitle: "Complete Protection",
+      },
     ];
 
-    protections.forEach(prot => {
+    protections.forEach((prot) => {
       const data = getProtectionData(prot.codes);
       if (!data) return;
 
-      const card = [...document.querySelectorAll(`#${EXP_ID} .protection-card`)].find(
-        c => c.querySelector(".card-title")?.textContent.trim() === prot.cardTitle
+      const card = [
+        ...document.querySelectorAll(`#${EXP_ID} .protection-card`),
+      ].find(
+        (c) =>
+          c.querySelector(".card-title")?.textContent.trim() === prot.cardTitle,
       );
 
       if (!card) return;
@@ -259,7 +529,6 @@
     });
 
     bindCustomSelectButton();
-
   }
 
   function observeReact() {

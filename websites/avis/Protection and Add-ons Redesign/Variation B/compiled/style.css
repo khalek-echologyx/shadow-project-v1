@@ -1,0 +1,40 @@
+.custom-btn-style {
+  height: 40px;
+  display: inline-flex;
+  justify-content: center;
+  outline: 0;
+  margin: 0;
+  font-family: "AvisSans", "AvisSans Fallback", sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  border-radius: 4px;
+  border: 1px solid black !important;
+  padding: 8px 16px;
+  transition: all 0.2s ease-in-out;
+}
+
+.custom-btn-style:hover {
+  border: 1px solid #91001D !important;
+  background-color: #91001D;
+  color: white !important;
+}
+
+.custom-btn-style:hover .checkField {
+  border: 1px solid #fff !important;
+}
+
+.checked {
+  background-color: #91001D !important;
+  border-radius: 4px !important;
+  border: 1px solid #91001D !important;
+}
+
+.custom-btn-style:hover .checked {
+  border: 1px solid #ffffff !important;
+}
+
+@media (max-width: 1000px) {
+  .custom-btn-style {
+    height: 48px;
+  }
+}

@@ -9,15 +9,18 @@
 
 .protection-bg {
   width: 100%;
-  height: auto;
+  height: 474px;
+  /* Reduced by approx 20% from 592px */
   display: block;
-}
-
-.protection-cards-section-content {
   position: absolute;
   top: 0;
   left: 0;
-  right: 0;
+  z-index: 0;
+}
+
+.protection-cards-section-content {
+  position: relative;
+  z-index: 1;
   width: calc(100% - 112px);
   margin: 0 auto;
 }
@@ -27,7 +30,9 @@
   font-size: 24px;
   font-weight: 700;
   letter-spacing: 0.3px !important;
-  margin-bottom: 40px;
+  margin: 0 !important;
+  padding-top: 25px;
+  padding-bottom: 50px;
 }
 
 .protection-cards {
@@ -37,6 +42,7 @@
 }
 
 .protection-card {
+  width: 100%;
   color: #fff;
   border-radius: 8px;
   border: 1px solid #D4D4D4;
@@ -63,12 +69,14 @@
 .protection-card.highlight .card-content-header {
   background: #88001b;
   border-radius: 0;
+  min-height: 160px;
 }
 
 .card-content-header {
   padding: 16px 24px;
   background-color: #151D28;
   border-radius: 8px 8px 0 0;
+  min-height: 140px;
 }
 
 .card-title {
@@ -188,6 +196,25 @@
   font-weight: 500;
 }
 
+.btn.selected {
+  position: relative;
+}
+
+.btn.selected::after {
+  content: "Selected";
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: #e8e6e6;
+  color: #979696;
+  width: 100%;
+  height: 100%;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .btn.primary {
   background: #D4002A;
   color: #fff;
@@ -196,4 +223,16 @@
 .btn.secondary {
   background: #000;
   color: #fff;
+}
+
+@media (max-width: 768px) {
+  .protection-cards-section-content {
+    width: calc(100% - 32px);
+  }
+  .protection-cards {
+    flex-direction: column;
+  }
+  .protection-card.highlight {
+    margin-top: 0;
+  }
 }

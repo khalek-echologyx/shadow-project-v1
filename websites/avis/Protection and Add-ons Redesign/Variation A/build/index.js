@@ -4,8 +4,8 @@
       (t()
         ? i()
         : setTimeout(() => {
-          poll(t, i, o, o ? e : e - a, a);
-        }, a));
+            poll(t, i, o, o ? e : e - a, a);
+          }, a));
   }
   const EXP_ID = "avis-protection-variation-a";
   const TARGET_SELECTOR = '[data-testid="Protections-container"] > div > svg';
@@ -25,13 +25,17 @@
     }
 
     // Construct selector for multiple data-codes
-    const selector = dataCodes.map(code => `[data-testid="ancillaries-bundle"][data-code="${code}"]`).join(",");
+    const selector = dataCodes
+      .map((code) => `[data-testid="ancillaries-bundle"][data-code="${code}"]`)
+      .join(",");
     const bundle = document.querySelector(selector);
 
     if (!bundle) return null;
 
     // Feature list (UL > LI)
-    const body = bundle.querySelector('[data-testid="ancillaries-bundle-body"]');
+    const body = bundle.querySelector(
+      '[data-testid="ancillaries-bundle-body"]',
+    );
     const features = body ? body.firstElementChild : null;
     var addCta = null;
     if (body) {
@@ -40,47 +44,57 @@
         () => {
           addCta = body.querySelector(".add-cta");
           // console.log(addCta, "addCta for", dataCodes);
-        });
+        },
+      );
     }
 
     // Old / cut price
     const oldPriceEl = bundle.querySelector(
-      '[data-testid="ancillaries-bundle-strikethrough-price"]'
+      '[data-testid="ancillaries-bundle-strikethrough-price"]',
     );
     const oldPrice = oldPriceEl ? oldPriceEl.textContent.trim() : null;
 
     // Current price (prefer data-price)
     const newPrice =
       bundle.getAttribute("data-price") ||
-      bundle.querySelector('[data-testid="ancillaries-bundle-price"]')?.textContent?.trim();
+      bundle
+        .querySelector('[data-testid="ancillaries-bundle-price"]')
+        ?.textContent?.trim();
 
     return {
       features,
       oldPrice,
       newPrice,
-      addCta, // This will be null initially due to poll, but updated by poll later. 
+      addCta, // This will be null initially due to poll, but updated by poll later.
       // However, since we re-query in click handler, it might be fine.
-      element: bundle 
+      element: bundle,
     };
   }
 
   function bindCustomSelectButton() {
     const customBtns = document.querySelectorAll(
-      `#${EXP_ID} .custom-select-btn`
+      `#${EXP_ID} .custom-select-btn`,
     );
 
-    customBtns.forEach(customBtn => {
+    customBtns.forEach((customBtn) => {
       customBtn.addEventListener("click", () => {
         const targetCode = customBtn.getAttribute("data-target-code");
         // Handle split codes like "Ultimate Protection,Complete Protection"
-        const codes = targetCode.includes(",") ? targetCode.split(",") : targetCode;
+        const codes = targetCode.includes(",")
+          ? targetCode.split(",")
+          : targetCode;
 
         const data = getProtectionData(codes);
 
         let nativeBtn = data ? data.addCta : null;
         if (!nativeBtn && data && data.element) {
-          nativeBtn = data.element.querySelector('[data-testid="ancillaries-bundle-body"] .add-cta') ||
-            data.element.querySelector('[data-testid="ancillaries-bundle-body"] button');
+          nativeBtn =
+            data.element.querySelector(
+              '[data-testid="ancillaries-bundle-body"] .add-cta',
+            ) ||
+            data.element.querySelector(
+              '[data-testid="ancillaries-bundle-body"] button',
+            );
         }
 
         console.log(nativeBtn, "nativeBtn for", targetCode);
@@ -95,20 +109,19 @@
             bubbles: true,
             cancelable: true,
             view: window,
-          })
+          }),
         );
 
         // Toggle selected class on the clicked button
         if (customBtn.classList.contains("selected")) {
           customBtn.classList.remove("selected");
         } else {
-          customBtns.forEach(b => b.classList.remove("selected"));
+          customBtns.forEach((b) => b.classList.remove("selected"));
           customBtn.classList.add("selected");
         }
       });
     });
   }
-
 
   function injectSection() {
     if (document.getElementById(EXP_ID)) return;
@@ -210,30 +223,35 @@
 
     insertionPoint.insertAdjacentHTML("beforebegin", html);
     insertionPoint.style.display = "none";
-    var targetContainer = document.querySelector('[data-testid="Protections-container"] > div > div');
+    var targetContainer = document.querySelector(
+      '[data-testid="Protections-container"] > div > div',
+    );
     targetContainer.style.display = "none";
 
     const protections = [
       {
         codes: "Essential Protection",
-        cardTitle: "Basic Protection"
+        cardTitle: "Basic Protection",
       },
       {
         codes: "Enhanced Protection",
-        cardTitle: "Standard Protection"
+        cardTitle: "Standard Protection",
       },
       {
         codes: ["Ultimate Protection", "Complete Protection"],
-        cardTitle: "Complete Protection"
-      }
+        cardTitle: "Complete Protection",
+      },
     ];
 
-    protections.forEach(prot => {
+    protections.forEach((prot) => {
       const data = getProtectionData(prot.codes);
       if (!data) return;
 
-      const card = [...document.querySelectorAll(`#${EXP_ID} .protection-card`)].find(
-        c => c.querySelector(".card-title")?.textContent.trim() === prot.cardTitle
+      const card = [
+        ...document.querySelectorAll(`#${EXP_ID} .protection-card`),
+      ].find(
+        (c) =>
+          c.querySelector(".card-title")?.textContent.trim() === prot.cardTitle,
       );
 
       if (!card) return;
@@ -259,7 +277,6 @@
     });
 
     bindCustomSelectButton();
-
   }
 
   function observeReact() {

@@ -1,4 +1,12 @@
 (() => {
+  function poll(t, i, o = !1, e = 10000, a = 25) {
+    e < 0 ||
+      (t()
+        ? i()
+        : setTimeout(() => {
+          poll(t, i, o, o ? e : e - a, a);
+        }, a));
+  }
   const EXP_ID = "avis-protection-variation-a";
   const TARGET_SELECTOR = '[data-testid="Protections-container"] > div > svg';
   var svg = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M19.8118 6.19684C20.0528 6.42427 20.0638 6.80401 19.8364 7.04501L9.96479 17.5055C9.72819 17.7562 9.32948 17.7564 9.09257 17.506L4.16415 12.2966C3.93641 12.0559 3.94694 11.6761 4.18766 11.4484C4.42837 11.2207 4.80812 11.2312 5.03586 11.4719L9.52788 16.22L18.9636 6.2214C19.1911 5.9804 19.5708 5.9694 19.8118 6.19684Z" fill="#4DC664" stroke="#8ACE97" stroke-linecap="round"/></svg>`;
@@ -11,21 +19,28 @@
         </svg>
          `;
 
-  function getCompleteProtectionData() {
-    const bundle = document.querySelector(
-      '[data-testid="ancillaries-bundle"][data-code="Ultimate Protection"],' +
-      '[data-testid="ancillaries-bundle"][data-code="Complete Protection"]'
-    );
+  function getProtectionData(dataCodes) {
+    if (!Array.isArray(dataCodes)) {
+      dataCodes = [dataCodes];
+    }
+
+    // Construct selector for multiple data-codes
+    const selector = dataCodes.map(code => `[data-testid="ancillaries-bundle"][data-code="${code}"]`).join(",");
+    const bundle = document.querySelector(selector);
 
     if (!bundle) return null;
 
     // Feature list (UL > LI)
     const body = bundle.querySelector('[data-testid="ancillaries-bundle-body"]');
-    const features = body.firstElementChild;
+    const features = body ? body.firstElementChild : null;
     var addCta = null
     if (body) {
-      addCta = body.querySelector(".add-cta");
-      console.log(addCta, "addCta"); 
+      poll(
+        () => body.querySelector(".add-cta"),
+        () => {
+          addCta = body.querySelector(".add-cta")
+          // console.log(addCta, "addCta for", dataCodes);
+        });
     }
 
     // Old / cut price
@@ -43,32 +58,54 @@
       features,
       oldPrice,
       newPrice,
-      addCta,
+      addCta, // This will be null initially due to poll, but updated by poll later. 
+      // However, since we re-query in click handler, it might be fine.
+      element: bundle 
     };
   }
 
   function bindCustomSelectButton() {
-    const customBtn = document.querySelector(
+    const customBtns = document.querySelectorAll(
       `#${EXP_ID} .custom-select-btn`
     );
 
-    if (!customBtn) return;
+    customBtns.forEach(customBtn => {
+      customBtn.addEventListener("click", () => {
+        const targetCode = customBtn.getAttribute("data-target-code");
+        // Handle split codes like "Ultimate Protection,Complete Protection"
+        const codes = targetCode.includes(",") ? targetCode.split(",") : targetCode;
 
-    customBtn.addEventListener("click", () => {
-      const nativeBtn = getNativeCompleteProtectionCTA();
+        const data = getProtectionData(codes);
 
-      if (!nativeBtn) {
-        console.warn("Native CTA not found");
-        return;
-      }
+        let nativeBtn = data ? data.addCta : null;
+        if (!nativeBtn && data && data.element) {
+          nativeBtn = data.element.querySelector('[data-testid="ancillaries-bundle-body"] .add-cta') ||
+            data.element.querySelector('[data-testid="ancillaries-bundle-body"] button');
+        }
 
-      nativeBtn.dispatchEvent(
-        new MouseEvent("click", {
-          bubbles: true,
-          cancelable: true,
-          view: window,
-        })
-      );
+        console.log(nativeBtn, "nativeBtn for", targetCode);
+
+        if (!nativeBtn) {
+          console.warn("Native CTA not found");
+          return;
+        }
+
+        nativeBtn.dispatchEvent(
+          new MouseEvent("click", {
+            bubbles: true,
+            cancelable: true,
+            view: window,
+          })
+        );
+
+        // Toggle selected class on the clicked button
+        if (customBtn.classList.contains("selected")) {
+          customBtn.classList.remove("selected");
+        } else {
+          customBtns.forEach(b => b.classList.remove("selected"));
+          customBtn.classList.add("selected");
+        }
+      });
     });
   }
 
@@ -82,7 +119,7 @@
     const html = `
       <section class="new-protection-section" id="${EXP_ID}">
         <div class="protection-cards-section">
-          <svg class="protection-bg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 979 424" fill="none">
+          <svg class="protection-bg" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" viewBox="0 0 979 424" fill="none">
             <path d="M5.83529e-05 0H979L979 350.639C979 350.639 679.144 424 487.982 424C296.82 424 0 350.639 0 350.639L5.83529e-05 0Z" fill="#EAEAEA"/>
           </svg>
           <div class="protection-cards-section-content">
@@ -96,7 +133,7 @@
                 <p class="card-title">Basic Protection</p>
                 <p class="ancillary-bundle-rating"><span class="active"></span> <span></span> <span></span> </p>
                 <p class="card-desc">
-                  For your rental vehicle, yourself, and your belongings.
+                  For your rental vehicle, yourself, and your belongings. 
                 </p>
               </div>
               <ul class="feature-list">
@@ -111,7 +148,7 @@
                 <span class="per-day">/day</span>
               </div>
               <div class="btn-container">
-                <button class="btn secondary">Select</button>
+                <button class="btn secondary custom-select-btn" data-target-code="Essential Protection">Select</button>
               </div>
             </div>
             <!-- Standard Protection Highlight -->
@@ -137,7 +174,7 @@
                 <span class="per-day">/day</span>
               </div>
               <div class="btn-container">
-                <button class="btn primary">Add Protection</button>
+                <button class="btn primary custom-select-btn" data-target-code="Enhanced Protection">Add Protection</button>
               </div>
             </div>
 
@@ -161,7 +198,7 @@
                 <span class="per-day">/day</span>
               </div>
               <div class="btn-container">
-                <button class="btn secondary custom-select-btn">Select</button>
+                <button class="btn secondary custom-select-btn" data-target-code="Ultimate Protection,Complete Protection">Select</button>
               </div>
             </div>
           </div>
@@ -172,36 +209,54 @@
     `;
 
     insertionPoint.insertAdjacentHTML("beforebegin", html);
-    const data = getCompleteProtectionData();
-    if (!data) return;
+    insertionPoint.style.display = "none";
+    var targetContainer = document.querySelector('[data-testid="Protections-container"] > div > div');
+    targetContainer.style.display = "none";
 
-    // Find Complete Protection card
-    const completeCard = [...document.querySelectorAll(
-      `#${EXP_ID} .protection-card`
-    )].find(card =>
-      card.querySelector(".card-title")?.textContent.trim() === "Complete Protection"
-    );
+    const protections = [
+      {
+        codes: "Essential Protection",
+        cardTitle: "Basic Protection"
+      },
+      {
+        codes: "Enhanced Protection",
+        cardTitle: "Standard Protection"
+      },
+      {
+        codes: ["Ultimate Protection", "Complete Protection"],
+        cardTitle: "Complete Protection"
+      }
+    ];
 
-    if (!completeCard) return;
+    protections.forEach(prot => {
+      const data = getProtectionData(prot.codes);
+      if (!data) return;
 
-    const ul = completeCard.querySelector("ul");
-    if (ul && data.features) {
-      data.features.classList.add("features");
-      ul.replaceWith(data.features);
-    }
+      const card = [...document.querySelectorAll(`#${EXP_ID} .protection-card`)].find(
+        c => c.querySelector(".card-title")?.textContent.trim() === prot.cardTitle
+      );
 
-    const oldPriceEl = completeCard.querySelector(".old-price");
-    if (oldPriceEl && data.oldPrice) {
-      oldPriceEl.textContent = data.oldPrice;
-      oldPriceEl.style.display = "inline";
-    }
+      if (!card) return;
 
-    const newPriceEl = completeCard.querySelector(".new-price");
-    if (newPriceEl && data.newPrice) {
-      newPriceEl.textContent = data.newPrice.startsWith("$")
-        ? data.newPrice
-        : `$${data.newPrice}`;
-    }
+      const ul = card.querySelector("ul");
+      if (ul && data.features) {
+        data.features.classList.add("features");
+        ul.replaceWith(data.features);
+      }
+
+      const oldPriceEl = card.querySelector(".old-price");
+      if (oldPriceEl && data.oldPrice) {
+        oldPriceEl.textContent = data.oldPrice;
+        oldPriceEl.style.display = "inline";
+      }
+
+      const newPriceEl = card.querySelector(".new-price");
+      if (newPriceEl && data.newPrice) {
+        newPriceEl.textContent = data.newPrice.startsWith("$")
+          ? data.newPrice
+          : `$${data.newPrice}`;
+      }
+    });
 
     bindCustomSelectButton();
 
