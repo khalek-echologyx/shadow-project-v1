@@ -1,14 +1,70 @@
-html {
-  position: relative;
+.opt-out-section {
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  margin: 0 56px;
+  padding: 56px 0;
 }
-html::before {
-  content: "AB test pilot CSS";
-  position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 99999999999;
-  background: #ff0000;
-  color: #ffffff;
-  padding: 10px;
-  border: 7px solid #269b11;
+
+.opt-out-section h4 {
+  font-family: AvisHeadline, "AvisHeadline Fallback", sans-serif;
+  font-size: 36px;
+  line-height: 36px;
+  margin: 0 0 8px 0;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.opt-out-section span {
+  color: rgb(82, 77, 77);
+  display: block;
+  margin: 0 auto 40px auto;
+  max-width: 700px;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.decline-option {
+  display: flex;
+  justify-content: center;
+}
+
+.decline-option label {
+  background: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  gap: 16px;
+  outline: #91001d solid 2px;
+  padding: 24px;
+}
+
+.decline-option label input {
+  opacity: 0;
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.decline-option label span.checkbox {
+  align-items: center;
+  background: #fff;
+  border: 1px solid #000;
+  display: inline-flex;
+  justify-content: center;
+  min-width: 24px;
+  width: 24px;
+  height: 24px;
+  margin: 0;
+}
+
+.decline-option label span svg {
+  width: 16px;
+  height: 16px;
+}
+
+.decline-option label:has(input:checked) .checkbox {
+  background: #000;
+}
+
+.decline-option label:has(input:checked) .checkbox path {
+  stroke: #fff;
 }
