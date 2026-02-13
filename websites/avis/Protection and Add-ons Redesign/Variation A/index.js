@@ -51,13 +51,8 @@
 <path d="M13.2604 0.59375L4.55208 9.30208L0.59375 5.34375" stroke="#1EA238" stroke-width="1.1875" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>`;
 
-  function getProtectionData(dataCodes) {
-    if (!Array.isArray(dataCodes)) {
-      dataCodes = [dataCodes];
-    }
-
-    // Construct selector for multiple data-codes
-    const selector = dataCodes.map(code => `[data-testid="ancillaries-bundle"][data-code="${code}"]`).join(",");
+  function getProtectionData(dataCode) {
+    const selector = `[data-testid="ancillaries-bundle"][data-code="${dataCode}"]`;
     const bundle = document.querySelector(selector);
 
     if (!bundle) return null;
@@ -65,14 +60,6 @@
     // Feature list (UL > LI)
     const body = bundle.querySelector('[data-testid="ancillaries-bundle-body"]');
     const features = body ? body.firstElementChild : null;
-    var addCta = null
-    if (body) {
-      poll(
-        () => body.querySelector(".add-cta"),
-        () => {
-          addCta = body.querySelector(".add-cta")
-        });
-    }
 
     // Old / cut price
     const oldPriceEl = bundle.querySelector(
@@ -89,7 +76,6 @@
       features,
       oldPrice,
       newPrice,
-      addCta,
       element: bundle
     };
   }
@@ -102,23 +88,12 @@
     customBtns.forEach(customBtn => {
       customBtn.addEventListener("click", () => {
         const targetCode = customBtn.getAttribute("data-target-code");
-        // Handle split codes like "Ultimate Protection,Complete Protection"
-        const codes = targetCode.includes(",") ? targetCode.split(",") : targetCode;
 
-        const data = getProtectionData(codes);
-
-        let nativeBtn = data ? data.addCta : null;
-        if (!nativeBtn && data && data.element) {
-          nativeBtn = data.element.querySelector('[data-testid="ancillaries-bundle-body"] .add-cta') ||
-            data.element.querySelector('[data-testid="ancillaries-bundle-body"] button');
+        const data = getProtectionData(targetCode);
+        if (!data.element) {
+          return console.warn("body element not found");
         }
-
-        if (!nativeBtn) {
-          console.warn("Native CTA not found");
-          return;
-        }
-
-        nativeBtn.dispatchEvent(
+        data.element.dispatchEvent(
           new MouseEvent("click", {
             bubbles: true,
             cancelable: true,
@@ -525,21 +500,21 @@
 
     const protections = [
       {
-        codes: ["Ultimate Protection", "Complete Protection"],
+        code: "Ultimate Protection",
         cardTitle: "Ultimate Protection"
       },
       {
-        codes: "Enhanced Protection",
+        code: "Enhanced Protection",
         cardTitle: "Enhanced Protection"
       },
       {
-        codes: "Essential Protection",
+        code: "Essential Protection",
         cardTitle: "Essential Protection"
       }
     ];
 
     protections.forEach(prot => {
-      const data = getProtectionData(prot.codes);
+      const data = getProtectionData(prot.code);
       if (!data) return;
 
       const card = [...document.querySelectorAll(`#${EXP_ID} .protection-card`)].find(
@@ -571,6 +546,38 @@
     bindCustomSelectButton();
     window.updateAvisCarSummary();
     disableOriginalFooterAccordion();
+
+    // Add opt out section
+    var optOutSectin = `<div class="opt-out-section">
+    <h4>Continue without protection</h4>
+    <span>This rental may not be fully covered by your insurance or credit card. Without protection, you remain responsible for any rental vehicle damage, theft, or loss, and third-party claims. </span>
+    <div class="decline-option">
+      <label id="decline-protection-label">
+        <input type="checkbox" name="decline-protection">
+        <span class="checkbox">
+          <svg focusable="false" aria-hidden="true" viewBox="0 0 11 9">
+            <path d="M1 4L4 7L10 1" stroke-linecap="round" fill="none"></path>
+          </svg>
+        </span>
+        I accept responsibility for damage to and loss/theft of the vehicle and third-party claims.
+      </label>
+    </div>
+  </div>`;
+
+    poll(
+      () =>
+        document.querySelector('[data-testid="single-protections-list-section-container"]') &&
+        !document.querySelector('.opt-out-section'),
+      () => {
+        var targetSection = document.querySelector('[data-testid="single-protections-list-section-container"]');
+        targetSection.insertAdjacentHTML("afterend", optOutSectin);
+        var noProtectionEl = document.querySelector('[data-testid="ancillaries-bundle"][data-code="No Protection"]');
+        var declineProtectionLabel = document.getElementById("decline-protection-label");
+        declineProtectionLabel.addEventListener("click", () => {
+          noProtectionEl.click();
+        });
+      }
+    );
   }
 
 
@@ -630,9 +637,6 @@
     window.updateAvisCarSummary();
     disableOriginalFooterAccordion();
   }
-
-
-
 
   function isProtectionPage() {
     return location.pathname.includes('/reservation/protectioncoverage');
