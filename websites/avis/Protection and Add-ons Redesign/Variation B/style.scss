@@ -2,8 +2,6 @@
   border-bottom: none !important;
 }
 
-
-
 .new-protection-section {
   display: block;
 }
@@ -17,7 +15,7 @@
   width: 100%;
   height: 474px;
   /* Reduced by approx 20% from 592px */
-  display: block;
+    display: block;
   position: absolute;
   top: 0;
   left: 0;
@@ -38,7 +36,7 @@
   letter-spacing: 0.3px !important;
   margin: 0 !important;
   padding-top: 25px;
-  padding-bottom: 50px;
+    padding-bottom: 50px;
 }
 
 .protection-cards {
@@ -59,7 +57,6 @@
 .protection-card.highlight {
   margin-top: -36px;
 }
-
 .protection-card.highlight .recomended {
   background-color: #660014;
   color: #fff;
@@ -94,12 +91,10 @@
   margin: 0;
   margin-bottom: 6px;
 }
-
 .ancillary-bundle-rating {
   margin: 0;
   margin-bottom: 6px;
 }
-
 .ancillary-bundle-rating span {
   width: 16px;
   height: 9px;
@@ -107,7 +102,6 @@
   display: inline-block;
   border-radius: 2px;
 }
-
 .ancillary-bundle-rating span.active {
   background-color: #E86400;
 }
@@ -149,10 +143,9 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  /* Gap between icon and text */
+    /* Gap between icon and text */
   margin: 0;
 }
-
 .feature-list li p span:first-child {
   margin-bottom: -5px;
 }
@@ -533,6 +526,90 @@
     }
   }
 }
+#avis-addOns-variation-A {
+  .protection-cards-column {
+    position: relative;
+  }
+}
+
+// =================================== NO OPT OUT SECTIONS TYLE
+[data-testid="ancillaries-bundle"][data-code="No Protection"] {
+  display: none !important;
+}
+
+.opt-out-section {
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  margin: 0 56px;
+  padding: 56px 0;
+}
+
+.opt-out-section h4 {
+  font-family: AvisHeadline, "AvisHeadline Fallback", sans-serif;
+  font-size: 36px;
+  line-height: 36px;
+  margin: 0 0 8px 0;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+
+.opt-out-section span {
+  color: rgb(82, 77, 77);
+  display: block;
+  margin: 0 auto 40px auto;
+  max-width: 700px;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.decline-option {
+  display: flex;
+  justify-content: center;
+}
+
+.decline-option label {
+  background: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  gap: 16px;
+  outline: #91001d solid 2px;
+  padding: 24px;
+}
+
+.decline-option label input {
+  opacity: 0;
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.decline-option label span.checkbox {
+  align-items: center;
+  background: #fff;
+  border: 1px solid #000;
+  display: inline-flex;
+  justify-content: center;
+  min-width: 24px;
+  width: 24px;
+  height: 24px;
+  margin: 0;
+}
+
+.decline-option label span svg {
+  width: 16px;
+  height: 16px;
+}
+
+.decline-option label:has(input:checked) .checkbox {
+  background: #000;
+}
+
+.decline-option label:has(input:checked) .checkbox path {
+  stroke: #fff;
+}
+
+// =================================== ADD TO TRIP BUTTON STYLE
 .custom-btn-style {
   height: 40px;
   display: inline-flex;
@@ -573,22 +650,16 @@
   border: 1px solid #ffffff !important;
 }
 
-@media (max-width: 1000px) {
-  .custom-btn-style {
-    height: 48px;
-  }
-}
 @media (max-width: 768px) {
   .protection-container-grid {
-    grid-template-columns: 1fr;
-    padding: 0;
-  }
-
-  .protection-cards-column,
-  .car-summary-column {
-    grid-column: span 1;
-  }
-
+      grid-template-columns: 1fr;
+        padding: 0;
+      }
+      
+      .protection-cards-column,
+      .car-summary-column {
+        grid-column: span 1;
+      }
   .protection-cards-section-content {
     width: calc(100% - 32px);
   }

@@ -1,4 +1,22 @@
 (() => {
+  (function (history) {
+    const pushState = history.pushState;
+    history.pushState = function () {
+      pushState.apply(history, arguments);
+      window.dispatchEvent(new Event('locationchange'));
+    };
+
+    const replaceState = history.replaceState;
+    history.replaceState = function () {
+      replaceState.apply(history, arguments);
+      window.dispatchEvent(new Event('locationchange'));
+    };
+
+    window.addEventListener('popstate', () => {
+      window.dispatchEvent(new Event('locationchange'));
+    });
+  })(window.history);
+
   function poll(t, i, o = false, e = 10000, a = 25) {
     e < 0 ||
       (t()
@@ -7,8 +25,11 @@
           poll(t, i, o, o ? e : e - a, a);
         }, a));
   }
+
   const EXP_ID = "avis-protection-variation-a";
+  var EXP_ID_2 = "avis-addOns-variation-A";
   const TARGET_SELECTOR = '[data-testid="Protections-container"] > div > svg';
+  var ADD_ON_PAGE = '[data-testid="AddOns-container"] > div';
   var TARGET_INDIVIDUAL_PROTECTION_SECTION = '[data-testid="single-protections-list-section-container"]';
   var svg = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M19.8118 6.19684C20.0528 6.42427 20.0638 6.80401 19.8364 7.04501L9.96479 17.5055C9.72819 17.7562 9.32948 17.7564 9.09257 17.506L4.16415 12.2966C3.93641 12.0559 3.94694 11.6761 4.18766 11.4484C4.42837 11.2207 4.80812 11.2312 5.03586 11.4719L9.52788 16.22L18.9636 6.2214C19.1911 5.9804 19.5708 5.9694 19.8118 6.19684Z" fill="#4DC664" stroke="#8ACE97" stroke-linecap="round"/></svg>`;
   var infoSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="24"     height="24" viewBox="0 0 24 24" fill="none">
@@ -30,13 +51,8 @@
 <path d="M13.2604 0.59375L4.55208 9.30208L0.59375 5.34375" stroke="#1EA238" stroke-width="1.1875" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>`;
 
-  function getProtectionData(dataCodes) {
-    if (!Array.isArray(dataCodes)) {
-      dataCodes = [dataCodes];
-    }
-
-    // Construct selector for multiple data-codes
-    const selector = dataCodes.map(code => `[data-testid="ancillaries-bundle"][data-code="${code}"]`).join(",");
+  function getProtectionData(dataCode) {
+    const selector = `[data-testid="ancillaries-bundle"][data-code="${dataCode}"]`;
     const bundle = document.querySelector(selector);
 
     if (!bundle) return null;
@@ -44,14 +60,6 @@
     // Feature list (UL > LI)
     const body = bundle.querySelector('[data-testid="ancillaries-bundle-body"]');
     const features = body ? body.firstElementChild : null;
-    var addCta = null;
-    if (body) {
-      poll(
-        () => body.querySelector(".add-cta"),
-        () => {
-          addCta = body.querySelector(".add-cta");
-        });
-    }
 
     // Old / cut price
     const oldPriceEl = bundle.querySelector(
@@ -68,7 +76,6 @@
       features,
       oldPrice,
       newPrice,
-      addCta,
       element: bundle
     };
   }
@@ -81,23 +88,12 @@
     customBtns.forEach(customBtn => {
       customBtn.addEventListener("click", () => {
         const targetCode = customBtn.getAttribute("data-target-code");
-        // Handle split codes like "Ultimate Protection,Complete Protection"
-        const codes = targetCode.includes(",") ? targetCode.split(",") : targetCode;
 
-        const data = getProtectionData(codes);
-
-        let nativeBtn = data ? data.addCta : null;
-        if (!nativeBtn && data && data.element) {
-          nativeBtn = data.element.querySelector('[data-testid="ancillaries-bundle-body"] .add-cta') ||
-            data.element.querySelector('[data-testid="ancillaries-bundle-body"] button');
+        const data = getProtectionData(targetCode);
+        if (!data.element) {
+          return console.warn("body element not found");
         }
-
-        if (!nativeBtn) {
-          console.warn("Native CTA not found");
-          return;
-        }
-
-        nativeBtn.dispatchEvent(
+        data.element.dispatchEvent(
           new MouseEvent("click", {
             bubbles: true,
             cancelable: true,
@@ -116,7 +112,297 @@
     });
   }
 
-  function injectSection() {
+  // --- Shared Car Summary Logic ---
+  let vehicleData = { name: "", image: "" };
+  let locationData = {
+    pickup: { name: "", date: "", time: "" },
+    dropoff: { name: "", date: "", time: "" }
+  };
+
+  function getSessionData() {
+    try {
+      const reservationStoreRaw = sessionStorage.getItem("reservation.store");
+      if (reservationStoreRaw) {
+        const store = JSON.parse(reservationStoreRaw);
+        if (store) {
+          const state = store.state || store;
+          vehicleData.name = state.vehicleModelDescription || "";
+          vehicleData.image = state.vehicleImage || "";
+
+          locationData.pickup.name = `${state.pickupAddressLine1}, ${state.pickupCityName}` || "";
+          locationData.dropoff.name = `${state.returnAddressLine1}, ${state.returnCityName}` || "";
+
+          const formatISO = (isoStr) => {
+            if (!isoStr) return { date: "", time: "" };
+            try {
+              const date = new Date(isoStr);
+              return {
+                date: date.toLocaleDateString("en-US", { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }),
+                time: date.toLocaleTimeString("en-US", { hour: 'numeric', minute: '2-digit' })
+              };
+            } catch (e) { return { date: "", time: "" }; }
+          };
+
+          const pickupDT = formatISO(state.pickupDatetime || state.pickUpDate);
+          locationData.pickup.date = pickupDT.date || state.pickUpDate || "";
+          locationData.pickup.time = pickupDT.time || state.pickUpTime || "";
+
+          const dropoffDT = formatISO(state.returnDatetime || state.dropOffDate);
+          locationData.dropoff.date = dropoffDT.date || state.dropOffDate || "";
+          locationData.dropoff.time = dropoffDT.time || state.dropOffTime || "";
+        }
+      }
+    } catch (e) {
+      console.error("Error parsing reservation store:", e);
+    }
+  }
+
+  function disableOriginalFooterAccordion() {
+    poll(
+      () => document.querySelector('[data-testid="action-footer-total-amount"]'),
+      () => {
+        if (window.innerWidth <= 1024) return;
+        var accordionElemet = document.querySelector('[data-testid="action-footer-total-amount"]');
+        var accordionTargetParentEl = accordionElemet.parentElement;
+        var btn = accordionTargetParentEl.querySelector('button');
+        if (btn) btn.style.display = "none";
+        accordionTargetParentEl.addEventListener('click', function (e) {
+          e.stopPropagation();
+        });
+      }
+    );
+  }
+
+
+  window.updateAvisCarSummary = function () {
+    const section = document.querySelector(`.new-protection-section .car-summary-section`);
+
+    if (!section) return;
+
+    getSessionData();
+
+    const totals = window.__AVIS_PRICE_CALC__ ? window.__AVIS_PRICE_CALC__.totals : {};
+    const priceCalc = window.__AVIS_PRICE_CALC__ ? window.__AVIS_PRICE_CALC__ : {};
+    const price = totals.total || "0.00";
+    const vehicleRate = totals.grossSubtotal || "0.00";
+    const vehicleRateDiscount = totals.netSubtotal || "0.00";
+    const rentalDays = priceCalc.rentalDays || "0";
+    const unlimitedFreeMiles = priceCalc.rateTerms ? priceCalc.rateTerms.unlimitedMilage : false;
+    const protectionBundle = priceCalc.protectionBundle;
+    const protectionBundleName = protectionBundle ? protectionBundle.code : "";
+    const protectionAndAddOnsTotal = (totals.addOnTotal || 0) + (totals.protectionTotal || 0);
+
+    let protectionList = [];
+    let addOnList = [];
+    let protectionAndAddOnSavings = 0;
+
+    const totalSavings = priceCalc.savings ? Number(priceCalc.savings.totalSavings).toFixed(2) : "0.00";
+    const discountCodeSavings = priceCalc.savings ? Number(priceCalc.savings.discountCodeSavings) : "0.00";
+    const payNowSaving = priceCalc.savings ? Number(priceCalc.savings.payNowSavings) : "0.00";
+
+    const taxAndFees = priceCalc.taxAndFeeItems || [];
+    const rateTerms = priceCalc.rateTerms || {};
+
+    try {
+      const reservationStoreRaw = sessionStorage.getItem("reservation.store");
+      if (reservationStoreRaw) {
+        const store = JSON.parse(reservationStoreRaw);
+        if (store && store.state) {
+          protectionList = store.state.pricesProtectionItems || [];
+          addOnList = store.state.pricesAddOnItems || [];
+          protectionAndAddOnSavings = store.state.extrasSavings || 0;
+        }
+      }
+    } catch (e) {
+      console.error("Error reading protection/addon data from sessionStorage:", e);
+    }
+
+    const combinedProtectionAddOns = [...protectionList, ...addOnList];
+
+    const buildList = (items) => {
+      if (!items || !items.length) return '<div class="empty-list">None</div>';
+      return items.map(i => `<div class="summary-item"><span>${i.description || i.name}</span><span>$${(i.amountString || i.amount || 0)}</span></div>`).join('');
+    };
+
+    const imageHtml = vehicleData.image ? `<div class="vehicle-image-container"><img src="https://www.avis.com${vehicleData.image}" data-testid="rental-summary-image" alt="vehicle image" class="car-image" loading="lazy" width="113" height="48" decoding="async" data-nimg="1"></div>` : '';
+
+    section.innerHTML = `
+      <p class="car-summary-title">Car Summary</p>
+      <div class="summary-content">
+         <div class="vehicle-info">
+           <p class="vehicle-name">${vehicleData.name}</p>
+           ${imageHtml}
+         </div>
+         <div class="location-info">
+           <div class="location-row pickup" style="padding-top:16px; border-top: 1px solid #EAEAEA">
+             <div class="loc-details">
+                 <div class="loc-label">Pick Up</div>
+                 <div class="loc-name">${locationData.pickup.name}</div>
+             </div>
+             <div class="loc-datetime">
+                 <div class="loc-date">${locationData.pickup.date}</div>
+                 <div class="loc-time">${locationData.pickup.time}</div>
+             </div>
+           </div>
+           <div class="location-row dropoff">
+             <div class="loc-details">
+                 <div class="loc-label">Drop Off</div>
+                 <div class="loc-name">${locationData.dropoff.name}</div>
+             </div>
+             <div class="loc-datetime">
+                 <div class="loc-date">${locationData.dropoff.date}</div>
+                 <div class="loc-time">${locationData.dropoff.time}</div>
+             </div>
+           </div>
+         </div>
+         <div class="divider"></div>
+         <div class="total-vehicle-rate">
+           <div class="total-vehicle-rate-content">
+            <div class="total-vehicle-rate-title">Vehicle total rate (${rentalDays} days)</div>
+            <div class="total-vehicle-rate-subtitle">${unlimitedFreeMiles ? "Unlimited free miles" : ""}</div>
+           </div>
+           <div class="total-vehicle-rate-price">
+            <span class="total-vehicle-rate-price-amount">$${vehicleRate}</span> 
+            <span class="total-vehicle-rate-price-save">$${vehicleRateDiscount}</span>
+           </div>
+         </div>
+        <div class="accordion-item protection-accordion">
+          <div class="accordion-header" data-has-items="${combinedProtectionAddOns.length > 0}">
+           <div class="accordion-header-title protection-add-ons">Protections & Add-ons</div>
+           <div class="accordion-header-icon">
+            <div class="accordion-header-icon-price">$${protectionAndAddOnsTotal.toFixed(2)}</div>
+            <div class="accordion-header-icon-arrow" style="display: ${combinedProtectionAddOns.length > 0 ? 'block' : 'none'};">${arrowDown}</div>
+           </div>
+          </div>
+          <div class="accordion-content">${buildList(combinedProtectionAddOns)}</div>
+          <div class="accordion-footer">
+          ${combinedProtectionAddOns.length > 0 && !protectionBundleName ? "" : combinedProtectionAddOns.length > 0 && protectionBundleName ?
+        `<div class="pr-added-footer">${checkIcon} <span>${protectionBundleName} added</span></div>`
+        : `<div class="protection-not-added">x Protection not added</div>`
+      }
+          </div>
+        </div>
+         <div class="divider"></div>
+        <div class="accordion-item savings-discount">
+          <div class="accordion-header" data-has-items="${totalSavings > 0}">
+           <div class="accordion-header-title">Savings and Discount</div>
+           <div class="accordion-header-icon">
+            <div class="accordion-header-icon-price">$${totalSavings || "0.00"}</div>
+            <div class="accordion-header-icon-arrow" style="display: ${totalSavings > 0 ? 'block' : 'none'};">${arrowDown}</div>
+           </div>
+          </div>
+          <div class="accordion-content">
+            <div class="summary-item"><span>Discount Code Savings</span><span>$${discountCodeSavings || "0.00"}</span></div>
+            <div class="summary-item"><span>Pay Now Savings</span><span>$${payNowSaving || "0.00"}</span></div>
+            <div class="summary-item"><span>Protection and Add-ons Savings</span><span>$${Number(protectionAndAddOnSavings).toFixed(2) || "0.00"}</span></div>
+          </div>
+        </div>
+        <div class="accordion-item text-and-fees-accordion">
+          <div class="accordion-header" data-has-items="${taxAndFees.length > 0}">
+           <div class="accordion-header-title">Tax and Fees</div>
+           <div class="accordion-header-icon">
+            <div class="accordion-header-icon-price">$${taxAndFees.length > 0 ? taxAndFees.reduce((acc, item) => acc + (item.amount || 0), 0).toFixed(2) : "0.00"}</div>
+            <div class="accordion-header-icon-arrow" style="display: ${taxAndFees.length > 0 ? 'block' : 'none'};">${arrowDown}</div>
+           </div>
+          </div>
+          <div class="accordion-content">
+            ${taxAndFees.map(item => `<div class="summary-item"><a target="_blank" class="tax-fee-link" href="https://www.avis.com/en/customer-service/faqs/usa/fees-taxes#${item.code}">${item.description}</a><span>$${(item.amount || 0).toFixed(2)}</span></div>`).join('')}
+          </div>
+        </div>
+         <div class="divider"></div>
+        <div class="price-info">
+           <span class="total-label">Total</span>
+           <span class="total-price">$${Number(price).toFixed(2) || "0.00"}</span>
+        </div>
+        <div class="accordion-item">
+          <div class="accordion-header">
+           <div class="accordion-header-title rate-terms">See rate terms</div>
+          </div>
+          <div class="accordion-content">
+            <div class="MuiBox-root mui-0"><div class="MuiTypography-root MuiTypography-body1 mui-16hh9w9" data-testid="rate-terms-container"><div class="MuiTypography-root MuiTypography-body1 mui-new8e0" data-testid="rate-terms-title">Rate terms</div><div class="MuiTypography-root MuiTypography-body1 mui-new8e0" data-testid="rate-terms-info-label">These rate terms apply for this specific rental.</div><div class="MuiTypography-root MuiTypography-body1 mui-new8e0" data-testid="rate-terms-description">If for any reason you change your rental parameters (pick up dates, times, etc.), those changes must follow these terms or your rate will also change.</div></div><ul class="MuiBox-root mui-1vnz3zg" data-testid="rate-terms-notes-ul"><li class="MuiBox-root mui-0"><span class="MuiTypography-root MuiTypography-bodySmallRegular mui-fp7ibt">Your rate was calculated based on the information provided. Some modifications may change this rate.</span></li><li class="MuiBox-root mui-0"><span class="MuiTypography-root MuiTypography-bodySmallRegular mui-fp7ibt">Unlimited free miles</span></li><li class="MuiBox-root mui-0"><span class="MuiTypography-root MuiTypography-bodySmallRegular mui-fp7ibt">If you need to cancel 24 hours prior to the scheduled pick-up time, we will refund the full prepaid amount less a ${rateTerms.cancelFeeBefore24h || "$0"} processing fee.</span></li><li class="MuiBox-root mui-0"><span class="MuiTypography-root MuiTypography-bodySmallRegular mui-fp7ibt">If you need to cancel during the 24 hour period prior to the scheduled pick-up time, we will refund the full prepaid amount less a ${rateTerms.cancelFeeWithin24h || "$0"} processing fee.</span></li></ul></div>
+          </div>
+        </div>
+      </div>
+    `;
+
+    section.querySelectorAll('.accordion-header').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const hasItems = btn.getAttribute('data-has-items');
+        if (hasItems === 'false') return;
+
+        btn.classList.toggle('active');
+        const content = btn.nextElementSibling;
+        const icon = btn.querySelector('.icon');
+        const arrow = btn.querySelector('.accordion-header-icon-arrow');
+
+        if (btn.classList.contains('active')) {
+          content.style.maxHeight = content.scrollHeight + "px";
+          if (icon) icon.textContent = "-";
+          if (arrow) {
+            arrow.style.transform = "rotate(180deg)";
+            arrow.style.marginTop = "1px";
+          }
+        } else {
+          content.style.maxHeight = null;
+          if (icon) icon.textContent = "+";
+          if (arrow) {
+            arrow.style.transform = "rotate(0deg)";
+            arrow.style.marginTop = "-9px";
+          }
+        }
+      });
+    });
+  };
+
+  if (!window.avisInterceptorSetup) {
+    window.avisInterceptorSetup = true;
+    const originalFetch = window.fetch;
+    window.fetch = async function (...args) {
+      const response = await originalFetch.apply(this, args);
+      try {
+        const url = args[0];
+        if (typeof url === "string" && url.includes("/web/reservation/price/calculate")) {
+          response.clone().json().then((data) => {
+            window.__AVIS_PRICE_CALC__ = data;
+            if (window.updateAvisCarSummary) {
+              setTimeout(() => { window.updateAvisCarSummary(); }, 100);
+            }
+          });
+        }
+      } catch (e) { console.error("Interceptor error:", e); }
+      return response;
+    };
+  }
+
+
+  // ============== CHECKBOX REDESIGN ==============
+  function checkBoxBtn() {
+    const testIds = [
+      '[data-testid="single-protections-item-add-to-trip-btn"]',
+      '[data-testid="single-addons-item-add-to-trip-btn"]'
+    ];
+
+    testIds.forEach(testId => {
+      var targetBtns = document.querySelectorAll(testId);
+      targetBtns.forEach(btn => {
+        btn.classList.add('custom-btn-style');
+        var isCheckedDiv = btn.querySelector("span:last-child div");
+        if (!isCheckedDiv) return;
+
+        // Apply state-based classes
+        if (isCheckedDiv.querySelector('svg')) {
+          isCheckedDiv.classList.remove('checkField');
+          isCheckedDiv.classList.add('checked');
+        } else {
+          isCheckedDiv.classList.remove('checked');
+          isCheckedDiv.classList.add('checkField');
+        }
+      });
+    });
+  }
+
+
+  function injectProtectionLayout() {
     if (document.getElementById(EXP_ID)) return;
 
     const insertionPoint = document.querySelector(TARGET_SELECTOR);
@@ -241,21 +527,21 @@
 
     const protections = [
       {
-        codes: ["Ultimate Protection", "Complete Protection"],
+        code: "Ultimate Protection",
         cardTitle: "Ultimate Protection"
       },
       {
-        codes: "Enhanced Protection",
+        code: "Enhanced Protection",
         cardTitle: "Enhanced Protection"
       },
       {
-        codes: "Essential Protection",
+        code: "Essential Protection",
         cardTitle: "Essential Protection"
       }
     ];
 
     protections.forEach(prot => {
-      const data = getProtectionData(prot.codes);
+      const data = getProtectionData(prot.code);
       if (!data) return;
 
       const card = [...document.querySelectorAll(`#${EXP_ID} .protection-card`)].find(
@@ -285,347 +571,144 @@
     });
 
     bindCustomSelectButton();
-
-    // 1. Get Vehicle Data from Session Storage
-    let vehicleData = { name: "", image: "" };
-    let locationData = {
-      pickup: { name: "", date: "", time: "" },
-      dropoff: { name: "", date: "", time: "" }
-    };
-    try {
-      const reservationStoreRaw = sessionStorage.getItem("reservation.store");
-      if (reservationStoreRaw) {
-        const store = JSON.parse(reservationStoreRaw);
-        if (store) {
-          vehicleData.name = store.state.vehicleModelDescription || "";
-          vehicleData.image = store.state.vehicleImage || "";
-
-          // Location
-          const state = store.state || store;
-          locationData.pickup.name = `${state.pickupAddressLine1}, ${state.pickupCityName}` || "";
-          locationData.dropoff.name = `${state.returnAddressLine1}, ${state.returnCityName}` || "";
-
-          // Helper to format ISO date string
-          const formatISO = (isoStr) => {
-            if (!isoStr) return { date: "", time: "" };
-            try {
-              const date = new Date(isoStr);
-              return {
-                date: date.toLocaleDateString("en-US", { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' }),
-                time: date.toLocaleTimeString("en-US", { hour: 'numeric', minute: '2-digit' })
-              };
-            } catch (e) { return { date: "", time: "" }; }
-          };
-
-          const pickupDT = formatISO(state.pickupDatetime || state.pickUpDate);
-          locationData.pickup.date = pickupDT.date || state.pickUpDate || "";
-          locationData.pickup.time = pickupDT.time || state.pickUpTime || "";
-
-          const dropoffDT = formatISO(state.returnDatetime || state.dropOffDate);
-          locationData.dropoff.date = dropoffDT.date || state.dropOffDate || "";
-          locationData.dropoff.time = dropoffDT.time || state.dropOffTime || "";
-
-
-        }
-      }
-    } catch (e) {
-      console.error("Error parsing reservation store:", e);
-    }
-
-
-
-    // 2. Define Update Function (Global so interceptor can call latest version)
-    window.updateAvisCarSummary = function () {
-      const section = document.querySelector(`#${EXP_ID} .car-summary-section`);
-      if (!section) return;
-
-      const totals = window.__AVIS_PRICE_CALC__ ? window.__AVIS_PRICE_CALC__.totals : {};
-      var priceCalc = window.__AVIS_PRICE_CALC__ ? window.__AVIS_PRICE_CALC__ : {};
-      const price = totals.total || "Calculated at next step";
-      var vehicleRate = totals.grossSubtotal || "Calculated at next step";
-      var vehicleRateDiscount = totals.netSubtotal || "Calculated at next step";
-      var rentalDays = priceCalc.rentalDays || "Calculated at next step";
-      var unlimitedFreeMiles = priceCalc.rateTerms ? priceCalc.rateTerms.unlimitedMilage : "Calculated at next step";
-      var protectionBundle = priceCalc.protectionBundle;
-      var protectionBundleName = protectionBundle ? protectionBundle.code : "";
-      var protectionAndAddOnsTotal = totals.addOnTotal + totals.protectionTotal;
-
-
-      // Get fresh protection and add-on lists from sessionStorage
-      var protectionList = [];
-      var addOnList = [];
-      var protectionAndAddOnSavings = 0;
-
-      //Savings and discount
-      var totalSavings = priceCalc.savings ? Number(priceCalc.savings.totalSavings).toFixed(2) : "0.00";
-      var discountCodeSavings = priceCalc.savings ? Number(priceCalc.savings.discountCodeSavings) : "0.00";
-      var payNowSaving = priceCalc.savings ? Number(priceCalc.savings.payNowSavings) : "0.00";
-
-      //Tax and fees
-      var taxAndFees = priceCalc.taxAndFeeItems || [];
-
-      //Rate terms
-      var rateTerms = priceCalc.rateTerms || {};
-
-      try {
-        const reservationStoreRaw = sessionStorage.getItem("reservation.store");
-        if (reservationStoreRaw) {
-          const store = JSON.parse(reservationStoreRaw);
-          if (store && store.state) {
-            protectionList = store.state.pricesProtectionItems || [];
-            addOnList = store.state.pricesAddOnItems || [];
-            protectionAndAddOnSavings = store.state.extrasSavings || 0;
-          }
-        }
-      } catch (e) {
-        console.error("Error reading protection/addon data from sessionStorage:", e);
-      }
-
-      // Combine protection and add-on lists for display
-      var combinedProtectionAddOns = [...protectionList, ...addOnList];
-
-
-      // Helper to build list items 
-      const buildList = (items) => {
-        if (!items || !items.length) return '<div class="empty-list">None</div>';
-        return items.map(i => `<div class="summary-item"><span>${i.description || i.name}</span><span>$${i.amountString || i.amount}</span></div>`).join('');
-      };
-
-      // Image HTML
-      const imageHtml = vehicleData.image ? `<div class="vehicle-image-container"><img src="https://www.avis.com${vehicleData.image}" data-testid="rental-summary-image" alt="vehicle image" class="car-image" loading="lazy" width="113" height="48" decoding="async" data-nimg="1"></div>` : '';
-
-      section.innerHTML = `
-        <p class="car-summary-title">Car Summary</p>
-        <div class="summary-content">
-           <div class="vehicle-info">
-             <p class="vehicle-name">${vehicleData.name}</p>
-             ${imageHtml}
-           </div>
-           
-           <div class="location-info">
-             <div class="location-row pickup" style="padding-top:16px; border-top: 1px solid #EAEAEA">
-               <div class="loc-details">
-                   <div class="loc-label">Pick Up</div>
-                   <div class="loc-name">${locationData.pickup.name}</div>
-               </div>
-               <div class="loc-datetime">
-                   <div class="loc-date">${locationData.pickup.date}</div>
-                   <div class="loc-time">${locationData.pickup.time}</div>
-               </div>
-             </div>
-             
-             <div class="location-row dropoff">
-               <div class="loc-details">
-                   <div class="loc-label">Drop Off</div>
-                   <div class="loc-name">${locationData.dropoff.name}</div>
-               </div>
-               <div class="loc-datetime">
-                   <div class="loc-date">${locationData.dropoff.date}</div>
-                   <div class="loc-time">${locationData.dropoff.time}</div>
-               </div>
-             </div>
-           </div>
-           <!-- Divider-->
-           <div class="divider"></div>
-           
-           <!-- Total Vehicle Rate-->
-           <div class="total-vehicle-rate">
-             <div class="total-vehicle-rate-content">
-              <div class="total-vehicle-rate-title">Vehicle total rate (${rentalDays} days)</div>
-              <div class="total-vehicle-rate-subtitle">${unlimitedFreeMiles ? "Unlimited free miles" : ""}</div>
-             </div>
-             <div class="total-vehicle-rate-price">
-              <span class="total-vehicle-rate-price-amount">$${vehicleRate}</span> 
-              <span class="total-vehicle-rate-price-save">$${vehicleRateDiscount}</span>
-             </div>
-           </div>
-           <!-- Protection and Add-ons -->
-          <div class="accordion-item protection-accordion"> 
-            <div class="accordion-header" data-has-items="${combinedProtectionAddOns.length > 0}">
-             <div class="accordion-header-title protection-add-ons">Protections & Add-ons</div>
-             <div class="accordion-header-icon">
-              <div class="accordion-header-icon-price">$${protectionAndAddOnsTotal || "0.00"}</div>
-              <div class="accordion-header-icon-arrow" style="display: ${combinedProtectionAddOns.length > 0 ? 'block' : 'none'};">${arrowDown}</div>
-             </div>
-            </div>
-            <div class="accordion-content">${buildList(combinedProtectionAddOns)}</div>
-            <div class="accordion-footer">
-            ${combinedProtectionAddOns.length > 0 && !protectionBundleName ? "" : combinedProtectionAddOns.length > 0 && protectionBundleName ?
-          `<div class="pr-added-footer">${checkIcon} <span>${protectionBundleName} added</span></div>`
-          : `<div class="protection-not-added">x Protection not added</div>`
-        }
-            </div>
-          </div>
-
-          <!-- Divider-->
-           <div class="divider"></div>
-
-          <!-- Savings and Discount -->
-          <div class="accordion-item savings-discount">
-            <div class="accordion-header" data-has-items="${totalSavings > 0}">
-             <div class="accordion-header-title">Savings and Discount</div>
-             <div class="accordion-header-icon">
-              <div class="accordion-header-icon-price">$${totalSavings || "0.00"}</div>
-              <div class="accordion-header-icon-arrow" style="display: ${totalSavings > 0 ? 'block' : 'none'};">${arrowDown}</div>
-             </div>
-            </div>
-            <div class="accordion-content">
-              <div class="summary-item"><span>Discount Code Savings</span><span>$${discountCodeSavings || "0.00"}</span></div>
-              <div class="summary-item"><span>Pay Now Savings</span><span>$${payNowSaving || "0.00"}</span></div>
-              <div class="summary-item"><span>Protection and Add-ons Savings</span><span>$${Number(protectionAndAddOnSavings).toFixed(2) || "0.00"}</span></div>
-            </div>
-          </div>
-
-          <!-- Tax and Fees -->
-          <div class="accordion-item text-and-fees-accordion">
-            <div class="accordion-header" data-has-items="${taxAndFees.length > 0}">
-             <div class="accordion-header-title">Tax and Fees</div>
-             <div class="accordion-header-icon">
-              <div class="accordion-header-icon-price">$${taxAndFees.length > 0 ? taxAndFees.reduce((acc, item) => acc + item.amount, 0).toFixed(2) : "0.00"}</div>
-              <div class="accordion-header-icon-arrow" style="display: ${taxAndFees.length > 0 ? 'block' : 'none'};">${arrowDown}</div>
-             </div>
-            </div>
-            <div class="accordion-content">
-              ${taxAndFees.map(item => `<div class="summary-item"><a target="_blank" class="tax-fee-link" href="https://www.avis.com/en/customer-service/faqs/usa/fees-taxes#${item.code}">${item.description}</a><span>$${item.amount.toFixed(2)}</span></div>`).join('')}
-            </div>
-          </div>
-          <!-- Divider-->
-           <div class="divider"></div>
-          <div class="price-info">
-             <span class="total-label">Total</span>
-             <span class="total-price">$${Number(price).toFixed(2) || "0.00"}</span>
-          </div>
-          <!-- Terms and Conditions -->
-          <div class="accordion-item">
-            <div class="accordion-header">
-             <div class="accordion-header-title rate-terms">See rate terms</div>
-            </div>
-            <div class="accordion-content">
-              <div class="MuiBox-root mui-0"><div class="MuiTypography-root MuiTypography-body1 mui-16hh9w9" data-testid="rate-terms-container"><div class="MuiTypography-root MuiTypography-body1 mui-new8e0" data-testid="rate-terms-title">Rate terms</div><div class="MuiTypography-root MuiTypography-body1 mui-new8e0" data-testid="rate-terms-info-label">These rate terms apply for this specific rental.</div><div class="MuiTypography-root MuiTypography-body1 mui-new8e0" data-testid="rate-terms-description">If for any reason you change your rental parameters (pick up dates, times, etc.), those changes must follow these terms or your rate will also change.</div></div><ul class="MuiBox-root mui-1vnz3zg" data-testid="rate-terms-notes-ul"><li class="MuiBox-root mui-0"><span class="MuiTypography-root MuiTypography-bodySmallRegular mui-fp7ibt">Your rate was calculated based on the information provided. Some modifications may change this rate.</span></li><li class="MuiBox-root mui-0"><span class="MuiTypography-root MuiTypography-bodySmallRegular mui-fp7ibt">Unlimited free miles</span></li><li class="MuiBox-root mui-0"><span class="MuiTypography-root MuiTypography-bodySmallRegular mui-fp7ibt">If you need to cancel 24 hours prior to the scheduled pick-up time, we will refund the full prepaid amount less a ${rateTerms.cancelFeeBefore24h} processing fee.</span></li><li class="MuiBox-root mui-0"><span class="MuiTypography-root MuiTypography-bodySmallRegular mui-fp7ibt">If you need to cancel during the 24 hour period prior to the scheduled pick-up time, we will refund the full prepaid amount less a ${rateTerms.cancelFeeWithin24h} processing fee.</span></li></ul></div>
-            </div>
-          </div>
-        </div>
-      `;
-
-      // Attach Accordion Listeners
-      section.querySelectorAll('.accordion-header').forEach(btn => {
-        btn.addEventListener('click', () => {
-          // Check if accordion has items (for protection & add-ons)
-          const hasItems = btn.getAttribute('data-has-items');
-          if (hasItems === 'false') {
-            return; // Don't expand if no items
-          }
-
-          btn.classList.toggle('active');
-          const content = btn.nextElementSibling;
-          const icon = btn.querySelector('.icon');
-          const arrow = btn.querySelector('.accordion-header-icon-arrow');
-
-          if (btn.classList.contains('active')) {
-            content.style.maxHeight = content.scrollHeight + "px";
-            if (icon) icon.textContent = "-";
-            if (arrow) {
-              arrow.style.transform = "rotate(180deg)";
-              arrow.style.marginTop = "1px";
-            }
-          } else {
-            content.style.maxHeight = null;
-            if (icon) icon.textContent = "+";
-            if (arrow) {
-              arrow.style.transform = "rotate(0deg)";
-              arrow.style.marginTop = "-9px";
-            }
-          }
-        });
-      });
-    };
-
-    // Initial render
     window.updateAvisCarSummary();
+    disableOriginalFooterAccordion();
 
-    // 3. Setup Fetch Interceptor (Once)
-    if (!window.avisInterceptorSetup) {
-      window.avisInterceptorSetup = true;
-      const originalFetch = window.fetch;
+    // Add opt out section
+    var optOutSectin = `<div class="opt-out-section">
+    <h4>Continue without protection</h4>
+    <span>This rental may not be fully covered by your insurance or credit card. Without protection, you remain responsible for any rental vehicle damage, theft, or loss, and third-party claims. </span>
+    <div class="decline-option">
+      <label id="decline-protection-label">
+        <input type="checkbox" name="decline-protection">
+        <span class="checkbox">
+          <svg focusable="false" aria-hidden="true" viewBox="0 0 11 9">
+            <path d="M1 4L4 7L10 1" stroke-linecap="round" fill="none"></path>
+          </svg>
+        </span>
+        I accept responsibility for damage to and loss/theft of the vehicle and third-party claims.
+      </label>
+    </div>
+     </div>`;
 
-      window.fetch = async function (...args) {
-        const response = await originalFetch.apply(this, args);
-
-        try {
-          const url = args[0];
-          if (typeof url === "string" && url.includes("/web/reservation/price/calculate")) {
-            response
-              .clone()
-              .json()
-              .then((data) => {
-                window.__AVIS_PRICE_CALC__ = data;
-                if (window.updateAvisCarSummary) {
-                  // Add delay to allow sessionStorage to be updated first
-                  setTimeout(() => {
-                    window.updateAvisCarSummary();
-                  }, 100);
-                }
-              });
-          }
-        } catch (e) {
-          console.error("Interceptor error:", e);
-        }
-
-        return response;
-      };
-    }
-    //Disable the accordion summary trigger
     poll(
-      () => document.querySelector('[data-testid="action-footer-total-amount"]'),
+      () =>
+        document.querySelector('[data-testid="single-protections-list-section-container"]') &&
+        !document.querySelector('.opt-out-section'),
       () => {
-        if (window.innerWidth <= 1024) return;
-        var accordionElemet = document.querySelector('[data-testid="action-footer-total-amount"]');
-        var accordionTargetParentEl = accordionElemet.parentElement;
-        accordionTargetParentEl.querySelector('button').style.display = "none";
-        accordionTargetParentEl.addEventListener('click', function (e) {
-          e.stopPropagation();
+        var targetSection = document.querySelector('[data-testid="single-protections-list-section-container"]');
+        targetSection.insertAdjacentHTML("afterend", optOutSectin);
+        var noProtectionEl = document.querySelector('[data-testid="ancillaries-bundle"][data-code="No Protection"]');
+        var declineProtectionLabel = document.getElementById("decline-protection-label");
+        declineProtectionLabel.addEventListener("click", () => {
+          noProtectionEl.click();
         });
       }
     );
+    checkBoxBtn();
   }
 
-  function checkBoxBtn() {
-    var targetBtns = document.querySelectorAll('[data-testid="single-protections-item-add-to-trip-btn"]');
-    targetBtns.forEach(btn => {
-      btn.classList.add('custom-btn-style'); 
-      var isChecked = btn.querySelector("span:last-child div");
-      console.log(isChecked, "isChecked");
-      if (isChecked && isChecked.querySelector('svg')) {
-        console.log("checked");
-        isChecked.classList.add('checked');
-      } else {
-        console.log("not checked");
-        isChecked.classList.add('checkField');
+
+  function injectCarSummaryOnly() {
+    if (document.getElementById(EXP_ID_2)) return;
+
+
+    const insertionPoint = document.querySelector(ADD_ON_PAGE);
+    if (!insertionPoint) return;
+
+    const html = `
+      <section class="new-protection-section" id="${EXP_ID_2}">
+        <div class="protection-container-grid">
+          <div class="protection-cards-column"></div>
+          <div class="car-summary-column">
+            <div class="car-summary-section">
+               <p class="car-summary-title">Car Summary</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    `;
+
+    insertionPoint.insertAdjacentHTML("beforebegin", html);
+
+    const addonSection = document.getElementById(EXP_ID_2);
+    addonSection.style.backgroundColor = "rgb(244, 244, 244)";
+    const cardsColumn = addonSection.querySelector(".protection-cards-column");
+
+    // Look for original elements that need to be moved into the new grid
+    const selectSvg = insertionPoint.querySelector(':scope > svg');
+    selectSvg.style.zIndex = "0";
+    const selectTravelPck = insertionPoint.querySelector(':scope > div:not(#' + EXP_ID_2 + '):not(#' + EXP_ID + ')');
+    selectTravelPck.style.paddingTop = "35px";
+    var TravelPackHeader = selectTravelPck.querySelector("div");
+    TravelPackHeader.style.zIndex = "1";
+    var addOnsPackages = document.querySelector('[data-testid="ancillaries-bundles-container"]');
+    addOnsPackages.style.zIndex = "1";
+    var selectAddOnsList = document.querySelector('[data-testid="single-addons-list-section-container"]');
+    var targetParentEl = document.querySelectorAll('[data-testid="single-addons-category-section-container"]');
+    var singleAddOnsCategoryHeader = document.querySelectorAll('[data-testid="single-addons-category-name"]');
+    singleAddOnsCategoryHeader.forEach((header, index) => {
+      header.style.marginBottom = "20px";
+      if (targetParentEl[index]) {
+        targetParentEl[index].parentElement.insertAdjacentElement("afterbegin", header);
       }
+    });
+
+
+    if (cardsColumn) {
+      if (selectSvg) cardsColumn.appendChild(selectSvg);
+      if (selectTravelPck) cardsColumn.appendChild(selectTravelPck);
+      if (selectAddOnsList) cardsColumn.appendChild(selectAddOnsList);
+    }
+
+    window.updateAvisCarSummary();
+    disableOriginalFooterAccordion();
+    // ============== CHECKBOX REDESIGN ============== 
+    checkBoxBtn();
+  }
+
+  function isProtectionPage() {
+    return location.pathname.includes('/reservation/protectioncoverage');
+  }
+
+  function isAddOnsPage() {
+    return location.pathname.includes('/reservation/addons');
+  }
+
+  function handlePageChange() {
+    if (isProtectionPage()) runProtection();
+    if (isAddOnsPage()) runAddOns();
+    checkBoxBtn();
+  }
+
+
+  function runProtection() {
+    poll(() => document.querySelector(TARGET_SELECTOR), () => {
+      injectProtectionLayout();
     });
   }
 
-  function observReact() {
-    var observer = new MutationObserver(() => {
-      injectSection();
-      checkBoxBtn();
+  function runAddOns() {
+    poll(() => document.querySelector(ADD_ON_PAGE), () => {
+      injectCarSummaryOnly();
+    });
+  }
+
+  function observeDOM() {
+    const observer = new MutationObserver(() => {
+      handlePageChange();
     });
 
     observer.observe(document.body, {
       childList: true,
-      subtree: true
+      subtree: true,
     });
   }
 
-  function init() {
-    injectSection();
-    checkBoxBtn();
-    observReact();
-  }
+  window.addEventListener("locationchange", handlePageChange);
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init);
-  } else {
-    init();
-  }
+  poll(() => document.body, () => {
+    handlePageChange();
+    observeDOM();
+  });
 })();
