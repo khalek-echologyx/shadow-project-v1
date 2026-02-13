@@ -11,7 +11,7 @@
     <h4>Continue without protection</h4>
     <span>This rental may not be fully covered by your insurance or credit card. Without protection, you remain responsible for any rental vehicle damage, theft, or loss, and third-party claims. </span>
     <div class="decline-option">
-      <label>
+      <label id="decline-protection-label">
         <input type="checkbox" name="decline-protection">
         <span class="checkbox">
           <svg focusable="false" aria-hidden="true" viewBox="0 0 11 9">
@@ -27,10 +27,15 @@
     poll(
       () =>
         document.querySelector('[data-testid="single-protections-list-section-container"]') &&
-        !document.querySelector('.opt-out-section'), // ✅ prevent duplicate
+        !document.querySelector('.opt-out-section'),
       () => {
         var targetSection = document.querySelector('[data-testid="single-protections-list-section-container"]');
         targetSection.insertAdjacentHTML("afterend", optOutSectin);
+        var noProtectionEl = document.querySelector('[data-testid="ancillaries-bundle"][data-code="No Protection"]');
+        var declineProtectionLabel = document.getElementById("decline-protection-label");
+        declineProtectionLabel.addEventListener("click", () => {
+          noProtectionEl.click();
+        });
       }
     );
   }
