@@ -30,14 +30,14 @@
     poll(
       function () {
         return (
-          document.querySelector('[data-testid="single-protections-list-section-container"]') &&
-          !document.querySelector('.opt-out-section')
+          document.querySelector('[data-testid="single-protections-list-section-container"]') && !document.querySelector('.opt-out-section')
         );
       },
       function () {
         var targetSection = document.querySelector('[data-testid="single-protections-list-section-container"]');
         targetSection.insertAdjacentHTML("afterend", optOutSectin);
         var noProtectionEl = document.querySelector('[data-testid="ancillaries-bundle"][data-code="No Protection"]');
+        console.log(noProtectionEl, "40")
         var declineProtectionLabel = document.getElementById("decline-protection-label");
         declineProtectionLabel.addEventListener("click", function () {
           noProtectionEl.click();
@@ -48,7 +48,7 @@
 
   function observerReact() {
     var observer = new MutationObserver(function () {
-      if (!document.querySelector('.opt-out-section')) {
+      if (document.querySelector('[data-testid="single-protections-list-section-container"]') && !document.querySelector('.opt-out-section')) {
         mainJs();
       }
     });

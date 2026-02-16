@@ -669,6 +669,7 @@
   poll(
     function () { return document.body; },
     function () {
+      console.log("MVT-307")
       handlePageChange();
       observeDOM();
     }
