@@ -246,7 +246,7 @@
   box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.01);
   background-color: #fff;
   border-radius: 8px;
-  padding: 24px;
+  padding: 24px 0;
   width: calc(100% - 57px);
   position: sticky;
   top: 66px;
@@ -261,12 +261,14 @@
   letter-spacing: 0.3px !important;
   margin: 0;
   margin-bottom: 24px;
+  padding: 0 24px;
 }
 
 .car-summary-section {
   .divider {
     height: 1px;
     background-color: #EAEAEA;
+    margin: 0 24px;
   }
 
   .vehicle-image-container {
@@ -284,6 +286,7 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    padding: 0 24px;
   }
 
   .vehicle-info .vehicle-name {
@@ -297,6 +300,7 @@
   .location-info {
     margin-top: 12px;
     margin-bottom: 16px;
+    padding: 0 24px;
 
     .location-row {
       display: flex;
@@ -341,6 +345,7 @@
     justify-content: space-between;
     align-items: flex-start;
     margin-top: 16px;
+    padding: 0 24px;
   }
 
   .total-vehicle-rate-content {
@@ -378,9 +383,6 @@
     }
   }
 
-  .accordion-section {
-    margin: 16px 0;
-  }
 
   .protection-accordion {
     padding-bottom: 12px;
@@ -394,6 +396,13 @@
     padding-bottom: 12px;
   }
 
+                                                                .accordion-item .accordion-footer {
+                                                                  padding: 0 24px;
+                                                                }
+                                
+                                                                .accordion-item.rate-terms-accordion .accordion-header {
+                                                                  margin-top: 0;
+                                                                }
   .accordion-item .accordion-footer .pr-added-footer span {
     color: #1EA238;
   }
@@ -404,7 +413,7 @@
 
   .accordion-header {
     width: 100%;
-    padding: 4px 0;
+    padding: 4px 24px;
     background: none;
     text-align: left;
     font-size: 14px;
@@ -422,6 +431,9 @@
       line-height: 1;
     }
   }
+                                .protection-accordion .accordion-header {
+                                  margin-top: 12px;
+                                }
 
   .accordion-header-title.rate-terms {
     font-size: 12px;
@@ -470,7 +482,7 @@
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.3s ease-out;
-    padding: 0;
+    padding: 0 24px;
     font-size: 14px;
     color: rgb(82, 77, 77);
 
@@ -512,6 +524,7 @@
     justify-content: space-between;
     align-items: center;
     margin-top: 12px;
+    padding: 0 24px;
 
     .total-label {
       font-size: 16px;
@@ -629,6 +642,9 @@
   .protection-card.highlight {
     margin-top: 0;
   }
+                                                                .opt-out-section {
+                                                                  margin: 0 16px;
+                                                                }
 }
 
 @media (max-width: 1024px) {

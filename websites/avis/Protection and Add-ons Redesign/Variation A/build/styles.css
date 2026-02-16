@@ -1,3 +1,7 @@
+[data-testid="stepper-container"] {
+  border-bottom: none !important;
+}
+
 .new-protection-section {
   display: block;
 }
@@ -142,7 +146,8 @@
 .feature-list li p {
   display: flex;
   align-items: center;
-  gap: 8px; /* Gap between icon and text */
+  gap: 8px;
+  /* Gap between icon and text */
   margin: 0;
 }
 
@@ -225,7 +230,362 @@
   color: #fff;
 }
 
+.protection-container-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.protection-cards-column {
+  grid-column: span 5;
+}
+
+.car-summary-column {
+  grid-column: span 2;
+}
+
+.car-summary-column {
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.01);
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 24px 0;
+  width: calc(100% - 57px);
+  position: sticky;
+  top: 66px;
+  align-self: start;
+  height: fit-content;
+}
+
+.car-summary-section .car-summary-title {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 28px;
+  letter-spacing: 0.3px !important;
+  margin: 0;
+  margin-bottom: 24px;
+  padding: 0 24px;
+}
+
+.car-summary-section .divider {
+  height: 1px;
+  background-color: #eaeaea;
+  margin: 0 24px;
+}
+.car-summary-section .vehicle-image-container {
+  text-align: center;
+}
+.car-summary-section .vehicle-image-container img.car-image {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+.car-summary-section .vehicle-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+}
+.car-summary-section .vehicle-info .vehicle-name {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.3px !important;
+  color: #000;
+}
+.car-summary-section .location-info {
+  margin-top: 12px;
+  margin-bottom: 16px;
+  padding: 0 24px;
+}
+.car-summary-section .location-info .location-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.car-summary-section .location-info .location-row:last-child {
+  margin-bottom: 0;
+}
+.car-summary-section .location-info .loc-details {
+  text-align: left;
+  flex: 1;
+  padding-right: 8px;
+}
+.car-summary-section .location-info .loc-datetime {
+  text-align: right;
+  flex-shrink: 0;
+}
+.car-summary-section .location-info .loc-label,
+.car-summary-section .location-info .loc-date {
+  font-weight: 700;
+  font-size: 14px;
+  color: #000;
+  margin-bottom: 4px;
+  line-height: 1.2;
+}
+.car-summary-section .location-info .loc-name,
+.car-summary-section .location-info .loc-time {
+  font-size: 14px;
+  color: #524d4d;
+  line-height: 1.4;
+}
+.car-summary-section .total-vehicle-rate {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-top: 16px;
+  padding: 0 24px;
+}
+.car-summary-section .total-vehicle-rate-content .total-vehicle-rate-title {
+  font-size: 14px;
+  line-height: 20px;
+  color: #000;
+  font-weight: 500;
+}
+.car-summary-section .total-vehicle-rate-content .total-vehicle-rate-subtitle {
+  font-size: 14px;
+  line-height: 20px;
+  color: #524d4d;
+}
+.car-summary-section .total-vehicle-rate-price {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.car-summary-section
+  .total-vehicle-rate-price
+  .total-vehicle-rate-price-amount {
+  text-decoration: line-through;
+  font-size: 14px;
+  line-height: 20px;
+  color: rgba(31, 29, 29, 0.4);
+}
+.car-summary-section .total-vehicle-rate-price .total-vehicle-rate-price-save {
+  font-size: 14px;
+  line-height: 20px;
+  color: #000;
+  font-weight: 500;
+}
+.car-summary-section .protection-accordion {
+  padding-bottom: 12px;
+}
+.car-summary-section .savings-discount {
+  padding-top: 12px;
+}
+.car-summary-section .text-and-fees-accordion {
+  padding-bottom: 12px;
+}
+.car-summary-section .accordion-item .accordion-footer {
+  padding: 0 24px;
+}
+.car-summary-section .accordion-item.rate-terms-accordion .accordion-header {
+  margin-top: 0;
+}
+.car-summary-section .accordion-item .accordion-footer .pr-added-footer span {
+  color: #1ea238;
+}
+.car-summary-section .protection-not-added {
+  color: #e90c38;
+}
+.car-summary-section .accordion-header {
+  width: 100%;
+  padding: 4px 24px;
+  background: none;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0;
+}
+.car-summary-section .accordion-header .icon {
+  font-size: 18px;
+  font-weight: normal;
+  line-height: 1;
+}
+.car-summary-section .protection-accordion .accordion-header {
+  margin-top: 12px;
+}
+.car-summary-section .accordion-header-title.rate-terms {
+  font-size: 12px;
+  color: #736d6d;
+  font-weight: 400;
+  text-decoration: underline;
+}
+.car-summary-section .accordion-header:hover {
+  background: rgb(244, 243, 242);
+}
+.car-summary-section .accordion-header-title {
+  font-size: 14px;
+  line-height: 20px;
+  color: #000;
+  font-weight: 400;
+}
+.car-summary-section .accordion-header-title.protection-add-ons {
+  font-weight: 500;
+}
+.car-summary-section .accordion-header-icon {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.car-summary-section .accordion-header-icon-price {
+  font-size: 14px;
+  line-height: 20px;
+  color: #000;
+  font-weight: 600;
+}
+.car-summary-section .accordion-header-icon-arrow {
+  font-size: 18px;
+  font-weight: normal;
+  line-height: 1;
+  margin-top: -9px;
+  transition: transform 0.3s ease;
+}
+.car-summary-section .accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+  padding: 0 24px;
+  font-size: 14px;
+  color: rgb(82, 77, 77);
+}
+.car-summary-section .accordion-content .summary-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.car-summary-section .accordion-content .summary-item .tax-fee-link {
+  font-size: 14px !important;
+  color: rgb(82, 77, 77);
+  text-decoration: underline;
+}
+.car-summary-section .accordion-content .summary-item:first-child {
+  margin-top: 8px;
+}
+.car-summary-section .accordion-content .summary-item:last-child {
+  margin-bottom: 12px;
+}
+.car-summary-section .accordion-content .empty-list {
+  padding: 8px 4px 12px;
+  font-style: italic;
+  color: #999;
+}
+.car-summary-section .accordion-content p.terms-text {
+  margin: 0;
+  padding: 8px 4px 12px;
+  line-height: 1.4;
+}
+.car-summary-section .price-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+  padding: 0 24px;
+}
+.car-summary-section .price-info .total-label {
+  font-size: 16px;
+  line-height: 20px;
+  color: #000;
+  font-weight: 500;
+}
+.car-summary-section .price-info .total-price {
+  font-weight: 700;
+  font-size: 18px;
+}
+
+#avis-addOns-variation-A .protection-cards-column {
+  position: relative;
+}
+
+[data-testid="ancillaries-bundle"][data-code="No Protection"] {
+  display: none !important;
+}
+
+.opt-out-section {
+  border-top: 1px solid rgba(0, 0, 0, 0.12);
+  margin: 0 56px;
+  padding: 56px 0;
+}
+
+.opt-out-section h4 {
+  font-family: AvisHeadline, "AvisHeadline Fallback", sans-serif;
+  font-size: 36px;
+  line-height: 36px;
+  margin: 0 0 8px 0;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.opt-out-section span {
+  color: rgb(82, 77, 77);
+  display: block;
+  margin: 0 auto 40px auto;
+  max-width: 700px;
+  text-align: center;
+  text-wrap: balance;
+}
+
+.decline-option {
+  display: flex;
+  justify-content: center;
+}
+
+.decline-option label {
+  background: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  gap: 16px;
+  outline: #91001d solid 2px;
+  padding: 24px;
+}
+
+.decline-option label input {
+  opacity: 0;
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+
+.decline-option label span.checkbox {
+  align-items: center;
+  background: #fff;
+  border: 1px solid #000;
+  display: inline-flex;
+  justify-content: center;
+  min-width: 24px;
+  width: 24px;
+  height: 24px;
+  margin: 0;
+}
+
+.decline-option label span svg {
+  width: 16px;
+  height: 16px;
+}
+
+.decline-option label:has(input:checked) .checkbox {
+  background: #000;
+}
+
+.decline-option label:has(input:checked) .checkbox path {
+  stroke: #fff;
+}
+
 @media (max-width: 768px) {
+  .protection-container-grid {
+    grid-template-columns: 1fr;
+    padding: 0;
+  }
+  .protection-cards-column,
+  .car-summary-column {
+    grid-column: span 1;
+  }
   .protection-cards-section-content {
     width: calc(100% - 32px);
   }
@@ -234,5 +594,21 @@
   }
   .protection-card.highlight {
     margin-top: 0;
+  }
+  .opt-out-section {
+    margin: 0 16px;
+  }
+}
+@media (max-width: 1024px) {
+  .car-summary-column {
+    display: none;
+  }
+  .protection-cards-column {
+    grid-column: span 7;
+  }
+}
+@media (min-width: 1025px) {
+  [data-testid="action-footer-total-amount"] {
+    cursor: default !important;
   }
 }

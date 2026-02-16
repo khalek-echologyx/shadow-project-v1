@@ -249,7 +249,7 @@
   box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.01);
   background-color: #fff;
   border-radius: 8px;
-  padding: 24px;
+  padding: 24px 0;
   width: calc(100% - 57px);
   position: sticky;
   top: 66px;
@@ -264,11 +264,13 @@
   letter-spacing: 0.3px !important;
   margin: 0;
   margin-bottom: 24px;
+  padding: 0 24px;
 }
 
 .car-summary-section .divider {
   height: 1px;
   background-color: #EAEAEA;
+  margin: 0 24px;
 }
 .car-summary-section .vehicle-image-container {
   text-align: center;
@@ -283,6 +285,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 0 24px;
 }
 .car-summary-section .vehicle-info .vehicle-name {
   font-weight: 500;
@@ -294,6 +297,7 @@
 .car-summary-section .location-info {
   margin-top: 12px;
   margin-bottom: 16px;
+  padding: 0 24px;
 }
 .car-summary-section .location-info .location-row {
   display: flex;
@@ -331,6 +335,7 @@
   justify-content: space-between;
   align-items: flex-start;
   margin-top: 16px;
+  padding: 0 24px;
 }
 .car-summary-section .total-vehicle-rate-content .total-vehicle-rate-title {
   font-size: 14px;
@@ -360,9 +365,6 @@
   color: #000;
   font-weight: 500;
 }
-.car-summary-section .accordion-section {
-  margin: 16px 0;
-}
 .car-summary-section .protection-accordion {
   padding-bottom: 12px;
 }
@@ -372,6 +374,12 @@
 .car-summary-section .text-and-fees-accordion {
   padding-bottom: 12px;
 }
+.car-summary-section .accordion-item .accordion-footer {
+  padding: 0 24px;
+}
+.car-summary-section .accordion-item.rate-terms-accordion .accordion-header {
+  margin-top: 0;
+}
 .car-summary-section .accordion-item .accordion-footer .pr-added-footer span {
   color: #1EA238;
 }
@@ -380,7 +388,7 @@
 }
 .car-summary-section .accordion-header {
   width: 100%;
-  padding: 4px 0;
+  padding: 4px 24px;
   background: none;
   text-align: left;
   font-size: 14px;
@@ -396,6 +404,9 @@
   font-size: 18px;
   font-weight: normal;
   line-height: 1;
+}
+.car-summary-section .protection-accordion .accordion-header {
+  margin-top: 12px;
 }
 .car-summary-section .accordion-header-title.rate-terms {
   font-size: 12px;
@@ -437,7 +448,7 @@
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.3s ease-out;
-  padding: 0;
+  padding: 0 24px;
   font-size: 14px;
   color: rgb(82, 77, 77);
 }
@@ -472,6 +483,7 @@
   justify-content: space-between;
   align-items: center;
   margin-top: 12px;
+  padding: 0 24px;
 }
 .car-summary-section .price-info .total-label {
   font-size: 16px;
