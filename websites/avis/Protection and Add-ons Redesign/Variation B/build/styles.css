@@ -245,16 +245,29 @@
   grid-column: span 2;
 }
 
+.car-summary-column-wrapper {
+  grid-column: span 2;
+  background-color: #fff;
+  margin-right: -1px;
+  padding-left: 20px;
+}
+
+[data-testid="ancillaries-action-footer"] {
+  margin-top: 0 !important;
+  position: static !important;
+}
+
 .car-summary-column {
-  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.01);
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.08);
   background-color: #fff;
   border-radius: 8px;
   padding: 24px 0;
-  width: calc(100% - 57px);
+  width: calc(100% - 58px);
   position: sticky;
-  top: 66px;
+  top: 96px;
   align-self: start;
   height: fit-content;
+  margin-top: 20px;
 }
 
 .car-summary-section .car-summary-title {
@@ -625,7 +638,7 @@
     padding: 0;
   }
   .protection-cards-column,
-  .car-summary-column {
+  .car-summary-column-wrapper {
     grid-column: span 1;
   }
   .protection-cards-section-content {

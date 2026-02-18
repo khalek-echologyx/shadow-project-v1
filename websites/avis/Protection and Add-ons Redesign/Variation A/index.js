@@ -30,7 +30,22 @@
   var mvtID = 'MVT-307'
   var EXP_ID = "avis-protection-variation-a";
   var EXP_ID_2 = "avis-addOns-variation-A";
-  var TARGET_SELECTOR = '[data-testid="Protections-container"] > div > svg';
+  var TARGET_SELECTOR_DEFAULT = '[data-testid="Protections-container"] > div > svg';
+  var TARGET_SELECTOR_AVIS_FIRST = '[data-testid="Protections-container"] div img';
+
+  function getTargetSelector() {
+    try {
+      var raw = sessionStorage.getItem('reservation.store');
+      if (raw) {
+        var store = JSON.parse(raw);
+        var state = store && (store.state || store);
+        if (state && state.isAvisFirst === true) {
+          return TARGET_SELECTOR_AVIS_FIRST;
+        }
+      }
+    } catch (e) { /* ignore */ }
+    return TARGET_SELECTOR_DEFAULT;
+  }
   var ADD_ON_PAGE = '[data-testid="AddOns-container"] > div';
   var TARGET_INDIVIDUAL_PROTECTION_SECTION = '[data-testid="single-protections-list-section-container"]';
   var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M19.8118 6.19684C20.0528 6.42427 20.0638 6.80401 19.8364 7.04501L9.96479 17.5055C9.72819 17.7562 9.32948 17.7564 9.09257 17.506L4.16415 12.2966C3.93641 12.0559 3.94694 11.6761 4.18766 11.4484C4.42837 11.2207 4.80812 11.2312 5.03586 11.4719L9.52788 16.22L18.9636 6.2214C19.1911 5.9804 19.5708 5.9694 19.8118 6.19684Z" fill="#4DC664" stroke="#8ACE97" stroke-linecap="round"/></svg>';
@@ -86,23 +101,27 @@
     for (var i = 0; i < customBtns.length; i++) {
       (function (customBtn) {
         customBtn.addEventListener("click", function () {
+          var isAlreadySelected = customBtn.classList.contains("selected");
           var targetCode = customBtn.getAttribute("data-target-code");
           var data = getProtectionData(targetCode);
           if (!data || !data.element) {
             return console.warn("body element not found");
           }
-          data.element.dispatchEvent(
-            new MouseEvent("click", {
-              bubbles: true,
-              cancelable: true,
-              view: window,
-            })
-          );
 
-          // Toggle selected class on the clicked button
-          if (customBtn.classList.contains("selected")) {
+          if (isAlreadySelected) {
+            // Deselect: click "No Protection" to clear the plan via the API
+            var noProtEl = document.querySelector('[data-testid="ancillaries-bundle"][data-code="No Protection"]');
+            if (noProtEl) {
+              noProtEl.dispatchEvent(
+                new MouseEvent("click", { bubbles: true, cancelable: true, view: window })
+              );
+            }
             customBtn.classList.remove("selected");
           } else {
+            // Select: click the target protection bundle
+            data.element.dispatchEvent(
+              new MouseEvent("click", { bubbles: true, cancelable: true, view: window })
+            );
             for (var j = 0; j < customBtns.length; j++) {
               customBtns[j].classList.remove("selected");
             }
@@ -174,6 +193,62 @@
         });
       }
     );
+  }
+
+  function injectSpinnerStyles() {
+    if (document.getElementById('avis-car-summary-spinner-styles')) return;
+    var style = document.createElement('style');
+    style.id = 'avis-car-summary-spinner-styles';
+    style.textContent = [
+      '@keyframes avis-mui-spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }',
+      '@keyframes avis-mui-dash {',
+      '  0%   { stroke-dasharray: 1px, 200px; stroke-dashoffset: 0; }',
+      '  50%  { stroke-dasharray: 100px, 200px; stroke-dashoffset: -15px; }',
+      '  100% { stroke-dasharray: 100px, 200px; stroke-dashoffset: -125px; }',
+      '}',
+      '.avis-car-summary-spinner-overlay {',
+      '  position: absolute; inset: 0;',
+      '  background: rgba(255,255,255,0.78);',
+      '  display: flex; align-items: center; justify-content: center;',
+      '  z-index: 100; border-radius: 8px;',
+      '}',
+      '.avis-car-summary-spinner-overlay .MuiCircularProgress-root {',
+      '  animation: avis-mui-spin 1.4s linear infinite;',
+      '  color: #D4002A;',
+      '}',
+      '.avis-car-summary-spinner-overlay .MuiCircularProgress-svg { display: block; }',
+      '.avis-car-summary-spinner-overlay .MuiCircularProgress-circle {',
+      '  stroke: currentColor;',
+      '  stroke-dasharray: 80px, 200px; stroke-dashoffset: 0;',
+      '  animation: avis-mui-dash 1.4s ease-in-out infinite;',
+      '}'
+    ].join('\n');
+    document.head.appendChild(style);
+  }
+
+  function showCarSummarySpinner() {
+    injectSpinnerStyles();
+    var sections = document.querySelectorAll('.new-protection-section .car-summary-section');
+    for (var s = 0; s < sections.length; s++) {
+      var section = sections[s];
+      if (section.querySelector('.avis-car-summary-spinner-overlay')) continue;
+      var overlay = document.createElement('div');
+      overlay.className = 'avis-car-summary-spinner-overlay';
+      overlay.innerHTML =
+        '<span class="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary mui-qqtl3b" role="progressbar" style="width: 40px; height: 40px;">' +
+        '<svg class="MuiCircularProgress-svg mui-4ejps8" viewBox="22 22 44 44">' +
+        '<circle class="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate mui-13odlrs" cx="44" cy="44" r="20.2" fill="none" stroke-width="3.6"></circle>' +
+        '</svg></span>';
+      section.style.position = 'relative';
+      section.appendChild(overlay);
+    }
+  }
+
+  function hideCarSummarySpinner() {
+    var overlays = document.querySelectorAll('.avis-car-summary-spinner-overlay');
+    for (var o = 0; o < overlays.length; o++) {
+      overlays[o].parentNode.removeChild(overlays[o]);
+    }
   }
 
   window.updateAvisCarSummary = function () {
@@ -366,23 +441,36 @@
     window.fetch = function () {
       var args = arguments;
       var self = this;
+      var url = args[0];
+      var isPriceCalc = typeof url === "string" && url.indexOf("/web/reservation/price/calculate") !== -1;
+
+      if (isPriceCalc) {
+        showCarSummarySpinner();
+      }
+
       return originalFetch.apply(self, args).then(function (response) {
         try {
-          var url = args[0];
-          if (typeof url === "string" && url.indexOf("/web/reservation/price/calculate") !== -1) {
+          if (isPriceCalc) {
             response.clone().json().then(function (data) {
               window.__AVIS_PRICE_CALC__ = data;
               if (window.updateAvisCarSummary) {
                 setTimeout(function () {
                   window.updateAvisCarSummary();
+                  hideCarSummarySpinner();
                 }, 100);
               }
+            }).catch(function () {
+              hideCarSummarySpinner();
             });
           }
         } catch (e) {
           console.error("Interceptor error:", e);
+          hideCarSummarySpinner();
         }
         return response;
+      }).catch(function (err) {
+        if (isPriceCalc) hideCarSummarySpinner();
+        throw err;
       });
     };
   }
@@ -391,7 +479,9 @@
   function injectProtectionLayout() {
     if (document.getElementById(EXP_ID)) return;
 
-    var insertionPoint = document.querySelector(TARGET_SELECTOR);
+    var selector = getTargetSelector();
+    var isAvisFirst = selector === TARGET_SELECTOR_AVIS_FIRST;
+    var insertionPoint = document.querySelector(selector);
     if (!insertionPoint) return;
 
     var html = '<section class="new-protection-section" id="' + EXP_ID + '">' +
@@ -407,7 +497,9 @@
       '                </h2>' +
       '    ' +
       '              <div class="protection-cards">' +
-      '                <div class="protection-card">' +
+      '                <!-- Ultimate Protection Highlight -->' +
+      '                <div class="protection-card highlight">' +
+      '                  <div class="recomended">RECOMMENDED</div>' +
       '                  <div class="card-content-header">' +
       '                    <p class="card-title">Ultimate Protection</p>' +
       '                    <p class="ancillary-bundle-rating"><span class="active"></span> <span class="active"></span> <span class="active"></span> </p> ' +
@@ -427,13 +519,12 @@
       '                    <span class="per-day">/day</span>' +
       '                  </div>' +
       '                  <div class="btn-container">' +
-      '                    <button class="btn secondary custom-select-btn" data-target-code="Ultimate Protection">Select</button>' +
+      '                    <button class="btn primary custom-select-btn" data-target-code="Ultimate Protection">Add Protection</button>' +
       '                  </div>' +
       '                </div>' +
       ' ' +
-      '                <!-- Standard Protection Highlight -->' +
-      '                <div class="protection-card highlight">' +
-      '                  <div class="recomended">RECOMMENDED</div>' +
+      '                <!-- Enhance Protection -->' +
+      '                <div class="protection-card">' +
       '                  <div class="card-content-header">' +
       '                    <p class="card-title">Enhanced Protection</p>' +
       '                    <p class="ancillary-bundle-rating"><span class="active"></span> <span class="active"></span> <span></span> </p>' +
@@ -454,10 +545,11 @@
       '                    <span class="per-day">/day</span>' +
       '                  </div>' +
       '                  <div class="btn-container">' +
-      '                    <button class="btn primary custom-select-btn" data-target-code="Enhanced Protection">Add Protection</button>' +
+      '                    <button class="btn secondary custom-select-btn" data-target-code="Enhanced Protection">Select</button>' +
       '                  </div>' +
       '                </div>' +
       ' ' +
+      '                <!-- Essential Protection -->' +
       '                <div class="protection-card">' +
       '                  <div class="card-content-header">' +
       '                    <p class="card-title">Essential Protection</p>' +
@@ -486,19 +578,35 @@
       '            </div>' +
       '          </div>' +
       '          <!-- Car Summary Column -->' +
-      '          <div class="car-summary-column">' +
-      '            <div class="car-summary-section">' +
-      '               <p class="car-summary-title">Car Summary</p>' +
-      '               <!-- Placeholder for car summary -->' +
+      '          <div class="car-summary-column-wrapper">' +
+      '            <div class="car-summary-column">' +
+      '              <div class="car-summary-section">' +
+      '                <p class="car-summary-title">Car Summary</p>' +
+      '                <!-- Placeholder for car summary -->' +
+      '              </div>' +
       '            </div>' +
       '          </div>' +
       '        </div>' +
       '      </section>';
 
     insertionPoint.insertAdjacentHTML("beforebegin", html);
-    insertionPoint.style.display = "none";
-    var targetContainer = document.querySelector('[data-testid="Protections-container"] > div > div');
-    targetContainer.style.display = "none";
+    if (isAvisFirst) {
+      insertionPoint.style.setProperty('display', 'none', 'important');
+      var AVIS_FIRST_HIDE_SELECTOR = '[data-testid="Protections-container"] > div:nth-child(2) > div:nth-child(2)';
+      poll(
+        function () { return document.querySelector(AVIS_FIRST_HIDE_SELECTOR); },
+        function () {
+          var el = document.querySelector(AVIS_FIRST_HIDE_SELECTOR);
+          console.log('[MVT] Avis First hide element found:', el);
+          el.style.setProperty('display', 'none', 'important');
+        },
+        false, 5000
+      );
+    } else {
+      insertionPoint.style.setProperty('display', 'none', 'important');
+      var targetContainer = document.querySelector('[data-testid="Protections-container"] > div > div');
+      if (targetContainer) targetContainer.style.setProperty('display', 'none', 'important');
+    }
     var targetIndividualProtectionSection = document.querySelector(TARGET_INDIVIDUAL_PROTECTION_SECTION);
 
     poll(
@@ -568,7 +676,7 @@
     disableOriginalFooterAccordion();
 
     // Add opt out section
-    var optOutSectin = '<div class="opt-out-section" id="avis-opt-out-container-a">' +
+    var optOutSectin = '<div class="opt-out-section" id="avis-opt-out-container">' +
       '    <h4>Continue without protection</h4>' +
       '    <span>This rental may not be fully covered by your insurance or credit card. Without protection, you remain responsible for any rental vehicle damage, theft, or loss, and third-party claims. </span>' +
       '    <div class="decline-option" id="avis-opt-out-option-a">' +
@@ -596,9 +704,6 @@
         targetSection.insertAdjacentHTML("afterend", optOutSectin);
         var noProtectionEl = document.querySelector('[data-testid="ancillaries-bundle"][data-code="No Protection"]');
         var declineProtectionLabel = document.getElementById("decline-protection-label");
-        declineProtectionLabel.addEventListener("click", function () {
-          if (noProtectionEl) noProtectionEl.click();
-        });
       }
     );
   }
@@ -674,13 +779,21 @@
   }
 
   function runProtection() {
+    // First wait for sessionStorage to be populated by the app (SPA navigation
+    // writes reservation.store asynchronously after the URL changes).
     poll(
       function () {
-        return document.querySelector(TARGET_SELECTOR);
+        try { return !!sessionStorage.getItem('reservation.store'); }
+        catch (e) { return false; }
       },
       function () {
-        injectProtectionLayout();
-      }
+        var selector = getTargetSelector();
+        poll(
+          function () { return document.querySelector(selector); },
+          function () { injectProtectionLayout(); }
+        );
+      },
+      false, 10000
     );
   }
 
@@ -696,11 +809,15 @@
   }
 
   function observeDOM() {
+    var debounceTimer = null;
     var observer = new MutationObserver(function () {
-      handlePageChange();
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(function () {
+        handlePageChange();
+      }, 50);
     });
 
-    observer.observe(document.querySelector('[data-testid="ancillaries-bundles-container"]'), {
+    observer.observe(document.body, {
       childList: true,
       subtree: true,
     });
@@ -708,15 +825,9 @@
 
   window.addEventListener("locationchange", handlePageChange);
 
-  poll(
-    function () {
-      return document.querySelector('[data-testid="ancillaries-bundles-container"]');
-    },
-    function () {
-      console.log(mvtID)
-      handlePageChange();
-      observeDOM();
-    }
-  );
+  // Run immediately for hard-reload case, then observe for SPA navigations.
+  console.log(mvtID);
+  handlePageChange();
+  observeDOM();
 })();
 

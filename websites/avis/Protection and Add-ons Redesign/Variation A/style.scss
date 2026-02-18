@@ -2,6 +2,60 @@
   border-bottom: none !important;
 }
 
+// ===== Car Summary Spinner Overlay =====
+@keyframes avis-mui-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes avis-mui-dash {
+  0% {
+    stroke-dasharray: 1px, 200px;
+    stroke-dashoffset: 0;
+  }
+
+  50% {
+    stroke-dasharray: 100px, 200px;
+    stroke-dashoffset: -15px;
+  }
+
+  100% {
+    stroke-dasharray: 100px, 200px;
+    stroke-dashoffset: -125px;
+  }
+}
+
+.avis-car-summary-spinner-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  border-radius: 8px;
+
+  .MuiCircularProgress-root {
+    animation: avis-mui-spin 1.4s linear infinite;
+    color: #D4002A;
+  }
+
+  .MuiCircularProgress-svg {
+    display: block;
+  }
+
+  .MuiCircularProgress-circle {
+    stroke: currentColor;
+    stroke-dasharray: 80px, 200px;
+    stroke-dashoffset: 0;
+    animation: avis-mui-dash 1.4s ease-in-out infinite;
+  }
+}
 .new-protection-section {
   display: block;
 }
@@ -72,14 +126,14 @@
 .protection-card.highlight .card-content-header {
   background: #88001b;
   border-radius: 0;
-  min-height: 160px;
+  min-height: 176px;
 }
 
 .card-content-header {
   padding: 16px 24px;
   background-color: #151D28;
   border-radius: 8px 8px 0 0;
-  min-height: 140px;
+  min-height: 176px;
 }
 
 .card-title {
@@ -237,21 +291,29 @@
   grid-column: span 5;
 }
 
-.car-summary-column {
+// ================ Car Summary Column ===================
+.car-summary-column-wrapper {
   grid-column: span 2;
+  background-color: #fff;
+    // margin-right: -1px;
+    padding-left: 20px;
 }
 
-// ================ Car Summary Column ===================
+[data-testid="ancillaries-action-footer"] {
+  margin-top: 0 !important;
+  position: static !important;
+}
 .car-summary-column {
-  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.01);
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.08);
   background-color: #fff;
   border-radius: 8px;
   padding: 24px 0;
-  width: calc(100% - 57px);
+  width: calc(100% - 58px);
   position: sticky;
-  top: 66px;
+  top: 96px;
   align-self: start;
   height: fit-content;
+  margin-top: 20px;
 }
 
 .car-summary-section .car-summary-title {
@@ -627,8 +689,8 @@
       padding: 0;
     }
   
-    .protection-cards-column,
-    .car-summary-column {
+                .protection-cards-column,
+                .car-summary-column-wrapper {
       grid-column: span 1;
     }
   .protection-cards-section-content {

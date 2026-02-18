@@ -251,16 +251,29 @@
   grid-column: span 2;
 }
 
+.car-summary-column-wrapper {
+  grid-column: span 2;
+  background-color: #fff;
+  margin-right: -1px;
+  padding-left: 20px;
+}
+
+[data-testid="ancillaries-action-footer"] {
+  margin-top: 0 !important;
+  position: static !important;
+}
+
 .car-summary-column {
-  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.01);
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.08);
   background-color: #fff;
   border-radius: 8px;
   padding: 24px 0;
-  width: calc(100% - 57px);
+  width: calc(100% - 58px);
   position: sticky;
-  top: 66px;
+  top: 96px;
   align-self: start;
   height: fit-content;
+  margin-top: 20px;
 }
 
 .car-summary-section .car-summary-title {
@@ -631,7 +644,7 @@
     padding: 0;
   }
   .protection-cards-column,
-  .car-summary-column {
+  .car-summary-column-wrapper {
     grid-column: span 1;
   }
   .protection-cards-section-content {
@@ -770,24 +783,37 @@
     for (var i = 0; i < customBtns.length; i++) {
       (function (customBtn) {
         customBtn.addEventListener("click", function () {
+          var isAlreadySelected = customBtn.classList.contains("selected");
           var targetCode = customBtn.getAttribute("data-target-code");
-
           var data = getProtectionData(targetCode);
           if (!data || !data.element) {
             return console.warn("body element not found");
           }
-          data.element.dispatchEvent(
-            new MouseEvent("click", {
-              bubbles: true,
-              cancelable: true,
-              view: window,
-            }),
-          );
 
-          // Toggle selected class on the clicked button
-          if (customBtn.classList.contains("selected")) {
+          if (isAlreadySelected) {
+            // Deselect: click "No Protection" to clear the plan via the API
+            var noProtEl = document.querySelector(
+              '[data-testid="ancillaries-bundle"][data-code="No Protection"]',
+            );
+            if (noProtEl) {
+              noProtEl.dispatchEvent(
+                new MouseEvent("click", {
+                  bubbles: true,
+                  cancelable: true,
+                  view: window,
+                }),
+              );
+            }
             customBtn.classList.remove("selected");
           } else {
+            // Select: click the target protection bundle
+            data.element.dispatchEvent(
+              new MouseEvent("click", {
+                bubbles: true,
+                cancelable: true,
+                view: window,
+              }),
+            );
             for (var j = 0; j < customBtns.length; j++) {
               customBtns[j].classList.remove("selected");
             }
@@ -1175,36 +1201,112 @@
     }
   };
 
+  function injectSpinnerStyles() {
+    if (document.getElementById("avis-car-summary-spinner-styles")) return;
+    var style = document.createElement("style");
+    style.id = "avis-car-summary-spinner-styles";
+    style.textContent = [
+      "@keyframes avis-mui-spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }",
+      "@keyframes avis-mui-dash {",
+      "  0%   { stroke-dasharray: 1px, 200px; stroke-dashoffset: 0; }",
+      "  50%  { stroke-dasharray: 100px, 200px; stroke-dashoffset: -15px; }",
+      "  100% { stroke-dasharray: 100px, 200px; stroke-dashoffset: -125px; }",
+      "}",
+      ".avis-car-summary-spinner-overlay {",
+      "  position: absolute; inset: 0;",
+      "  background: rgba(255,255,255,0.78);",
+      "  display: flex; align-items: center; justify-content: center;",
+      "  z-index: 100; border-radius: 8px;",
+      "}",
+      ".avis-car-summary-spinner-overlay .MuiCircularProgress-root {",
+      "  animation: avis-mui-spin 1.4s linear infinite;",
+      "  color: #D4002A;",
+      "}",
+      ".avis-car-summary-spinner-overlay .MuiCircularProgress-svg { display: block; }",
+      ".avis-car-summary-spinner-overlay .MuiCircularProgress-circle {",
+      "  stroke: currentColor;",
+      "  stroke-dasharray: 80px, 200px; stroke-dashoffset: 0;",
+      "  animation: avis-mui-dash 1.4s ease-in-out infinite;",
+      "}",
+    ].join("\n");
+    document.head.appendChild(style);
+  }
+
+  function showCarSummarySpinner() {
+    injectSpinnerStyles();
+    var sections = document.querySelectorAll(
+      ".new-protection-section .car-summary-section",
+    );
+    for (var s = 0; s < sections.length; s++) {
+      var section = sections[s];
+      if (section.querySelector(".avis-car-summary-spinner-overlay")) continue;
+      var overlay = document.createElement("div");
+      overlay.className = "avis-car-summary-spinner-overlay";
+      overlay.innerHTML =
+        '<span class="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary" role="progressbar" style="width: 40px; height: 40px;">' +
+        '<svg class="MuiCircularProgress-svg" viewBox="22 22 44 44">' +
+        '<circle class="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate" cx="44" cy="44" r="20.2" fill="none" stroke-width="3.6"></circle>' +
+        "</svg></span>";
+      section.style.position = "relative";
+      section.appendChild(overlay);
+    }
+  }
+
+  function hideCarSummarySpinner() {
+    var overlays = document.querySelectorAll(
+      ".avis-car-summary-spinner-overlay",
+    );
+    for (var o = 0; o < overlays.length; o++) {
+      overlays[o].parentNode.removeChild(overlays[o]);
+    }
+  }
+
   if (!window.avisInterceptorSetup) {
     window.avisInterceptorSetup = true;
     var originalFetch = window.fetch;
     window.fetch = function () {
       var args = arguments;
       var self = this;
-      return originalFetch.apply(self, args).then(function (response) {
-        try {
-          var url = args[0];
-          if (
-            typeof url === "string" &&
-            url.indexOf("/web/reservation/price/calculate") !== -1
-          ) {
-            response
-              .clone()
-              .json()
-              .then(function (data) {
-                window.__AVIS_PRICE_CALC__ = data;
-                if (window.updateAvisCarSummary) {
-                  setTimeout(function () {
-                    window.updateAvisCarSummary();
-                  }, 100);
-                }
-              });
+      var url = args[0];
+      var isPriceCalc =
+        typeof url === "string" &&
+        url.indexOf("/web/reservation/price/calculate") !== -1;
+
+      if (isPriceCalc) {
+        showCarSummarySpinner();
+      }
+
+      return originalFetch
+        .apply(self, args)
+        .then(function (response) {
+          try {
+            if (isPriceCalc) {
+              response
+                .clone()
+                .json()
+                .then(function (data) {
+                  window.__AVIS_PRICE_CALC__ = data;
+                  if (window.updateAvisCarSummary) {
+                    setTimeout(function () {
+                      window.updateAvisCarSummary();
+                      hideCarSummarySpinner();
+                    }, 100);
+                  }
+                })
+                .catch(function () {
+                  hideCarSummarySpinner();
+                });
+            }
+          } catch (e) {
+            console.error("Interceptor error:", e);
+            hideCarSummarySpinner();
           }
-        } catch (e) {
-          console.error("Interceptor error:", e);
-        }
-        return response;
-      });
+          return response;
+        })
+        .catch(function (err) {
+          if (isPriceCalc) hideCarSummarySpinner();
+          throw err;
+        });
     };
   }
 
@@ -1258,7 +1360,9 @@
       "                </h2>" +
       "    " +
       '              <div class="protection-cards">' +
-      '                <div class="protection-card">' +
+      "                <!-- Ultimate Protection Highlight -->" +
+      '                <div class="protection-card highlight">' +
+      '                  <div class="recomended">RECOMMENDED</div>' +
       '                  <div class="card-content-header">' +
       '                    <p class="card-title">Ultimate Protection</p>' +
       '                    <p class="ancillary-bundle-rating"><span class="active"></span> <span class="active"></span> <span class="active"></span> </p> ' +
@@ -1294,13 +1398,12 @@
       '                    <span class="per-day">/day</span>' +
       "                  </div>" +
       '                  <div class="btn-container">' +
-      '                    <button class="btn secondary custom-select-btn" data-target-code="Ultimate Protection">Select</button>' +
+      '                    <button class="btn primary custom-select-btn" data-target-code="Ultimate Protection">Add Protection</button>' +
       "                  </div>" +
       "                </div>" +
       " " +
-      "                <!-- Standard Protection Highlight -->" +
-      '                <div class="protection-card highlight">' +
-      '                  <div class="recomended">RECOMMENDED</div>' +
+      "                <!-- Enhance Protection -->" +
+      '                <div class="protection-card">' +
       '                  <div class="card-content-header">' +
       '                    <p class="card-title">Enhanced Protection</p>' +
       '                    <p class="ancillary-bundle-rating"><span class="active"></span> <span class="active"></span> <span></span> </p>' +
@@ -1337,10 +1440,11 @@
       '                    <span class="per-day">/day</span>' +
       "                  </div>" +
       '                  <div class="btn-container">' +
-      '                    <button class="btn primary custom-select-btn" data-target-code="Enhanced Protection">Add Protection</button>' +
+      '                    <button class="btn secondary custom-select-btn" data-target-code="Enhanced Protection">Select</button>' +
       "                  </div>" +
       "                </div>" +
       " " +
+      "                <!-- Essential Protection -->" +
       '                <div class="protection-card">' +
       '                  <div class="card-content-header">' +
       '                    <p class="card-title">Essential Protection</p>' +
@@ -1385,10 +1489,12 @@
       "            </div>" +
       "          </div>" +
       "          <!-- Car Summary Column -->" +
-      '          <div class="car-summary-column">' +
-      '            <div class="car-summary-section">' +
-      '               <p class="car-summary-title">Car Summary</p>' +
-      "               <!-- Placeholder for car summary -->" +
+      '          <div class="car-summary-column-wrapper">' +
+      '            <div class="car-summary-column">' +
+      '              <div class="car-summary-section">' +
+      '                <p class="car-summary-title">Car Summary</p>' +
+      "                <!-- Placeholder for car summary -->" +
+      "              </div>" +
       "            </div>" +
       "          </div>" +
       "        </div>" +
@@ -1478,10 +1584,10 @@
 
     // Add opt out section
     var optOutSectin =
-      '<div class="opt-out-section">' +
+      '<div class="opt-out-section" id="avis-opt-out-container-b">' +
       "    <h4>Continue without protection</h4>" +
       "    <span>This rental may not be fully covered by your insurance or credit card. Without protection, you remain responsible for any rental vehicle damage, theft, or loss, and third-party claims. </span>" +
-      '    <div class="decline-option">' +
+      '    <div class="decline-option" id="avis-opt-out-option-b">' +
       '      <label id="decline-protection-label">' +
       '        <input type="checkbox" name="decline-protection">' +
       '        <span class="checkbox">' +
@@ -1514,11 +1620,105 @@
           "decline-protection-label",
         );
         declineProtectionLabel.addEventListener("click", function () {
-          noProtectionEl.click();
+          if (noProtectionEl) noProtectionEl.click();
+          setTimeout(checkState, 100);
         });
       },
     );
     checkBoxBtn();
+
+    // identify continue cta
+    var contCta = $('button[data-testid="action-footer-cta-button"]');
+
+    function checkState() {
+      // check for active bundle
+      var activeBundle =
+        $(".ancillaries-bundle--selected").not('[data-code="No Protection"]')
+          .length > 0;
+
+      // check for active items
+      var activeItems =
+        $(
+          'div[data-testid="single-protections-item-add-to-trip-btn"] input:checked',
+        ).length > 0;
+
+      // check for included items
+      var includedItems =
+        $(
+          'span[data-testid="single-protections-item-included-in-bundle"]',
+        ).filter(function () {
+          return $(this).text() === "Included";
+        }).length > 0;
+
+      // check if decline option is checked
+      var declineChecked = $(
+        '#avis-opt-out-option-b input[type="checkbox"]',
+      ).is(":checked");
+
+      // states
+      var shouldEnable =
+        activeBundle || activeItems || includedItems || declineChecked;
+      var shouldHide = activeBundle || activeItems || includedItems;
+
+      // current state
+      var isDisabled = contCta.is(":disabled");
+
+      // determine if cta state should change
+      if (shouldEnable && isDisabled) {
+        // if active items, enable continue cta
+        contCta.removeAttr("disabled");
+      } else if (!shouldEnable && !isDisabled) {
+        // if no active items, disable continue cta
+        contCta.attr("disabled", "");
+      }
+
+      // determine if decline option should be hidden
+      if (shouldHide) {
+        // hide the decline option
+        $("#avis-opt-out-container-b").slideUp();
+        // reset the decline checkbox
+        $('#avis-opt-out-option-b input[type="checkbox"]').prop(
+          "checked",
+          false,
+        );
+      } else {
+        // show the decline option
+        $("#avis-opt-out-container-b").slideDown();
+      }
+
+      // if bundle is active
+      if (activeBundle) {
+        // add class to body
+        $("body").addClass("bundle-active");
+      } else {
+        // remove class from body
+        $("body").removeClass("bundle-active");
+      }
+    }
+
+    // check state on page load
+    setTimeout(checkState, 500);
+
+    // check state when continue button updates
+    if (contCta.length > 0) {
+      var observer = new MutationObserver(function (mutationsList) {
+        checkState();
+      });
+
+      observer.observe(contCta[0], {
+        attributes: true,
+        childList: false,
+        subtree: false,
+      });
+    }
+
+    $(document).on(
+      "click",
+      '[data-testid="ancillaries-bundle"], [data-testid="single-protections-item-add-to-trip-btn"], #avis-opt-out-option-b',
+      function () {
+        setTimeout(checkState, 200);
+      },
+    );
   }
 
   function injectCarSummaryOnly() {
@@ -1651,6 +1851,7 @@
       return document.body;
     },
     function () {
+      console.log("MVT-307");
       handlePageChange();
       observeDOM();
     },
