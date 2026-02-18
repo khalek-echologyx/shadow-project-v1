@@ -10,7 +10,7 @@
     }, a);
   }
 
-  var optOutSectin = '<div class="opt-out-section">' +
+  var optOutSectin = '<div class="opt-out-section" id="opt-out-section">' +
     '    <h4>Continue without protection</h4>' +
     '    <span>This rental may not be fully covered by your insurance or credit card. Without protection, you remain responsible for any rental vehicle damage, theft, or loss, and third-party claims. </span>' +
     '    <div class="decline-option">' +
@@ -37,13 +37,20 @@
         var targetSection = document.querySelector('[data-testid="single-protections-list-section-container"]');
         targetSection.insertAdjacentHTML("afterend", optOutSectin);
         var noProtectionEl = document.querySelector('[data-testid="ancillaries-bundle"][data-code="No Protection"]');
-        console.log(noProtectionEl, "40");
         var declineProtectionLabel = document.getElementById("decline-protection-label");
         declineProtectionLabel.addEventListener("click", function () {
-          noProtectionEl.click();
+          if (noProtectionEl) {
+            var event = new MouseEvent('click', {
+              view: window,
+              bubbles: true,
+              cancelable: true
+            });
+            noProtectionEl.dispatchEvent(event);
+          }
         });
       }
     );
+
   }
 
   function observerReact() {
@@ -51,6 +58,7 @@
       if (document.querySelector('[data-testid="single-protections-list-section-container"]') && !document.querySelector('.opt-out-section')) {
         mainJs();
       }
+      checkState();
     });
 
     observer.observe(document.body, {
@@ -59,9 +67,40 @@
     });
   }
 
+  function checkState() {
+    if (window.jQuery) {
+
+      // Logic for Button (includes 'No Protection')
+      var anyBundle = $('.ancillaries-bundle--selected').length > 0;
+      var activeItems = $('div[data-testid="single-protections-item-add-to-trip-btn"] input:checked').length > 0;
+
+      var contCta = $('button[data-testid="action-footer-cta-button"]');
+      var isDisabled = contCta.is(':disabled');
+
+      // Enable button if any bundle (including No Protection) or items selected
+      if ((anyBundle || activeItems) && isDisabled) {
+        contCta.removeAttr('disabled');
+
+        // if no active items, disable continue cta
+        contCta.attr('disabled', '');
+
+      }
+      if (activeBundle || activeItems) {
+        $('#opt-out-section').hide();
+      } else {
+        $('#opt-out-section').show();
+      }
+    }
+  }
+
   function init() {
     mainJs();
     observerReact();
+    poll(function () {
+      return window.jQuery;
+    }, function () {
+      checkState();
+    });
   }
 
   if (document.readyState === "loading") {

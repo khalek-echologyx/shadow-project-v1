@@ -27,7 +27,7 @@
       poll(t, i, o, o ? e : e - a, a);
     }, a);
   }
-
+  var mvtID = 'MVT-307';
   var EXP_ID = "avis-protection-variation-a";
   var EXP_ID_2 = "avis-addOns-variation-A";
   var TARGET_SELECTOR = '[data-testid="Protections-container"] > div > svg';
@@ -598,86 +598,9 @@
         var declineProtectionLabel = document.getElementById("decline-protection-label");
         declineProtectionLabel.addEventListener("click", function () {
           if (noProtectionEl) noProtectionEl.click();
-          setTimeout(checkState, 100);
         });
       }
     );
-
-    // identify continue cta
-    var contCta = $('button[data-testid="action-footer-cta-button"]');
-
-    function checkState() {
-      // check for active bundle
-      var activeBundle = $('.ancillaries-bundle--selected').not('[data-code="No Protection"]').length > 0;
-
-      // check for active items
-      var activeItems = $('div[data-testid="single-protections-item-add-to-trip-btn"] input:checked').length > 0;
-
-      // check for included items
-      var includedItems = $('span[data-testid="single-protections-item-included-in-bundle"]').filter(function () {
-        return $(this).text() === "Included";
-      }).length > 0;
-
-      // check if decline option is checked
-      var declineChecked = $('#avis-opt-out-option-a input[type="checkbox"]').is(':checked');
-
-      // states
-      var shouldEnable = activeBundle || activeItems || includedItems || declineChecked;
-      var shouldHide = activeBundle || activeItems || includedItems;
-
-      // current state
-      var isDisabled = contCta.is(':disabled');
-
-      // determine if cta state should change
-      if (shouldEnable && isDisabled) {
-        // if active items, enable continue cta
-        contCta.removeAttr('disabled');
-      } else if (!shouldEnable && !isDisabled) {
-        // if no active items, disable continue cta
-        contCta.attr('disabled', '');
-      }
-
-      // determine if decline option should be hidden
-      if (shouldHide) {
-        // hide the decline option
-        $('#avis-opt-out-container-a').slideUp();
-        // reset the decline checkbox
-        $('#avis-opt-out-option-a input[type="checkbox"]').prop('checked', false);
-      } else {
-        // show the decline option
-        $('#avis-opt-out-container-a').slideDown();
-      }
-
-      // if bundle is active
-      if (activeBundle) {
-        // add class to body
-        $('body').addClass('bundle-active');
-      } else {
-        // remove class from body
-        $('body').removeClass('bundle-active');
-      }
-    }
-
-    // check state on page load
-    setTimeout(checkState, 500);
-
-    // check state when continue button updates
-    if (contCta.length > 0) {
-      var observer = new MutationObserver(function (mutationsList) {
-        checkState();
-      });
-
-      observer.observe(contCta[0], {
-        attributes: true,
-        childList: false,
-        subtree: false
-      });
-    }
-
-    $(document).on('click', '[data-testid="ancillaries-bundle"], [data-testid="single-protections-item-add-to-trip-btn"], #avis-opt-out-option-a', function () {
-      setTimeout(checkState, 200);
-    });
-
   }
 
 
@@ -790,7 +713,7 @@
       return document.querySelector('[data-testid="ancillaries-bundles-container"]');
     },
     function () {
-      console.log("MVT-307");
+      console.log(mvtID);
       handlePageChange();
       observeDOM();
     }
