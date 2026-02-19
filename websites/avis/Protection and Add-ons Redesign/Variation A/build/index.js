@@ -36,7 +36,26 @@
   var mvtID = "MVT-307";
   var EXP_ID = "avis-protection-variation-a";
   var EXP_ID_2 = "avis-addOns-variation-A";
-  var TARGET_SELECTOR = '[data-testid="Protections-container"] > div > svg';
+  var TARGET_SELECTOR_DEFAULT =
+    '[data-testid="Protections-container"] > div > svg';
+  var TARGET_SELECTOR_AVIS_FIRST =
+    '[data-testid="Protections-container"] div img';
+
+  function getTargetSelector() {
+    try {
+      var raw = sessionStorage.getItem("reservation.store");
+      if (raw) {
+        var store = JSON.parse(raw);
+        var state = store && (store.state || store);
+        if (state && state.isAvisFirst === true) {
+          return TARGET_SELECTOR_AVIS_FIRST;
+        }
+      }
+    } catch (e) {
+      /* ignore */
+    }
+    return TARGET_SELECTOR_DEFAULT;
+  }
   var ADD_ON_PAGE = '[data-testid="AddOns-container"] > div';
   var TARGET_INDIVIDUAL_PROTECTION_SECTION =
     '[data-testid="single-protections-list-section-container"]';
@@ -305,7 +324,11 @@
       ? priceCalc.rateTerms.unlimitedMilage
       : false;
     var protectionBundle = priceCalc.protectionBundle;
-    var protectionBundleName = protectionBundle ? protectionBundle.code : "";
+    var protectionBundleName = protectionBundle
+      ? protectionBundle.code === "No Protection"
+        ? ""
+        : protectionBundle.code
+      : "";
     var protectionAndAddOnsTotal =
       (totals.addOnTotal || 0) + (totals.protectionTotal || 0);
 
@@ -633,7 +656,9 @@
   function injectProtectionLayout() {
     if (document.getElementById(EXP_ID)) return;
 
-    var insertionPoint = document.querySelector(TARGET_SELECTOR);
+    var selector = getTargetSelector();
+    var isAvisFirst = selector === TARGET_SELECTOR_AVIS_FIRST;
+    var insertionPoint = document.querySelector(selector);
     if (!insertionPoint) return;
 
     var html =
@@ -793,11 +818,29 @@
       "      </section>";
 
     insertionPoint.insertAdjacentHTML("beforebegin", html);
-    insertionPoint.style.display = "none";
-    var targetContainer = document.querySelector(
-      '[data-testid="Protections-container"] > div > div',
-    );
-    targetContainer.style.display = "none";
+    if (isAvisFirst) {
+      insertionPoint.style.setProperty("display", "none", "important");
+      var AVIS_FIRST_HIDE_SELECTOR =
+        '[data-testid="Protections-container"] > div:nth-child(2) > div:nth-child(2)';
+      poll(
+        function () {
+          return document.querySelector(AVIS_FIRST_HIDE_SELECTOR);
+        },
+        function () {
+          var el = document.querySelector(AVIS_FIRST_HIDE_SELECTOR);
+          el.style.setProperty("display", "none", "important");
+        },
+        false,
+        5000,
+      );
+    } else {
+      insertionPoint.style.setProperty("display", "none", "important");
+      var targetContainer = document.querySelector(
+        '[data-testid="Protections-container"] > div > div',
+      );
+      if (targetContainer)
+        targetContainer.style.setProperty("display", "none", "important");
+    }
     var targetIndividualProtectionSection = document.querySelector(
       TARGET_INDIVIDUAL_PROTECTION_SECTION,
     );
@@ -878,7 +921,7 @@
 
     // Add opt out section
     var optOutSectin =
-      '<div class="opt-out-section" id="avis-opt-out-container-a">' +
+      '<div class="opt-out-section" id="avis-opt-out-container">' +
       "    <h4>Continue without protection</h4>" +
       "    <span>This rental may not be fully covered by your insurance or credit card. Without protection, you remain responsible for any rental vehicle damage, theft, or loss, and third-party claims. </span>" +
       '    <div class="decline-option" id="avis-opt-out-option-a">' +
@@ -907,10 +950,101 @@
           '[data-testid="single-protections-list-section-container"]',
         );
         targetSection.insertAdjacentHTML("afterend", optOutSectin);
-        document.querySelector(
+
+        var noProtectionEl = document.querySelector(
           '[data-testid="ancillaries-bundle"][data-code="No Protection"]',
         );
-        document.getElementById("decline-protection-label");
+        var declineProtectionLabel = document.getElementById(
+          "decline-protection-label",
+        );
+
+        declineProtectionLabel.addEventListener("click", function () {
+          if (noProtectionEl) noProtectionEl.click();
+          setTimeout(checkState, 100);
+        });
+      },
+    );
+
+    // identify continue cta
+    var contCta = $('button[data-testid="action-footer-cta-button"]');
+
+    function checkState() {
+      // check for active bundle (paid, not "No Protection")
+      var activeBundle =
+        $(".ancillaries-bundle--selected").not('[data-code="No Protection"]')
+          .length > 0;
+
+      // check for active individual items
+      var activeItems =
+        $(
+          'div[data-testid="single-protections-item-add-to-trip-btn"] input:checked',
+        ).length > 0;
+
+      // check for included items
+      var includedItems =
+        $(
+          'span[data-testid="single-protections-item-included-in-bundle"]',
+        ).filter(function () {
+          return $(this).text() === "Included";
+        }).length > 0;
+
+      // check if decline checkbox is checked
+      var declineChecked = $(
+        '#avis-opt-out-option-a input[type="checkbox"]',
+      ).is(":checked");
+
+      // enable CTA if any selection made
+      var shouldEnable =
+        activeBundle || activeItems || includedItems || declineChecked;
+      // hide opt-out section if a paid protection is active
+      var shouldHide = activeBundle || activeItems || includedItems;
+
+      var isDisabled = contCta.is(":disabled");
+
+      if (shouldEnable && isDisabled) {
+        contCta.removeAttr("disabled");
+      } else if (!shouldEnable && !isDisabled) {
+        contCta.attr("disabled", "");
+      }
+
+      if (shouldHide) {
+        $("#avis-opt-out-container").slideUp();
+        $('#avis-opt-out-option-a input[type="checkbox"]').prop(
+          "checked",
+          false,
+        );
+      } else {
+        $("#avis-opt-out-container").slideDown();
+      }
+
+      if (activeBundle) {
+        $("body").addClass("bundle-active");
+      } else {
+        $("body").removeClass("bundle-active");
+      }
+    }
+
+    // run on load
+    setTimeout(checkState, 500);
+
+    // watch CTA button attribute changes
+    if (contCta.length > 0) {
+      var ctaObserver = new MutationObserver(function () {
+        checkState();
+      });
+      ctaObserver.observe(contCta[0], {
+        attributes: true,
+        childList: false,
+        subtree: false,
+      });
+    }
+
+    // re-run checkState on any relevant interaction
+    $(document).on(
+      "click",
+      '[data-testid="ancillaries-bundle"], [data-testid="single-protections-item-add-to-trip-btn"], #avis-opt-out-option-a',
+      function () {
+        setTimeout(checkState, 200);
       },
     );
   }
@@ -927,9 +1061,13 @@
       '">' +
       '        <div class="protection-container-grid">' +
       '          <div class="protection-cards-column"></div>' +
-      '          <div class="car-summary-column">' +
-      '            <div class="car-summary-section">' +
-      '               <p class="car-summary-title">Car Summary</p>' +
+      "          <!-- Car Summary Column -->" +
+      '          <div class="car-summary-column-wrapper">' +
+      '            <div class="car-summary-column">' +
+      '              <div class="car-summary-section">' +
+      '                <p class="car-summary-title">Car Summary</p>' +
+      "                <!-- Placeholder for car summary -->" +
+      "              </div>" +
       "            </div>" +
       "          </div>" +
       "        </div>" +
@@ -983,6 +1121,28 @@
       if (selectAddOnsList) cardsColumn.appendChild(selectAddOnsList);
     }
 
+    // For Avis First: place the avis-first logo grandparent as the 2nd child of cardsColumn
+    if (getTargetSelector() === TARGET_SELECTOR_AVIS_FIRST) {
+      poll(
+        function () {
+          return document.querySelector('[data-testid="avis-first-long-logo"]');
+        },
+        function () {
+          var logoEl = document.querySelector(
+            '[data-testid="avis-first-long-logo"]',
+          );
+          var avisFirstBlock = logoEl.parentElement.parentElement;
+          if (cardsColumn && avisFirstBlock) {
+            // Insert as the second child (after whatever is first)
+            var secondChild = cardsColumn.children[1] || null;
+            cardsColumn.insertBefore(avisFirstBlock, secondChild);
+          }
+        },
+        false,
+        5000,
+      );
+    }
+
     window.updateAvisCarSummary();
     disableOriginalFooterAccordion();
   }
@@ -1001,13 +1161,29 @@
   }
 
   function runProtection() {
+    // First wait for sessionStorage to be populated by the app (SPA navigation
+    // writes reservation.store asynchronously after the URL changes).
     poll(
       function () {
-        return document.querySelector(TARGET_SELECTOR);
+        try {
+          return !!sessionStorage.getItem("reservation.store");
+        } catch (e) {
+          return false;
+        }
       },
       function () {
-        injectProtectionLayout();
+        var selector = getTargetSelector();
+        poll(
+          function () {
+            return document.querySelector(selector);
+          },
+          function () {
+            injectProtectionLayout();
+          },
+        );
       },
+      false,
+      10000,
     );
   }
 
@@ -1023,31 +1199,24 @@
   }
 
   function observeDOM() {
+    var debounceTimer = null;
     var observer = new MutationObserver(function () {
-      handlePageChange();
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(function () {
+        handlePageChange();
+      }, 50);
     });
 
-    observer.observe(
-      document.querySelector('[data-testid="ancillaries-bundles-container"]'),
-      {
-        childList: true,
-        subtree: true,
-      },
-    );
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true,
+    });
   }
 
   window.addEventListener("locationchange", handlePageChange);
 
-  poll(
-    function () {
-      return document.querySelector(
-        '[data-testid="ancillaries-bundles-container"]',
-      );
-    },
-    function () {
-      console.log(mvtID);
-      handlePageChange();
-      observeDOM();
-    },
-  );
+  // Run immediately for hard-reload case, then observe for SPA navigations.
+  console.log(mvtID);
+  handlePageChange();
+  observeDOM();
 })();

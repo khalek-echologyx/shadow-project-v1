@@ -73,14 +73,14 @@
 .protection-card.highlight .card-content-header {
   background: #88001b;
   border-radius: 0;
-  min-height: 160px;
+  min-height: 176px;
 }
 
 .card-content-header {
   padding: 16px 24px;
   background-color: #151D28;
   border-radius: 8px 8px 0 0;
-  min-height: 140px;
+  min-height: 176px;
 }
 
 .card-title {

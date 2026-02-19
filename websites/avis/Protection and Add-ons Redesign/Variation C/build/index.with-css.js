@@ -1,4 +1,612 @@
 (function () {
+  var interval = setInterval(function () {
+    if (document.head) {
+      // Check if <head> exists
+      clearInterval(interval); // Stop checking once found
+      var style = document.createElement("style");
+      style.innerHTML = `[data-testid="stepper-container"] {
+  border-bottom: none !important;
+}
+
+@keyframes avis-mui-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes avis-mui-dash {
+  0% {
+    stroke-dasharray: 1px, 200px;
+    stroke-dashoffset: 0;
+  }
+  50% {
+    stroke-dasharray: 100px, 200px;
+    stroke-dashoffset: -15px;
+  }
+  100% {
+    stroke-dasharray: 100px, 200px;
+    stroke-dashoffset: -125px;
+  }
+}
+.avis-car-summary-spinner-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  border-radius: 8px;
+}
+.avis-car-summary-spinner-overlay .MuiCircularProgress-root {
+  animation: avis-mui-spin 1.4s linear infinite;
+  color: #d4002a;
+}
+.avis-car-summary-spinner-overlay .MuiCircularProgress-svg {
+  display: block;
+}
+.avis-car-summary-spinner-overlay .MuiCircularProgress-circle {
+  stroke: currentColor;
+  stroke-dasharray: 80px, 200px;
+  stroke-dashoffset: 0;
+  animation: avis-mui-dash 1.4s ease-in-out infinite;
+}
+
+.new-protection-section {
+  display: block;
+}
+
+.protection-cards-section {
+  width: 100%;
+  position: relative;
+}
+
+.protection-bg {
+  width: 100%;
+  height: 474px;
+  /* Reduced by approx 20% from 592px */
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+}
+
+.protection-cards-section-content {
+  position: relative;
+  z-index: 1;
+  width: calc(100% - 112px);
+  margin: 0 auto;
+}
+
+.protection-title {
+  text-align: center;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 0.3px !important;
+  margin: 0 !important;
+  padding-top: 25px;
+  padding-bottom: 50px;
+}
+
+.protection-cards {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+
+.protection-card {
+  width: 100%;
+  color: #fff;
+  border-radius: 8px;
+  border: 1px solid #d4d4d4;
+  letter-spacing: 0.3px !important;
+  flex: 1;
+}
+
+.protection-card.highlight {
+  margin-top: -36px;
+}
+
+.protection-card.highlight .recomended {
+  background-color: #660014;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 100%;
+  letter-spacing: 0.84px;
+  text-align: center;
+  padding: 12px 0;
+  border-radius: 8px 8px 0 0;
+}
+
+.protection-card.highlight .card-content-header {
+  background: #88001b;
+  border-radius: 0;
+  min-height: 176px;
+}
+
+.card-content-header {
+  padding: 16px 24px;
+  background-color: #151d28;
+  border-radius: 8px 8px 0 0;
+  min-height: 176px;
+}
+
+.card-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 28px;
+  letter-spacing: 0.3px !important;
+  margin: 0;
+  margin-bottom: 6px;
+}
+
+.ancillary-bundle-rating {
+  margin: 0;
+  margin-bottom: 6px;
+}
+
+.ancillary-bundle-rating span {
+  width: 16px;
+  height: 9px;
+  background-color: rgba(225, 225, 225, 0.3019607843);
+  display: inline-block;
+  border-radius: 2px;
+}
+
+.ancillary-bundle-rating span.active {
+  background-color: #e86400;
+}
+
+.card-desc {
+  font-size: 14px;
+  line-height: 20px;
+  margin: 0;
+}
+
+.protection-card .features {
+  background-color: #fff;
+  margin-bottom: 0;
+  padding: 16px 12px;
+}
+
+.protection-card .features > div > div:last-child > svg {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.feature-list {
+  list-style: none;
+  padding: 16px 12px;
+  background-color: #fff;
+  margin: 0;
+}
+
+.feature-list li {
+  font-size: 14px;
+  color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.feature-list li p {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  /* Gap between icon and text */
+  margin: 0;
+}
+
+.feature-list li p span:first-child {
+  margin-bottom: -5px;
+}
+
+.price {
+  background-color: #fff;
+  text-align: center;
+  padding: 16px 0;
+}
+
+.old-price {
+  text-decoration: line-through;
+  font-size: 14px;
+  color: rgba(31, 29, 29, 0.4);
+  line-height: 18px;
+  letter-spacing: 0.3px !important;
+  vertical-align: middle;
+}
+
+.new-price {
+  font-size: 30px;
+  font-weight: 500;
+  color: #000;
+  line-height: 28px;
+}
+
+.per-day {
+  font-size: 16px;
+  color: #000;
+  line-height: 20px;
+  vertical-align: text-bottom;
+  font-weight: 500;
+}
+
+.btn-container {
+  padding: 16px 24px;
+  background-color: #fff;
+  border-radius: 0 0 8px 8px;
+}
+
+.btn {
+  border: none;
+  padding: 16px 0;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  width: 100%;
+  font-weight: 500;
+}
+
+.btn.selected {
+  position: relative;
+}
+
+.btn.selected::after {
+  content: "Selected";
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: #e8e6e6;
+  color: #979696;
+  width: 100%;
+  height: 100%;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn.primary {
+  background: #d4002a;
+  color: #fff;
+}
+
+.btn.secondary {
+  background: #000;
+  color: #fff;
+}
+
+.protection-container-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.protection-cards-column {
+  grid-column: span 5;
+}
+
+.car-summary-column-wrapper {
+  grid-column: span 2;
+  background-color: #fff;
+  padding-left: 20px;
+}
+
+[data-testid="ancillaries-action-footer"] {
+  margin-top: 0 !important;
+  position: static !important;
+}
+
+.car-summary-column {
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.08);
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 24px 0;
+  width: calc(100% - 58px);
+  position: sticky;
+  top: 96px;
+  align-self: start;
+  height: fit-content;
+  margin-top: 20px;
+}
+
+.car-summary-section .car-summary-title {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 28px;
+  letter-spacing: 0.3px !important;
+  margin: 0;
+  margin-bottom: 24px;
+  padding: 0 24px;
+}
+
+.car-summary-section .divider {
+  height: 1px;
+  background-color: #eaeaea;
+  margin: 0 24px;
+}
+.car-summary-section .vehicle-image-container {
+  text-align: center;
+}
+.car-summary-section .vehicle-image-container img.car-image {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+.car-summary-section .vehicle-info {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+}
+.car-summary-section .vehicle-info .vehicle-name {
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.3px !important;
+  color: #000;
+}
+.car-summary-section .location-info {
+  margin-top: 12px;
+  margin-bottom: 16px;
+  padding: 0 24px;
+}
+.car-summary-section .location-info .location-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+.car-summary-section .location-info .location-row:last-child {
+  margin-bottom: 0;
+}
+.car-summary-section .location-info .loc-details {
+  text-align: left;
+  flex: 1;
+  padding-right: 8px;
+}
+.car-summary-section .location-info .loc-datetime {
+  text-align: right;
+  flex-shrink: 0;
+}
+.car-summary-section .location-info .loc-label,
+.car-summary-section .location-info .loc-date {
+  font-weight: 700;
+  font-size: 14px;
+  color: #000;
+  margin-bottom: 4px;
+  line-height: 1.2;
+}
+.car-summary-section .location-info .loc-name,
+.car-summary-section .location-info .loc-time {
+  font-size: 14px;
+  color: #524d4d;
+  line-height: 1.4;
+}
+.car-summary-section .total-vehicle-rate {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-top: 16px;
+  padding: 0 24px;
+}
+.car-summary-section .total-vehicle-rate-content .total-vehicle-rate-title {
+  font-size: 14px;
+  line-height: 20px;
+  color: #000;
+  font-weight: 500;
+}
+.car-summary-section .total-vehicle-rate-content .total-vehicle-rate-subtitle {
+  font-size: 14px;
+  line-height: 20px;
+  color: #524d4d;
+}
+.car-summary-section .total-vehicle-rate-price {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.car-summary-section
+  .total-vehicle-rate-price
+  .total-vehicle-rate-price-amount {
+  text-decoration: line-through;
+  font-size: 14px;
+  line-height: 20px;
+  color: rgba(31, 29, 29, 0.4);
+}
+.car-summary-section .total-vehicle-rate-price .total-vehicle-rate-price-save {
+  font-size: 14px;
+  line-height: 20px;
+  color: #000;
+  font-weight: 500;
+}
+.car-summary-section .accordion-section {
+  margin: 16px 0;
+}
+.car-summary-section .protection-accordion {
+  padding-bottom: 12px;
+}
+.car-summary-section .savings-discount {
+  padding-top: 12px;
+}
+.car-summary-section .text-and-fees-accordion {
+  padding-bottom: 12px;
+}
+.car-summary-section .accordion-item .accordion-footer {
+  padding: 0 24px;
+}
+.car-summary-section .accordion-item.rate-terms-accordion .accordion-header {
+  margin-top: 0;
+}
+.car-summary-section .accordion-item .accordion-footer .pr-added-footer span {
+  color: #1ea238;
+}
+.car-summary-section .protection-not-added {
+  color: #e90c38;
+}
+.car-summary-section .accordion-header {
+  width: 100%;
+  padding: 4px 24px;
+  background: none;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0;
+}
+.car-summary-section .accordion-header .icon {
+  font-size: 18px;
+  font-weight: normal;
+  line-height: 1;
+}
+.car-summary-section .protection-accordion .accordion-header {
+  margin-top: 12px;
+}
+.car-summary-section .accordion-header-title.rate-terms {
+  font-size: 12px;
+  color: #736d6d;
+  font-weight: 400;
+  text-decoration: underline;
+}
+.car-summary-section .accordion-header:hover {
+  background: rgb(244, 243, 242);
+}
+.car-summary-section .accordion-header-title {
+  font-size: 14px;
+  line-height: 20px;
+  color: #000;
+  font-weight: 400;
+}
+.car-summary-section .accordion-header-title.protection-add-ons {
+  font-weight: 500;
+}
+.car-summary-section .accordion-header-icon {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.car-summary-section .accordion-header-icon-price {
+  font-size: 14px;
+  line-height: 20px;
+  color: #000;
+  font-weight: 600;
+}
+.car-summary-section .accordion-header-icon-arrow {
+  font-size: 18px;
+  font-weight: normal;
+  line-height: 1;
+  margin-top: -9px;
+  transition: transform 0.3s ease;
+}
+.car-summary-section .accordion-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+  padding: 0 24px;
+  font-size: 14px;
+  color: rgb(82, 77, 77);
+}
+.car-summary-section .accordion-content .summary-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.car-summary-section .accordion-content .summary-item .tax-fee-link {
+  font-size: 14px !important;
+  color: rgb(82, 77, 77);
+  text-decoration: underline;
+}
+.car-summary-section .accordion-content .summary-item:first-child {
+  margin-top: 8px;
+}
+.car-summary-section .accordion-content .summary-item:last-child {
+  margin-bottom: 12px;
+}
+.car-summary-section .accordion-content .empty-list {
+  padding: 8px 4px 12px;
+  font-style: italic;
+  color: #999;
+}
+.car-summary-section .accordion-content p.terms-text {
+  margin: 0;
+  padding: 8px 4px 12px;
+  line-height: 1.4;
+}
+.car-summary-section .price-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+  padding: 0 24px;
+}
+.car-summary-section .price-info .total-label {
+  font-size: 16px;
+  line-height: 20px;
+  color: #000;
+  font-weight: 500;
+}
+.car-summary-section .price-info .total-price {
+  font-weight: 700;
+  font-size: 18px;
+}
+
+#avis-addOns-variation-C .protection-cards-column {
+  position: relative;
+}
+
+[data-testid="ancillaries-bundle"][data-code="No Protection"] {
+  display: none !important;
+}
+
+@media (max-width: 768px) {
+  .protection-container-grid {
+    grid-template-columns: 1fr;
+    padding: 0;
+  }
+  .protection-cards-column,
+  .car-summary-column-wrapper {
+    grid-column: span 1;
+  }
+  .protection-cards-section-content {
+    width: calc(100% - 32px);
+  }
+  .protection-cards {
+    flex-direction: column;
+  }
+}
+@media (max-width: 1024px) {
+  .car-summary-column {
+    display: none;
+  }
+  .protection-cards-column {
+    grid-column: span 7;
+  }
+}
+@media (min-width: 1025px) {
+  [data-testid="action-footer-total-amount"] {
+    cursor: default !important;
+  }
+}
+`;
+      document.head.appendChild(style);
+      setTimeout(() => {
+        clearInterval(interval); // Clear the interval after 5 seconds
+      }, 5000);
+    }
+  }, 100); // Check every 100ms for <head>
+})();
+(function () {
   (function (history) {
     var pushState = history.pushState;
     history.pushState = function () {
@@ -34,8 +642,9 @@
     }, a);
   }
 
-  var EXP_ID = "avis-protection-variation-a";
-  var EXP_ID_2 = "avis-addOns-variation-A";
+  var mvtID = "MVT-307";
+  var EXP_ID = "avis-protection-variation-c";
+  var EXP_ID_2 = "avis-addOns-variation-C";
   var TARGET_SELECTOR_DEFAULT =
     '[data-testid="Protections-container"] > div > svg';
   var TARGET_SELECTOR_AVIS_FIRST =
@@ -56,6 +665,7 @@
     }
     return TARGET_SELECTOR_DEFAULT;
   }
+
   var ADD_ON_PAGE = '[data-testid="AddOns-container"] > div';
   var TARGET_INDIVIDUAL_PROTECTION_SECTION =
     '[data-testid="single-protections-list-section-container"]';
@@ -242,6 +852,66 @@
     );
   }
 
+  function injectSpinnerStyles() {
+    if (document.getElementById("avis-car-summary-spinner-styles")) return;
+    var style = document.createElement("style");
+    style.id = "avis-car-summary-spinner-styles";
+    style.textContent = [
+      "@keyframes avis-mui-spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }",
+      "@keyframes avis-mui-dash {",
+      "  0%   { stroke-dasharray: 1px, 200px; stroke-dashoffset: 0; }",
+      "  50%  { stroke-dasharray: 100px, 200px; stroke-dashoffset: -15px; }",
+      "  100% { stroke-dasharray: 100px, 200px; stroke-dashoffset: -125px; }",
+      "}",
+      ".avis-car-summary-spinner-overlay {",
+      "  position: absolute; inset: 0;",
+      "  background: rgba(255,255,255,0.78);",
+      "  display: flex; align-items: center; justify-content: center;",
+      "  z-index: 100; border-radius: 8px;",
+      "}",
+      ".avis-car-summary-spinner-overlay .MuiCircularProgress-root {",
+      "  animation: avis-mui-spin 1.4s linear infinite;",
+      "  color: #D4002A;",
+      "}",
+      ".avis-car-summary-spinner-overlay .MuiCircularProgress-svg { display: block; }",
+      ".avis-car-summary-spinner-overlay .MuiCircularProgress-circle {",
+      "  stroke: currentColor;",
+      "  stroke-dasharray: 80px, 200px; stroke-dashoffset: 0;",
+      "  animation: avis-mui-dash 1.4s ease-in-out infinite;",
+      "}",
+    ].join("\n");
+    document.head.appendChild(style);
+  }
+
+  function showCarSummarySpinner() {
+    injectSpinnerStyles();
+    var sections = document.querySelectorAll(
+      ".new-protection-section .car-summary-section",
+    );
+    for (var s = 0; s < sections.length; s++) {
+      var section = sections[s];
+      if (section.querySelector(".avis-car-summary-spinner-overlay")) continue;
+      var overlay = document.createElement("div");
+      overlay.className = "avis-car-summary-spinner-overlay";
+      overlay.innerHTML =
+        '<span class="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary" role="progressbar" style="width: 40px; height: 40px;">' +
+        '<svg class="MuiCircularProgress-svg" viewBox="22 22 44 44">' +
+        '<circle class="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate" cx="44" cy="44" r="20.2" fill="none" stroke-width="3.6"></circle>' +
+        "</svg></span>";
+      section.style.position = "relative";
+      section.appendChild(overlay);
+    }
+  }
+
+  function hideCarSummarySpinner() {
+    var overlays = document.querySelectorAll(
+      ".avis-car-summary-spinner-overlay",
+    );
+    for (var o = 0; o < overlays.length; o++) {
+      overlays[o].parentNode.removeChild(overlays[o]);
+    }
+  }
+
   window.updateAvisCarSummary = function () {
     var section = document.querySelector(
       ".new-protection-section .car-summary-section",
@@ -264,7 +934,11 @@
       ? priceCalc.rateTerms.unlimitedMilage
       : false;
     var protectionBundle = priceCalc.protectionBundle;
-    var protectionBundleName = protectionBundle ? protectionBundle.code : "";
+    var protectionBundleName = protectionBundle
+      ? protectionBundle.code === "No Protection"
+        ? ""
+        : protectionBundle.code
+      : "";
     var protectionAndAddOnsTotal =
       (totals.addOnTotal || 0) + (totals.protectionTotal || 0);
 
@@ -389,11 +1063,11 @@
       "</span>" +
       "     </div>" +
       "   </div>" +
-      '  <div class="accordion-item protection-accordion">' +
+      '  <div class="accordion-item protection-accordion"> ' +
       '    <div class="accordion-header" data-has-items="' +
       (combinedProtectionAddOns.length > 0) +
       '">' +
-      '     <div class="accordion-header-title protection-add-ons">Protections & Add-ons</div>' +
+      '     <div class="accordion-header-title protection-add-ons">Protections &amp; Add-ons</div>' +
       '     <div class="accordion-header-icon">' +
       '      <div class="accordion-header-icon-price">$' +
       protectionAndAddOnsTotal.toFixed(2) +
@@ -540,66 +1214,6 @@
     }
   };
 
-  function injectSpinnerStyles() {
-    if (document.getElementById("avis-car-summary-spinner-styles")) return;
-    var style = document.createElement("style");
-    style.id = "avis-car-summary-spinner-styles";
-    style.textContent = [
-      "@keyframes avis-mui-spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }",
-      "@keyframes avis-mui-dash {",
-      "  0%   { stroke-dasharray: 1px, 200px; stroke-dashoffset: 0; }",
-      "  50%  { stroke-dasharray: 100px, 200px; stroke-dashoffset: -15px; }",
-      "  100% { stroke-dasharray: 100px, 200px; stroke-dashoffset: -125px; }",
-      "}",
-      ".avis-car-summary-spinner-overlay {",
-      "  position: absolute; inset: 0;",
-      "  background: rgba(255,255,255,0.78);",
-      "  display: flex; align-items: center; justify-content: center;",
-      "  z-index: 100; border-radius: 8px;",
-      "}",
-      ".avis-car-summary-spinner-overlay .MuiCircularProgress-root {",
-      "  animation: avis-mui-spin 1.4s linear infinite;",
-      "  color: #D4002A;",
-      "}",
-      ".avis-car-summary-spinner-overlay .MuiCircularProgress-svg { display: block; }",
-      ".avis-car-summary-spinner-overlay .MuiCircularProgress-circle {",
-      "  stroke: currentColor;",
-      "  stroke-dasharray: 80px, 200px; stroke-dashoffset: 0;",
-      "  animation: avis-mui-dash 1.4s ease-in-out infinite;",
-      "}",
-    ].join("\n");
-    document.head.appendChild(style);
-  }
-
-  function showCarSummarySpinner() {
-    injectSpinnerStyles();
-    var sections = document.querySelectorAll(
-      ".new-protection-section .car-summary-section",
-    );
-    for (var s = 0; s < sections.length; s++) {
-      var section = sections[s];
-      if (section.querySelector(".avis-car-summary-spinner-overlay")) continue;
-      var overlay = document.createElement("div");
-      overlay.className = "avis-car-summary-spinner-overlay";
-      overlay.innerHTML =
-        '<span class="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary" role="progressbar" style="width: 40px; height: 40px;">' +
-        '<svg class="MuiCircularProgress-svg" viewBox="22 22 44 44">' +
-        '<circle class="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate" cx="44" cy="44" r="20.2" fill="none" stroke-width="3.6"></circle>' +
-        "</svg></span>";
-      section.style.position = "relative";
-      section.appendChild(overlay);
-    }
-  }
-
-  function hideCarSummarySpinner() {
-    var overlays = document.querySelectorAll(
-      ".avis-car-summary-spinner-overlay",
-    );
-    for (var o = 0; o < overlays.length; o++) {
-      overlays[o].parentNode.removeChild(overlays[o]);
-    }
-  }
-
   if (!window.avisInterceptorSetup) {
     window.avisInterceptorSetup = true;
     var originalFetch = window.fetch;
@@ -647,34 +1261,6 @@
           throw err;
         });
     };
-  }
-
-  // ============== CHECKBOX REDESIGN ==============
-  function checkBoxBtn() {
-    var testIds = [
-      '[data-testid="single-protections-item-add-to-trip-btn"]',
-      '[data-testid="single-addons-item-add-to-trip-btn"]',
-    ];
-
-    for (var i = 0; i < testIds.length; i++) {
-      var testId = testIds[i];
-      var targetBtns = document.querySelectorAll(testId);
-      for (var j = 0; j < targetBtns.length; j++) {
-        var btn = targetBtns[j];
-        btn.classList.add("custom-btn-style");
-        var isCheckedDiv = btn.querySelector("span:last-child div");
-        if (isCheckedDiv) {
-          // Apply state-based classes
-          if (isCheckedDiv.querySelector("svg")) {
-            isCheckedDiv.classList.remove("checkField");
-            isCheckedDiv.classList.add("checked");
-          } else {
-            isCheckedDiv.classList.remove("checked");
-            isCheckedDiv.classList.add("checkField");
-          }
-        }
-      }
-    }
   }
 
   function injectProtectionLayout() {
@@ -865,6 +1451,7 @@
       if (targetContainer)
         targetContainer.style.setProperty("display", "none", "important");
     }
+
     var targetIndividualProtectionSection = document.querySelector(
       TARGET_INDIVIDUAL_PROTECTION_SECTION,
     );
@@ -884,32 +1471,25 @@
       },
     );
 
-    var protections = [
-      {
-        code: "Ultimate Protection",
-        cardTitle: "Ultimate Protection",
-      },
-      {
-        code: "Enhanced Protection",
-        cardTitle: "Enhanced Protection",
-      },
-      {
-        code: "Essential Protection",
-        cardTitle: "Essential Protection",
-      },
+    var protectionItems = [
+      { code: "Ultimate Protection", cardTitle: "Ultimate Protection" },
+      { code: "Enhanced Protection", cardTitle: "Enhanced Protection" },
+      { code: "Essential Protection", cardTitle: "Essential Protection" },
     ];
 
-    for (var i = 0; i < protections.length; i++) {
-      var prot = protections[i];
+    for (var i = 0; i < protectionItems.length; i++) {
+      var prot = protectionItems[i];
       var data = getProtectionData(prot.code);
       if (!data) continue;
 
-      var cards = document.querySelectorAll("#" + EXP_ID + " .protection-card");
+      var allCards = document.querySelectorAll(
+        "#" + EXP_ID + " .protection-card",
+      );
       var card = null;
-      for (var j = 0; j < cards.length; j++) {
-        var titleEl = cards[j].querySelector(".card-title");
+      for (var j = 0; j < allCards.length; j++) {
+        var titleEl = allCards[j].querySelector(".card-title");
         if (titleEl && titleEl.textContent.trim() === prot.cardTitle) {
-          card = cards[j];
+          card = allCards[j];
           break;
         }
       }
@@ -940,144 +1520,6 @@
     bindCustomSelectButton();
     window.updateAvisCarSummary();
     disableOriginalFooterAccordion();
-
-    // Add opt out section
-    var optOutSectin =
-      '<div class="opt-out-section" id="avis-opt-out-container-b">' +
-      "    <h4>Continue without protection</h4>" +
-      "    <span>This rental may not be fully covered by your insurance or credit card. Without protection, you remain responsible for any rental vehicle damage, theft, or loss, and third-party claims. </span>" +
-      '    <div class="decline-option" id="avis-opt-out-option-b">' +
-      '      <label id="decline-protection-label">' +
-      '        <input type="checkbox" name="decline-protection">' +
-      '        <span class="checkbox">' +
-      '          <svg focusable="false" aria-hidden="true" viewBox="0 0 11 9">' +
-      '            <path d="M1 4L4 7L10 1" stroke-linecap="round" fill="none"></path>' +
-      "          </svg>" +
-      "        </span>" +
-      "        I accept responsibility for damage to and loss/theft of the vehicle and third-party claims." +
-      "      </label>" +
-      "    </div>" +
-      "     </div>";
-
-    poll(
-      function () {
-        return (
-          document.querySelector(
-            '[data-testid="single-protections-list-section-container"]',
-          ) && !document.querySelector(".opt-out-section")
-        );
-      },
-      function () {
-        var targetSection = document.querySelector(
-          '[data-testid="single-protections-list-section-container"]',
-        );
-        targetSection.insertAdjacentHTML("afterend", optOutSectin);
-        var noProtectionEl = document.querySelector(
-          '[data-testid="ancillaries-bundle"][data-code="No Protection"]',
-        );
-        var declineProtectionLabel = document.getElementById(
-          "decline-protection-label",
-        );
-        declineProtectionLabel.addEventListener("click", function () {
-          if (noProtectionEl) noProtectionEl.click();
-          setTimeout(checkState, 100);
-        });
-      },
-    );
-    checkBoxBtn();
-
-    // identify continue cta
-    var contCta = $('button[data-testid="action-footer-cta-button"]');
-
-    function checkState() {
-      // check for active bundle
-      var activeBundle =
-        $(".ancillaries-bundle--selected").not('[data-code="No Protection"]')
-          .length > 0;
-
-      // check for active items
-      var activeItems =
-        $(
-          'div[data-testid="single-protections-item-add-to-trip-btn"] input:checked',
-        ).length > 0;
-
-      // check for included items
-      var includedItems =
-        $(
-          'span[data-testid="single-protections-item-included-in-bundle"]',
-        ).filter(function () {
-          return $(this).text() === "Included";
-        }).length > 0;
-
-      // check if decline option is checked
-      var declineChecked = $(
-        '#avis-opt-out-option-b input[type="checkbox"]',
-      ).is(":checked");
-
-      // states
-      var shouldEnable =
-        activeBundle || activeItems || includedItems || declineChecked;
-      var shouldHide = activeBundle || activeItems || includedItems;
-
-      // current state
-      var isDisabled = contCta.is(":disabled");
-
-      // determine if cta state should change
-      if (shouldEnable && isDisabled) {
-        // if active items, enable continue cta
-        contCta.removeAttr("disabled");
-      } else if (!shouldEnable && !isDisabled) {
-        // if no active items, disable continue cta
-        contCta.attr("disabled", "");
-      }
-
-      // determine if decline option should be hidden
-      if (shouldHide) {
-        // hide the decline option
-        $("#avis-opt-out-container-b").slideUp();
-        // reset the decline checkbox
-        $('#avis-opt-out-option-b input[type="checkbox"]').prop(
-          "checked",
-          false,
-        );
-      } else {
-        // show the decline option
-        $("#avis-opt-out-container-b").slideDown();
-      }
-
-      // if bundle is active
-      if (activeBundle) {
-        // add class to body
-        $("body").addClass("bundle-active");
-      } else {
-        // remove class from body
-        $("body").removeClass("bundle-active");
-      }
-    }
-
-    // check state on page load
-    setTimeout(checkState, 500);
-
-    // check state when continue button updates
-    if (contCta.length > 0) {
-      var observer = new MutationObserver(function (mutationsList) {
-        checkState();
-      });
-
-      observer.observe(contCta[0], {
-        attributes: true,
-        childList: false,
-        subtree: false,
-      });
-    }
-
-    $(document).on(
-      "click",
-      '[data-testid="ancillaries-bundle"], [data-testid="single-protections-item-add-to-trip-btn"], #avis-opt-out-option-b',
-      function () {
-        setTimeout(checkState, 200);
-      },
-    );
   }
 
   function injectCarSummaryOnly() {
@@ -1113,7 +1555,6 @@
     // Look for original elements that need to be moved into the new grid
     var selectSvg = insertionPoint.querySelector(":scope > svg");
     if (selectSvg) selectSvg.style.zIndex = "0";
-
     var selectTravelPck = insertionPoint.querySelector(
       ":scope > div:not(#" + EXP_ID_2 + "):not(#" + EXP_ID + ")",
     );
@@ -1122,12 +1563,10 @@
       var TravelPackHeader = selectTravelPck.querySelector("div");
       if (TravelPackHeader) TravelPackHeader.style.zIndex = "1";
     }
-
     var addOnsPackages = document.querySelector(
       '[data-testid="ancillaries-bundles-container"]',
     );
     if (addOnsPackages) addOnsPackages.style.zIndex = "1";
-
     var selectAddOnsList = document.querySelector(
       '[data-testid="single-addons-list-section-container"]',
     );
@@ -1178,7 +1617,6 @@
 
     window.updateAvisCarSummary();
     disableOriginalFooterAccordion();
-    checkBoxBtn();
   }
 
   function isProtectionPage() {
@@ -1192,11 +1630,12 @@
   function handlePageChange() {
     if (isProtectionPage()) runProtection();
     if (isAddOnsPage()) runAddOns();
-    checkBoxBtn();
   }
 
   function runProtection() {
-    // Wait for sessionStorage to be populated (SPA navigations write it async)
+    // First wait for sessionStorage to be populated by the app (SPA navigation
+    // writes reservation.store asynchronously after the URL changes).
+    console.log("runProtection");
     poll(
       function () {
         try {
@@ -1233,8 +1672,12 @@
   }
 
   function observeDOM() {
+    var debounceTimer = null;
     var observer = new MutationObserver(function () {
-      handlePageChange();
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(function () {
+        handlePageChange();
+      }, 50);
     });
 
     observer.observe(document.body, {
@@ -1245,8 +1688,8 @@
 
   window.addEventListener("locationchange", handlePageChange);
 
-  // Run immediately for hard-reload, then observe for SPA navigations.
-  console.log("MVT-307");
+  // Run immediately for hard-reload case, then observe for SPA navigations.
+  console.log(mvtID);
   handlePageChange();
   observeDOM();
 })();

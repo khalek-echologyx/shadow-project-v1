@@ -2,6 +2,10 @@
   display: none !important;
 }
 
+[data-testid=ancillaries-bundles-container] {
+  grid-template-columns: repeat(3, 1fr) !important;
+}
+
 .opt-out-section {
   border-top: 1px solid rgba(0, 0, 0, 0.12);
   margin: 0 56px;
@@ -71,4 +75,10 @@
 
 .decline-option label:has(input:checked) .checkbox path {
   stroke: #fff;
+}
+
+@media (max-width: 768px) {
+  .opt-out-section {
+    margin: 0 16px;
+  }
 }

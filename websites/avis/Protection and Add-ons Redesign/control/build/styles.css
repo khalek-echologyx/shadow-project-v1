@@ -76,3 +76,9 @@
 .decline-option label:has(input:checked) .checkbox path {
   stroke: #fff;
 }
+
+@media (max-width: 768px) {
+  .opt-out-section {
+    margin: 0 16px;
+  }
+}
