@@ -2,6 +2,60 @@
   border-bottom: none !important;
 }
 
+// ===== Car Summary Spinner Overlay =====
+@keyframes avis-mui-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes avis-mui-dash {
+  0% {
+    stroke-dasharray: 1px, 200px;
+    stroke-dashoffset: 0;
+  }
+
+  50% {
+    stroke-dasharray: 100px, 200px;
+    stroke-dashoffset: -15px;
+  }
+
+  100% {
+    stroke-dasharray: 100px, 200px;
+    stroke-dashoffset: -125px;
+  }
+}
+
+.avis-car-summary-spinner-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(255, 255, 255, 0.75);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  border-radius: 8px;
+
+  .MuiCircularProgress-root {
+    animation: avis-mui-spin 1.4s linear infinite;
+    color: #D4002A;
+  }
+
+  .MuiCircularProgress-svg {
+    display: block;
+  }
+
+  .MuiCircularProgress-circle {
+    stroke: currentColor;
+    stroke-dasharray: 80px, 200px;
+    stroke-dashoffset: 0;
+    animation: avis-mui-dash 1.4s ease-in-out infinite;
+  }
+}
 .new-protection-section {
   display: block;
 }
@@ -73,13 +127,14 @@
 .protection-card.highlight .card-content-header {
   background: #88001b;
   border-radius: 0;
-  min-height: 160px;
+  min-height: 176px;
 }
+
 .card-content-header {
   padding: 16px 24px;
   background-color: #151D28;
   border-radius: 8px 8px 0 0;
-  min-height: 140px;
+  min-height: 176px;
 }
 
 .card-title {
@@ -241,170 +296,181 @@
   grid-column: span 5;
 }
 
-.car-summary-column {
+// ================ Car Summary Column ===================
+.car-summary-column-wrapper {
   grid-column: span 2;
+  background-color: #fff;
+    padding-left: 20px;
 }
 
-// ================ Car Summary Column ===================
+[data-testid="ancillaries-action-footer"] {
+  margin-top: 0 !important;
+  position: static !important;
+}
 .car-summary-column {
-  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.01);
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.08);
   background-color: #fff;
   border-radius: 8px;
   padding: 24px 0;
-    width: calc(100% - 57px);
+  width: calc(100% - 58px);
     position: sticky;
-    top: 66px;
+  top: 96px;
     align-self: start;
     height: fit-content;
+  margin-top: 20px;
+}
+
+.car-summary-section .car-summary-title {
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 28px;
+  letter-spacing: 0.3px !important;
+  margin: 0;
+  margin-bottom: 24px;
+  padding: 0 24px;
+}
+
+.car-summary-section {
+  .divider {
+    height: 1px;
+    background-color: #EAEAEA;
+    margin: 0 24px;
   }
-  
-  .car-summary-section .car-summary-title {
-    font-size: 24px;
-    font-weight: 700;
-    line-height: 28px;
-    letter-spacing: 0.3px !important;
-    margin: 0;
-    margin-bottom: 24px;
+
+  .vehicle-image-container {
+    text-align: center;
+
+    img.car-image {
+      max-width: 100%;
+      height: auto;
+      display: block;
+      margin: 0 auto;
+    }
+  }
+
+  .vehicle-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     padding: 0 24px;
   }
-  
-  .car-summary-section {
-    .divider {
-      height: 1px;
-      background-color: #EAEAEA;
-      margin: 0 24px;
-    }
-  
-    .vehicle-image-container {
-      text-align: center;
-  
-      img.car-image {
-        max-width: 100%;
-        height: auto;
-        display: block;
-        margin: 0 auto;
+
+  .vehicle-info .vehicle-name {
+    font-weight: 500;
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 0.3px !important;
+    color: #000;
+  }
+
+  .location-info {
+    margin-top: 12px;
+    margin-bottom: 16px;
+    padding: 0 24px;
+
+    .location-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 16px;
+
+      &:last-child {
+        margin-bottom: 0;
       }
     }
-  
-    .vehicle-info {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 24px;
+
+    .loc-details {
+      text-align: left;
+      flex: 1;
+      padding-right: 8px;
     }
-  
-    .vehicle-info .vehicle-name {
-      font-weight: 500;
+
+    .loc-datetime {
+      text-align: right;
+      flex-shrink: 0;
+    }
+
+    .loc-label,
+    .loc-date {
+      font-weight: 700;
+      font-size: 14px;
+      color: #000;
+      margin-bottom: 4px;
+      line-height: 1.2;
+    }
+
+    .loc-name,
+    .loc-time {
+      font-size: 14px;
+      color: #524D4D;
+      line-height: 1.4;
+    }
+  }
+
+  .total-vehicle-rate {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-top: 16px;
+    padding: 0 24px;
+  }
+
+  .total-vehicle-rate-content {
+    .total-vehicle-rate-title {
       font-size: 14px;
       line-height: 20px;
-      letter-spacing: 0.3px !important;
       color: #000;
+      font-weight: 500;
     }
-  
-    .location-info {
-      margin-top: 12px;
-      margin-bottom: 16px;
-      padding: 0 24px;
-  
-      .location-row {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 16px;
-  
-        &:last-child {
-          margin-bottom: 0;
-        }
-      }
-  
-      .loc-details {
-        text-align: left;
-        flex: 1;
-        padding-right: 8px;
-      }
-  
-      .loc-datetime {
-        text-align: right;
-        flex-shrink: 0;
-      }
-  
-      .loc-label,
-      .loc-date {
-        font-weight: 700;
-        font-size: 14px;
-        color: #000;
-        margin-bottom: 4px;
-        line-height: 1.2;
-      }
-  
-      .loc-name,
-      .loc-time {
-        font-size: 14px;
-        color: #524D4D;
-        line-height: 1.4;
-      }
+
+    .total-vehicle-rate-subtitle {
+      font-size: 14px;
+      line-height: 20px;
+      color: #524D4D;
     }
-  
-    .total-vehicle-rate {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      margin-top: 16px;
-      padding: 0 24px;
+  }
+
+  .total-vehicle-rate-price {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+
+    .total-vehicle-rate-price-amount {
+      text-decoration: line-through;
+      font-size: 14px;
+      line-height: 20px;
+      color: #1F1D1D66;
     }
-  
-    .total-vehicle-rate-content {
-      .total-vehicle-rate-title {
-        font-size: 14px;
-        line-height: 20px;
-        color: #000;
-        font-weight: 500;
-      }
-  
-      .total-vehicle-rate-subtitle {
-        font-size: 14px;
-        line-height: 20px;
-        color: #524D4D;
-      }
+
+    .total-vehicle-rate-price-save {
+      font-size: 14px;
+      line-height: 20px;
+      color: #000;
+      font-weight: 500;
     }
-  
-    .total-vehicle-rate-price {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-  
-      .total-vehicle-rate-price-amount {
-        text-decoration: line-through;
-        font-size: 14px;
-        line-height: 20px;
-        color: #1F1D1D66;
-      }
-  
-      .total-vehicle-rate-price-save {
-        font-size: 14px;
-        line-height: 20px;
-        color: #000;
-        font-weight: 500;
-      }
-    }
-  
-    .accordion-section {
-      margin: 16px 0;
-    }
-  
-    .protection-accordion {
-      padding-bottom: 12px;
-    }
-  
-    .savings-discount {
-      padding-top: 12px;
-    }
-  
-    .text-and-fees-accordion {
-      padding-bottom: 12px;
-    }
+  }
+
+  .accordion-section {
+    margin: 16px 0;
+  }
+
+  .protection-accordion {
+    padding-bottom: 12px;
+  }
+
+  .savings-discount {
+    padding-top: 12px;
+  }
+
+  .text-and-fees-accordion {
+    padding-bottom: 12px;
+  }
+
                 .accordion-item .accordion-footer {
                   padding: 0 24px;
                 }
+.accordion-item.rate-terms-accordion .accordion-header {
+  margin-top: 0;
+}
     .accordion-item .accordion-footer .pr-added-footer span {
       color: #1EA238;
     }
@@ -433,7 +499,9 @@
         line-height: 1;
       }
     }
-  
+                                .protection-accordion .accordion-header {
+                                  margin-top: 12px;
+                                }
     .accordion-header-title.rate-terms {
       font-size: 12px;
       color: #736D6D;
@@ -537,17 +605,18 @@
         font-size: 18px;
       }
     }
-  }
-#avis-addOns-variation-A {
+                                }
+#avis-addOns-variation-C {
   .protection-cards-column {
     position: relative;
   }
 }
 
-// =================================== NO OPT OUT SECTIONS TYLE
+// =================================== NO OPT OUT SECTION STYLE
 [data-testid="ancillaries-bundle"][data-code="No Protection"] {
   display: none !important;
 }
+
 @media (max-width: 768px) {
   .protection-container-grid {
     grid-template-columns: 1fr;
@@ -555,7 +624,7 @@
   }
 
   .protection-cards-column,
-  .car-summary-column {
+                                .car-summary-column-wrapper {
     grid-column: span 1;
   }
 
@@ -567,9 +636,6 @@
     flex-direction: column;
   }
 
-  .protection-card.highlight {
-    margin-top: 0;
-  }
 }
 
 @media (max-width: 1024px) {

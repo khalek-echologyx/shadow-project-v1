@@ -30,7 +30,22 @@
 
   var EXP_ID = "avis-protection-variation-a";
   var EXP_ID_2 = "avis-addOns-variation-A";
-  var TARGET_SELECTOR = '[data-testid="Protections-container"] > div > svg';
+  var TARGET_SELECTOR_DEFAULT = '[data-testid="Protections-container"] > div > svg';
+  var TARGET_SELECTOR_AVIS_FIRST = '[data-testid="Protections-container"] div img';
+
+  function getTargetSelector() {
+    try {
+      var raw = sessionStorage.getItem('reservation.store');
+      if (raw) {
+        var store = JSON.parse(raw);
+        var state = store && (store.state || store);
+        if (state && state.isAvisFirst === true) {
+          return TARGET_SELECTOR_AVIS_FIRST;
+        }
+      }
+    } catch (e) { /* ignore */ }
+    return TARGET_SELECTOR_DEFAULT;
+  }
   var ADD_ON_PAGE = '[data-testid="AddOns-container"] > div';
   var TARGET_INDIVIDUAL_PROTECTION_SECTION = '[data-testid="single-protections-list-section-container"]';
   var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M19.8118 6.19684C20.0528 6.42427 20.0638 6.80401 19.8364 7.04501L9.96479 17.5055C9.72819 17.7562 9.32948 17.7564 9.09257 17.506L4.16415 12.2966C3.93641 12.0559 3.94694 11.6761 4.18766 11.4484C4.42837 11.2207 4.80812 11.2312 5.03586 11.4719L9.52788 16.22L18.9636 6.2214C19.1911 5.9804 19.5708 5.9694 19.8118 6.19684Z" fill="#4DC664" stroke="#8ACE97" stroke-linecap="round"/></svg>';
@@ -494,7 +509,9 @@
   function injectProtectionLayout() {
     if (document.getElementById(EXP_ID)) return;
 
-    var insertionPoint = document.querySelector(TARGET_SELECTOR);
+    var selector = getTargetSelector();
+    var isAvisFirst = selector === TARGET_SELECTOR_AVIS_FIRST;
+    var insertionPoint = document.querySelector(selector);
     if (!insertionPoint) return;
 
     var html = '<section class="new-protection-section" id="' + EXP_ID + '">' +
@@ -603,9 +620,22 @@
       '      </section>';
 
     insertionPoint.insertAdjacentHTML("beforebegin", html);
-    insertionPoint.style.display = "none";
-    var targetContainer = document.querySelector('[data-testid="Protections-container"] > div > div');
-    targetContainer.style.display = "none";
+    if (isAvisFirst) {
+      insertionPoint.style.setProperty('display', 'none', 'important');
+      var AVIS_FIRST_HIDE_SELECTOR = '[data-testid="Protections-container"] > div:nth-child(2) > div:nth-child(2)';
+      poll(
+        function () { return document.querySelector(AVIS_FIRST_HIDE_SELECTOR); },
+        function () {
+          var el = document.querySelector(AVIS_FIRST_HIDE_SELECTOR);
+          el.style.setProperty('display', 'none', 'important');
+        },
+        false, 5000
+      );
+    } else {
+      insertionPoint.style.setProperty('display', 'none', 'important');
+      var targetContainer = document.querySelector('[data-testid="Protections-container"] > div > div');
+      if (targetContainer) targetContainer.style.setProperty('display', 'none', 'important');
+    }
     var targetIndividualProtectionSection = document.querySelector(TARGET_INDIVIDUAL_PROTECTION_SECTION);
 
     poll(
@@ -795,9 +825,13 @@
     var html = '<section class="new-protection-section" id="' + EXP_ID_2 + '">' +
       '        <div class="protection-container-grid">' +
       '          <div class="protection-cards-column"></div>' +
-      '          <div class="car-summary-column">' +
-      '            <div class="car-summary-section">' +
-      '               <p class="car-summary-title">Car Summary</p>' +
+      '          <!-- Car Summary Column -->' +
+      '          <div class="car-summary-column-wrapper">' +
+      '            <div class="car-summary-column">' +
+      '              <div class="car-summary-section">' +
+      '                <p class="car-summary-title">Car Summary</p>' +
+      '                <!-- Placeholder for car summary -->' +
+      '              </div>' +
       '            </div>' +
       '          </div>' +
       '        </div>' +
@@ -841,6 +875,24 @@
       if (selectAddOnsList) cardsColumn.appendChild(selectAddOnsList);
     }
 
+    // For Avis First: place the avis-first logo grandparent as the 2nd child of cardsColumn
+    if (getTargetSelector() === TARGET_SELECTOR_AVIS_FIRST) {
+      poll(
+        function () {
+          return document.querySelector('[data-testid="avis-first-long-logo"]');
+        },
+        function () {
+          var logoEl = document.querySelector('[data-testid="avis-first-long-logo"]');
+          var avisFirstBlock = logoEl.parentElement.parentElement;
+          if (cardsColumn && avisFirstBlock) {
+            var secondChild = cardsColumn.children[1] || null;
+            cardsColumn.insertBefore(avisFirstBlock, secondChild);
+          }
+        },
+        false, 5000
+      );
+    }
+
     window.updateAvisCarSummary();
     disableOriginalFooterAccordion();
     checkBoxBtn();
@@ -861,13 +913,20 @@
   }
 
   function runProtection() {
+    // Wait for sessionStorage to be populated (SPA navigations write it async)
     poll(
       function () {
-        return document.querySelector(TARGET_SELECTOR);
+        try { return !!sessionStorage.getItem('reservation.store'); }
+        catch (e) { return false; }
       },
       function () {
-        injectProtectionLayout();
-      }
+        var selector = getTargetSelector();
+        poll(
+          function () { return document.querySelector(selector); },
+          function () { injectProtectionLayout(); }
+        );
+      },
+      false, 10000
     );
   }
 
@@ -895,10 +954,9 @@
 
   window.addEventListener("locationchange", handlePageChange);
 
-  poll(function () { return document.body; }, function () {
-    console.log("MVT-307")
-    handlePageChange();
-    observeDOM();
-  });
+  // Run immediately for hard-reload, then observe for SPA navigations.
+  console.log('MVT-307');
+  handlePageChange();
+  observeDOM();
 })();
 

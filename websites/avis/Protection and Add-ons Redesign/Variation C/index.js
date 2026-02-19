@@ -28,9 +28,26 @@
     }, a);
   }
 
-  var EXP_ID = "avis-protection-variation-a";
-  var EXP_ID_2 = "avis-addOns-variation-A";
-  var TARGET_SELECTOR = '[data-testid="Protections-container"] > div > svg';
+  var mvtID = 'MVT-307';
+  var EXP_ID = "avis-protection-variation-c";
+  var EXP_ID_2 = "avis-addOns-variation-C";
+  var TARGET_SELECTOR_DEFAULT = '[data-testid="Protections-container"] > div > svg';
+  var TARGET_SELECTOR_AVIS_FIRST = '[data-testid="Protections-container"] div img';
+
+  function getTargetSelector() {
+    try {
+      var raw = sessionStorage.getItem('reservation.store');
+      if (raw) {
+        var store = JSON.parse(raw);
+        var state = store && (store.state || store);
+        if (state && state.isAvisFirst === true) {
+          return TARGET_SELECTOR_AVIS_FIRST;
+        }
+      }
+    } catch (e) { /* ignore */ }
+    return TARGET_SELECTOR_DEFAULT;
+  }
+
   var ADD_ON_PAGE = '[data-testid="AddOns-container"] > div';
   var TARGET_INDIVIDUAL_PROTECTION_SECTION = '[data-testid="single-protections-list-section-container"]';
   var svg = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"><path fill-rule="evenodd" clip-rule="evenodd" d="M19.8118 6.19684C20.0528 6.42427 20.0638 6.80401 19.8364 7.04501L9.96479 17.5055C9.72819 17.7562 9.32948 17.7564 9.09257 17.506L4.16415 12.2966C3.93641 12.0559 3.94694 11.6761 4.18766 11.4484C4.42837 11.2207 4.80812 11.2312 5.03586 11.4719L9.52788 16.22L18.9636 6.2214C19.1911 5.9804 19.5708 5.9694 19.8118 6.19684Z" fill="#4DC664" stroke="#8ACE97" stroke-linecap="round"/></svg>';
@@ -41,10 +58,10 @@
     '        <path d="M7.00022 17L17 7.00006M16.9998 16.9999L7 7" stroke="#A3A3A3" stroke-width="1.5"/>' +
     '        </svg>';
   var arrowDown = '<svg xmlns="http://www.w3.org/2000/svg" width="13" height="7" viewBox="0 0 13 7" fill="none">' +
-    '                      <mask id="path-1-inside-1_512_5469" fill="white">' +
-    '                      <path d="M6.40918 6.74563C6.31024 6.7456 6.21566 6.70604 6.14551 6.63626L0.10645 0.636257C0.0378715 0.565764 -0.000509358 0.47142 5.1061e-06 0.373073C0.000519571 0.274726 0.0395792 0.180638 0.108892 0.110866C0.178204 0.0410944 0.272269 0.00118986 0.370611 2.62624e-05C0.468952 -0.00113734 0.563827 0.0364063 0.634771 0.104518L6.40772 5.84231L12.105 0.106472C12.1755 0.0378926 12.2698 -0.000488202 12.3682 2.62624e-05C12.4665 0.000540727 12.5611 0.0400886 12.6309 0.109401C12.7006 0.178714 12.7401 0.272291 12.7412 0.370632C12.7424 0.468973 12.7048 0.563848 12.6367 0.634792L6.67579 6.63479C6.60578 6.70534 6.51101 6.74558 6.41163 6.74612L6.40918 6.74563Z"/>' +
-    '                      </mask>' +
-    '                      <path d="M6.40918 6.74563C6.31024 6.7456 6.21566 6.70604 6.14551 6.63626L0.10645 0.636257C0.0378715 0.565764 -0.000509358 0.47142 5.1061e-06 0.373073C0.000519571 0.274726 0.0395792 0.180638 0.108892 0.110866C0.178204 0.0410944 0.272269 0.00118986 0.370611 2.62624e-05C0.468952 -0.00113734 0.563827 0.0364063 0.634771 0.104518L6.40772 5.84231L12.105 0.106472C12.1755 0.0378926 12.2698 -0.000488202 12.3682 2.62624e-05C12.4665 0.000540727 12.5611 0.0400886 12.6309 0.109401C12.7006 0.178714 12.7401 0.272291 12.7412 0.370632C12.7424 0.468973 12.7048 0.563848 12.6367 0.634792L6.67579 6.63479C6.60578 6.70534 6.51101 6.74558 6.41163 6.74612L6.40918 6.74563Z" fill="black"/>' +
+    '                       <mask id="path-1-inside-1_512_5469" fill="white">' +
+    '                       <path d="M6.40918 6.74563C6.31024 6.7456 6.21566 6.70604 6.14551 6.63626L0.10645 0.636257C0.0378715 0.565764 -0.000509358 0.47142 5.1061e-06 0.373073C0.000519571 0.274726 0.0395792 0.180638 0.108892 0.110866C0.178204 0.0410944 0.272269 0.00118986 0.370611 2.62624e-05C0.468952 -0.00113734 0.563827 0.0364063 0.634771 0.104518L6.40772 5.84231L12.105 0.106472C12.1755 0.0378926 12.2698 -0.000488202 12.3682 2.62624e-05C12.4665 0.000540727 12.5611 0.0400886 12.6309 0.109401C12.7006 0.178714 12.7401 0.272291 12.7412 0.370632C12.7424 0.468973 12.7048 0.563848 12.6367 0.634792L6.67579 6.63479C6.60578 6.70534 6.51101 6.74558 6.41163 6.74612L6.40918 6.74563Z"/>' +
+    '                       </mask>' +
+    '                       <path d="M6.40918 6.74563C6.31024 6.7456 6.21566 6.70604 6.14551 6.63626L0.10645 0.636257C0.0378715 0.565764 -0.000509358 0.47142 5.1061e-06 0.373073C0.000519571 0.274726 0.0395792 0.180638 0.108892 0.110866C0.178204 0.0410944 0.272269 0.00118986 0.370611 2.62624e-05C0.468952 -0.00113734 0.563827 0.0364063 0.634771 0.104518L6.40772 5.84231L12.105 0.106472C12.1755 0.0378926 12.2698 -0.000488202 12.3682 2.62624e-05C12.4665 0.000540727 12.5611 0.0400886 12.6309 0.109401C12.7006 0.178714 12.7401 0.272291 12.7412 0.370632C12.7424 0.468973 12.7048 0.563848 12.6367 0.634792L6.67579 6.63479C6.60578 6.70534 6.51101 6.74558 6.41163 6.74612L6.40918 6.74563Z" fill="black"/>' +
     '                   </svg>';
   var checkIcon = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="10" viewBox="0 0 14 10" fill="none">' +
     '<path d="M13.2604 0.59375L4.55208 9.30208L0.59375 5.34375" stroke="#1EA238" stroke-width="1.1875" stroke-linecap="round" stroke-linejoin="round"/>' +
@@ -84,26 +101,29 @@
     );
 
     for (var i = 0; i < customBtns.length; i++) {
-      (function (customBtn) { // IIFE to capture customBtn for each iteration
+      (function (customBtn) {
         customBtn.addEventListener("click", function () {
+          var isAlreadySelected = customBtn.classList.contains("selected");
           var targetCode = customBtn.getAttribute("data-target-code");
-
           var data = getProtectionData(targetCode);
-          if (!data || !data.element) { // Added check for data itself
+          if (!data || !data.element) {
             return console.warn("body element not found");
           }
-          data.element.dispatchEvent(
-            new MouseEvent("click", {
-              bubbles: true,
-              cancelable: true,
-              view: window,
-            })
-          );
 
-          // Toggle selected class on the clicked button
-          if (customBtn.classList.contains("selected")) {
+          if (isAlreadySelected) {
+            // Deselect: click "No Protection" to clear the plan via the API
+            var noProtEl = document.querySelector('[data-testid="ancillaries-bundle"][data-code="No Protection"]');
+            if (noProtEl) {
+              noProtEl.dispatchEvent(
+                new MouseEvent("click", { bubbles: true, cancelable: true, view: window })
+              );
+            }
             customBtn.classList.remove("selected");
           } else {
+            // Select: click the target protection bundle
+            data.element.dispatchEvent(
+              new MouseEvent("click", { bubbles: true, cancelable: true, view: window })
+            );
             for (var j = 0; j < customBtns.length; j++) {
               customBtns[j].classList.remove("selected");
             }
@@ -161,7 +181,9 @@
 
   function disableOriginalFooterAccordion() {
     poll(
-      function () { return document.querySelector('[data-testid="action-footer-total-amount"]'); },
+      function () {
+        return document.querySelector('[data-testid="action-footer-total-amount"]');
+      },
       function () {
         if (window.innerWidth <= 1024) return;
         var accordionElemet = document.querySelector('[data-testid="action-footer-total-amount"]');
@@ -175,10 +197,64 @@
     );
   }
 
+  function injectSpinnerStyles() {
+    if (document.getElementById('avis-car-summary-spinner-styles')) return;
+    var style = document.createElement('style');
+    style.id = 'avis-car-summary-spinner-styles';
+    style.textContent = [
+      '@keyframes avis-mui-spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }',
+      '@keyframes avis-mui-dash {',
+      '  0%   { stroke-dasharray: 1px, 200px; stroke-dashoffset: 0; }',
+      '  50%  { stroke-dasharray: 100px, 200px; stroke-dashoffset: -15px; }',
+      '  100% { stroke-dasharray: 100px, 200px; stroke-dashoffset: -125px; }',
+      '}',
+      '.avis-car-summary-spinner-overlay {',
+      '  position: absolute; inset: 0;',
+      '  background: rgba(255,255,255,0.78);',
+      '  display: flex; align-items: center; justify-content: center;',
+      '  z-index: 100; border-radius: 8px;',
+      '}',
+      '.avis-car-summary-spinner-overlay .MuiCircularProgress-root {',
+      '  animation: avis-mui-spin 1.4s linear infinite;',
+      '  color: #D4002A;',
+      '}',
+      '.avis-car-summary-spinner-overlay .MuiCircularProgress-svg { display: block; }',
+      '.avis-car-summary-spinner-overlay .MuiCircularProgress-circle {',
+      '  stroke: currentColor;',
+      '  stroke-dasharray: 80px, 200px; stroke-dashoffset: 0;',
+      '  animation: avis-mui-dash 1.4s ease-in-out infinite;',
+      '}'
+    ].join('\n');
+    document.head.appendChild(style);
+  }
+
+  function showCarSummarySpinner() {
+    injectSpinnerStyles();
+    var sections = document.querySelectorAll('.new-protection-section .car-summary-section');
+    for (var s = 0; s < sections.length; s++) {
+      var section = sections[s];
+      if (section.querySelector('.avis-car-summary-spinner-overlay')) continue;
+      var overlay = document.createElement('div');
+      overlay.className = 'avis-car-summary-spinner-overlay';
+      overlay.innerHTML =
+        '<span class="MuiCircularProgress-root MuiCircularProgress-indeterminate MuiCircularProgress-colorPrimary" role="progressbar" style="width: 40px; height: 40px;">' +
+        '<svg class="MuiCircularProgress-svg" viewBox="22 22 44 44">' +
+        '<circle class="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate" cx="44" cy="44" r="20.2" fill="none" stroke-width="3.6"></circle>' +
+        '</svg></span>';
+      section.style.position = 'relative';
+      section.appendChild(overlay);
+    }
+  }
+
+  function hideCarSummarySpinner() {
+    var overlays = document.querySelectorAll('.avis-car-summary-spinner-overlay');
+    for (var o = 0; o < overlays.length; o++) {
+      overlays[o].parentNode.removeChild(overlays[o]);
+    }
+  }
 
   window.updateAvisCarSummary = function () {
     var section = document.querySelector(".new-protection-section .car-summary-section");
-
     if (!section) return;
 
     getSessionData();
@@ -191,14 +267,15 @@
     var rentalDays = priceCalc.rentalDays || "0";
     var unlimitedFreeMiles = priceCalc.rateTerms ? priceCalc.rateTerms.unlimitedMilage : false;
     var protectionBundle = priceCalc.protectionBundle;
-    var protectionBundleName = protectionBundle ? protectionBundle.code : "";
+    var protectionBundleName = protectionBundle ? protectionBundle.code === "No Protection" ? "" : protectionBundle.code : "";
     var protectionAndAddOnsTotal = (totals.addOnTotal || 0) + (totals.protectionTotal || 0);
 
     var protectionList = [];
     var addOnList = [];
     var protectionAndAddOnSavings = 0;
 
-    var totalSavings = priceCalc.savings ? Number(priceCalc.savings.totalSavings).toFixed(2) : "0.00";
+    var totalSavingsData = priceCalc.savings ? priceCalc.savings.totalSavings : "0.00";
+    var totalSavings = Number(totalSavingsData).toFixed(2);
     var discountCodeSavings = priceCalc.savings ? Number(priceCalc.savings.discountCodeSavings) : "0.00";
     var payNowSaving = priceCalc.savings ? Number(priceCalc.savings.payNowSavings) : "0.00";
 
@@ -269,9 +346,9 @@
       '      <span class="total-vehicle-rate-price-save">$' + vehicleRateDiscount + '</span>' +
       '     </div>' +
       '   </div>' +
-      '  <div class="accordion-item protection-accordion">' +
+      '  <div class="accordion-item protection-accordion"> ' +
       '    <div class="accordion-header" data-has-items="' + (combinedProtectionAddOns.length > 0) + '">' +
-      '     <div class="accordion-header-title protection-add-ons">Protections & Add-ons</div>' +
+      '     <div class="accordion-header-title protection-add-ons">Protections &amp; Add-ons</div>' +
       '     <div class="accordion-header-icon">' +
       '      <div class="accordion-header-icon-price">$' + protectionAndAddOnsTotal.toFixed(2) + '</div>' +
       '      <div class="accordion-header-icon-arrow" style="display: ' + (combinedProtectionAddOns.length > 0 ? 'block' : 'none') + ';">' + arrowDown + '</div>' +
@@ -365,21 +442,37 @@
     var originalFetch = window.fetch;
     window.fetch = function () {
       var args = arguments;
-      return originalFetch.apply(this, args).then(function (response) {
+      var self = this;
+      var url = args[0];
+      var isPriceCalc = typeof url === "string" && url.indexOf("/web/reservation/price/calculate") !== -1;
+
+      if (isPriceCalc) {
+        showCarSummarySpinner();
+      }
+
+      return originalFetch.apply(self, args).then(function (response) {
         try {
-          var url = args[0];
-          if (typeof url === "string" && url.indexOf("/web/reservation/price/calculate") !== -1) {
+          if (isPriceCalc) {
             response.clone().json().then(function (data) {
               window.__AVIS_PRICE_CALC__ = data;
               if (window.updateAvisCarSummary) {
-                setTimeout(function () { window.updateAvisCarSummary(); }, 100);
+                setTimeout(function () {
+                  window.updateAvisCarSummary();
+                  hideCarSummarySpinner();
+                }, 100);
               }
+            }).catch(function () {
+              hideCarSummarySpinner();
             });
           }
         } catch (e) {
           console.error("Interceptor error:", e);
+          hideCarSummarySpinner();
         }
         return response;
+      }).catch(function (err) {
+        if (isPriceCalc) hideCarSummarySpinner();
+        throw err;
       });
     };
   }
@@ -388,7 +481,9 @@
   function injectProtectionLayout() {
     if (document.getElementById(EXP_ID)) return;
 
-    var insertionPoint = document.querySelector(TARGET_SELECTOR);
+    var selector = getTargetSelector();
+    var isAvisFirst = selector === TARGET_SELECTOR_AVIS_FIRST;
+    var insertionPoint = document.querySelector(selector);
     if (!insertionPoint) return;
 
     var html = '<section class="new-protection-section" id="' + EXP_ID + '">' +
@@ -404,7 +499,9 @@
       '                </h2>' +
       '    ' +
       '              <div class="protection-cards">' +
-      '                <div class="protection-card">' +
+      '                <!-- Ultimate Protection Highlight -->' +
+      '                <div class="protection-card highlight">' +
+      '                  <div class="recomended">RECOMMENDED</div>' +
       '                  <div class="card-content-header">' +
       '                    <p class="card-title">Ultimate Protection</p>' +
       '                    <p class="ancillary-bundle-rating"><span class="active"></span> <span class="active"></span> <span class="active"></span> </p> ' +
@@ -424,13 +521,12 @@
       '                    <span class="per-day">/day</span>' +
       '                  </div>' +
       '                  <div class="btn-container">' +
-      '                    <button class="btn secondary custom-select-btn" data-target-code="Ultimate Protection">Select</button>' +
+      '                    <button class="btn primary custom-select-btn" data-target-code="Ultimate Protection">Add Protection</button>' +
       '                  </div>' +
       '                </div>' +
       ' ' +
-      '                <!-- Standard Protection Highlight -->' +
-      '                <div class="protection-card highlight">' +
-      '                  <div class="recomended">RECOMMENDED</div>' +
+      '                <!-- Enhance Protection -->' +
+      '                <div class="protection-card">' +
       '                  <div class="card-content-header">' +
       '                    <p class="card-title">Enhanced Protection</p>' +
       '                    <p class="ancillary-bundle-rating"><span class="active"></span> <span class="active"></span> <span></span> </p>' +
@@ -451,10 +547,11 @@
       '                    <span class="per-day">/day</span>' +
       '                  </div>' +
       '                  <div class="btn-container">' +
-      '                    <button class="btn primary custom-select-btn" data-target-code="Enhanced Protection">Add Protection</button>' +
+      '                    <button class="btn secondary custom-select-btn" data-target-code="Enhanced Protection">Select</button>' +
       '                  </div>' +
       '                </div>' +
       ' ' +
+      '                <!-- Essential Protection -->' +
       '                <div class="protection-card">' +
       '                  <div class="card-content-header">' +
       '                    <p class="card-title">Essential Protection</p>' +
@@ -483,55 +580,64 @@
       '            </div>' +
       '          </div>' +
       '          <!-- Car Summary Column -->' +
-      '          <div class="car-summary-column">' +
-      '            <div class="car-summary-section">' +
-      '               <p class="car-summary-title">Car Summary</p>' +
-      '               <!-- Placeholder for car summary -->' +
+      '          <div class="car-summary-column-wrapper">' +
+      '            <div class="car-summary-column">' +
+      '              <div class="car-summary-section">' +
+      '                <p class="car-summary-title">Car Summary</p>' +
+      '                <!-- Placeholder for car summary -->' +
+      '              </div>' +
       '            </div>' +
       '          </div>' +
       '        </div>' +
       '      </section>';
 
     insertionPoint.insertAdjacentHTML("beforebegin", html);
-    insertionPoint.style.display = "none";
-    var targetContainer = document.querySelector('[data-testid="Protections-container"] > div > div');
-    if (targetContainer) targetContainer.style.display = "none";
+    if (isAvisFirst) {
+      insertionPoint.style.setProperty('display', 'none', 'important');
+      var AVIS_FIRST_HIDE_SELECTOR = '[data-testid="Protections-container"] > div:nth-child(2) > div:nth-child(2)';
+      poll(
+        function () { return document.querySelector(AVIS_FIRST_HIDE_SELECTOR); },
+        function () {
+          var el = document.querySelector(AVIS_FIRST_HIDE_SELECTOR);
+          el.style.setProperty('display', 'none', 'important');
+        },
+        false, 5000
+      );
+    } else {
+      insertionPoint.style.setProperty('display', 'none', 'important');
+      var targetContainer = document.querySelector('[data-testid="Protections-container"] > div > div');
+      if (targetContainer) targetContainer.style.setProperty('display', 'none', 'important');
+    }
+
     var targetIndividualProtectionSection = document.querySelector(TARGET_INDIVIDUAL_PROTECTION_SECTION);
 
     poll(
-      function () { return document.querySelector(".protection-cards-section"); },
+      function () {
+        return document.querySelector(".protection-cards-section");
+      },
       function () {
         var protectionCardSection = document.querySelector(".protection-cards-section");
         protectionCardSection.insertAdjacentElement("afterend", targetIndividualProtectionSection);
       }
     );
 
-    var protections = [
-      {
-        code: "Ultimate Protection",
-        cardTitle: "Ultimate Protection"
-      },
-      {
-        code: "Enhanced Protection",
-        cardTitle: "Enhanced Protection"
-      },
-      {
-        code: "Essential Protection",
-        cardTitle: "Essential Protection"
-      }
+    var protectionItems = [
+      { code: "Ultimate Protection", cardTitle: "Ultimate Protection" },
+      { code: "Enhanced Protection", cardTitle: "Enhanced Protection" },
+      { code: "Essential Protection", cardTitle: "Essential Protection" }
     ];
 
-    for (var i = 0; i < protections.length; i++) {
-      var prot = protections[i];
+    for (var i = 0; i < protectionItems.length; i++) {
+      var prot = protectionItems[i];
       var data = getProtectionData(prot.code);
       if (!data) continue;
 
-      var cardList = document.querySelectorAll("#" + EXP_ID + " .protection-card");
+      var allCards = document.querySelectorAll("#" + EXP_ID + " .protection-card");
       var card = null;
-      for (var j = 0; j < cardList.length; j++) {
-        var titleEl = cardList[j].querySelector(".card-title");
+      for (var j = 0; j < allCards.length; j++) {
+        var titleEl = allCards[j].querySelector(".card-title");
         if (titleEl && titleEl.textContent.trim() === prot.cardTitle) {
-          card = cardList[j];
+          card = allCards[j];
           break;
         }
       }
@@ -567,16 +673,19 @@
   function injectCarSummaryOnly() {
     if (document.getElementById(EXP_ID_2)) return;
 
-
     var insertionPoint = document.querySelector(ADD_ON_PAGE);
     if (!insertionPoint) return;
 
     var html = '<section class="new-protection-section" id="' + EXP_ID_2 + '">' +
       '        <div class="protection-container-grid">' +
       '          <div class="protection-cards-column"></div>' +
-      '          <div class="car-summary-column">' +
-      '            <div class="car-summary-section">' +
-      '               <p class="car-summary-title">Car Summary</p>' +
+      '          <!-- Car Summary Column -->' +
+      '          <div class="car-summary-column-wrapper">' +
+      '            <div class="car-summary-column">' +
+      '              <div class="car-summary-section">' +
+      '                <p class="car-summary-title">Car Summary</p>' +
+      '                <!-- Placeholder for car summary -->' +
+      '              </div>' +
       '            </div>' +
       '          </div>' +
       '        </div>' +
@@ -591,35 +700,48 @@
     // Look for original elements that need to be moved into the new grid
     var selectSvg = insertionPoint.querySelector(':scope > svg');
     if (selectSvg) selectSvg.style.zIndex = "0";
-
     var selectTravelPck = insertionPoint.querySelector(':scope > div:not(#' + EXP_ID_2 + '):not(#' + EXP_ID + ')');
     if (selectTravelPck) {
       selectTravelPck.style.paddingTop = "35px";
       var TravelPackHeader = selectTravelPck.querySelector("div");
       if (TravelPackHeader) TravelPackHeader.style.zIndex = "1";
     }
-
     var addOnsPackages = document.querySelector('[data-testid="ancillaries-bundles-container"]');
     if (addOnsPackages) addOnsPackages.style.zIndex = "1";
-
     var selectAddOnsList = document.querySelector('[data-testid="single-addons-list-section-container"]');
     var targetParentEl = document.querySelectorAll('[data-testid="single-addons-category-section-container"]');
     var singleAddOnsCategoryHeader = document.querySelectorAll('[data-testid="single-addons-category-name"]');
 
-    for (var k = 0; k < singleAddOnsCategoryHeader.length; k++) {
-      (function (header, index) {
-        header.style.marginBottom = "20px";
-        if (targetParentEl[index]) {
-          targetParentEl[index].parentElement.insertAdjacentElement("afterbegin", header);
-        }
-      })(singleAddOnsCategoryHeader[k], k);
+    for (var i = 0; i < singleAddOnsCategoryHeader.length; i++) {
+      var header = singleAddOnsCategoryHeader[i];
+      header.style.marginBottom = "20px";
+      if (targetParentEl[i]) {
+        targetParentEl[i].parentElement.insertAdjacentElement("afterbegin", header);
+      }
     }
-
 
     if (cardsColumn) {
       if (selectSvg) cardsColumn.appendChild(selectSvg);
       if (selectTravelPck) cardsColumn.appendChild(selectTravelPck);
       if (selectAddOnsList) cardsColumn.appendChild(selectAddOnsList);
+    }
+
+    // For Avis First: place the avis-first logo grandparent as the 2nd child of cardsColumn
+    if (getTargetSelector() === TARGET_SELECTOR_AVIS_FIRST) {
+      poll(
+        function () {
+          return document.querySelector('[data-testid="avis-first-long-logo"]');
+        },
+        function () {
+          var logoEl = document.querySelector('[data-testid="avis-first-long-logo"]');
+          var avisFirstBlock = logoEl.parentElement.parentElement;
+          if (cardsColumn && avisFirstBlock) {
+            var secondChild = cardsColumn.children[1] || null;
+            cardsColumn.insertBefore(avisFirstBlock, secondChild);
+          }
+        },
+        false, 5000
+      );
     }
 
     window.updateAvisCarSummary();
@@ -640,22 +762,43 @@
   }
 
   function runProtection() {
+    // First wait for sessionStorage to be populated by the app (SPA navigation
+    // writes reservation.store asynchronously after the URL changes).
+    console.log("runProtection");
     poll(
-      function () { return document.querySelector(TARGET_SELECTOR); },
-      function () { injectProtectionLayout(); }
+      function () {
+        try { return !!sessionStorage.getItem('reservation.store'); }
+        catch (e) { return false; }
+      },
+      function () {
+        var selector = getTargetSelector();
+        poll(
+          function () { return document.querySelector(selector); },
+          function () { injectProtectionLayout(); }
+        );
+      },
+      false, 10000
     );
   }
 
   function runAddOns() {
     poll(
-      function () { return document.querySelector(ADD_ON_PAGE); },
-      function () { injectCarSummaryOnly(); }
+      function () {
+        return document.querySelector(ADD_ON_PAGE);
+      },
+      function () {
+        injectCarSummaryOnly();
+      }
     );
   }
 
   function observeDOM() {
+    var debounceTimer = null;
     var observer = new MutationObserver(function () {
-      handlePageChange();
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(function () {
+        handlePageChange();
+      }, 50);
     });
 
     observer.observe(document.body, {
@@ -666,13 +809,8 @@
 
   window.addEventListener("locationchange", handlePageChange);
 
-  poll(
-    function () { return document.body; },
-    function () {
-      console.log("MVT-307")
-      handlePageChange();
-      observeDOM();
-    }
-  );
+  // Run immediately for hard-reload case, then observe for SPA navigations.
+  console.log(mvtID);
+  handlePageChange();
+  observeDOM();
 })();
-

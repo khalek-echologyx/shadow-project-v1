@@ -836,6 +836,25 @@
       if (selectAddOnsList) cardsColumn.appendChild(selectAddOnsList);
     }
 
+    // For Avis First: place the avis-first logo grandparent as the 2nd child of cardsColumn
+    if (getTargetSelector() === TARGET_SELECTOR_AVIS_FIRST) {
+      poll(
+        function () {
+          return document.querySelector('[data-testid="avis-first-long-logo"]');
+        },
+        function () {
+          var logoEl = document.querySelector('[data-testid="avis-first-long-logo"]');
+          var avisFirstBlock = logoEl.parentElement.parentElement;
+          if (cardsColumn && avisFirstBlock) {
+            // Insert as the second child (after whatever is first)
+            var secondChild = cardsColumn.children[1] || null;
+            cardsColumn.insertBefore(avisFirstBlock, secondChild);
+          }
+        },
+        false, 5000
+      );
+    }
+
     window.updateAvisCarSummary();
     disableOriginalFooterAccordion();
   }
