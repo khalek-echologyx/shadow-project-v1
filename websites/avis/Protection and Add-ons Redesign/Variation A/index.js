@@ -265,7 +265,7 @@
     var rentalDays = priceCalc.rentalDays || "0";
     var unlimitedFreeMiles = priceCalc.rateTerms ? priceCalc.rateTerms.unlimitedMilage : false;
     var protectionBundle = priceCalc.protectionBundle;
-    var protectionBundleName = protectionBundle ? protectionBundle.code : "";
+    var protectionBundleName = protectionBundle ? protectionBundle.code === "No Protection" ? "" : protectionBundle.code : "";
     var protectionAndAddOnsTotal = (totals.addOnTotal || 0) + (totals.protectionTotal || 0);
 
     var protectionList = [];
@@ -597,7 +597,6 @@
         function () { return document.querySelector(AVIS_FIRST_HIDE_SELECTOR); },
         function () {
           var el = document.querySelector(AVIS_FIRST_HIDE_SELECTOR);
-          console.log('[MVT] Avis First hide element found:', el);
           el.style.setProperty('display', 'none', 'important');
         },
         false, 5000
@@ -702,11 +701,83 @@
       function () {
         var targetSection = document.querySelector('[data-testid="single-protections-list-section-container"]');
         targetSection.insertAdjacentHTML("afterend", optOutSectin);
+
         var noProtectionEl = document.querySelector('[data-testid="ancillaries-bundle"][data-code="No Protection"]');
         var declineProtectionLabel = document.getElementById("decline-protection-label");
+
+        declineProtectionLabel.addEventListener("click", function () {
+          if (noProtectionEl) noProtectionEl.click();
+          setTimeout(checkState, 100);
+        });
       }
     );
+
+    // identify continue cta
+    var contCta = $('button[data-testid="action-footer-cta-button"]');
+
+    function checkState() {
+      // check for active bundle (paid, not "No Protection")
+      var activeBundle = $('.ancillaries-bundle--selected').not('[data-code="No Protection"]').length > 0;
+
+      // check for active individual items
+      var activeItems = $('div[data-testid="single-protections-item-add-to-trip-btn"] input:checked').length > 0;
+
+      // check for included items
+      var includedItems = $('span[data-testid="single-protections-item-included-in-bundle"]').filter(function () {
+        return $(this).text() === "Included";
+      }).length > 0;
+
+      // check if decline checkbox is checked
+      var declineChecked = $('#avis-opt-out-option-a input[type="checkbox"]').is(':checked');
+
+      // enable CTA if any selection made
+      var shouldEnable = activeBundle || activeItems || includedItems || declineChecked;
+      // hide opt-out section if a paid protection is active
+      var shouldHide = activeBundle || activeItems || includedItems;
+
+      var isDisabled = contCta.is(':disabled');
+
+      if (shouldEnable && isDisabled) {
+        contCta.removeAttr('disabled');
+      } else if (!shouldEnable && !isDisabled) {
+        contCta.attr('disabled', '');
+      }
+
+      if (shouldHide) {
+        $('#avis-opt-out-container').slideUp();
+        $('#avis-opt-out-option-a input[type="checkbox"]').prop('checked', false);
+      } else {
+        $('#avis-opt-out-container').slideDown();
+      }
+
+      if (activeBundle) {
+        $('body').addClass('bundle-active');
+      } else {
+        $('body').removeClass('bundle-active');
+      }
+    }
+
+    // run on load
+    setTimeout(checkState, 500);
+
+    // watch CTA button attribute changes
+    if (contCta.length > 0) {
+      var ctaObserver = new MutationObserver(function () {
+        checkState();
+      });
+      ctaObserver.observe(contCta[0], {
+        attributes: true,
+        childList: false,
+        subtree: false
+      });
+    }
+
+    // re-run checkState on any relevant interaction
+    $(document).on('click', '[data-testid="ancillaries-bundle"], [data-testid="single-protections-item-add-to-trip-btn"], #avis-opt-out-option-a', function () {
+      setTimeout(checkState, 200);
+    });
   }
+
 
 
   function injectCarSummaryOnly() {
@@ -718,9 +789,13 @@
     var html = '<section class="new-protection-section" id="' + EXP_ID_2 + '">' +
       '        <div class="protection-container-grid">' +
       '          <div class="protection-cards-column"></div>' +
-      '          <div class="car-summary-column">' +
-      '            <div class="car-summary-section">' +
-      '               <p class="car-summary-title">Car Summary</p>' +
+      '          <!-- Car Summary Column -->' +
+      '          <div class="car-summary-column-wrapper">' +
+      '            <div class="car-summary-column">' +
+      '              <div class="car-summary-section">' +
+      '                <p class="car-summary-title">Car Summary</p>' +
+      '                <!-- Placeholder for car summary -->' +
+      '              </div>' +
       '            </div>' +
       '          </div>' +
       '        </div>' +
