@@ -5,9 +5,11 @@
   "website": "avis",
   "variations": [
     "control",
-    "Variation A"
+    "Variation A",
+    "Variation B",
+    "Var C"
   ],
   "createdAt": "2026-02-18T05:25:35.797Z",
   "createdAtReadable": "2/18/2026, 11:25:35 AM",
-  "lastUpdated": "2026-02-18T05:25:35.982Z"
+  "lastUpdated": "2026-02-19T10:27:16.230Z"
 }

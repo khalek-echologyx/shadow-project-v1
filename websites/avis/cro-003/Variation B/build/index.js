@@ -1,8 +1,7 @@
 (function () {
-
   // --- CONFIGURATION VARIABLES ---
-  var mvtID = 'MVT-308';
-  var pagePaths = ['/en/reservation/protectioncoverage'];
+  var mvtID = "MVT-308";
+  var pagePaths = ["/en/reservation/protectioncoverage"];
   var waitElem = '[data-testid="ancillaries-bundle"]';
   var intervalTime = 100;
   var maxWaitTime = 10000;
@@ -30,13 +29,18 @@
   // --- MAIN LOGIC ---
   function applyCode() {
     if (checkIsAvisFirst()) {
-      var targetElem = document.querySelector('[data-testid="avis-first-long-logo"]').nextSibling;      if (targetElem) {
-        targetElem.innerText = "Avoid unexpected costs with our protection packages.";
+      var targetElem = document.querySelector(
+        '[data-testid="avis-first-long-logo"]',
+      ).nextSibling;
+      if (targetElem) {
+        targetElem.innerText = "What level of protection do you need?";
       }
     } else {
-      var targetElem = document.querySelector('[data-testid="Protections-container"] h4');
+      var targetElem = document.querySelector(
+        '[data-testid="Protections-container"] h4',
+      );
       if (targetElem) {
-        targetElem.innerText = "Avoid unexpected costs with our protection packages.";
+        targetElem.innerText = "What level of protection do you need?";
       }
     }
   }
@@ -46,7 +50,6 @@
     var startTime = Date.now();
 
     var interval = setInterval(function () {
-
       if (Date.now() - startTime > maxWaitTime) {
         clearInterval(interval);
         return;
@@ -60,15 +63,12 @@
           applyCode();
         }
       }
-
     }, intervalTime);
   }
 
   // --- ROUTE WATCHER (Fixes First Load Issue) ---
   var routeInterval = setInterval(function () {
-
     if (isValidPage()) {
-
       if (!document.body.classList.contains(mvtID)) {
         document.body.classList.add(mvtID);
         startElementPolling();
@@ -76,7 +76,5 @@
 
       clearInterval(routeInterval);
     }
-
   }, 100);
-
 })();

@@ -71,10 +71,7 @@
     if (isValidPage()) {
 
       if (!document.body.classList.contains(mvtID)) {
-
         document.body.classList.add(mvtID);
-        console.log("MVT-308 initialized on:", window.location.pathname);
-
         startElementPolling();
       }
 

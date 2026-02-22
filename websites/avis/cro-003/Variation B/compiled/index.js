@@ -31,12 +31,12 @@
   function applyCode() {
     if (checkIsAvisFirst()) {
       var targetElem = document.querySelector('[data-testid="avis-first-long-logo"]').nextSibling;      if (targetElem) {
-        targetElem.innerText = "Avoid unexpected costs with our protection packages.";
+        targetElem.innerText = "What level of protection do you need?";
       }
     } else {
       var targetElem = document.querySelector('[data-testid="Protections-container"] h4');
       if (targetElem) {
-        targetElem.innerText = "Avoid unexpected costs with our protection packages.";
+        targetElem.innerText = "What level of protection do you need?";
       }
     }
   }
