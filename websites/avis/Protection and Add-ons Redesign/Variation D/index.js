@@ -316,7 +316,7 @@
     section.innerHTML = '<p class="car-summary-title">Car Summary</p>' +
       '<div class="summary-content">' +
       '   <div class="vehicle-info">' +
-      '     <div class="vehicle-name-container">' + '<p class="vehicle-name">' + vehicleData.name + '</p>' + (vehicleData.showSimilar ? '<p class="vehicle-similar"> or Similar</p>' : '') + '</div>' +
+      '     <div class="vehicle-name-container">' + '<p class="vehicle-name">' + vehicleData.name + '</p>' + (vehicleData.showSimilar ? '<p class="vehicle-similar"> or similar</p>' : '') + '</div>' +
       '     ' + imageHtml +
       '   </div>' +
       '   <div class="location-info">' +

@@ -428,7 +428,7 @@
       vehicleData.name +
       "</p>" +
       (vehicleData.showSimilar
-        ? '<p class="vehicle-similar"> or Similar</p>'
+        ? '<p class="vehicle-similar"> or similar</p>'
         : "") +
       "</div>" +
       "     " +

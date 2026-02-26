@@ -249,6 +249,7 @@
   width: 24px;
   height: 24px;
   cursor: pointer;
+  fill: #BDBDBD;
 }
 
 .feature-list {
@@ -276,6 +277,10 @@
 
 .feature-list li p span:first-child {
   margin-bottom: -5px;
+}
+
+.selected .features p {
+  font-size: 15.43px;
 }
 
 .price {

@@ -258,6 +258,7 @@
   width: 24px;
   height: 24px;
   cursor: pointer;
+  fill: #bdbdbd;
 }
 
 .feature-list {
@@ -284,6 +285,10 @@
 
 .feature-list li p span:first-child {
   margin-bottom: -5px;
+}
+
+.selected .features p {
+  font-size: 15.43px;
 }
 
 .price {
@@ -1176,7 +1181,7 @@
       vehicleData.name +
       "</p>" +
       (vehicleData.showSimilar
-        ? '<p class="vehicle-similar"> or Similar</p>'
+        ? '<p class="vehicle-similar"> or similar</p>'
         : "") +
       "</div>" +
       "     " +
