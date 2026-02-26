@@ -76,13 +76,13 @@
 }
 
 .protection-title {
-  text-align: center;
   font-size: 24px;
   font-weight: 700;
   letter-spacing: 0.3px !important;
   margin: 0 !important;
-  padding-top: 25px;
-  padding-bottom: 50px;
+  padding-top: 21px;
+  padding-bottom: 44px;
+  line-height: 28px;
 }
 
 .protection-cards {
@@ -98,10 +98,53 @@
   border: 1px solid #d4d4d4;
   letter-spacing: 0.3px !important;
   flex: 1;
+  cursor: pointer;
+  box-sizing: border-box;
 }
 
-.protection-card.highlight {
-  margin-top: -36px;
+.protection-card:hover {
+  border: 1px solid #000;
+}
+
+.protection-card.selected:not(.ultimate-card) {
+  border: 3px solid #000 !important;
+  border-radius: 11px;
+  transform: scaleY(1.05);
+  z-index: 2;
+}
+
+.protection-card.selected.ultimate-card {
+  border: 3px solid #000 !important;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+}
+
+.protection-card.selected {
+  border: 3px solid #000 !important;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 12px;
+}
+
+.ultimate-card {
+  margin-top: -40px;
+  border: 1px solid rgb(167, 167, 167);
+  border-bottom: 1px solid rgb(199, 199, 199);
+}
+
+.ultimate-card .card-content-header {
+  border-radius: 0 !important;
+}
+
+.recomended {
+  background-color: #000;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 100%;
+  letter-spacing: 0.84px;
+  text-align: center;
+  padding: 10px 0;
+  border-radius: 8px 8px 0 0;
 }
 
 .protection-card.highlight .recomended {
@@ -120,6 +163,7 @@
   background: #88001b;
   border-radius: 0;
   min-height: 176px;
+  border-radius: 8px 8px 0 0;
 }
 
 .card-content-header {
@@ -127,6 +171,10 @@
   background-color: #151d28;
   border-radius: 8px 8px 0 0;
   min-height: 176px;
+}
+
+.selected .card-content-header {
+  min-height: 196px;
 }
 
 .card-title {
@@ -139,21 +187,33 @@
   margin-bottom: 6px;
 }
 
-.ancillary-bundle-rating {
+.highlight .card-title {
+  font-size: 24px;
+  line-height: 31px;
+}
+
+.rating-mvt-307 {
   margin: 0;
   margin-bottom: 6px;
+  gap: 2px;
 }
 
-.ancillary-bundle-rating span {
-  width: 16px;
-  height: 9px;
+.highlight .rating-mvt-307 {
+  gap: 2.2px;
+}
+
+.rating-mvt-307 div {
   background-color: rgba(225, 225, 225, 0.3019607843);
-  display: inline-block;
-  border-radius: 2px;
+  margin: 0;
 }
 
-.ancillary-bundle-rating span.active {
+.rating-mvt-307 div.active {
   background-color: #e86400;
+}
+
+.protection-card.highlight .card-content-header .rating-mvt-307 div {
+  width: 17px;
+  height: 7px;
 }
 
 .card-desc {
@@ -162,10 +222,31 @@
   margin: 0;
 }
 
+.highlight .card-desc {
+  font-size: 15.43px;
+  line-height: 22px;
+}
+
 .protection-card .features {
   background-color: #fff;
   margin-bottom: 0;
   padding: 16px 12px;
+}
+
+.features [data-testid="ancillaries-bundle-item-excluded"] p {
+  color: rgb(167, 167, 167) !important;
+}
+
+.features [data-testid="ancillaries-bundle-item-included"] svg {
+  fill: #bdbdbd;
+}
+
+.features
+  [data-testid="ancillaries-bundle-item-excluded"]
+  div:first-child
+  svg
+  path {
+  stroke: #a3a3a3 !important;
 }
 
 .protection-card .features > div > div:last-child > svg {
@@ -204,7 +285,7 @@
 .price {
   background-color: #fff;
   text-align: center;
-  padding: 16px 0;
+  padding: 0 12px;
 }
 
 .old-price {
@@ -214,21 +295,30 @@
   line-height: 18px;
   letter-spacing: 0.3px !important;
   vertical-align: middle;
+  margin-right: 4px;
 }
 
 .new-price {
-  font-size: 30px;
+  font-size: 28px;
   font-weight: 500;
   color: #000;
   line-height: 28px;
 }
 
+.highlight .new-price {
+  font-size: 30px;
+}
+
 .per-day {
   font-size: 16px;
   color: #000;
-  line-height: 20px;
+  line-height: 22.05px;
   vertical-align: text-bottom;
   font-weight: 500;
+}
+
+.highlight .per-day {
+  font-size: 17.64px;
 }
 
 .btn-container {
@@ -245,6 +335,10 @@
   cursor: pointer;
   width: 100%;
   font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
 .btn.selected {
@@ -252,28 +346,25 @@
 }
 
 .btn.selected::after {
-  content: "Selected";
-  position: absolute;
-  top: 0;
-  left: 0;
-  background: #e8e6e6;
-  color: #979696;
-  width: 100%;
-  height: 100%;
-  border-radius: 6px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  content: none;
 }
 
 .btn.primary {
   background: #d4002a;
   color: #fff;
+  font-weight: 500;
+  font-size: 15.43px;
+  font-family: "AvisSans";
+  letter-spacing: 0.3px !important;
 }
 
 .btn.secondary {
   background: #000;
   color: #fff;
+  font-weight: 500;
+  font-size: 14px;
+  font-family: "AvisSans";
+  letter-spacing: 0.3px;
 }
 
 .protection-container-grid {
@@ -309,6 +400,7 @@
   align-self: start;
   height: fit-content;
   margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .car-summary-section .car-summary-title {
@@ -337,9 +429,14 @@
 }
 .car-summary-section .vehicle-info {
   display: flex;
-  align-items: center;
+  align-items: start;
   justify-content: space-between;
   padding: 0 24px;
+}
+.car-summary-section .vehicle-info .vehicle-name-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 .car-summary-section .vehicle-info .vehicle-name {
   font-weight: 500;
@@ -347,9 +444,18 @@
   line-height: 20px;
   letter-spacing: 0.3px !important;
   color: #000;
+  margin: 0;
+  padding-bottom: 4px;
+}
+.car-summary-section .vehicle-info .vehicle-similar {
+  margin: 0;
+  color: #808080;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.3px !important;
 }
 .car-summary-section .location-info {
-  margin-top: 12px;
+  margin-top: 6px;
   margin-bottom: 16px;
   padding: 0 24px;
 }
@@ -372,22 +478,24 @@
 }
 .car-summary-section .location-info .loc-label,
 .car-summary-section .location-info .loc-date {
-  font-weight: 700;
+  font-weight: 500;
   font-size: 14px;
   color: #000;
   margin-bottom: 4px;
-  line-height: 1.2;
+  line-height: 20px;
+  letter-spacing: 0.3px !important;
 }
 .car-summary-section .location-info .loc-name,
 .car-summary-section .location-info .loc-time {
   font-size: 14px;
   color: #524d4d;
-  line-height: 1.4;
+  line-height: 20px;
+  letter-spacing: 0.3px !important;
 }
 .car-summary-section .total-vehicle-rate {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
+  align-items: center;
   margin-top: 16px;
   padding: 0 24px;
 }
@@ -396,6 +504,12 @@
   line-height: 20px;
   color: #000;
   font-weight: 500;
+}
+.car-summary-section
+  .total-vehicle-rate-content
+  .total-vehicle-rate-title
+  .rental-days {
+  font-weight: 400;
 }
 .car-summary-section .total-vehicle-rate-content .total-vehicle-rate-subtitle {
   font-size: 14px;
@@ -438,6 +552,10 @@
 }
 .car-summary-section .accordion-item .accordion-footer .pr-added-footer span {
   color: #1ea238;
+  font-weight: 500;
+}
+.car-summary-section .terms-content {
+  color: rgb(0, 0, 0) !important;
 }
 .car-summary-section .protection-not-added {
   color: #e90c38;
@@ -448,8 +566,8 @@
   background: none;
   text-align: left;
   font-size: 14px;
-  font-weight: 600;
-  color: #333;
+  font-weight: 500;
+  color: #000;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
@@ -469,6 +587,8 @@
   color: #736d6d;
   font-weight: 400;
   text-decoration: underline;
+  letter-spacing: 0.3px;
+  line-height: 12px;
 }
 .car-summary-section .accordion-header:hover {
   background: rgb(244, 243, 242);
@@ -491,7 +611,13 @@
   font-size: 14px;
   line-height: 20px;
   color: #000;
-  font-weight: 600;
+  font-weight: 400;
+}
+.car-summary-section .protection-add-ons-price {
+  font-weight: 500;
+}
+.car-summary-section .accordion-header-icon-price.savings-price {
+  color: #388a13;
 }
 .car-summary-section .accordion-header-icon-arrow {
   font-size: 18px;
@@ -543,13 +669,21 @@
 }
 .car-summary-section .price-info .total-label {
   font-size: 16px;
-  line-height: 20px;
+  line-height: 24px;
   color: #000;
   font-weight: 500;
+  letter-spacing: 0.3px !important;
 }
 .car-summary-section .price-info .total-price {
-  font-weight: 700;
-  font-size: 18px;
+  font-size: 16px;
+  line-height: 24px;
+  color: #000;
+  font-weight: 500;
+  letter-spacing: 0.3px !important;
+}
+
+.accordion-footer {
+  font-size: 14px;
 }
 
 #avis-addOns-variation-A .protection-cards-column {
@@ -652,6 +786,9 @@
   .opt-out-section {
     margin: 0 16px;
   }
+  .protection-card.selected:not(.ultimate-card) {
+    transform: none;
+  }
 }
 @media (max-width: 1024px) {
   .car-summary-column {
@@ -664,5 +801,11 @@
 @media (min-width: 1025px) {
   [data-testid="action-footer-total-amount"] {
     cursor: default !important;
+  }
+}
+@media (max-width: 1359px) {
+  .card-content-header,
+  .protection-card.highlight .card-content-header {
+    min-height: 216px;
   }
 }

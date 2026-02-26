@@ -1,0 +1,13 @@
+{
+  "id": "1771859193795_8672_Prioritize_FAQs",
+  "name": "Prioritize FAQs",
+  "type": "A/B",
+  "website": "Brunt",
+  "variations": [
+    "control",
+    "Variation A"
+  ],
+  "createdAt": "2026-02-23T15:06:33.795Z",
+  "createdAtReadable": "2/23/2026, 9:06:33 PM",
+  "lastUpdated": "2026-02-23T15:06:33.935Z"
+}

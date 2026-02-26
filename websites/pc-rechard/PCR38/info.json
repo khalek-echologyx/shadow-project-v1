@@ -1,0 +1,13 @@
+{
+  "id": "1771931397698_9666_PCR38",
+  "name": "PCR38",
+  "type": "A/B",
+  "website": "pc-rechard",
+  "variations": [
+    "control",
+    "Variation A"
+  ],
+  "createdAt": "2026-02-24T11:09:57.698Z",
+  "createdAtReadable": "2/24/2026, 5:09:57 PM",
+  "lastUpdated": "2026-02-24T11:09:57.810Z"
+}

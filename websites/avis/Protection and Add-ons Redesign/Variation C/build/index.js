@@ -78,6 +78,10 @@
     "                       </mask>" +
     '                       <path d="M6.40918 6.74563C6.31024 6.7456 6.21566 6.70604 6.14551 6.63626L0.10645 0.636257C0.0378715 0.565764 -0.000509358 0.47142 5.1061e-06 0.373073C0.000519571 0.274726 0.0395792 0.180638 0.108892 0.110866C0.178204 0.0410944 0.272269 0.00118986 0.370611 2.62624e-05C0.468952 -0.00113734 0.563827 0.0364063 0.634771 0.104518L6.40772 5.84231L12.105 0.106472C12.1755 0.0378926 12.2698 -0.000488202 12.3682 2.62624e-05C12.4665 0.000540727 12.5611 0.0400886 12.6309 0.109401C12.7006 0.178714 12.7401 0.272291 12.7412 0.370632C12.7424 0.468973 12.7048 0.563848 12.6367 0.634792L6.67579 6.63479C6.60578 6.70534 6.51101 6.74558 6.41163 6.74612L6.40918 6.74563Z" fill="black"/>' +
     "                   </svg>";
+  var whiteCheckSvg =
+    '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="14" viewBox="0 0 18 14" fill="none">' +
+    '<path fill-rule="evenodd" clip-rule="evenodd" d="M16.8118 1.16363C17.0528 1.39107 17.0638 1.7708 16.8364 2.0118L6.96479 12.4723C6.72819 12.723 6.32948 12.7232 6.09257 12.4728L1.16415 7.2634C0.936413 7.02269 0.946938 6.64293 1.18766 6.4152C1.42837 6.18747 1.80812 6.19799 2.03586 6.43871L6.52788 11.1868L15.9636 1.1882C16.1911 0.947198 16.5708 0.9362 16.8118 1.16363Z" fill="white" stroke="white" stroke-width="2" stroke-linecap="round"/>' +
+    "</svg>";
   var checkIcon =
     '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="10" viewBox="0 0 14 10" fill="none">' +
     '<path d="M13.2604 0.59375L4.55208 9.30208L0.59375 5.34375" stroke="#1EA238" stroke-width="1.1875" stroke-linecap="round" stroke-linejoin="round"/>' +
@@ -89,6 +93,11 @@
     var bundle = document.querySelector(selector);
 
     if (!bundle) return null;
+
+    //Rating
+    var rating = bundle.querySelector(
+      '[data-testid="ancillaries-bundle-rating"]',
+    );
 
     // Feature list (UL > LI)
     var body = bundle.querySelector('[data-testid="ancillaries-bundle-body"]');
@@ -113,24 +122,26 @@
       oldPrice: oldPrice,
       newPrice: newPrice,
       element: bundle,
+      rating,
     };
   }
 
   function bindCustomSelectButton() {
-    var customBtns = document.querySelectorAll(
-      "#" + EXP_ID + " .custom-select-btn",
-    );
+    var cards = document.querySelectorAll("#" + EXP_ID + " .protection-card");
 
-    for (var i = 0; i < customBtns.length; i++) {
-      (function (customBtn) {
-        customBtn.addEventListener("click", function () {
-          var isAlreadySelected = customBtn.classList.contains("selected");
-          var targetCode = customBtn.getAttribute("data-target-code");
+    for (var i = 0; i < cards.length; i++) {
+      (function (card) {
+        card.addEventListener("click", function (e) {
+          var btn = card.querySelector(".custom-select-btn");
+          var isAlreadySelected = btn.classList.contains("selected");
+          var targetCode = btn.getAttribute("data-target-code");
           var data = getProtectionData(targetCode);
+
           if (!data || !data.element) {
             return console.warn("body element not found");
           }
 
+          // Handle selection and deselection
           if (isAlreadySelected) {
             // Deselect: click "No Protection" to clear the plan via the API
             var noProtEl = document.querySelector(
@@ -145,9 +156,8 @@
                 }),
               );
             }
-            customBtn.classList.remove("selected");
           } else {
-            // Select: click the target protection bundle
+            // Select logic
             data.element.dispatchEvent(
               new MouseEvent("click", {
                 bubbles: true,
@@ -155,18 +165,20 @@
                 view: window,
               }),
             );
-            for (var j = 0; j < customBtns.length; j++) {
-              customBtns[j].classList.remove("selected");
-            }
-            customBtn.classList.add("selected");
+          }
+
+          if (window.checkAvisState) {
+            setTimeout(function () {
+              window.checkAvisState();
+            }, 100);
           }
         });
-      })(customBtns[i]);
+      })(cards[i]);
     }
   }
 
-  // --- Shared Car Summary Logic ---
-  var vehicleData = { name: "", image: "" };
+  // --- Shared Car Summary ---
+  var vehicleData = { name: "", image: "", showSimilar: false };
   var locationData = {
     pickup: { name: "", date: "", time: "" },
     dropoff: { name: "", date: "", time: "" },
@@ -179,13 +191,28 @@
         var store = JSON.parse(reservationStoreRaw);
         if (store) {
           var state = store.state || store;
-          vehicleData.name = state.vehicleModelDescription || "";
+          var rawName = state.vehicleModelDescription || "";
+          if (rawName.indexOf("or Similar") !== -1) {
+            vehicleData.name = rawName.replace("or Similar", "").trim();
+            vehicleData.showSimilar = true;
+          } else {
+            vehicleData.name = rawName;
+            vehicleData.showSimilar = false;
+          }
           vehicleData.image = state.vehicleImage || "";
 
           locationData.pickup.name =
-            state.pickupAddressLine1 + ", " + state.pickupCityName || "";
+            state.pickupAddressLine1 +
+              ", " +
+              state.pickupCityName +
+              ", " +
+              state.pickupStateCode || "";
           locationData.dropoff.name =
-            state.returnAddressLine1 + ", " + state.returnCityName || "";
+            state.returnAddressLine1 +
+              ", " +
+              state.returnCityName +
+              ", " +
+              state.returnStateCode || "";
 
           var formatISO = function (isoStr) {
             if (!isoStr) return { date: "", time: "" };
@@ -396,9 +423,14 @@
       '<p class="car-summary-title">Car Summary</p>' +
       '<div class="summary-content">' +
       '   <div class="vehicle-info">' +
-      '     <p class="vehicle-name">' +
+      '     <div class="vehicle-name-container">' +
+      '<p class="vehicle-name">' +
       vehicleData.name +
       "</p>" +
+      (vehicleData.showSimilar
+        ? '<p class="vehicle-similar"> or Similar</p>'
+        : "") +
+      "</div>" +
       "     " +
       imageHtml +
       "   </div>" +
@@ -439,11 +471,11 @@
       '   <div class="divider"></div>' +
       '   <div class="total-vehicle-rate">' +
       '     <div class="total-vehicle-rate-content">' +
-      '      <div class="total-vehicle-rate-title">Vehicle total rate (' +
+      '      <div class="total-vehicle-rate-title">Vehicle total rate <span class="rental-days">(' +
       rentalDays +
-      " days)</div>" +
+      " days)</span></div>" +
       '      <div class="total-vehicle-rate-subtitle">' +
-      (unlimitedFreeMiles ? "Unlimited free miles" : "") +
+      (unlimitedFreeMiles ? "Unlimited free miles included" : "") +
       "</div>" +
       "     </div>" +
       '     <div class="total-vehicle-rate-price">' +
@@ -461,7 +493,7 @@
       '">' +
       '     <div class="accordion-header-title protection-add-ons">Protections &amp; Add-ons</div>' +
       '     <div class="accordion-header-icon">' +
-      '      <div class="accordion-header-icon-price">$' +
+      '      <div class="accordion-header-icon-price protection-add-ons-price">$' +
       protectionAndAddOnsTotal.toFixed(2) +
       "</div>" +
       '      <div class="accordion-header-icon-arrow" style="display: ' +
@@ -491,9 +523,9 @@
       '    <div class="accordion-header" data-has-items="' +
       (totalSavings > 0) +
       '">' +
-      '     <div class="accordion-header-title">Savings and Discount</div>' +
+      '     <div class="accordion-header-title">Savings & discounts</div>' +
       '     <div class="accordion-header-icon">' +
-      '      <div class="accordion-header-icon-price">$' +
+      '      <div class="accordion-header-icon-price savings-price">-$' +
       (totalSavings || "0.00") +
       "</div>" +
       '      <div class="accordion-header-icon-arrow" style="display: ' +
@@ -519,7 +551,7 @@
       '    <div class="accordion-header" data-has-items="' +
       (taxAndFees.length > 0) +
       '">' +
-      '     <div class="accordion-header-title">Tax and Fees</div>' +
+      '     <div class="accordion-header-title">Taxes & Fees</div>' +
       '     <div class="accordion-header-icon">' +
       '      <div class="accordion-header-icon-price">$' +
       (taxAndFees.length > 0
@@ -564,7 +596,7 @@
       '    <div class="accordion-header">' +
       '     <div class="accordion-header-title rate-terms">See rate terms</div>' +
       "    </div>" +
-      '    <div class="accordion-content">' +
+      '    <div class="accordion-content terms-content">' +
       '      <div class="MuiBox-root mui-0"><div class="MuiTypography-root MuiTypography-body1 mui-16hh9w9" data-testid="rate-terms-container"><div class="MuiTypography-root MuiTypography-body1 mui-new8e0" data-testid="rate-terms-title">Rate terms</div><div class="MuiTypography-root MuiTypography-body1 mui-new8e0" data-testid="rate-terms-info-label">These rate terms apply for this specific rental.</div><div class="MuiTypography-root MuiTypography-body1 mui-new8e0" data-testid="rate-terms-description">If for any reason you change your rental parameters (pick up dates, times, etc.), those changes must follow these terms or your rate will also change.</div></div><ul class="MuiBox-root mui-1vnz3zg" data-testid="rate-terms-notes-ul"><li class="MuiBox-root mui-0"><span class="MuiTypography-root MuiTypography-bodySmallRegular mui-fp7ibt">Your rate was calculated based on the information provided. Some modifications may change this rate.</span></li><li class="MuiBox-root mui-0"><span class="MuiTypography-root MuiTypography-bodySmallRegular mui-fp7ibt">Unlimited free miles</span></li><li class="MuiBox-root mui-0"><span class="MuiTypography-root MuiTypography-bodySmallRegular mui-fp7ibt">If you need to cancel 24 hours prior to the scheduled pick-up time, we will refund the full prepaid amount less a ' +
       (rateTerms.cancelFeeBefore24h || "$0") +
       ' processing fee.</span></li><li class="MuiBox-root mui-0"><span class="MuiTypography-root MuiTypography-bodySmallRegular mui-fp7ibt">If you need to cancel during the 24 hour period prior to the scheduled pick-up time, we will refund the full prepaid amount less a ' +
@@ -613,9 +645,9 @@
       var args = arguments;
       var self = this;
       var url = args[0];
+      var urlStr = typeof url === "string" ? url : url.url ? url.url : "";
       var isPriceCalc =
-        typeof url === "string" &&
-        url.indexOf("/web/reservation/price/calculate") !== -1;
+        urlStr.indexOf("/web/reservation/price/calculate") !== -1;
 
       if (isPriceCalc) {
         showCarSummarySpinner();
@@ -633,9 +665,15 @@
                   window.__AVIS_PRICE_CALC__ = data;
                   if (window.updateAvisCarSummary) {
                     setTimeout(function () {
-                      window.updateAvisCarSummary();
-                      hideCarSummarySpinner();
-                    }, 100);
+                      try {
+                        window.updateAvisCarSummary();
+                        if (window.checkAvisState) window.checkAvisState();
+                      } finally {
+                        hideCarSummarySpinner();
+                      }
+                    }, 150);
+                  } else {
+                    hideCarSummarySpinner();
                   }
                 })
                 .catch(function () {
@@ -680,7 +718,7 @@
       "    " +
       '              <div class="protection-cards">' +
       "                <!-- Ultimate Protection Highlight -->" +
-      '                <div class="protection-card highlight">' +
+      '                <div class="protection-card highlight ultimate-card" data-target-code="Ultimate Protection">' +
       '                  <div class="recomended">RECOMMENDED</div>' +
       '                  <div class="card-content-header">' +
       '                    <p class="card-title">Ultimate Protection</p>' +
@@ -722,12 +760,12 @@
       "                </div>" +
       " " +
       "                <!-- Enhance Protection -->" +
-      '                <div class="protection-card">' +
+      '                <div class="protection-card" data-target-code="Enhanced Protection">' +
       '                  <div class="card-content-header">' +
       '                    <p class="card-title">Enhanced Protection</p>' +
       '                    <p class="ancillary-bundle-rating"><span class="active"></span> <span class="active"></span> <span></span> </p>' +
       '                    <p class="card-desc">' +
-      "                      For your rental vehicle + liability coverage, to help avoid costly" +
+      "                      For your rental vehicle +liability coverage, to help avoid costly" +
       "                      claims from third party injuries or property damage." +
       "                    </p>" +
       "                  </div>" +
@@ -764,7 +802,7 @@
       "                </div>" +
       " " +
       "                <!-- Essential Protection -->" +
-      '                <div class="protection-card">' +
+      '                <div class="protection-card" data-target-code="Essential Protection">' +
       '                  <div class="card-content-header">' +
       '                    <p class="card-title">Essential Protection</p>' +
       '                    <p class="ancillary-bundle-rating"><span class="active"></span> <span></span> <span></span> </p>' +
@@ -888,10 +926,68 @@
 
       if (!card) continue;
 
+      //feature list elements
       var ul = card.querySelector("ul");
       if (ul && data.features) {
         data.features.classList.add("features");
         ul.parentNode.replaceChild(data.features, ul);
+        data.features.addEventListener("click", function (e) {
+          e.stopPropagation();
+          // Walk up the DOM to find the owning card at click-time (avoids stale closure)
+          var ownerCard = e.currentTarget.closest(".protection-card");
+          if (!ownerCard) return;
+          var btn = ownerCard.querySelector(".custom-select-btn");
+          if (!btn) return;
+          var isAlreadySelected = btn.classList.contains("selected");
+          var targetCode = btn.getAttribute("data-target-code");
+          var bundleData = getProtectionData(targetCode);
+          if (!bundleData || !bundleData.element) return;
+          if (isAlreadySelected) {
+            var noProtEl = document.querySelector(
+              '[data-testid="ancillaries-bundle"][data-code="No Protection"]',
+            );
+            if (noProtEl) {
+              noProtEl.dispatchEvent(
+                new MouseEvent("click", {
+                  bubbles: true,
+                  cancelable: true,
+                  view: window,
+                }),
+              );
+            }
+          } else {
+            bundleData.element.dispatchEvent(
+              new MouseEvent("click", {
+                bubbles: true,
+                cancelable: true,
+                view: window,
+              }),
+            );
+          }
+          if (window.checkAvisState) {
+            setTimeout(function () {
+              window.checkAvisState();
+            }, 100);
+          }
+        });
+      }
+
+      //Rating replace
+      var ratingEl = card.querySelector(".ancillary-bundle-rating");
+      if (ratingEl && data.rating) {
+        var ratingDivs = data.rating.querySelectorAll("div");
+        for (var d = 0; d < ratingDivs.length; d++) {
+          ratingDivs[d].classList.remove("active");
+          if (prot.code === "Ultimate Protection") {
+            ratingDivs[d].classList.add("active");
+          } else if (prot.code === "Enhanced Protection" && d < 2) {
+            ratingDivs[d].classList.add("active");
+          } else if (prot.code === "Essential Protection" && d < 1) {
+            ratingDivs[d].classList.add("active");
+          }
+        }
+        data.rating.classList.add("rating-mvt-307");
+        ratingEl.parentNode.replaceChild(data.rating, ratingEl);
       }
 
       var oldPriceEl = card.querySelector(".old-price");
@@ -902,10 +998,12 @@
 
       var newPriceEl = card.querySelector(".new-price");
       if (newPriceEl && data.newPrice) {
-        newPriceEl.textContent =
+        var rawPrice =
           data.newPrice.indexOf("$") === 0
-            ? data.newPrice
-            : "$" + data.newPrice;
+            ? data.newPrice.slice(1)
+            : data.newPrice;
+        var formattedPrice = parseFloat(rawPrice).toFixed(2);
+        newPriceEl.textContent = "$" + formattedPrice;
       }
     }
 
@@ -947,6 +1045,7 @@
     // Look for original elements that need to be moved into the new grid
     var selectSvg = insertionPoint.querySelector(":scope > svg");
     if (selectSvg) selectSvg.style.zIndex = "0";
+
     var selectTravelPck = insertionPoint.querySelector(
       ":scope > div:not(#" + EXP_ID_2 + "):not(#" + EXP_ID + ")",
     );
@@ -955,10 +1054,12 @@
       var TravelPackHeader = selectTravelPck.querySelector("div");
       if (TravelPackHeader) TravelPackHeader.style.zIndex = "1";
     }
+
     var addOnsPackages = document.querySelector(
       '[data-testid="ancillaries-bundles-container"]',
     );
     if (addOnsPackages) addOnsPackages.style.zIndex = "1";
+
     var selectAddOnsList = document.querySelector(
       '[data-testid="single-addons-list-section-container"]',
     );
@@ -1011,6 +1112,93 @@
     disableOriginalFooterAccordion();
   }
 
+  function checkState() {
+    // identify continue cta
+    var contCta = $('button[data-testid="action-footer-cta-button"]');
+
+    // check for active bundle (paid, not "No Protection")
+    var activeBundleEl = $(".ancillaries-bundle--selected").not(
+      '[data-code="No Protection"]',
+    );
+    var activeBundle = activeBundleEl.length > 0;
+    var selectedPlanCode = activeBundle
+      ? activeBundleEl.attr("data-code")
+      : null;
+
+    // Update custom cards highlighting
+    var customCards = document.querySelectorAll(
+      "#" + EXP_ID + " .protection-card",
+    );
+    for (var c = 0; c < customCards.length; c++) {
+      var card = customCards[c];
+      var cardBtn = card.querySelector(".custom-select-btn");
+      var cardCode = cardBtn.getAttribute("data-target-code");
+
+      var originalText =
+        cardCode === "Ultimate Protection" ? "Add Protection" : "Select";
+
+      if (selectedPlanCode === cardCode) {
+        card.classList.add("highlight");
+        card.classList.add("selected");
+        cardBtn.classList.add("selected");
+        cardBtn.innerHTML = whiteCheckSvg + " Protection Added";
+        cardBtn.classList.remove("secondary");
+        cardBtn.classList.add("primary");
+      } else if (
+        selectedPlanCode === null &&
+        cardCode === "Ultimate Protection"
+      ) {
+        card.classList.add("highlight");
+        card.classList.remove("selected");
+        cardBtn.classList.remove("selected");
+        cardBtn.innerHTML = originalText;
+        cardBtn.classList.add("primary");
+        cardBtn.classList.remove("secondary");
+      } else {
+        card.classList.remove("highlight");
+        card.classList.remove("selected");
+        cardBtn.classList.remove("selected");
+        cardBtn.innerHTML = originalText;
+        cardBtn.classList.remove("primary");
+        cardBtn.classList.add("secondary");
+      }
+    }
+
+    // check for active individual items
+    var activeItems =
+      $(
+        'div[data-testid="single-protections-item-add-to-trip-btn"] input:checked',
+      ).length > 0;
+
+    // check for included items
+    var includedItems =
+      $(
+        'span[data-testid="single-protections-item-included-in-bundle"]',
+      ).filter(function () {
+        return $(this).text() === "Included";
+      }).length > 0;
+
+    // enable CTA if any selection made
+    var shouldEnable =
+      activeBundle || activeItems || includedItems || isAddOnsPage();
+    // Variation C doesn't have the decline checkbox as per previous port requirements (V-A to V-C)
+
+    var isDisabled = contCta.is(":disabled");
+
+    if (shouldEnable && isDisabled) {
+      contCta.removeAttr("disabled");
+    } else if (!shouldEnable && !isDisabled) {
+      contCta.attr("disabled", "");
+    }
+
+    if (activeBundle) {
+      $("body").addClass("bundle-active");
+    } else {
+      $("body").removeClass("bundle-active");
+    }
+  }
+  window.checkAvisState = checkState;
+
   function isProtectionPage() {
     return location.pathname.indexOf("/reservation/protectioncoverage") !== -1;
   }
@@ -1027,7 +1215,6 @@
   function runProtection() {
     // First wait for sessionStorage to be populated by the app (SPA navigation
     // writes reservation.store asynchronously after the URL changes).
-    console.log("runProtection");
     poll(
       function () {
         try {
@@ -1044,6 +1231,7 @@
           },
           function () {
             injectProtectionLayout();
+            checkState();
           },
         );
       },
@@ -1059,6 +1247,7 @@
       },
       function () {
         injectCarSummaryOnly();
+        checkState();
       },
     );
   }

@@ -84,6 +84,9 @@
 }
 
 @media (max-width: 768px) {
+  [data-testid="ancillaries-bundles-container"] {
+    grid-template-columns: repeat(1, 1fr) !important;
+  }
   .opt-out-section {
     margin: 0 16px;
   }

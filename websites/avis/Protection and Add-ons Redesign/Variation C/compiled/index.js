@@ -139,8 +139,8 @@
     }
   }
 
-  // --- Shared Car Summary Logic ---
-  var vehicleData = { name: "", image: "" };
+  // --- Shared Car Summary ---
+  var vehicleData = { name: "", image: "", showSimilar: false };
   var locationData = {
     pickup: { name: "", date: "", time: "" },
     dropoff: { name: "", date: "", time: "" }
@@ -153,11 +153,18 @@
         var store = JSON.parse(reservationStoreRaw);
         if (store) {
           var state = store.state || store;
-          vehicleData.name = state.vehicleModelDescription || "";
+          var rawName = state.vehicleModelDescription || "";
+          if (rawName.indexOf("or Similar") !== -1) {
+            vehicleData.name = rawName.replace("or Similar", "").trim();
+            vehicleData.showSimilar = true;
+          } else {
+            vehicleData.name = rawName;
+            vehicleData.showSimilar = false;
+          }
           vehicleData.image = state.vehicleImage || "";
 
-          locationData.pickup.name = (state.pickupAddressLine1 + ", " + state.pickupCityName) || "";
-          locationData.dropoff.name = (state.returnAddressLine1 + ", " + state.returnCityName) || "";
+          locationData.pickup.name = (state.pickupAddressLine1 + ", " + state.pickupCityName + ", " + state.pickupStateCode) || "";
+          locationData.dropoff.name = (state.returnAddressLine1 + ", " + state.returnCityName + ", " + state.returnStateCode) || "";
 
           var formatISO = function (isoStr) {
             if (!isoStr) return { date: "", time: "" };
@@ -315,7 +322,7 @@
     section.innerHTML = '<p class="car-summary-title">Car Summary</p>' +
       '<div class="summary-content">' +
       '   <div class="vehicle-info">' +
-      '     <p class="vehicle-name">' + vehicleData.name + '</p>' +
+      '     <div class="vehicle-name-container">' + '<p class="vehicle-name">' + vehicleData.name + '</p>' + (vehicleData.showSimilar ? '<p class="vehicle-similar"> or Similar</p>' : '') + '</div>' +
       '     ' + imageHtml +
       '   </div>' +
       '   <div class="location-info">' +
@@ -343,8 +350,8 @@
       '   <div class="divider"></div>' +
       '   <div class="total-vehicle-rate">' +
       '     <div class="total-vehicle-rate-content">' +
-      '      <div class="total-vehicle-rate-title">Vehicle total rate (' + rentalDays + ' days)</div>' +
-      '      <div class="total-vehicle-rate-subtitle">' + (unlimitedFreeMiles ? "Unlimited free miles" : "") + '</div>' +
+      '      <div class="total-vehicle-rate-title">Vehicle total rate <span class="rental-days">(' + rentalDays + ' days)</span></div>' +
+      '      <div class="total-vehicle-rate-subtitle">' + (unlimitedFreeMiles ? "Unlimited free miles included" : "") + '</div>' +
       '     </div>' +
       '     <div class="total-vehicle-rate-price">' +
       '      <span class="total-vehicle-rate-price-amount">$' + vehicleRate + '</span> ' +
@@ -355,7 +362,7 @@
       '    <div class="accordion-header" data-has-items="' + (combinedProtectionAddOns.length > 0) + '">' +
       '     <div class="accordion-header-title protection-add-ons">Protections &amp; Add-ons</div>' +
       '     <div class="accordion-header-icon">' +
-      '      <div class="accordion-header-icon-price">$' + protectionAndAddOnsTotal.toFixed(2) + '</div>' +
+      '      <div class="accordion-header-icon-price protection-add-ons-price">$' + protectionAndAddOnsTotal.toFixed(2) + '</div>' +
       '      <div class="accordion-header-icon-arrow" style="display: ' + (combinedProtectionAddOns.length > 0 ? 'block' : 'none') + ';">' + arrowDown + '</div>' +
       '     </div>' +
       '    </div>' +
@@ -369,9 +376,9 @@
       '   <div class="divider"></div>' +
       '  <div class="accordion-item savings-discount">' +
       '    <div class="accordion-header" data-has-items="' + (totalSavings > 0) + '">' +
-      '     <div class="accordion-header-title">Savings and Discount</div>' +
+      '     <div class="accordion-header-title">Savings & discounts</div>' +
       '     <div class="accordion-header-icon">' +
-      '      <div class="accordion-header-icon-price">$' + (totalSavings || "0.00") + '</div>' +
+      '      <div class="accordion-header-icon-price savings-price">-$' + (totalSavings || "0.00") + '</div>' +
       '      <div class="accordion-header-icon-arrow" style="display: ' + (totalSavings > 0 ? 'block' : 'none') + ';">' + arrowDown + '</div>' +
       '     </div>' +
       '    </div>' +
@@ -383,7 +390,7 @@
       '  </div>' +
       '  <div class="accordion-item text-and-fees-accordion">' +
       '    <div class="accordion-header" data-has-items="' + (taxAndFees.length > 0) + '">' +
-      '     <div class="accordion-header-title">Tax and Fees</div>' +
+      '     <div class="accordion-header-title">Taxes & Fees</div>' +
       '     <div class="accordion-header-icon">' +
       '      <div class="accordion-header-icon-price">$' + (taxAndFees.length > 0 ? taxAndFees.reduce(function (acc, item) { return acc + (item.amount || 0); }, 0).toFixed(2) : "0.00") + '</div>' +
       '      <div class="accordion-header-icon-arrow" style="display: ' + (taxAndFees.length > 0 ? 'block' : 'none') + ';">' + arrowDown + '</div>' +
@@ -404,7 +411,7 @@
       '    <div class="accordion-header">' +
       '     <div class="accordion-header-title rate-terms">See rate terms</div>' +
       '    </div>' +
-      '    <div class="accordion-content">' +
+      '    <div class="accordion-content terms-content">' +
       '      <div class="MuiBox-root mui-0"><div class="MuiTypography-root MuiTypography-body1 mui-16hh9w9" data-testid="rate-terms-container"><div class="MuiTypography-root MuiTypography-body1 mui-new8e0" data-testid="rate-terms-title">Rate terms</div><div class="MuiTypography-root MuiTypography-body1 mui-new8e0" data-testid="rate-terms-info-label">These rate terms apply for this specific rental.</div><div class="MuiTypography-root MuiTypography-body1 mui-new8e0" data-testid="rate-terms-description">If for any reason you change your rental parameters (pick up dates, times, etc.), those changes must follow these terms or your rate will also change.</div></div><ul class="MuiBox-root mui-1vnz3zg" data-testid="rate-terms-notes-ul"><li class="MuiBox-root mui-0"><span class="MuiTypography-root MuiTypography-bodySmallRegular mui-fp7ibt">Your rate was calculated based on the information provided. Some modifications may change this rate.</span></li><li class="MuiBox-root mui-0"><span class="MuiTypography-root MuiTypography-bodySmallRegular mui-fp7ibt">Unlimited free miles</span></li><li class="MuiBox-root mui-0"><span class="MuiTypography-root MuiTypography-bodySmallRegular mui-fp7ibt">If you need to cancel 24 hours prior to the scheduled pick-up time, we will refund the full prepaid amount less a ' + (rateTerms.cancelFeeBefore24h || "$0") + ' processing fee.</span></li><li class="MuiBox-root mui-0"><span class="MuiTypography-root MuiTypography-bodySmallRegular mui-fp7ibt">If you need to cancel during the 24 hour period prior to the scheduled pick-up time, we will refund the full prepaid amount less a ' + (rateTerms.cancelFeeWithin24h || "$0") + ' processing fee.</span></li></ul></div>' +
       '    </div>' +
       '  </div>' +
@@ -512,7 +519,7 @@
       '    ' +
       '              <div class="protection-cards">' +
       '                <!-- Ultimate Protection Highlight -->' +
-      '                <div class="protection-card highlight" data-target-code="Ultimate Protection">' +
+      '                <div class="protection-card highlight ultimate-card" data-target-code="Ultimate Protection">' +
       '                  <div class="recomended">RECOMMENDED</div>' +
       '                  <div class="card-content-header">' +
       '                    <p class="card-title">Ultimate Protection</p>' +
@@ -543,7 +550,7 @@
       '                    <p class="card-title">Enhanced Protection</p>' +
       '                    <p class="ancillary-bundle-rating"><span class="active"></span> <span class="active"></span> <span></span> </p>' +
       '                    <p class="card-desc">' +
-      '                      For your rental vehicle + liability coverage, to help avoid costly' +
+      '                      For your rental vehicle +liability coverage, to help avoid costly' +
       '                      claims from third party injuries or property damage.' +
       '                    </p>' +
       '                  </div>' +
@@ -656,6 +663,36 @@
 
       if (!card) continue;
 
+      //feature list elements
+      var ul = card.querySelector("ul");
+      if (ul && data.features) {
+        data.features.classList.add("features");
+        ul.parentNode.replaceChild(data.features, ul);
+        data.features.addEventListener("click", function (e) {
+          e.stopPropagation();
+          // Walk up the DOM to find the owning card at click-time (avoids stale closure)
+          var ownerCard = e.currentTarget.closest(".protection-card");
+          if (!ownerCard) return;
+          var btn = ownerCard.querySelector(".custom-select-btn");
+          if (!btn) return;
+          var isAlreadySelected = btn.classList.contains("selected");
+          var targetCode = btn.getAttribute("data-target-code");
+          var bundleData = getProtectionData(targetCode);
+          if (!bundleData || !bundleData.element) return;
+          if (isAlreadySelected) {
+            var noProtEl = document.querySelector('[data-testid="ancillaries-bundle"][data-code="No Protection"]');
+            if (noProtEl) {
+              noProtEl.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, view: window }));
+            }
+          } else {
+            bundleData.element.dispatchEvent(new MouseEvent("click", { bubbles: true, cancelable: true, view: window }));
+          }
+          if (window.checkAvisState) {
+            setTimeout(function () { window.checkAvisState(); }, 100);
+          }
+        });
+      }
+
       //Rating replace
       var ratingEl = card.querySelector(".ancillary-bundle-rating");
       if (ratingEl && data.rating) {
@@ -682,9 +719,9 @@
 
       var newPriceEl = card.querySelector(".new-price");
       if (newPriceEl && data.newPrice) {
-        newPriceEl.textContent = data.newPrice.indexOf("$") === 0
-          ? data.newPrice
-          : "$" + data.newPrice;
+        var rawPrice = data.newPrice.indexOf("$") === 0 ? data.newPrice.slice(1) : data.newPrice;
+        var formattedPrice = parseFloat(rawPrice).toFixed(2);
+        newPriceEl.textContent = "$" + formattedPrice;
       }
     }
 
@@ -826,7 +863,7 @@
     }).length > 0;
 
     // enable CTA if any selection made
-    var shouldEnable = activeBundle || activeItems || includedItems;
+    var shouldEnable = activeBundle || activeItems || includedItems || isAddOnsPage();
     // Variation C doesn't have the decline checkbox as per previous port requirements (V-A to V-C)
 
     var isDisabled = contCta.is(':disabled');
@@ -870,7 +907,10 @@
         var selector = getTargetSelector();
         poll(
           function () { return document.querySelector(selector); },
-          function () { injectProtectionLayout(); }
+          function () {
+            injectProtectionLayout();
+            checkState();
+          }
         );
       },
       false, 10000
@@ -884,6 +924,7 @@
       },
       function () {
         injectCarSummaryOnly();
+        checkState();
       }
     );
   }

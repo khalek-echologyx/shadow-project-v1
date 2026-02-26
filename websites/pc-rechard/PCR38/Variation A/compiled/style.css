@@ -1,0 +1,48 @@
+.acima-section {
+  display: flex;
+  gap: 45px;
+}
+
+.acima-section .acima-section-left {
+  background-color: #F9F9F9;
+  padding: 16px 19.87px 16.08px 27px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50%;
+}
+
+.acima-section .acima-section-left .acima-section-left-content {
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 12px;
+  letter-spacing: -1%;
+  text-decoration-thickness: 0%;
+  color: #424242;
+}
+
+.acima-section .acima-section-left .acima-section-left-content a {
+  text-decoration: underline;
+}
+
+.acima-section .acima-section-right {
+  width: 50%;
+}
+
+.acima-section .affirm-as-low-as-wrap {
+  padding-left: 0;
+}
+
+.acima-section .affirm-as-low-as-wrap p {
+  border-top: 0 !important;
+}
+
+@media (max-width: 768px) {
+  .acima-section {
+    flex-direction: column;
+    gap: 6px;
+  }
+  .acima-section .acima-section-right, .acima-section .acima-section-left {
+    width: 100%;
+  }
+}
