@@ -30,6 +30,19 @@
   var mvtID = 'MVT-307'
   var EXP_ID = "avis-protection-variation-a";
   var EXP_ID_2 = "avis-addOns-variation-A";
+
+  var getSymbol = function (code) {
+    if (!code) return '$';
+    return (0).toLocaleString("en", {
+      style: "currency",
+      currency: code
+    }).replace(/[\d\s.,]/g, "");
+  };
+  // If the symbol contains letters (e.g. BDT, USD) add a space before the amount.
+  // Symbol signs (e.g. $, €, £) are kept tight against the number.
+  var formatPrice = function (symbol, amount) {
+    return /[a-zA-Z]/.test(symbol) ? symbol + ' ' + amount : symbol + amount;
+  };
   var TARGET_SELECTOR_DEFAULT = '[data-testid="Protections-container"] > div > svg';
   var TARGET_SELECTOR_AVIS_FIRST = '[data-testid="Protections-container"] div img';
 
@@ -139,6 +152,7 @@
     pickup: { name: "", date: "", time: "" },
     dropoff: { name: "", date: "", time: "" }
   };
+  var hasProtectionBundles = true;
 
   function getSessionData() {
     try {
@@ -147,6 +161,8 @@
         var store = JSON.parse(reservationStoreRaw);
         if (store) {
           var state = store.state || store;
+          var protectionBundles = (state.protectionsData && state.protectionsData.protectionBundles) || [];
+          hasProtectionBundles = protectionBundles.length > 1;
           var rawName = state.vehicleModelDescription || "";
           if (rawName.indexOf("or Similar") !== -1) {
             vehicleData.name = rawName.replace("or Similar", "").trim();
@@ -265,11 +281,31 @@
 
     getSessionData();
 
+    var protectionCards = document.querySelector(".protection-cards");
+    var protectionBg = document.querySelector(".protection-bg");
+    var protectionCardsColumn = document.querySelector(".protection-cards-column");
+    var optOutSection = document.querySelector(".opt-out-section");
+
+    if (protectionCards) {
+      protectionCards.style.display = hasProtectionBundles ? "flex" : "none";
+    }
+    if (protectionBg) {
+      protectionBg.style.zIndex = hasProtectionBundles ? "0" : "-1";
+    }
+    if (protectionCardsColumn) {
+      protectionCardsColumn.style.marginBottom = hasProtectionBundles ? "0px" : "50px";
+    }
+    if (optOutSection) {
+      optOutSection.style.marginTop = hasProtectionBundles ? "0px" : "50px";
+    }
+
     var totals = window.__AVIS_PRICE_CALC__ ? window.__AVIS_PRICE_CALC__.totals : {};
     var priceCalc = window.__AVIS_PRICE_CALC__ ? window.__AVIS_PRICE_CALC__ : {};
+    var currencySymbol = getSymbol(priceCalc.currencyCode);
     var price = totals.total || "0.00";
     var vehicleRate = totals.grossSubtotal || "0.00";
     var vehicleRateDiscount = totals.netSubtotal || "0.00";
+    var amazonGiftCardAmount = priceCalc.amazonCashBack ? priceCalc.amazonCashBack.toFixed(2) : "0.00";
     var rentalDays = priceCalc.rentalDays || "0";
     var unlimitedFreeMiles = priceCalc.rateTerms ? priceCalc.rateTerms.unlimitedMilage : false;
     var protectionBundle = priceCalc.protectionBundle;
@@ -307,11 +343,39 @@
     var buildList = function (items) {
       if (!items || !items.length) return '<div class="empty-list">None</div>';
       return items.map(function (i) {
-        return '<div class="summary-item"><span>' + (i.description || i.name) + '</span><span>$' + (i.amountString || i.amount || 0) + '</span></div>';
+        var itemAmount = (i.code === "GSO" && (i.amount === 0 || i.amount === "0")) ? "Market Price" : formatPrice(currencySymbol, (i.amountString || i.amount || 0));
+        var description = i.description || i.name;
+        if (i.code === 'GSO') {
+          var gsoAmount = Number(i.netSubtotalPerUnit || 0).toFixed(2);
+          var gsoSuffix = (i.chargeType === "PER_GALLON") ? "/gal" : "";
+          description += '<span style="display: block; font-size: 12px;">Est. ' + (priceCalc.currencyCode || "USD") + ' ' + gsoAmount + gsoSuffix + '</span>';
+        }
+        var itemStyle = i.code === 'GSO' ? ' style="align-items: center;"' : '';
+        return '<div class="summary-item"' + itemStyle + '><span>' + description + '</span><span>' + itemAmount + '</span></div>';
       }).join('');
     };
 
     var imageHtml = vehicleData.image ? '<div class="vehicle-image-container"><img src="https://www.avis.com' + vehicleData.image + '" data-testid="rental-summary-image" alt="vehicle image" class="car-image" loading="lazy" width="113" height="48" decoding="async" data-nimg="1"></div>' : '';
+
+    var amazonHtml = '';
+    if (amazonGiftCardAmount !== "0.00" && amazonGiftCardAmount !== 0) {
+      amazonHtml = '   <!-- amazon gift card alert -->' +
+        '   <div class="amazon-gift-card-alert" role="alert" style="--Paper-shadow: none">' +
+        '     <div class="amazon-logo-container">' +
+        '       <img alt="amazon-logo" loading="lazy" width="50" height="32" decoding="async" data-nimg="1" srcset="https://www.avis.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Famazon-logo.b7f2a5f7.png&amp;w=64&amp;q=75 1x, https://www.avis.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Famazon-logo.b7f2a5f7.png&amp;w=128&amp;q=75 2x" src="https://www.avis.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Famazon-logo.b7f2a5f7.png&amp;w=128&amp;q=75" style="color: transparent; width: auto; height: 32px">' +
+        '     </div>' +
+        '     <div class="amazon-gift-card-content">' +
+        '       <div class="amazon-gift-card-info">' +
+        '         <div class="amazon-gift-card-title">' +
+        '           <span class="amazon-reward-text">You will receive ' + formatPrice(currencySymbol, amazonGiftCardAmount) + '  on an Amazon.com Gift Card upon completing your rental!</span>' +
+        '         </div>' +
+        '         <div class="amazon-gift-card-disclaimer">' +
+        '           <span class="amazon-legal-text">*Restrictions apply, see Amazon.com/gc-legal</span>' +
+        '         </div>' +
+        '       </div>' +
+        '     </div>' +
+        '   </div>';
+    }
 
     section.innerHTML = '<p class="car-summary-title">Car Summary</p>' +
       '<div class="summary-content">' +
@@ -341,23 +405,22 @@
       '       </div>' +
       '     </div>' +
       '   </div>' +
-      '   <div class="divider"></div>' +
       '   <div class="total-vehicle-rate">' +
       '     <div class="total-vehicle-rate-content">' +
       '      <div class="total-vehicle-rate-title">Vehicle total rate <span class="rental-days">(' + rentalDays + ' days)</span></div>' +
       '      <div class="total-vehicle-rate-subtitle">' + (unlimitedFreeMiles ? "Unlimited free miles included" : "") + '</div>' +
       '     </div>' +
       '     <div class="total-vehicle-rate-price">' +
-      '      <span class="total-vehicle-rate-price-amount">$' + vehicleRate + '</span> ' +
-      '      <span class="total-vehicle-rate-price-save">$' + vehicleRateDiscount + '</span>' +
+      '      <span class="total-vehicle-rate-price-amount">' + formatPrice(currencySymbol, vehicleRate) + '</span> ' +
+      '      <span class="total-vehicle-rate-price-save">' + formatPrice(currencySymbol, vehicleRateDiscount) + '</span>' +
       '     </div>' +
       '   </div>' +
       '  <div class="accordion-item protection-accordion"> ' +
       '    <div class="accordion-header" data-has-items="' + (combinedProtectionAddOns.length > 0) + '">' +
       '     <div class="accordion-header-title protection-add-ons">Protections & Add-ons</div>' +
       '     <div class="accordion-header-icon">' +
-      '      <div class="accordion-header-icon-price protection-add-ons-price">$' + protectionAndAddOnsTotal.toFixed(2) + '</div>' +
-      '      <div class="accordion-header-icon-arrow" style="display: ' + (combinedProtectionAddOns.length > 0 ? 'block' : 'none') + ';">' + arrowDown + '</div>' +
+      '      <div class="accordion-header-icon-price protection-add-ons-price">' + formatPrice(currencySymbol, protectionAndAddOnsTotal.toFixed(2)) + '</div>' +
+      '      <div class="accordion-header-icon-arrow" style="display: ' + (combinedProtectionAddOns.length > 0 ? 'block' : 'none') + '; transform: rotate(0deg); margin-top: -9px;">' + arrowDown + '</div>' +
       '     </div>' +
       '    </div>' +
       '    <div class="accordion-content">' + buildList(combinedProtectionAddOns) + '</div>' +
@@ -367,46 +430,47 @@
         '<div class="protection-not-added">x Protection not added</div>')) +
       '    </div>' +
       '  </div>' +
+      amazonHtml +
       '   <div class="divider"></div>' +
       '  <div class="accordion-item savings-discount">' +
       '    <div class="accordion-header" data-has-items="' + (totalSavings > 0) + '">' +
       '     <div class="accordion-header-title">Savings & discounts</div>' +
       '     <div class="accordion-header-icon">' +
-      '      <div class="accordion-header-icon-price savings-price">-$' + (totalSavings || "0.00") + '</div>' +
+      '      <div class="accordion-header-icon-price savings-price">-' + formatPrice(currencySymbol, (totalSavings || "0.00")) + '</div>' +
       '      <div class="accordion-header-icon-arrow" style="display: ' + (totalSavings > 0 ? 'block' : 'none') + ';">' + arrowDown + '</div>' +
       '     </div>' +
       '    </div>' +
       '    <div class="accordion-content">' +
-      '      <div class="summary-item"><span>Discount Code Savings</span><span>$' + (discountCodeSavings || "0.00") + '</span></div>' +
-      '      <div class="summary-item"><span>Pay Now Savings</span><span>$' + (payNowSaving || "0.00") + '</span></div>' +
-      '      <div class="summary-item"><span>Protection and Add-ons Savings</span><span>$' + (Number(protectionAndAddOnSavings).toFixed(2) || "0.00") + '</span></div>' +
+      '      <div class="summary-item"><span>Discount Code Savings</span><span>' + formatPrice(currencySymbol, (discountCodeSavings || "0.00")) + '</span></div>' +
+      '      <div class="summary-item"><span>Pay Now Savings</span><span>' + formatPrice(currencySymbol, (payNowSaving || "0.00")) + '</span></div>' +
+      '      <div class="summary-item"><span>Protection & Add-ons Savings</span><span>' + formatPrice(currencySymbol, (Number(protectionAndAddOnSavings).toFixed(2) || "0.00")) + '</span></div>' +
       '    </div>' +
       '  </div>' +
       '  <div class="accordion-item text-and-fees-accordion">' +
       '    <div class="accordion-header' + (taxAndFees.length > 0 ? ' active' : '') + '" data-has-items="' + (taxAndFees.length > 0) + '">' +
       '     <div class="accordion-header-title">Taxes & Fees</div>' +
       '     <div class="accordion-header-icon">' +
-      '      <div class="accordion-header-icon-price">$' + (taxAndFees.length > 0 ? taxAndFees.reduce(function (acc, item) { return acc + (item.amount || 0); }, 0).toFixed(2) : "0.00") + '</div>' +
+      '      <div class="accordion-header-icon-price">' + formatPrice(currencySymbol, (taxAndFees.length > 0 ? taxAndFees.reduce(function (acc, item) { return acc + (item.amount || 0); }, 0).toFixed(2) : "0.00")) + '</div>' +
       '      <div class="accordion-header-icon-arrow" style="display: ' + (taxAndFees.length > 0 ? 'block' : 'none') + ';' + (taxAndFees.length > 0 ? ' transform: rotate(180deg); margin-top: 1px;' : '') + '">' + arrowDown + '</div>' +
       '     </div>' +
       '    </div>' +
       '    <div class="accordion-content"' + (taxAndFees.length > 0 ? ' style="max-height: 1000px;"' : '') + '>' +
       taxAndFees.map(function (item) {
-        return '<div class="summary-item"><a target="_blank" class="tax-fee-link" href="https://www.avis.com/en/customer-service/faqs/usa/fees-taxes#' + item.code + '">' + item.description + '</a><span>$' + (item.amount || 0).toFixed(2) + '</span></div>';
+        return '<div class="summary-item"><a target="_blank" class="tax-fee-link" href="https://www.avis.com/en/customer-service/faqs/usa/fees-taxes#' + item.code + '">' + item.description + '</a><span>' + formatPrice(currencySymbol, (item.amount || 0).toFixed(2)) + '</span></div>';
       }).join('') +
       '    </div>' +
       '  </div>' +
       '   <div class="divider"></div>' +
       '  <div class="price-info">' +
       '     <span class="total-label">Total</span>' +
-      '     <span class="total-price">$' + (Number(price).toFixed(2) || "0.00") + '</span>' +
+      '     <span class="total-price">' + formatPrice(currencySymbol, (Number(price).toFixed(2) || "0.00")) + '</span>' +
       '  </div>' +
       '  <div class="accordion-item rate-terms-accordion">' +
       '    <div class="accordion-header">' +
       '     <div class="accordion-header-title rate-terms">See rate terms</div>' +
       '    </div>' +
       '    <div class="accordion-content terms-content">' +
-      '      <div class="MuiBox-root mui-0"><div class="MuiTypography-root MuiTypography-body1 mui-16hh9w9" data-testid="rate-terms-container"><div class="MuiTypography-root MuiTypography-body1 mui-new8e0" data-testid="rate-terms-title">Rate terms</div><div class="MuiTypography-root MuiTypography-body1 mui-new8e0" data-testid="rate-terms-info-label">These rate terms apply for this specific rental.</div><div class="MuiTypography-root MuiTypography-body1 mui-new8e0" data-testid="rate-terms-description">If for any reason you change your rental parameters (pick up dates, times, etc.), those changes must follow these terms or your rate will also change.</div></div><ul class="MuiBox-root mui-1vnz3zg" data-testid="rate-terms-notes-ul"><li class="MuiBox-root mui-0"><span class="MuiTypography-root MuiTypography-bodySmallRegular mui-fp7ibt">Your rate was calculated based on the information provided. Some modifications may change this rate.</span></li><li class="MuiBox-root mui-0"><span class="MuiTypography-root MuiTypography-bodySmallRegular mui-fp7ibt">Unlimited free miles</span></li><li class="MuiBox-root mui-0"><span class="MuiTypography-root MuiTypography-bodySmallRegular mui-fp7ibt">If you need to cancel 24 hours prior to the scheduled pick-up time, we will refund the full prepaid amount less a ' + (rateTerms.cancelFeeBefore24h || "$0") + ' processing fee.</span></li><li class="MuiBox-root mui-0"><span class="MuiTypography-root MuiTypography-bodySmallRegular mui-fp7ibt">If you need to cancel during the 24 hour period prior to the scheduled pick-up time, we will refund the full prepaid amount less a ' + (rateTerms.cancelFeeWithin24h || "$0") + ' processing fee.</span></li></ul></div>' +
+      '      <div class="MuiBox-root mui-0"><div class="MuiTypography-root MuiTypography-body1 mui-16hh9w9" data-testid="rate-terms-container"><div class="MuiTypography-root MuiTypography-body1 mui-new8e0" data-testid="rate-terms-title">Rate terms</div><div class="MuiTypography-root MuiTypography-body1 mui-new8e0" data-testid="rate-terms-info-label">These rate terms apply for this specific rental.</div><div class="MuiTypography-root MuiTypography-body1 mui-new8e0" data-testid="rate-terms-description">If for any reason you change your rental parameters (pick up dates, times, etc.), those changes must follow these terms or your rate will also change.</div></div><ul class="MuiBox-root mui-1vnz3zg" data-testid="rate-terms-notes-ul"><li class="MuiBox-root mui-0"><span class="MuiTypography-root MuiTypography-bodySmallRegular mui-fp7ibt">Your rate was calculated based on the information provided. Some modifications may change this rate.</span></li><li class="MuiBox-root mui-0"><span class="MuiTypography-root MuiTypography-bodySmallRegular mui-fp7ibt">Unlimited free miles</span></li><li class="MuiBox-root mui-0"><span class="MuiTypography-root MuiTypography-bodySmallRegular mui-fp7ibt">If you need to cancel 24 hours prior to the scheduled pick-up time, we will refund the full prepaid amount less a ' + (rateTerms.cancelFeeBefore24h || (currencySymbol + "0")) + ' processing fee.</span></li><li class="MuiBox-root mui-0"><span class="MuiTypography-root MuiTypography-bodySmallRegular mui-fp7ibt">If you need to cancel during the 24 hour period prior to the scheduled pick-up time, we will refund the full prepaid amount less a ' + (rateTerms.cancelFeeWithin24h || (currencySymbol + "0")) + ' processing fee.</span></li></ul></div>' +
       '    </div>' +
       '  </div>' +
       '</div>';
@@ -440,6 +504,36 @@
           }
         });
       })(accordionHeaders[k]);
+    }
+
+    // Update protection card prices with the current currency symbol on every price recalc
+    var expSection = document.getElementById(EXP_ID);
+    if (expSection) {
+      var protectionCardEls = expSection.querySelectorAll(".protection-card");
+      for (var pi = 0; pi < protectionCardEls.length; pi++) {
+        var pCard = protectionCardEls[pi];
+        var pCode = pCard.getAttribute("data-target-code");
+        var pData = getProtectionData(pCode);
+        if (!pData) continue;
+
+        var pOldPriceEl = pCard.querySelector(".old-price");
+        if (pOldPriceEl) {
+          if (pData.oldPrice) {
+            var rawOld = pData.oldPrice.replace(/^[^\d.]+/, "");
+            pOldPriceEl.textContent = formatPrice(currencySymbol, rawOld);
+            pOldPriceEl.style.display = "";
+          } else {
+            pOldPriceEl.style.display = "none";
+          }
+        }
+
+        var pNewPriceEl = pCard.querySelector(".new-price");
+        if (pNewPriceEl && pData.newPrice) {
+          var rawNew = pData.newPrice.replace(/^[^\d.]+/, "");
+          var formattedNew = parseFloat(rawNew).toFixed(2);
+          pNewPriceEl.textContent = formatPrice(currencySymbol, formattedNew);
+        }
+      }
     }
   };
 
@@ -640,9 +734,15 @@
 
       var newPriceEl = card.querySelector(".new-price");
       if (newPriceEl && data.newPrice) {
-        var rawPrice = data.newPrice.indexOf("$") === 0 ? data.newPrice.slice(1) : data.newPrice;
+        var symbol = getSymbol(window.__AVIS_PRICE_CALC__ ? window.__AVIS_PRICE_CALC__.currencyCode : "");
+        var rawPrice = data.newPrice;
+        if (rawPrice.indexOf("$") === 0) {
+          rawPrice = rawPrice.slice(1);
+        } else if (symbol && rawPrice.indexOf(symbol) === 0) {
+          rawPrice = rawPrice.slice(symbol.length);
+        }
         var formattedPrice = parseFloat(rawPrice).toFixed(2);
-        newPriceEl.textContent = "$" + formattedPrice;
+        newPriceEl.textContent = symbol + formattedPrice;
       }
     }
 

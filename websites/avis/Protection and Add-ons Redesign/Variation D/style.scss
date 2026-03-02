@@ -136,12 +136,14 @@
 .ultimate-card {
   margin-top: -40px;
   border: 1px solid rgb(167, 167, 167);
-    border-bottom: 1px solid rgb(199, 199, 199);
-  }
-  
-  .ultimate-card .card-content-header {
-    border-radius: 0 !important;
+  border-bottom: 1px solid rgb(199, 199, 199);
 }
+
+.ultimate-card .card-content-header {
+  border-radius: 0 !important;
+}
+  
+
 .recomended {
   background-color: #000;
   color: #fff;
@@ -167,7 +169,6 @@
 }
 
 .protection-card.highlight .card-content-header {
-  background: #88001b;
   border-radius: 0;
   min-height: 176px;
   border-radius: 8px 8px 0 0;
@@ -234,6 +235,7 @@
   margin-bottom: 0;
   padding: 16px 12px;
 }
+
 //features
 .features [data-testid="ancillaries-bundle-item-excluded"] p {
   color: rgba(167, 167, 167, 1) !important;
@@ -370,19 +372,19 @@
 
 .protection-container-grid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(12, 1fr);
   // gap: 6px;
   max-width: 1440px;
   margin: 0 auto;
 }
 
 .protection-cards-column {
-  grid-column: span 5;
+  grid-column: span 8;
 }
 
 // ================ Car Summary Column ===================
 .car-summary-column-wrapper {
-  grid-column: span 2;
+  grid-column: span 4;
   background-color: #fff;
   // margin-right: -1px;
     padding-left: 20px;
@@ -391,6 +393,11 @@
 [data-testid="ancillaries-action-footer"] {
   margin-top: 0 !important;
   position: static !important;
+
+  &::before,
+  &::after {
+    display: none !important;
+  }
 }
 
 .car-summary-column {
@@ -510,6 +517,33 @@
     }
   }
 
+  //AMAZON SECTION STYLE HERE
+  .amazon-gift-card-alert {
+    background-color: rgb(244, 244, 244);
+    border-radius: 4px;
+    border: 1px solid rgba(115, 109, 109, 0.3);
+    box-shadow: none !important;
+    padding: 16px 24px;
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+
+    .amazon-gift-card-title {
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 700;
+    }
+
+    .amazon-gift-card-disclaimer {
+      margin: 0px;
+      font-family: AvisSans, "AvisSans Fallback", sans-serif;
+      font-size: 14px;
+      line-height: 20px;
+      letter-spacing: 0.003em;
+      color: rgb(0, 0, 0);
+    }
+  }
+
   .total-vehicle-rate {
     display: flex;
     justify-content: space-between;
@@ -624,7 +658,8 @@
       line-height: 12px;
   }
 
-  .accordion-header:hover {
+  .accordion-header:hover,
+  .accordion-header.active {
     background: rgb(244, 243, 242);
   }
 
@@ -852,12 +887,12 @@
 }
 
 @media (max-width: 1024px) {
-  .car-summary-column {
+  .car-summary-column-wrapper {
     display: none;
   }
 
   .protection-cards-column {
-    grid-column: span 7;
+    grid-column: span 12;
   }
 }
 

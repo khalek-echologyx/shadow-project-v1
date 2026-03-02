@@ -69,7 +69,6 @@
 .protection-bg {
   width: 100%;
   height: 474px;
-  /* Reduced by approx 20% from 592px */
   display: block;
   position: absolute;
   top: 0;
@@ -90,17 +89,18 @@
   letter-spacing: 0.3px !important;
   margin: 0 !important;
   padding-top: 21px;
-    padding-bottom: 44px;
-    line-height: 28px;
+  padding-bottom: 44px;
+  line-height: 28px;
 }
 
 .protection-cards {
   display: flex;
   gap: 8px;
-  align-items: flex-start;
+  align-items: center;
 }
 
 .protection-card {
+  position: relative;
   width: 100%;
   color: #fff;
   border-radius: 8px;
@@ -109,81 +109,69 @@
   flex: 1;
   cursor: pointer;
   box-sizing: border-box;
-  }
+  transition: all 0.3s ease-in-out;
+}
 
-.protection-card:hover{
+.protection-card:hover {
   border: 1px solid #000;
 }
-  
-  .protection-card.selected:not(.ultimate-card) {
-    border: 3px solid #000 !important;
-    border-radius: 11px;
-    transform: scaleY(1.05);
-    z-index: 2;
-  }
-  
-  .protection-card.selected.ultimate-card {
-    border: 3px solid #000 !important;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
-    border-radius: 12px;
-  }
-  
-  .protection-card.selected {
-    border: 3px solid #000 !important;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
-  border-radius: 12px;
+
+.protection-card.highlight {
+  border: 2px solid #000 !important;
+  border-radius: 8px;
+  z-index: 2;
 }
 
 .ultimate-card {
-  margin-top: -40px;
   border: 1px solid rgb(167, 167, 167);
-    border-bottom: 1px solid rgb(199, 199, 199);
-  }
-  
-  .ultimate-card .card-content-header {
-    border-radius: 0 !important;
+  border-bottom: 1px solid rgb(199, 199, 199);
 }
 .recomended {
-  background-color: #000;
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background-color: #42000D;
   color: #fff;
   font-size: 12px;
-  font-weight: 400;
-  line-height: 100%;
-  letter-spacing: 0.84px;
-  text-align: center;
-  padding: 10px 0;
-  border-radius: 8px 8px 0 0;
-}
-
-.protection-card.highlight .recomended {
-  background-color: #660014;
-  color: #fff;
-  font-size: 14px;
   font-weight: 700;
   line-height: 100%;
   letter-spacing: 0.84px;
   text-align: center;
-  padding: 12px 0;
-  border-radius: 8px 8px 0 0;
+  padding: 1.5px 8px;
+  border-radius: 4px;
 }
 
-.protection-card.highlight .card-content-header {
-  background: #88001b;
-  border-radius: 0;
-  min-height: 176px;
-  border-radius: 8px 8px 0 0;
+.recomended svg {
+  fill: #62B41F;
+  height: 19px;
+  width: 19px;
+}
+
+.recomended svg path {
+  stroke: #62B41F;
+  stroke-width: 1.5px;
+}
+
+.ultimate-card .card-content-header {
+  background: #91001D;
 }
 
 .card-content-header {
   padding: 16px 24px;
-  background-color: #151D28;
-  border-radius: 8px 8px 0 0;
+  background-color: #2E0009;
+  border-radius: 7px 7px 0 0;
   min-height: 176px;
 }
 
-.selected .card-content-header {
+.highlight .card-content-header {
   min-height: 196px;
+  border-radius: 4px 4px 0 0;
 }
+
 .card-title {
   font-size: 20px;
   font-weight: 700;
@@ -193,19 +181,22 @@
   margin: 0;
   margin-bottom: 6px;
 }
+
 .highlight .card-title {
   font-size: 24px;
   line-height: 31px;
 }
+
 .rating-mvt-307 {
   margin: 0;
   margin-bottom: 6px;
   gap: 2px;
-  }
-  
-  .highlight .rating-mvt-307 {
-    gap: 2.2px;
 }
+
+.highlight .rating-mvt-307 {
+  gap: 2.2px;
+}
+
 .rating-mvt-307 div {
   background-color: #E1E1E14D;
   margin: 0;
@@ -217,7 +208,7 @@
 
 .protection-card.highlight .card-content-header .rating-mvt-307 div {
   width: 17px;
-    height: 7px;
+  height: 7px;
 }
 
 .card-desc {
@@ -230,11 +221,17 @@
   font-size: 15.43px;
   line-height: 22px;
 }
+
 .protection-card .features {
   background-color: #fff;
   margin-bottom: 0;
   padding: 16px 12px;
 }
+
+.protection-card.highlight .features {
+  min-height: 200px;
+}
+
 //features
 .features [data-testid="ancillaries-bundle-item-excluded"] p {
   color: rgba(167, 167, 167, 1) !important;
@@ -247,6 +244,7 @@
 .features [data-testid="ancillaries-bundle-item-excluded"] div:first-child svg path {
   stroke: #A3A3A3 !important;
 }
+
 .protection-card .features>div>div:last-child>svg {
   width: 24px;
   height: 24px;
@@ -281,7 +279,7 @@
   margin-bottom: -5px;
 }
 
-.selected .features p {
+.highlight .features p {
   font-size: 15.43px;
 }
 
@@ -289,6 +287,7 @@
   background-color: #fff;
   text-align: center;
   padding: 0 12px;
+  min-height: 57px;
 }
 
 .old-price {
@@ -311,6 +310,7 @@
 .highlight .new-price {
   font-size: 30px;
 }
+
 .per-day {
   font-size: 16px;
   color: #000;
@@ -318,6 +318,7 @@
   vertical-align: text-bottom;
   font-weight: 500;
 }
+
 .highlight .per-day {
   font-size: 17.64px;
 }
@@ -326,6 +327,7 @@
   padding: 16px 24px;
   background-color: #fff;
   border-radius: 0 0 8px 8px;
+  padding-top: 0;
 }
 
 .btn {
@@ -338,8 +340,8 @@
   font-weight: 500;
   display: flex;
   align-items: center;
-    justify-content: center;
-    gap: 8px;
+  justify-content: center;
+  gap: 8px;
 }
 
 .btn.selected {
@@ -354,43 +356,48 @@
   background: #D4002A;
   color: #fff;
   font-weight: 500;
-    font-size: 15.43px;
-    font-family: 'AvisSans';
-    letter-spacing: 0.3px !important;
+  font-size: 15.43px;
+  font-family: 'AvisSans';
+  letter-spacing: 0.3px !important;
 }
 
 .btn.secondary {
   background: #000;
   color: #fff;
   font-weight: 500;
-    font-size: 14px;
-    font-family: 'AvisSans';
-    letter-spacing: 0.3px;
+  font-size: 14px;
+  font-family: 'AvisSans';
+  letter-spacing: 0.3px;
 }
 
 .protection-container-grid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(12, 1fr);
   // gap: 6px;
   max-width: 1440px;
   margin: 0 auto;
 }
 
 .protection-cards-column {
-  grid-column: span 5;
+  grid-column: span 8;
 }
 
 // ================ Car Summary Column ===================
 .car-summary-column-wrapper {
-  grid-column: span 2;
+  grid-column: span 4;
   background-color: #fff;
   // margin-right: -1px;
-    padding-left: 20px;
+  padding-left: 20px;
 }
 
 [data-testid="ancillaries-action-footer"] {
   margin-top: 0 !important;
   position: static !important;
+
+  &::before,
+  &::after {
+    display: none !important;
+  }
 }
 
 .car-summary-column {
@@ -442,11 +449,12 @@
     padding: 0 24px;
   }
 
-        .vehicle-info .vehicle-name-container {
-          display: flex;
-          flex-direction: column;
-          height: 100%;
-        }
+  .vehicle-info .vehicle-name-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
   .vehicle-info .vehicle-name {
     font-weight: 500;
     font-size: 14px;
@@ -454,15 +462,15 @@
     letter-spacing: 0.3px !important;
     color: #000;
     margin: 0;
-      padding-bottom: 4px;
-    }
-    
-    .vehicle-info .vehicle-similar {
-      margin: 0;
-      color: #808080;
-      font-size: 14px;
-      line-height: 20px;
-      letter-spacing: 0.3px !important;
+    padding-bottom: 4px;
+  }
+
+  .vehicle-info .vehicle-similar {
+    margin: 0;
+    color: #808080;
+    font-size: 14px;
+    line-height: 20px;
+    letter-spacing: 0.3px !important;
   }
 
   .location-info {
@@ -498,7 +506,7 @@
       color: #000;
       margin-bottom: 4px;
       line-height: 20px;
-        letter-spacing: 0.3px !important;
+      letter-spacing: 0.3px !important;
     }
 
     .loc-name,
@@ -506,7 +514,35 @@
       font-size: 14px;
       color: #524D4D;
       line-height: 20px;
-        letter-spacing: 0.3px !important;
+      letter-spacing: 0.3px !important;
+    }
+  }
+
+  //AMAZON SECTION STYLE HERE
+  .amazon-gift-card-alert {
+    background-color: rgb(244, 244, 244);
+    border-radius: 4px;
+    border: 1px solid rgba(115, 109, 109, 0.3);
+    box-shadow: none !important;
+    padding: 16px 24px;
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    
+
+    .amazon-gift-card-title {
+      font-size: 16px;
+      line-height: 24px;
+      font-weight: 700;
+    }
+
+    .amazon-gift-card-disclaimer {
+      margin: 0px;
+      font-family: AvisSans, "AvisSans Fallback", sans-serif;
+      font-size: 14px;
+      line-height: 20px;
+      letter-spacing: 0.003em;
+      color: rgb(0, 0, 0);
     }
   }
 
@@ -524,9 +560,10 @@
       line-height: 20px;
       color: #000;
       font-weight: 500;
-.rental-days {
-    font-weight: 400;
-  }
+
+      .rental-days {
+        font-weight: 400;
+      }
     }
 
     .total-vehicle-rate-subtitle {
@@ -569,18 +606,19 @@
     padding-bottom: 12px;
   }
 
-        .accordion-item .accordion-footer {
-          padding: 0 24px;
-        }
-    
-        .accordion-item.rate-terms-accordion .accordion-header {
-          margin-top: 0;
-        }
+  .accordion-item .accordion-footer {
+    padding: 0 24px;
+  }
+
+  .accordion-item.rate-terms-accordion .accordion-header {
+    margin-top: 0;
+  }
 
   .accordion-item .accordion-footer .pr-added-footer span {
     color: #1EA238;
     font-weight: 500;
   }
+
   .terms-content {
     color: rgba(0, 0, 0) !important;
   }
@@ -596,7 +634,7 @@
     text-align: left;
     font-size: 14px;
     font-weight: 500;
-      color: #000;
+    color: #000;
     cursor: pointer;
     display: flex;
     justify-content: space-between;
@@ -610,9 +648,9 @@
     }
   }
 
-        .protection-accordion .accordion-header {
-          margin-top: 12px;
-        }
+  .protection-accordion .accordion-header {
+    margin-top: 12px;
+  }
 
   .accordion-header-title.rate-terms {
     font-size: 12px;
@@ -620,10 +658,11 @@
     font-weight: 400;
     text-decoration: underline;
     letter-spacing: 0.3px;
-      line-height: 12px;
+    line-height: 12px;
   }
 
-  .accordion-header:hover {
+  .accordion-header:hover,
+  .accordion-header.active {
     background: rgb(244, 243, 242);
   }
 
@@ -650,12 +689,13 @@
     color: #000;
     font-weight: 400;
   }
+
   .protection-add-ons-price {
     font-weight: 500;
   }
-    
-    .accordion-header-icon-price.savings-price {
-      color: #388A13;
+
+  .accordion-header-icon-price.savings-price {
+    color: #388A13;
   }
 
   .accordion-header-icon-arrow {
@@ -724,10 +764,10 @@
 
     .total-price {
       font-size: 16px;
-        line-height: 24px;
-        color: #000;
-        font-weight: 500;
-        letter-spacing: 0.3px !important;
+      line-height: 24px;
+      color: #000;
+      font-weight: 500;
+      letter-spacing: 0.3px !important;
     }
   }
 }
@@ -822,12 +862,13 @@
 @media (max-width: 768px) {
   .protection-container-grid {
     grid-template-columns: 1fr;
-      padding: 0;
-    }
-        .protection-cards-column,
-        .car-summary-column-wrapper {
-      grid-column: span 1;
-    }
+    padding: 0;
+  }
+
+  .protection-cards-column,
+  .car-summary-column-wrapper {
+    grid-column: span 1;
+  }
 
   .protection-cards-section-content {
     width: calc(100% - 32px);
@@ -844,18 +885,19 @@
   .opt-out-section {
     margin: 0 16px;
   }
-  .protection-card.selected:not(.ultimate-card){
+
+  .protection-card.selected:not(.ultimate-card) {
     transform: none;
   }
 }
 
 @media (max-width: 1024px) {
-  .car-summary-column {
+  .car-summary-column-wrapper {
     display: none;
   }
 
   .protection-cards-column {
-    grid-column: span 7;
+    grid-column: span 12;
   }
 }
 
@@ -868,6 +910,13 @@
 @media (max-width: 1359px) {
   .card-content-header,
   .protection-card.highlight .card-content-header {
-    min-height: 216px;
+    min-height: 252px;
+  }
+}
+
+@media (max-width: 768px) {
+  .card-content-header,
+  .protection-card.highlight .card-content-header {
+    min-height: fit-content;
   }
 }

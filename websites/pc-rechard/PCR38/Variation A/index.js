@@ -1,6 +1,17 @@
 (() => {
   const TEST_ID = "PCR38";
-  const VARIANT_ID = "Variation A";
+  const VARIANT_ID = "V1"
+  function logInfo(message) {
+    console.log(
+      `%cAcadia%c${TEST_ID}-${VARIANT_ID}`,
+      "color: white; background: rgb(0, 0, 57); font-weight: 700; padding: 2px 4px; border-radius: 2px;",
+      "margin-left: 8px; color: white; background: rgb(0, 57, 57); font-weight: 700; padding: 2px 4px; border-radius: 2px;",
+      message
+    );
+  }
+
+  logInfo("fired"); 
+
   function waitForElem(
     waitFor,
     callback,
@@ -36,6 +47,53 @@
         : setTimeout(() => {
           poll(t, i, o, o ? e : e - a, a);
         }, a));
+  }
+
+  // function fireGA4Event(eventName, eventLabel = "") {
+  //   window.dataLayer = window.dataLayer || [];
+  //   window.dataLayer.push({
+  //     event: "GA4event",
+  //     "ga4-event-name": "cro_event",
+  //     "ga4-event-p1-name": "event_category",
+  //     "ga4-event-p1-value": eventName,
+  //     "ga4-event-p2-name": "event_label",
+  //     "ga4-event-p2-value": eventLabel,
+  //   });
+  // }
+
+  const fireGA4Event = (eventName, eventLabel = "") => {
+        window.dataLayer = window.dataLayer || [];
+        window.dataLayer.push({
+            event: "MonetateEvent",
+            "ga4-event-name": "cro_event",
+            "ga4-event-p1-name": "event_category",
+            "ga4-event-p1-value": eventName,
+            "ga4-event-p2-name": "event_label",
+            "ga4-event-p2-value": eventLabel,
+        });
+    };
+
+  function getGeoEvent() {
+    return window.dataLayer?.find(d => d.event === "ketchGeoip")
+  }
+
+  function waitForGeo(callback, timeout = 3000) {
+    const start = Date.now();
+
+    (function check() {
+      const geo = getGeoEvent();
+      if (geo) {
+        callback(geo);
+        return;
+      }
+
+      if (Date.now() - start > timeout) {
+        console.warn(TEST_ID + ": Geo not found, running normally");
+        callback(null);
+        return;
+      }
+      setTimeout(check, 50)
+    })();
   }
 
   const acimaLogo = `<svg xmlns="http://www.w3.org/2000/svg" width="51" height="10" viewBox="0 0 51 10" fill="none">
@@ -97,13 +155,25 @@
         document.addEventListener("click", (e) => {
           const el = e.target;
           if (el.closest(".acima-learn-more")) {
-            console.log("acima");
+            fireGA4Event("PCR38_AcimaClick", "acima")
           } else if (el.closest(".affirm-modal-trigger")) {
-            console.log("Affirm")
+            fireGA4Event("PCR38_AffirmClick", "affirm")
           }
         })
       }
     )
   }
-  waitForElem("body", mainJs);
+  waitForGeo(function (geo) {
+    if (
+      geo &&
+      geo.countryCode === "US" &&
+      geo.regionCode === "NJ"
+    ) {
+      console.log(TEST_ID + ": Excluded (New Jersey)");
+      return; // STOP CAMPAIGN
+    }
+
+    waitForElem("body", mainJs);
+  })
+
 })();
