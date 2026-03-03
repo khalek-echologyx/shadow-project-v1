@@ -37,6 +37,7 @@
   padding-top: 21px;
   padding-bottom: 44px;
   line-height: 28px;
+  text-align: center;
 }
 
 .protection-cards {
@@ -122,6 +123,17 @@
   min-height: 176px;
 }
 
+// ===== Card header style bg changes on selection =====
+body.bundle-active .card-content-header {
+  background-color: #000;
+}
+body.bundle-active .ultimate-card .card-content-header {
+  background: #7C1620;
+}
+body.bundle-active .recomended {
+  background-color: #000;
+}
+
 .highlight .card-content-header {
   min-height: 196px;
 }
@@ -187,8 +199,9 @@
   min-height: 200px;
 }
 
-.features [data-testid="ancillaries-bundle-item-excluded"] p {
+.features [data-testid="ancillaries-bundle-item-excluded"] span {
   color: rgba(167, 167, 167, 1) !important;
+  text-decoration: none;
 }
 
 .features [data-testid="ancillaries-bundle-item-included"] svg,

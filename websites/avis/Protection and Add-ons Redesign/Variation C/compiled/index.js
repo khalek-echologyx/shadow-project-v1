@@ -606,7 +606,7 @@
       '              </svg>' +
       '              <div class="protection-cards-section-content">' +
       '                <h2 class="protection-title">' +
-      '                2.5 Million + customers purchased our popular protection in 2025!' +
+      '                Protection Packages Built for Peace of Mind' +
       '                </h2>' +
       '    ' +
       '              <div class="protection-cards">' +
@@ -953,24 +953,15 @@
     }
 
     // check for active individual items
-    var activeItems = $('div[data-testid="single-protections-item-add-to-trip-btn"] input:checked').length > 0;
+    $('div[data-testid="single-protections-item-add-to-trip-btn"] input:checked').length > 0;
 
     // check for included items
-    var includedItems = $('span[data-testid="single-protections-item-included-in-bundle"]').filter(function () {
+    $('span[data-testid="single-protections-item-included-in-bundle"]').filter(function () {
       return $(this).text() === "Included";
     }).length > 0;
 
-    // enable CTA if any selection made
-    var shouldEnable = activeBundle || activeItems || includedItems || isAddOnsPage();
-    // Variation C doesn't have the decline checkbox as per previous port requirements (V-A to V-C)
-
-    var isDisabled = contCta.is(':disabled');
-
-    if (shouldEnable && isDisabled) {
-      contCta.removeAttr('disabled');
-    } else if (!shouldEnable && !isDisabled) {
-      contCta.attr('disabled', '');
-    }
+    // Variation C: CTA is always enabled regardless of selection state
+    contCta.removeAttr('disabled');
 
     if (activeBundle) {
       $('body').addClass('bundle-active');

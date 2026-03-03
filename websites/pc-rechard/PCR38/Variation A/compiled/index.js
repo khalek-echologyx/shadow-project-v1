@@ -88,7 +88,6 @@
       }
 
       if (Date.now() - start > timeout) {
-        console.warn(TEST_ID + ": Geo not found, running normally");
         callback(null);
         return;
       }

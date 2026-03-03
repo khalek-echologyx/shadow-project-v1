@@ -80,6 +80,7 @@
   var whiteCheckSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="14" viewBox="0 0 18 14" fill="none">' +
     '<path fill-rule="evenodd" clip-rule="evenodd" d="M16.8118 1.16363C17.0528 1.39107 17.0638 1.7708 16.8364 2.0118L6.96479 12.4723C6.72819 12.723 6.32948 12.7232 6.09257 12.4728L1.16415 7.2634C0.936413 7.02269 0.946938 6.64293 1.18766 6.4152C1.42837 6.18747 1.80812 6.19799 2.03586 6.43871L6.52788 11.1868L15.9636 1.1882C16.1911 0.947198 16.5708 0.9362 16.8118 1.16363Z" fill="white" stroke="white" stroke-width="2" stroke-linecap="round"/>' +
     '</svg>';
+    var recommendCheckSvg = '<svg focusable="false" aria-hidden="true" viewBox="0 0 11 9"><path d="M1 4L4 7L10 1" stroke-linecap="round" fill="none"></path></svg>';
 
   function getProtectionData(dataCode) {
     var selector = '[data-testid="ancillaries-bundle"][data-code="' + dataCode + '"]';
@@ -595,14 +596,87 @@
       '              </svg>' +
       '              <div class="protection-cards-section-content">' +
       '                <h2 class="protection-title">' +
-      '                2.5 Million + customers purchased our popular protection in 2025!' +
+      '                Protection Packages Built for Peace of Mind' +
       '                </h2>' +
       '    ' +
       '              <div class="protection-cards">' +
-      '              <div class="protection-cards">' +
-      '                <!-- Ultimate Protection Highlight -->\n                <div class="protection-card highlight ultimate-card" data-target-code="Ultimate Protection">\n                  <div class="recomended">RECOMMENDED</div>\n                  <div class="card-content-header">\n                    <p class="card-title">Ultimate Protection</p>\n                    <p class="ancillary-bundle-rating"><span class="active"></span> <span class="active"></span> <span class="active"></span> </p> \n                    <p class="card-desc">\n                      Includes full protection if your rental vehicle is damaged or stolen.\n                    </p>\n                  </div>\n                  <ul class="feature-list">\n                    <li class="active"><p><span class="active">' + svg + '</span> <span>Cover The Car (LDW)</span></p> <span>' + infoSvg + '</span></li>\n                    <li class="active"><p><span class="active">' + svg + '</span> <span>Cover My Liability (ALI)</span></p> <span>' + infoSvg + '</span></li>\n                    <li class="active"><p><span class="active">' + svg + '</span> <span>Cover Myself (PAI)</span></p> <span>' + infoSvg + '</span></li>\n                    <li class="active"><p><span class="active">' + svg + '</span> <span>Cover My Belongings (PEP)</span></p> <span>' + infoSvg + '</span></li>\n                  </ul>\n                  <div class="price">\n                    <span class="old-price">$62.00/day</span>\n                    <span class="new-price">$56</span>\n                    <span class="per-day">/day</span>\n                  </div>\n                  <div class="btn-container">\n                    <button class="btn primary custom-select-btn" data-target-code="Ultimate Protection">Add Protection</button>\n                  </div>\n                </div>\n\n                <!-- Enhance Protection -->\n                <div class="protection-card" data-target-code="Enhanced Protection">\n                  <div class="card-content-header">\n                    <p class="card-title">Enhanced Protection</p>\n                    <p class="ancillary-bundle-rating"><span class="active"></span> <span class="active"></span> <span></span> </p>\n                    <p class="card-desc">\n                      For your rental vehicle +liability coverage, to help avoid costly\n                      claims from third party injuries or property damage.\n                    </p>\n                  </div>\n                  <ul class="feature-list">\n                    <li class="active"><p><span class="active">' + svg + '</span> <span>Cover The Car (LDW)</span></p> <span>' + infoSvg + '</span></li>\n                    <li class="active"><p><span class="active">' + svg + '</span> <span>Cover My Liability (ALI)</span></p> <span>' + infoSvg + '</span></li>\n                    <li class="active"><p><span class="active">' + svg + '</span> <span>Cover Myself (PAI)</span></p> <span>' + infoSvg + '</span></li>\n                    <li class="inactive"><p><span class="inactive">' + crossSvg + '</span> <span>Cover My Belongings (PEP)</span></p> <span>' + infoSvg + '</span></li>\n                  </ul>\n                  <div class="price">\n                    <span class="old-price">$62.00/day</span>\n                    <span class="new-price">$45</span>\n                    <span class="per-day">/day</span>\n                  </div>\n                  <div class="btn-container">\n                    <button class="btn secondary custom-select-btn" data-target-code="Enhanced Protection">Select</button>\n                  </div>\n                </div>\n\n                <!-- Essential Protection -->\n                <div class="protection-card" data-target-code="Essential Protection">\n                  <div class="card-content-header">\n                    <p class="card-title">Essential Protection</p>\n                    <p class="ancillary-bundle-rating"><span class="active"></span> <span></span> <span></span> </p>\n                    <p class="card-desc">\n                      For your rental vehicle, yourself, and your belongings.\n                    </p>\n                  </div>\n                  <ul class="feature-list">\n                    <li class="active"><p><span class="active">' + svg + '</span> <span>Cover The Car (LDW)</span></p> <span>' + infoSvg + '</span></li>\n                    <li class="inactive"><p><span class="inactive">' + crossSvg + '</span> <span>Cover My Liability (ALI)</span></p> <span>' + infoSvg + '</span></li>\n                    <li class="inactive"><p><span class="inactive">' + crossSvg + '</span> <span>Cover Myself (PAI)</span></p> <span>' + infoSvg + '</span></li>\n                    <li class="inactive"><p><span class="inactive">' + crossSvg + '</span> <span>Cover My Belongings (PEP)</span></p> <span>' + infoSvg + '</span></li>\n                  </ul>\n                  <div class="price">\n                    <span class="old-price">$62.00/day</span>\n                    <span class="new-price">$32</span>\n                    <span class="per-day">/day</span>\n                  </div>\n                  <div class="btn-container">\n                    <button class="btn secondary custom-select-btn" data-target-code="Essential Protection">Select</button>\n                  </div>\n                </div>' +
+      '                <!-- Ultimate Protection Highlight -->' +
+      '                <div class="protection-card highlight ultimate-card" data-target-code="Ultimate Protection">' +
+      '                  <div class="recomended"> '+ recommendCheckSvg +' <span>RECOMMENDED</span> </div>' +
+      '                  <div class="card-content-header">' +
+      '                    <p class="card-title">Ultimate Protection</p>' +
+      '                    <p class="ancillary-bundle-rating"><span class="active"></span> <span class="active"></span> <span class="active"></span> </p> ' +
+      '                    <p class="card-desc">' +
+      '                      Includes full protection if your rental vehicle is damaged or stolen.' +
+      '                    </p>' +
+      '                  </div>' +
+      '                  <ul class="feature-list">' +
+      '                    <li class="active"><p><span class="active">' + svg + '</span> <span>Cover The Car (LDW)</span></p> <span>' + infoSvg + '</span></li>' +
+      '                    <li class="active"><p><span class="active">' + svg + '</span> <span>Cover My Liability (ALI)</span></p> <span>' + infoSvg + '</span></li>' +
+      '                    <li class="active"><p><span class="active">' + svg + '</span> <span>Cover Myself (PAI)</span></p> <span>' + infoSvg + '</span></li>' +
+      '                    <li class="active"><p><span class="active">' + svg + '</span> <span>Cover My Belongings (PEP)</span></p> <span>' + infoSvg + '</span></li>' +
+      '                  </ul>' +
+      '                  <div class="price">' +
+      '                    <span class="old-price">$62.00/day</span>' +
+      '                    <span class="new-price">$56</span>' +
+      '                    <span class="per-day">/day</span>' +
+      '                  </div>' +
+      '                  <div class="btn-container">' +
+      '                    <button class="btn primary custom-select-btn" data-target-code="Ultimate Protection">Select</button>' +
+      '                  </div>' +
       '                </div>' +
-      '              </div>' +
+      ' ' +
+      '                <!-- Enhance Protection -->' +
+      '                <div class="protection-card" data-target-code="Enhanced Protection">' +
+      '                  <div class="card-content-header">' +
+      '                    <p class="card-title">Enhanced Protection</p>' +
+      '                    <p class="ancillary-bundle-rating"><span class="active"></span> <span class="active"></span> <span></span> </p>' +
+      '                    <p class="card-desc">' +
+      '                      For your rental vehicle +liability coverage, to help avoid costly' +
+      '                      claims from third party injuries or property damage.' +
+      '                    </p>' +
+      '                  </div>' +
+      '                  <ul class="feature-list">' +
+      '                    <li class="active"><p><span class="active">' + svg + '</span> <span>Cover The Car (LDW)</span></p> <span>' + infoSvg + '</span></li>' +
+      '                    <li class="active"><p><span class="active">' + svg + '</span> <span>Cover My Liability (ALI)</span></p> <span>' + infoSvg + '</span></li>' +
+      '                    <li class="active"><p><span class="active">' + svg + '</span> <span>Cover Myself (PAI)</span></p> <span>' + infoSvg + '</span></li>' +
+      '                    <li class="inactive"><p><span class="inactive">' + crossSvg + '</span> <span>Cover My Belongings (PEP)</span></p> <span>' + infoSvg + '</span></li>' +
+      '                  </ul>' +
+      '                  <div class="price">' +
+      '                    <span class="old-price">$62.00/day</span>' +
+      '                    <span class="new-price">$45</span>' +
+      '                    <span class="per-day">/day</span>' +
+      '                  </div>' +
+      '                  <div class="btn-container">' +
+      '                    <button class="btn secondary custom-select-btn" data-target-code="Enhanced Protection">Select</button>' +
+      '                  </div>' +
+      '                </div>' +
+      ' ' +
+      '                <!-- Essential Protection -->' +
+      '                <div class="protection-card" data-target-code="Essential Protection">' +
+      '                  <div class="card-content-header">' +
+      '                    <p class="card-title">Essential Protection</p>' +
+      '                    <p class="ancillary-bundle-rating"><span class="active"></span> <span></span> <span></span> </p>' +
+      '                    <p class="card-desc">' +
+      '                      For your rental vehicle, yourself, and your belongings.' +
+      '                    </p>' +
+      '                  </div>' +
+      '                  <ul class="feature-list">' +
+      '                    <li class="active"><p><span class="active">' + svg + '</span> <span>Cover The Car (LDW)</span></p> <span>' + infoSvg + '</span></li>' +
+      '                    <li class="inactive"><p><span class="inactive">' + crossSvg + '</span> <span>Cover My Liability (ALI)</span></p> <span>' + infoSvg + '</span></li>' +
+      '                    <li class="inactive"><p><span class="inactive">' + crossSvg + '</span> <span>Cover Myself (PAI)</span></p> <span>' + infoSvg + '</span></li>' +
+      '                    <li class="inactive"><p><span class="inactive">' + crossSvg + '</span> <span>Cover My Belongings (PEP)</span></p> <span>' + infoSvg + '</span></li>' +
+      '                  </ul>' +
+      '                  <div class="price">' +
+      '                    <span class="old-price">$62.00/day</span>' +
+      '                    <span class="new-price">$32</span>' +
+      '                    <span class="per-day">/day</span>' +
+      '                  </div>' +
+      '                  <div class="btn-container">' +
+      '                    <button class="btn secondary custom-select-btn" data-target-code="Essential Protection">Select</button>' +
+      '                  </div>' +
+      '                </div>' +
+      '               </div>' +
       '              </div>' +
       '            </div>' +
       '          </div>' +
@@ -804,7 +878,7 @@
         var cardBtn = card.querySelector(".custom-select-btn");
         var cardCode = cardBtn.getAttribute("data-target-code");
 
-        var originalText = cardCode === "Ultimate Protection" ? "Add Protection" : "Select";
+        var originalText = "Select";
 
         if (selectedPlanCode === cardCode) {
           card.classList.add("highlight");

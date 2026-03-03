@@ -596,7 +596,7 @@
       '              </svg>' +
       '              <div class="protection-cards-section-content">' +
       '                <h2 class="protection-title">' +
-      '                2.5 Million + customers purchased our popular protection in 2025!' +
+      '                Protection Packages Built for Peace of Mind' +
       '                </h2>' +
       '    ' +
       '              <div class="protection-cards">' +

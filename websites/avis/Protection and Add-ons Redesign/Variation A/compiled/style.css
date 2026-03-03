@@ -82,6 +82,7 @@
   padding-top: 21px;
   padding-bottom: 44px;
   line-height: 28px;
+  text-align: center;
 }
 
 .protection-cards {
@@ -100,7 +101,7 @@
   flex: 1;
   cursor: pointer;
   box-sizing: border-box;
-  transition: all 0.5s ease-in-out;
+  transition: all 0.3s ease-in-out;
 }
 
 .protection-card:hover {
@@ -157,6 +158,18 @@
   background-color: #2E0009;
   border-radius: 7px 7px 0 0;
   min-height: 176px;
+}
+
+body.bundle-active .card-content-header {
+  background-color: #000;
+}
+
+body.bundle-active .ultimate-card .card-content-header {
+  background: #7C1620;
+}
+
+body.bundle-active .recomended {
+  background-color: #000;
 }
 
 .highlight .card-content-header {
@@ -224,8 +237,9 @@
   min-height: 200px;
 }
 
-.features [data-testid=ancillaries-bundle-item-excluded] p {
+.features [data-testid=ancillaries-bundle-item-excluded] span {
   color: rgb(167, 167, 167) !important;
+  text-decoration: none;
 }
 
 .features [data-testid=ancillaries-bundle-item-included] svg {

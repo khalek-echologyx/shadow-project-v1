@@ -66,7 +66,6 @@
 .protection-bg {
   width: 100%;
   height: 474px;
-  /* Reduced by approx 20% from 592px */
   display: block;
   position: absolute;
   top: 0;
@@ -89,15 +88,17 @@
   padding-top: 21px;
   padding-bottom: 44px;
   line-height: 28px;
+  text-align: center;
 }
 
 .protection-cards {
   display: flex;
   gap: 8px;
-  align-items: flex-start;
+  align-items: center;
 }
 
 .protection-card {
+  position: relative;
   width: 100%;
   color: #fff;
   border-radius: 8px;
@@ -106,81 +107,80 @@
   flex: 1;
   cursor: pointer;
   box-sizing: border-box;
+  transition: all 0.3s ease-in-out;
 }
 
 .protection-card:hover {
   border: 1px solid #000;
 }
 
-.protection-card.selected:not(.ultimate-card) {
-  border: 3px solid #000 !important;
-  border-radius: 11px;
-  transform: scaleY(1.05);
+.protection-card.highlight {
+  border: 2px solid #000 !important;
+  border-radius: 8px;
   z-index: 2;
 }
 
-.protection-card.selected.ultimate-card {
-  border: 3px solid #000 !important;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
-  border-radius: 12px;
-}
-
-.protection-card.selected {
-  border: 3px solid #000 !important;
-  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15);
-  border-radius: 12px;
-}
-
 .ultimate-card {
-  margin-top: -40px;
   border: 1px solid rgb(167, 167, 167);
   border-bottom: 1px solid rgb(199, 199, 199);
 }
 
-.ultimate-card .card-content-header {
-  border-radius: 0 !important;
-}
-
 .recomended {
-  background-color: #000;
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background-color: #42000d;
   color: #fff;
   font-size: 12px;
-  font-weight: 400;
-  line-height: 100%;
-  letter-spacing: 0.84px;
-  text-align: center;
-  padding: 10px 0;
-  border-radius: 8px 8px 0 0;
-}
-
-.protection-card.highlight .recomended {
-  background-color: #660014;
-  color: #fff;
-  font-size: 14px;
   font-weight: 700;
   line-height: 100%;
   letter-spacing: 0.84px;
   text-align: center;
-  padding: 12px 0;
-  border-radius: 8px 8px 0 0;
+  padding: 1.5px 8px;
+  border-radius: 4px;
 }
 
-.protection-card.highlight .card-content-header {
-  background: #88001b;
-  border-radius: 0;
-  min-height: 176px;
-  border-radius: 8px 8px 0 0;
+.recomended svg {
+  fill: #62b41f;
+  height: 19px;
+  width: 19px;
+}
+
+.recomended svg path {
+  stroke: #62b41f;
+  stroke-width: 1.5px;
+}
+
+.ultimate-card .card-content-header {
+  background: #91001d;
 }
 
 .card-content-header {
   padding: 16px 24px;
-  background-color: #151d28;
-  border-radius: 8px 8px 0 0;
+  background-color: #2e0009;
+  border-radius: 7px 7px 0 0;
   min-height: 176px;
 }
 
-.selected .card-content-header {
+body.bundle-active .card-content-header {
+  background-color: #000;
+}
+
+body.bundle-active .ultimate-card .card-content-header {
+  background: #7c1620;
+}
+
+body.bundle-active .recomended {
+  background-color: #000;
+}
+
+.highlight .card-content-header {
   min-height: 196px;
+  border-radius: 4px 4px 0 0;
 }
 
 .card-title {
@@ -239,8 +239,13 @@
   padding: 16px 12px;
 }
 
-.features [data-testid="ancillaries-bundle-item-excluded"] p {
+.protection-card.highlight .features {
+  min-height: 200px;
+}
+
+.features [data-testid="ancillaries-bundle-item-excluded"] span {
   color: rgb(167, 167, 167) !important;
+  text-decoration: none;
 }
 
 .features [data-testid="ancillaries-bundle-item-included"] svg {
@@ -289,7 +294,7 @@
   margin-bottom: -5px;
 }
 
-.selected .features p {
+.highlight .features p {
   font-size: 15.43px;
 }
 
@@ -297,6 +302,7 @@
   background-color: #fff;
   text-align: center;
   padding: 0 12px;
+  min-height: 57px;
 }
 
 .old-price {
@@ -336,6 +342,7 @@
   padding: 16px 24px;
   background-color: #fff;
   border-radius: 0 0 8px 8px;
+  padding-top: 0;
 }
 
 .btn {
@@ -380,17 +387,17 @@
 
 .protection-container-grid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(12, 1fr);
   max-width: 1440px;
   margin: 0 auto;
 }
 
 .protection-cards-column {
-  grid-column: span 5;
+  grid-column: span 8;
 }
 
 .car-summary-column-wrapper {
-  grid-column: span 2;
+  grid-column: span 4;
   background-color: #fff;
   padding-left: 20px;
 }
@@ -398,6 +405,10 @@
 [data-testid="ancillaries-action-footer"] {
   margin-top: 0 !important;
   position: static !important;
+}
+[data-testid="ancillaries-action-footer"]::before,
+[data-testid="ancillaries-action-footer"]::after {
+  display: none !important;
 }
 
 .car-summary-column {
@@ -503,6 +514,29 @@
   line-height: 20px;
   letter-spacing: 0.3px !important;
 }
+.car-summary-section .amazon-gift-card-alert {
+  background-color: rgb(244, 244, 244);
+  border-radius: 4px;
+  border: 1px solid rgba(115, 109, 109, 0.3);
+  box-shadow: none !important;
+  padding: 16px 24px;
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.car-summary-section .amazon-gift-card-alert .amazon-gift-card-title {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 700;
+}
+.car-summary-section .amazon-gift-card-alert .amazon-gift-card-disclaimer {
+  margin: 0px;
+  font-family: AvisSans, "AvisSans Fallback", sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.003em;
+  color: rgb(0, 0, 0);
+}
 .car-summary-section .total-vehicle-rate {
   display: flex;
   justify-content: space-between;
@@ -601,7 +635,8 @@
   letter-spacing: 0.3px;
   line-height: 12px;
 }
-.car-summary-section .accordion-header:hover {
+.car-summary-section .accordion-header:hover,
+.car-summary-section .accordion-header.active {
   background: rgb(244, 243, 242);
 }
 .car-summary-section .accordion-header-title {
@@ -802,11 +837,11 @@
   }
 }
 @media (max-width: 1024px) {
-  .car-summary-column {
+  .car-summary-column-wrapper {
     display: none;
   }
   .protection-cards-column {
-    grid-column: span 7;
+    grid-column: span 12;
   }
 }
 @media (min-width: 1025px) {
@@ -817,7 +852,13 @@
 @media (max-width: 1359px) {
   .card-content-header,
   .protection-card.highlight .card-content-header {
-    min-height: 216px;
+    min-height: 252px;
+  }
+}
+@media (max-width: 768px) {
+  .card-content-header,
+  .protection-card.highlight .card-content-header {
+    min-height: fit-content;
   }
 }
 `;
@@ -866,6 +907,21 @@
   var mvtID = "MVT-307";
   var EXP_ID = "avis-protection-variation-a";
   var EXP_ID_2 = "avis-addOns-variation-A";
+
+  var getSymbol = function (code) {
+    if (!code) return "$";
+    return (0)
+      .toLocaleString("en", {
+        style: "currency",
+        currency: code,
+      })
+      .replace(/[\d\s.,]/g, "");
+  };
+  // If the symbol contains letters (e.g. BDT, USD) add a space before the amount.
+  // Symbol signs (e.g. $, €, £) are kept tight against the number.
+  var formatPrice = function (symbol, amount) {
+    return /[a-zA-Z]/.test(symbol) ? symbol + " " + amount : symbol + amount;
+  };
   var TARGET_SELECTOR_DEFAULT =
     '[data-testid="Protections-container"] > div > svg';
   var TARGET_SELECTOR_AVIS_FIRST =
@@ -914,6 +970,8 @@
     '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="14" viewBox="0 0 18 14" fill="none">' +
     '<path fill-rule="evenodd" clip-rule="evenodd" d="M16.8118 1.16363C17.0528 1.39107 17.0638 1.7708 16.8364 2.0118L6.96479 12.4723C6.72819 12.723 6.32948 12.7232 6.09257 12.4728L1.16415 7.2634C0.936413 7.02269 0.946938 6.64293 1.18766 6.4152C1.42837 6.18747 1.80812 6.19799 2.03586 6.43871L6.52788 11.1868L15.9636 1.1882C16.1911 0.947198 16.5708 0.9362 16.8118 1.16363Z" fill="white" stroke="white" stroke-width="2" stroke-linecap="round"/>' +
     "</svg>";
+  var recommendCheckSvg =
+    '<svg focusable="false" aria-hidden="true" viewBox="0 0 11 9"><path d="M1 4L4 7L10 1" stroke-linecap="round" fill="none"></path></svg>';
 
   function getProtectionData(dataCode) {
     var selector =
@@ -1007,6 +1065,7 @@
     pickup: { name: "", date: "", time: "" },
     dropoff: { name: "", date: "", time: "" },
   };
+  var hasProtectionBundles = true;
 
   function getSessionData() {
     try {
@@ -1015,6 +1074,11 @@
         var store = JSON.parse(reservationStoreRaw);
         if (store) {
           var state = store.state || store;
+          var protectionBundles =
+            (state.protectionsData &&
+              state.protectionsData.protectionBundles) ||
+            [];
+          hasProtectionBundles = protectionBundles.length > 1;
           var rawName = state.vehicleModelDescription || "";
           if (rawName.indexOf("or Similar") !== -1) {
             vehicleData.name = rawName.replace("or Similar", "").trim();
@@ -1163,12 +1227,38 @@
 
     getSessionData();
 
+    var protectionCards = document.querySelector(".protection-cards");
+    var protectionBg = document.querySelector(".protection-bg");
+    var protectionCardsColumn = document.querySelector(
+      ".protection-cards-column",
+    );
+    var optOutSection = document.querySelector(".opt-out-section");
+
+    if (protectionCards) {
+      protectionCards.style.display = hasProtectionBundles ? "flex" : "none";
+    }
+    if (protectionBg) {
+      protectionBg.style.zIndex = hasProtectionBundles ? "0" : "-1";
+    }
+    if (protectionCardsColumn) {
+      protectionCardsColumn.style.marginBottom = hasProtectionBundles
+        ? "0px"
+        : "50px";
+    }
+    if (optOutSection) {
+      optOutSection.style.marginTop = hasProtectionBundles ? "0px" : "50px";
+    }
+
     var totals = window.__AVIS_PRICE_CALC__
       ? window.__AVIS_PRICE_CALC__.totals
       : {};
     var priceCalc = window.__AVIS_PRICE_CALC__
       ? window.__AVIS_PRICE_CALC__
       : {};
+    var currencySymbol = getSymbol(priceCalc.currencyCode);
+    var amazonGiftCardAmount = priceCalc.amazonCashBack
+      ? priceCalc.amazonCashBack.toFixed(2)
+      : "0.00";
     var price = totals.total || "0.00";
     var vehicleRate = totals.grossSubtotal || "0.00";
     var vehicleRateDiscount = totals.netSubtotal || "0.00";
@@ -1219,18 +1309,38 @@
         e,
       );
     }
-
+    //combine protection and add-ons
     var combinedProtectionAddOns = protectionList.concat(addOnList);
 
     var buildList = function (items) {
       if (!items || !items.length) return '<div class="empty-list">None</div>';
       return items
         .map(function (i) {
+          var itemAmount =
+            i.code === "GSO" && (i.amount === 0 || i.amount === "0")
+              ? "Market Price"
+              : formatPrice(currencySymbol, i.amountString || i.amount || 0);
+          var description = i.description || i.name;
+          if (i.code === "GSO") {
+            var gsoAmount = Number(i.netSubtotalPerUnit || 0).toFixed(2);
+            var gsoSuffix = i.chargeType === "PER_GALLON" ? "/gal" : "";
+            description +=
+              '<span style="display: block; font-size: 12px;">Est. ' +
+              (priceCalc.currencyCode || "USD") +
+              " " +
+              gsoAmount +
+              gsoSuffix +
+              "</span>";
+          }
+          var itemStyle =
+            i.code === "GSO" ? ' style="align-items: center;"' : "";
           return (
-            '<div class="summary-item"><span>' +
-            (i.description || i.name) +
-            "</span><span>$" +
-            (i.amountString || i.amount || 0) +
+            '<div class="summary-item"' +
+            itemStyle +
+            "><span>" +
+            description +
+            "</span><span>" +
+            itemAmount +
             "</span></div>"
           );
         })
@@ -1242,6 +1352,29 @@
         vehicleData.image +
         '" data-testid="rental-summary-image" alt="vehicle image" class="car-image" loading="lazy" width="113" height="48" decoding="async" data-nimg="1"></div>'
       : "";
+
+    var amazonHtml = "";
+    if (amazonGiftCardAmount !== "0.00" && amazonGiftCardAmount !== 0) {
+      amazonHtml =
+        "   <!-- amazon gift card alert -->" +
+        '   <div class="amazon-gift-card-alert" role="alert" style="--Paper-shadow: none">' +
+        '     <div class="amazon-logo-container">' +
+        '       <img alt="amazon-logo" loading="lazy" width="50" height="32" decoding="async" data-nimg="1" srcset="https://www.avis.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Famazon-logo.b7f2a5f7.png&amp;w=64&amp;q=75 1x, https://www.avis.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Famazon-logo.b7f2a5f7.png&amp;w=128&amp;q=75 2x" src="https://www.avis.com/_next/image?url=%2F_next%2Fstatic%2Fmedia%2Famazon-logo.b7f2a5f7.png&amp;w=128&amp;q=75" style="color: transparent; width: auto; height: 32px">' +
+        "     </div>" +
+        '     <div class="amazon-gift-card-content">' +
+        '       <div class="amazon-gift-card-info">' +
+        '         <div class="amazon-gift-card-title">' +
+        '           <span class="amazon-reward-text">You will receive ' +
+        formatPrice(currencySymbol, amazonGiftCardAmount) +
+        "  on an Amazon.com Gift Card upon completing your rental!</span>" +
+        "         </div>" +
+        '         <div class="amazon-gift-card-disclaimer">' +
+        '           <span class="amazon-legal-text">*Restrictions apply, see Amazon.com/gc-legal</span>' +
+        "         </div>" +
+        "       </div>" +
+        "     </div>" +
+        "   </div>";
+    }
 
     section.innerHTML =
       '<p class="car-summary-title">Car Summary</p>' +
@@ -1292,7 +1425,6 @@
       "       </div>" +
       "     </div>" +
       "   </div>" +
-      '   <div class="divider"></div>' +
       '   <div class="total-vehicle-rate">' +
       '     <div class="total-vehicle-rate-content">' +
       '      <div class="total-vehicle-rate-title">Vehicle total rate <span class="rental-days">(' +
@@ -1303,11 +1435,11 @@
       "</div>" +
       "     </div>" +
       '     <div class="total-vehicle-rate-price">' +
-      '      <span class="total-vehicle-rate-price-amount">$' +
-      vehicleRate +
+      '      <span class="total-vehicle-rate-price-amount">' +
+      formatPrice(currencySymbol, vehicleRate) +
       "</span> " +
-      '      <span class="total-vehicle-rate-price-save">$' +
-      vehicleRateDiscount +
+      '      <span class="total-vehicle-rate-price-save">' +
+      formatPrice(currencySymbol, vehicleRateDiscount) +
       "</span>" +
       "     </div>" +
       "   </div>" +
@@ -1317,12 +1449,12 @@
       '">' +
       '     <div class="accordion-header-title protection-add-ons">Protections & Add-ons</div>' +
       '     <div class="accordion-header-icon">' +
-      '      <div class="accordion-header-icon-price protection-add-ons-price">$' +
-      protectionAndAddOnsTotal.toFixed(2) +
+      '      <div class="accordion-header-icon-price protection-add-ons-price">' +
+      formatPrice(currencySymbol, protectionAndAddOnsTotal.toFixed(2)) +
       "</div>" +
       '      <div class="accordion-header-icon-arrow" style="display: ' +
       (combinedProtectionAddOns.length > 0 ? "block" : "none") +
-      ';">' +
+      '; transform: rotate(0deg); margin-top: -9px;">' +
       arrowDown +
       "</div>" +
       "     </div>" +
@@ -1342,6 +1474,7 @@
           : '<div class="protection-not-added">x Protection not added</div>') +
       "    </div>" +
       "  </div>" +
+      amazonHtml +
       '   <div class="divider"></div>' +
       '  <div class="accordion-item savings-discount">' +
       '    <div class="accordion-header" data-has-items="' +
@@ -1349,8 +1482,8 @@
       '">' +
       '     <div class="accordion-header-title">Savings & discounts</div>' +
       '     <div class="accordion-header-icon">' +
-      '      <div class="accordion-header-icon-price savings-price">-$' +
-      (totalSavings || "0.00") +
+      '      <div class="accordion-header-icon-price savings-price">-' +
+      formatPrice(currencySymbol, totalSavings || "0.00") +
       "</div>" +
       '      <div class="accordion-header-icon-arrow" style="display: ' +
       (totalSavings > 0 ? "block" : "none") +
@@ -1360,14 +1493,17 @@
       "     </div>" +
       "    </div>" +
       '    <div class="accordion-content">' +
-      '      <div class="summary-item"><span>Discount Code Savings</span><span>$' +
-      (discountCodeSavings || "0.00") +
+      '      <div class="summary-item"><span>Discount Code Savings</span><span>' +
+      formatPrice(currencySymbol, discountCodeSavings || "0.00") +
       "</span></div>" +
-      '      <div class="summary-item"><span>Pay Now Savings</span><span>$' +
-      (payNowSaving || "0.00") +
+      '      <div class="summary-item"><span>Pay Now Savings</span><span>' +
+      formatPrice(currencySymbol, payNowSaving || "0.00") +
       "</span></div>" +
-      '      <div class="summary-item"><span>Protection and Add-ons Savings</span><span>$' +
-      (Number(protectionAndAddOnSavings).toFixed(2) || "0.00") +
+      '      <div class="summary-item"><span>Protection & Add-ons Savings</span><span>' +
+      formatPrice(
+        currencySymbol,
+        Number(protectionAndAddOnSavings).toFixed(2) || "0.00",
+      ) +
       "</span></div>" +
       "    </div>" +
       "  </div>" +
@@ -1377,18 +1513,21 @@
       '">' +
       '     <div class="accordion-header-title">Taxes & Fees</div>' +
       '     <div class="accordion-header-icon">' +
-      '      <div class="accordion-header-icon-price">$' +
-      (taxAndFees.length > 0
-        ? taxAndFees
-            .reduce(function (acc, item) {
-              return acc + (item.amount || 0);
-            }, 0)
-            .toFixed(2)
-        : "0.00") +
+      '      <div class="accordion-header-icon-price">' +
+      formatPrice(
+        currencySymbol,
+        taxAndFees.length > 0
+          ? taxAndFees
+              .reduce(function (acc, item) {
+                return acc + (item.amount || 0);
+              }, 0)
+              .toFixed(2)
+          : "0.00",
+      ) +
       "</div>" +
       '      <div class="accordion-header-icon-arrow" style="display: ' +
       (taxAndFees.length > 0 ? "block" : "none") +
-      ';">' +
+      '; transform: rotate(0deg); margin-top: -9px;">' +
       arrowDown +
       "</div>" +
       "     </div>" +
@@ -1401,8 +1540,8 @@
             item.code +
             '">' +
             item.description +
-            "</a><span>$" +
-            (item.amount || 0).toFixed(2) +
+            "</a><span>" +
+            formatPrice(currencySymbol, (item.amount || 0).toFixed(2)) +
             "</span></div>"
           );
         })
@@ -1412,8 +1551,8 @@
       '   <div class="divider"></div>' +
       '  <div class="price-info">' +
       '     <span class="total-label">Total</span>' +
-      '     <span class="total-price">$' +
-      (Number(price).toFixed(2) || "0.00") +
+      '     <span class="total-price">' +
+      formatPrice(currencySymbol, Number(price).toFixed(2) || "0.00") +
       "</span>" +
       "  </div>" +
       '  <div class="accordion-item rate-terms-accordion">' +
@@ -1422,9 +1561,9 @@
       "    </div>" +
       '    <div class="accordion-content terms-content">' +
       '      <div class="MuiBox-root mui-0"><div class="MuiTypography-root MuiTypography-body1 mui-16hh9w9" data-testid="rate-terms-container"><div class="MuiTypography-root MuiTypography-body1 mui-new8e0" data-testid="rate-terms-title">Rate terms</div><div class="MuiTypography-root MuiTypography-body1 mui-new8e0" data-testid="rate-terms-info-label">These rate terms apply for this specific rental.</div><div class="MuiTypography-root MuiTypography-body1 mui-new8e0" data-testid="rate-terms-description">If for any reason you change your rental parameters (pick up dates, times, etc.), those changes must follow these terms or your rate will also change.</div></div><ul class="MuiBox-root mui-1vnz3zg" data-testid="rate-terms-notes-ul"><li class="MuiBox-root mui-0"><span class="MuiTypography-root MuiTypography-bodySmallRegular mui-fp7ibt">Your rate was calculated based on the information provided. Some modifications may change this rate.</span></li><li class="MuiBox-root mui-0"><span class="MuiTypography-root MuiTypography-bodySmallRegular mui-fp7ibt">Unlimited free miles</span></li><li class="MuiBox-root mui-0"><span class="MuiTypography-root MuiTypography-bodySmallRegular mui-fp7ibt">If you need to cancel 24 hours prior to the scheduled pick-up time, we will refund the full prepaid amount less a ' +
-      (rateTerms.cancelFeeBefore24h || "$0") +
+      (rateTerms.cancelFeeBefore24h || currencySymbol + "0") +
       ' processing fee.</span></li><li class="MuiBox-root mui-0"><span class="MuiTypography-root MuiTypography-bodySmallRegular mui-fp7ibt">If you need to cancel during the 24 hour period prior to the scheduled pick-up time, we will refund the full prepaid amount less a ' +
-      (rateTerms.cancelFeeWithin24h || "$0") +
+      (rateTerms.cancelFeeWithin24h || currencySymbol + "0") +
       " processing fee.</span></li></ul></div>" +
       "    </div>" +
       "  </div>" +
@@ -1459,6 +1598,36 @@
           }
         });
       })(accordionHeaders[k]);
+    }
+
+    // Update protection card prices with the current currency symbol on every price recalc
+    var expSection = document.getElementById(EXP_ID);
+    if (expSection) {
+      var protectionCardEls = expSection.querySelectorAll(".protection-card");
+      for (var pi = 0; pi < protectionCardEls.length; pi++) {
+        var pCard = protectionCardEls[pi];
+        var pCode = pCard.getAttribute("data-target-code");
+        var pData = getProtectionData(pCode);
+        if (!pData) continue;
+
+        var pOldPriceEl = pCard.querySelector(".old-price");
+        if (pOldPriceEl) {
+          if (pData.oldPrice) {
+            var rawOld = pData.oldPrice.replace(/^[^\d.]+/, "");
+            pOldPriceEl.textContent = formatPrice(currencySymbol, rawOld);
+            pOldPriceEl.style.display = "";
+          } else {
+            pOldPriceEl.style.display = "none";
+          }
+        }
+
+        var pNewPriceEl = pCard.querySelector(".new-price");
+        if (pNewPriceEl && pData.newPrice) {
+          var rawNew = pData.newPrice.replace(/^[^\d.]+/, "");
+          var formattedNew = parseFloat(rawNew).toFixed(2);
+          pNewPriceEl.textContent = formatPrice(currencySymbol, formattedNew);
+        }
+      }
     }
   };
 
@@ -1531,62 +1700,137 @@
       "              </svg>" +
       '              <div class="protection-cards-section-content">' +
       '                <h2 class="protection-title">' +
-      "                2.5 Million + customers purchased our popular protection in 2025!" +
+      "                Protection Packages Built for Peace of Mind" +
       "                </h2>" +
       "    " +
       '              <div class="protection-cards">' +
-      '              <div class="protection-cards">' +
-      '                <!-- Ultimate Protection Highlight -->\n                <div class="protection-card highlight ultimate-card" data-target-code="Ultimate Protection">\n                  <div class="recomended">RECOMMENDED</div>\n                  <div class="card-content-header">\n                    <p class="card-title">Ultimate Protection</p>\n                    <p class="ancillary-bundle-rating"><span class="active"></span> <span class="active"></span> <span class="active"></span> </p> \n                    <p class="card-desc">\n                      Includes full protection if your rental vehicle is damaged or stolen.\n                    </p>\n                  </div>\n                  <ul class="feature-list">\n                    <li class="active"><p><span class="active">' +
+      "                <!-- Ultimate Protection Highlight -->" +
+      '                <div class="protection-card highlight ultimate-card" data-target-code="Ultimate Protection">' +
+      '                  <div class="recomended"> ' +
+      recommendCheckSvg +
+      " <span>RECOMMENDED</span> </div>" +
+      '                  <div class="card-content-header">' +
+      '                    <p class="card-title">Ultimate Protection</p>' +
+      '                    <p class="ancillary-bundle-rating"><span class="active"></span> <span class="active"></span> <span class="active"></span> </p> ' +
+      '                    <p class="card-desc">' +
+      "                      Includes full protection if your rental vehicle is damaged or stolen." +
+      "                    </p>" +
+      "                  </div>" +
+      '                  <ul class="feature-list">' +
+      '                    <li class="active"><p><span class="active">' +
       svg +
       "</span> <span>Cover The Car (LDW)</span></p> <span>" +
       infoSvg +
-      '</span></li>\n                    <li class="active"><p><span class="active">' +
+      "</span></li>" +
+      '                    <li class="active"><p><span class="active">' +
       svg +
       "</span> <span>Cover My Liability (ALI)</span></p> <span>" +
       infoSvg +
-      '</span></li>\n                    <li class="active"><p><span class="active">' +
+      "</span></li>" +
+      '                    <li class="active"><p><span class="active">' +
       svg +
       "</span> <span>Cover Myself (PAI)</span></p> <span>" +
       infoSvg +
-      '</span></li>\n                    <li class="active"><p><span class="active">' +
+      "</span></li>" +
+      '                    <li class="active"><p><span class="active">' +
       svg +
       "</span> <span>Cover My Belongings (PEP)</span></p> <span>" +
       infoSvg +
-      '</span></li>\n                  </ul>\n                  <div class="price">\n                    <span class="old-price">$62.00/day</span>\n                    <span class="new-price">$56</span>\n                    <span class="per-day">/day</span>\n                  </div>\n                  <div class="btn-container">\n                    <button class="btn primary custom-select-btn" data-target-code="Ultimate Protection">Add Protection</button>\n                  </div>\n                </div>\n\n                <!-- Enhance Protection -->\n                <div class="protection-card" data-target-code="Enhanced Protection">\n                  <div class="card-content-header">\n                    <p class="card-title">Enhanced Protection</p>\n                    <p class="ancillary-bundle-rating"><span class="active"></span> <span class="active"></span> <span></span> </p>\n                    <p class="card-desc">\n                      For your rental vehicle +liability coverage, to help avoid costly\n                      claims from third party injuries or property damage.\n                    </p>\n                  </div>\n                  <ul class="feature-list">\n                    <li class="active"><p><span class="active">' +
-      svg +
-      "</span> <span>Cover The Car (LDW)</span></p> <span>" +
-      infoSvg +
-      '</span></li>\n                    <li class="active"><p><span class="active">' +
-      svg +
-      "</span> <span>Cover My Liability (ALI)</span></p> <span>" +
-      infoSvg +
-      '</span></li>\n                    <li class="active"><p><span class="active">' +
-      svg +
-      "</span> <span>Cover Myself (PAI)</span></p> <span>" +
-      infoSvg +
-      '</span></li>\n                    <li class="inactive"><p><span class="inactive">' +
-      crossSvg +
-      "</span> <span>Cover My Belongings (PEP)</span></p> <span>" +
-      infoSvg +
-      '</span></li>\n                  </ul>\n                  <div class="price">\n                    <span class="old-price">$62.00/day</span>\n                    <span class="new-price">$45</span>\n                    <span class="per-day">/day</span>\n                  </div>\n                  <div class="btn-container">\n                    <button class="btn secondary custom-select-btn" data-target-code="Enhanced Protection">Select</button>\n                  </div>\n                </div>\n\n                <!-- Essential Protection -->\n                <div class="protection-card" data-target-code="Essential Protection">\n                  <div class="card-content-header">\n                    <p class="card-title">Essential Protection</p>\n                    <p class="ancillary-bundle-rating"><span class="active"></span> <span></span> <span></span> </p>\n                    <p class="card-desc">\n                      For your rental vehicle, yourself, and your belongings.\n                    </p>\n                  </div>\n                  <ul class="feature-list">\n                    <li class="active"><p><span class="active">' +
-      svg +
-      "</span> <span>Cover The Car (LDW)</span></p> <span>" +
-      infoSvg +
-      '</span></li>\n                    <li class="inactive"><p><span class="inactive">' +
-      crossSvg +
-      "</span> <span>Cover My Liability (ALI)</span></p> <span>" +
-      infoSvg +
-      '</span></li>\n                    <li class="inactive"><p><span class="inactive">' +
-      crossSvg +
-      "</span> <span>Cover Myself (PAI)</span></p> <span>" +
-      infoSvg +
-      '</span></li>\n                    <li class="inactive"><p><span class="inactive">' +
-      crossSvg +
-      "</span> <span>Cover My Belongings (PEP)</span></p> <span>" +
-      infoSvg +
-      '</span></li>\n                  </ul>\n                  <div class="price">\n                    <span class="old-price">$62.00/day</span>\n                    <span class="new-price">$32</span>\n                    <span class="per-day">/day</span>\n                  </div>\n                  <div class="btn-container">\n                    <button class="btn secondary custom-select-btn" data-target-code="Essential Protection">Select</button>\n                  </div>\n                </div>' +
+      "</span></li>" +
+      "                  </ul>" +
+      '                  <div class="price">' +
+      '                    <span class="old-price">$62.00/day</span>' +
+      '                    <span class="new-price">$56</span>' +
+      '                    <span class="per-day">/day</span>' +
+      "                  </div>" +
+      '                  <div class="btn-container">' +
+      '                    <button class="btn primary custom-select-btn" data-target-code="Ultimate Protection">Select</button>' +
+      "                  </div>" +
       "                </div>" +
-      "              </div>" +
+      " " +
+      "                <!-- Enhance Protection -->" +
+      '                <div class="protection-card" data-target-code="Enhanced Protection">' +
+      '                  <div class="card-content-header">' +
+      '                    <p class="card-title">Enhanced Protection</p>' +
+      '                    <p class="ancillary-bundle-rating"><span class="active"></span> <span class="active"></span> <span></span> </p>' +
+      '                    <p class="card-desc">' +
+      "                      For your rental vehicle +liability coverage, to help avoid costly" +
+      "                      claims from third party injuries or property damage." +
+      "                    </p>" +
+      "                  </div>" +
+      '                  <ul class="feature-list">' +
+      '                    <li class="active"><p><span class="active">' +
+      svg +
+      "</span> <span>Cover The Car (LDW)</span></p> <span>" +
+      infoSvg +
+      "</span></li>" +
+      '                    <li class="active"><p><span class="active">' +
+      svg +
+      "</span> <span>Cover My Liability (ALI)</span></p> <span>" +
+      infoSvg +
+      "</span></li>" +
+      '                    <li class="active"><p><span class="active">' +
+      svg +
+      "</span> <span>Cover Myself (PAI)</span></p> <span>" +
+      infoSvg +
+      "</span></li>" +
+      '                    <li class="inactive"><p><span class="inactive">' +
+      crossSvg +
+      "</span> <span>Cover My Belongings (PEP)</span></p> <span>" +
+      infoSvg +
+      "</span></li>" +
+      "                  </ul>" +
+      '                  <div class="price">' +
+      '                    <span class="old-price">$62.00/day</span>' +
+      '                    <span class="new-price">$45</span>' +
+      '                    <span class="per-day">/day</span>' +
+      "                  </div>" +
+      '                  <div class="btn-container">' +
+      '                    <button class="btn secondary custom-select-btn" data-target-code="Enhanced Protection">Select</button>' +
+      "                  </div>" +
+      "                </div>" +
+      " " +
+      "                <!-- Essential Protection -->" +
+      '                <div class="protection-card" data-target-code="Essential Protection">' +
+      '                  <div class="card-content-header">' +
+      '                    <p class="card-title">Essential Protection</p>' +
+      '                    <p class="ancillary-bundle-rating"><span class="active"></span> <span></span> <span></span> </p>' +
+      '                    <p class="card-desc">' +
+      "                      For your rental vehicle, yourself, and your belongings." +
+      "                    </p>" +
+      "                  </div>" +
+      '                  <ul class="feature-list">' +
+      '                    <li class="active"><p><span class="active">' +
+      svg +
+      "</span> <span>Cover The Car (LDW)</span></p> <span>" +
+      infoSvg +
+      "</span></li>" +
+      '                    <li class="inactive"><p><span class="inactive">' +
+      crossSvg +
+      "</span> <span>Cover My Liability (ALI)</span></p> <span>" +
+      infoSvg +
+      "</span></li>" +
+      '                    <li class="inactive"><p><span class="inactive">' +
+      crossSvg +
+      "</span> <span>Cover Myself (PAI)</span></p> <span>" +
+      infoSvg +
+      "</span></li>" +
+      '                    <li class="inactive"><p><span class="inactive">' +
+      crossSvg +
+      "</span> <span>Cover My Belongings (PEP)</span></p> <span>" +
+      infoSvg +
+      "</span></li>" +
+      "                  </ul>" +
+      '                  <div class="price">' +
+      '                    <span class="old-price">$62.00/day</span>' +
+      '                    <span class="new-price">$32</span>' +
+      '                    <span class="per-day">/day</span>' +
+      "                  </div>" +
+      '                  <div class="btn-container">' +
+      '                    <button class="btn secondary custom-select-btn" data-target-code="Essential Protection">Select</button>' +
+      "                  </div>" +
+      "                </div>" +
+      "               </div>" +
       "              </div>" +
       "            </div>" +
       "          </div>" +
@@ -1750,12 +1994,20 @@
 
       var newPriceEl = card.querySelector(".new-price");
       if (newPriceEl && data.newPrice) {
-        var rawPrice =
-          data.newPrice.indexOf("$") === 0
-            ? data.newPrice.slice(1)
-            : data.newPrice;
+        var symbol = getSymbol(
+          window.__AVIS_PRICE_CALC__
+            ? window.__AVIS_PRICE_CALC__.currencyCode
+            : "",
+        );
+        console.log(symbol, "779");
+        var rawPrice = data.newPrice;
+        if (rawPrice.indexOf("$") === 0) {
+          rawPrice = rawPrice.slice(1);
+        } else if (symbol && rawPrice.indexOf(symbol) === 0) {
+          rawPrice = rawPrice.slice(symbol.length);
+        }
         var formattedPrice = parseFloat(rawPrice).toFixed(2);
-        newPriceEl.textContent = "$" + formattedPrice;
+        newPriceEl.textContent = symbol + formattedPrice;
       }
     }
 
@@ -1831,8 +2083,7 @@
         var cardBtn = card.querySelector(".custom-select-btn");
         var cardCode = cardBtn.getAttribute("data-target-code");
 
-        var originalText =
-          cardCode === "Ultimate Protection" ? "Add Protection" : "Select";
+        var originalText = "Select";
 
         if (selectedPlanCode === cardCode) {
           card.classList.add("highlight");

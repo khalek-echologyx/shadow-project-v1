@@ -83,15 +83,17 @@
   padding-top: 21px;
   padding-bottom: 44px;
   line-height: 28px;
+  text-align: center;
 }
 
 .protection-cards {
   display: flex;
   gap: 8px;
-  align-items: flex-start;
+  align-items: center;
 }
 
 .protection-card {
+  position: relative;
   width: 100%;
   color: #fff;
   border-radius: 8px;
@@ -100,80 +102,90 @@
   flex: 1;
   cursor: pointer;
   box-sizing: border-box;
-  transition: border 0.2s ease;
+  transition: all 0.3s ease-in-out;
 }
 
 .protection-card:hover {
   border: 1px solid #000;
 }
 
-.protection-card.selected:not(.ultimate-card) {
-  border: 3px solid #000 !important;
-  border-radius: 12px;
-  transform: scaleY(1.05);
+.protection-card.highlight {
+  border: 2px solid #000 !important;
+  border-radius: 8px;
   z-index: 2;
 }
 
-.protection-card.selected.ultimate-card {
-  border: 3px solid #000 !important;
-  border-radius: 12px;
+.protection-card.highlight.ultimate-card {
+  border: 2px solid #000 !important;
+  border-radius: 8px;
 }
 
-.protection-card.selected {
-  border: 3px solid #000 !important;
-  border-radius: 12px;
+.protection-card.highlight {
+  border: 2px solid #000 !important;
+  border-radius: 8px;
 }
 
 .ultimate-card {
-  margin-top: -40px;
   border: 1px solid rgb(167, 167, 167);
   border-bottom: 1px solid rgb(199, 199, 199);
 }
 
-.ultimate-card .card-content-header {
-  border-radius: 0 !important;
-}
-
 .recomended {
-  background-color: #000;
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background-color: #42000d;
   color: #fff;
   font-size: 12px;
-  font-weight: 400;
-  line-height: 100%;
-  letter-spacing: 0.84px;
-  text-align: center;
-  padding: 10px 0;
-  border-radius: 8px 8px 0 0;
-}
-
-.protection-card.highlight .recomended {
-  background-color: #660014;
-  color: #fff;
-  font-size: 14px;
   font-weight: 700;
   line-height: 100%;
   letter-spacing: 0.84px;
   text-align: center;
-  padding: 12px 0;
-  border-radius: 8px 8px 0 0;
+  padding: 1.5px 8px;
+  border-radius: 4px;
 }
 
-.protection-card.highlight .card-content-header {
-  background: #88001b;
-  border-radius: 0;
-  min-height: 176px;
-  border-radius: 8px 8px 0 0;
+.recomended svg {
+  fill: #62b41f;
+  height: 19px;
+  width: 19px;
+}
+
+.recomended svg path {
+  stroke: #62b41f;
+  stroke-width: 1.5px;
+}
+
+.ultimate-card .card-content-header {
+  background: #91001d;
 }
 
 .card-content-header {
   padding: 16px 24px;
-  background-color: #151d28;
-  border-radius: 8px 8px 0 0;
+  background-color: #2e0009;
+  border-radius: 7px 7px 0 0;
   min-height: 176px;
 }
 
-.selected .card-content-header {
+body.bundle-active .card-content-header {
+  background-color: #000;
+}
+
+body.bundle-active .ultimate-card .card-content-header {
+  background: #7c1620;
+}
+
+body.bundle-active .recomended {
+  background-color: #000;
+}
+
+.highlight .card-content-header {
   min-height: 196px;
+  border-radius: 4px 4px 0 0;
 }
 
 .card-title {
@@ -232,8 +244,13 @@
   padding: 16px 12px;
 }
 
-.features [data-testid="ancillaries-bundle-item-excluded"] p {
+.protection-card.highlight .features {
+  min-height: 200px;
+}
+
+.features [data-testid="ancillaries-bundle-item-excluded"] span {
   color: rgb(167, 167, 167) !important;
+  text-decoration: none;
 }
 
 .features [data-testid="ancillaries-bundle-item-included"] svg,
@@ -291,6 +308,7 @@
   background-color: #fff;
   text-align: center;
   padding: 0 16px;
+  min-height: 57px;
 }
 
 .old-price {
@@ -330,6 +348,7 @@
   padding: 16px 24px;
   background-color: #fff;
   border-radius: 0 0 8px 8px;
+  padding-top: 0;
 }
 
 .btn {
@@ -374,17 +393,17 @@
 
 .protection-container-grid {
   display: grid;
-  grid-template-columns: repeat(7, 1fr);
+  grid-template-columns: repeat(12, 1fr);
   max-width: 1440px;
   margin: 0 auto;
 }
 
 .protection-cards-column {
-  grid-column: span 5;
+  grid-column: span 8;
 }
 
 .car-summary-column-wrapper {
-  grid-column: span 2;
+  grid-column: span 4;
   background-color: #fff;
   padding-left: 20px;
 }
@@ -392,6 +411,10 @@
 [data-testid="ancillaries-action-footer"] {
   margin-top: 0 !important;
   position: static !important;
+}
+[data-testid="ancillaries-action-footer"]::before,
+[data-testid="ancillaries-action-footer"]::after {
+  display: none !important;
 }
 
 .car-summary-column {
@@ -497,6 +520,29 @@
   line-height: 20px;
   letter-spacing: 0.3px !important;
 }
+.car-summary-section .amazon-gift-card-alert {
+  background-color: rgb(244, 244, 244);
+  border-radius: 4px;
+  border: 1px solid rgba(115, 109, 109, 0.3);
+  box-shadow: none !important;
+  padding: 16px 24px;
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+.car-summary-section .amazon-gift-card-alert .amazon-gift-card-title {
+  font-size: 16px;
+  line-height: 24px;
+  font-weight: 700;
+}
+.car-summary-section .amazon-gift-card-alert .amazon-gift-card-disclaimer {
+  margin: 0px;
+  font-family: AvisSans, "AvisSans Fallback", sans-serif;
+  font-size: 14px;
+  line-height: 20px;
+  letter-spacing: 0.003em;
+  color: rgb(0, 0, 0);
+}
 .car-summary-section .total-vehicle-rate {
   display: flex;
   justify-content: space-between;
@@ -595,7 +641,8 @@
   letter-spacing: 0.3px;
   line-height: 12px;
 }
-.car-summary-section .accordion-header:hover {
+.car-summary-section .accordion-header:hover,
+.car-summary-section .accordion-header.active {
   background: rgb(244, 243, 242);
 }
 .car-summary-section .accordion-header-title {
@@ -796,11 +843,11 @@
   }
 }
 @media (max-width: 1024px) {
-  .car-summary-column {
+  .car-summary-column-wrapper {
     display: none;
   }
   .protection-cards-column {
-    grid-column: span 7;
+    grid-column: span 12;
   }
 }
 @media (min-width: 1025px) {
@@ -811,6 +858,18 @@
 @media (max-width: 1359px) {
   .card-content-header,
   .protection-card.highlight .card-content-header {
-    min-height: 212px;
+    min-height: 252px;
+  }
+}
+@media (max-width: 1024px) {
+  .card-content-header,
+  .protection-card.highlight .card-content-header {
+    min-height: 215px;
+  }
+}
+@media (max-width: 768px) {
+  .card-content-header,
+  .protection-card.highlight .card-content-header {
+    min-height: fit-content;
   }
 }
