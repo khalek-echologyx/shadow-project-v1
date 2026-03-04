@@ -170,7 +170,10 @@
         if (store) {
           var state = store.state || store;
           var protectionBundles = (state.protectionsData && state.protectionsData.protectionBundles) || [];
-          hasProtectionBundles = protectionBundles.length > 1;
+          var requiredBundles = ['Ultimate Protection', 'Enhanced Protection', 'Essential Protection'];
+          var bundleCodes = protectionBundles.map(function (b) { return b.code; });
+          var hasAllRequired = requiredBundles.every(function (code) { return bundleCodes.indexOf(code) !== -1; });
+          hasProtectionBundles = protectionBundles.length > 1 && hasAllRequired;
           var rawName = state.vehicleModelDescription || "";
           if (rawName.indexOf("or Similar") !== -1) {
             vehicleData.name = rawName.replace("or Similar", "").trim();
@@ -301,6 +304,21 @@
     }
     if (protectionCardsColumn) {
       protectionCardsColumn.style.marginBottom = hasProtectionBundles ? "0px" : "50px";
+    }
+
+    // When our custom plans are hidden, show the original Avis bundles in our section =
+    var originalBundlesContainer = document.querySelector('[data-testid="ancillaries-bundles-container"]');
+    if (!hasProtectionBundles && originalBundlesContainer) {
+      var sectionContent = document.querySelector('.protection-cards-section-content');
+      // Only move it once — check if it's already inside our section
+      if (sectionContent && !sectionContent.contains(originalBundlesContainer)) {
+        originalBundlesContainer.style.removeProperty('display');
+        sectionContent.appendChild(originalBundlesContainer);
+      }
+      originalBundlesContainer.style.display = 'block';
+    } else if (hasProtectionBundles && originalBundlesContainer) {
+      // If our plans are showing, keep the original container hidden
+      originalBundlesContainer.style.display = 'none';
     }
 
     var totals = window.__AVIS_PRICE_CALC__ ? window.__AVIS_PRICE_CALC__.totals : {};

@@ -2,6 +2,10 @@
   border-bottom: none !important;
 }
 
+[data-testid=ancillaries-bundle-body] {
+  overflow: visible !important;
+}
+
 @keyframes avis-mui-spin {
   0% {
     transform: rotate(0deg);
@@ -83,6 +87,7 @@
   padding-top: 21px;
   padding-bottom: 44px;
   line-height: 28px;
+  text-align: center;
 }
 
 .protection-cards {

@@ -1,0 +1,27 @@
+.limited-edition {
+  background-color: #FFFFFF; 
+  color: #000;
+  h3{
+    color: #373737;
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 0;
+    line-height: 22px;
+  }
+  .productCard__description{
+    font-weight: 300;
+    font-size: 14px;
+    letter-spacing: 0;
+    line-height: 20px;
+  }
+  .priceRange .igPrice{
+    font-weight: 700;
+    font-size: 16px;
+    letter-spacing: 0;
+    line-height: 22px;
+    
+    sup {
+      font-size: 12px; 
+    }
+  }
+}

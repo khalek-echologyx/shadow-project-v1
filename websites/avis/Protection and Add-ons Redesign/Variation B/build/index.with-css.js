@@ -8,6 +8,10 @@
   border-bottom: none !important;
 }
 
+[data-testid="ancillaries-bundle-body"] {
+  overflow: visible !important;
+}
+
 .new-protection-section {
   display: block;
 }
@@ -207,6 +211,11 @@ body.bundle-active .recomended {
 }
 
 .features [data-testid="ancillaries-bundle-item-excluded"] span {
+  color: rgb(167, 167, 167) !important;
+  text-decoration: none;
+}
+
+.features [data-testid="ancillaries-bundle-item-excluded"] p {
   color: rgb(167, 167, 167) !important;
   text-decoration: none;
 }
@@ -691,10 +700,6 @@ body.bundle-active .recomended {
   font-size: 14px;
 }
 
-#avis-addOns-variation-A .protection-cards-column {
-  position: relative;
-}
-
 [data-testid="ancillaries-bundle"][data-code="No Protection"] {
   display: none !important;
 }
@@ -827,6 +832,12 @@ body.bundle-active .recomended {
   .protection-cards {
     flex-direction: column;
   }
+  .cro-001-grid {
+    display: flex !important;
+  }
+  .cro-001-grid [data-testid="ancillaries-bundle"] {
+    width: 100%;
+  }
   .protection-card.highlight {
     margin-top: 0;
   }
@@ -863,6 +874,13 @@ body.bundle-active .recomended {
   }
 }
 @media (max-width: 768px) {
+  .cro-001-grid {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .cro-001-grid [data-testid="ancillaries-bundle"] {
+    width: 100%;
+  }
   .card-content-header,
   .protection-card.highlight .card-content-header {
     min-height: fit-content;
@@ -1089,7 +1107,18 @@ body.bundle-active .recomended {
             (state.protectionsData &&
               state.protectionsData.protectionBundles) ||
             [];
-          hasProtectionBundles = protectionBundles.length > 1;
+          var requiredBundles = [
+            "Ultimate Protection",
+            "Enhanced Protection",
+            "Essential Protection",
+          ];
+          var bundleCodes = protectionBundles.map(function (b) {
+            return b.code;
+          });
+          var hasAllRequired = requiredBundles.every(function (code) {
+            return bundleCodes.indexOf(code) !== -1;
+          });
+          hasProtectionBundles = protectionBundles.length > 1 && hasAllRequired;
           var rawName = state.vehicleModelDescription || "";
           if (rawName.indexOf("or Similar") !== -1) {
             vehicleData.name = rawName.replace("or Similar", "").trim();
@@ -1200,6 +1229,28 @@ body.bundle-active .recomended {
       optOutSection.style.marginTop = hasProtectionBundles ? "0px" : "50px";
     }
 
+    // When our custom plans are hidden, show the original Avis bundles in our section =
+    var originalBundlesContainer = document.querySelector(
+      '[data-testid="ancillaries-bundles-container"]',
+    );
+    if (!hasProtectionBundles && originalBundlesContainer) {
+      var sectionContent = document.querySelector(
+        ".protection-cards-section-content",
+      );
+      // Only move it once — check if it's already inside our section
+      if (
+        sectionContent &&
+        !sectionContent.contains(originalBundlesContainer)
+      ) {
+        originalBundlesContainer.style.removeProperty("display");
+        sectionContent.appendChild(originalBundlesContainer);
+      }
+      originalBundlesContainer.classList.add("cro-001-grid");
+    } else if (hasProtectionBundles && originalBundlesContainer) {
+      // If our plans are showing, keep the original container hidden
+      originalBundlesContainer.style.display = "none";
+    }
+
     var totals = window.__AVIS_PRICE_CALC__
       ? window.__AVIS_PRICE_CALC__.totals
       : {};
@@ -1271,7 +1322,7 @@ body.bundle-active .recomended {
             i.code === "GSO" && (i.amount === 0 || i.amount === "0")
               ? "Market Price"
               : formatPrice(currencySymbol, i.amountString || i.amount || 0);
-          var description = i.description || i.name;
+          var description = i.description || "";
           if (i.code === "GSO") {
             var gsoAmount = Number(i.netSubtotalPerUnit || 0).toFixed(2);
             var gsoSuffix = i.chargeType === "PER_GALLON" ? "/gal" : "";
@@ -2308,6 +2359,7 @@ body.bundle-active .recomended {
     }
 
     if (cardsColumn) {
+      cardsColumn.style.position = "relative";
       if (selectSvg) cardsColumn.appendChild(selectSvg);
       if (selectTravelPck) cardsColumn.appendChild(selectTravelPck);
       if (selectAddOnsList) cardsColumn.appendChild(selectAddOnsList);

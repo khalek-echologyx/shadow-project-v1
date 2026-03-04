@@ -2,6 +2,10 @@
   border-bottom: none !important;
 }
 
+[data-testid=ancillaries-bundle-body] {
+  overflow: visible !important;
+}
+
 .new-protection-section {
   display: block;
 }
@@ -37,6 +41,7 @@
   padding-top: 21px;
   padding-bottom: 44px;
   line-height: 28px;
+  text-align: center;
 }
 
 .protection-cards {
@@ -200,6 +205,11 @@ body.bundle-active .recomended {
 }
 
 .features [data-testid=ancillaries-bundle-item-excluded] span {
+  color: rgb(167, 167, 167) !important;
+  text-decoration: none;
+}
+
+.features [data-testid=ancillaries-bundle-item-excluded] p {
   color: rgb(167, 167, 167) !important;
   text-decoration: none;
 }
@@ -676,10 +686,6 @@ body.bundle-active .recomended {
 }
 .car-summary-section .accordion-footer {
   font-size: 14px;
-}
-
-#avis-addOns-variation-A .protection-cards-column {
-  position: relative;
 }
 
 [data-testid=ancillaries-bundle][data-code="No Protection"] {

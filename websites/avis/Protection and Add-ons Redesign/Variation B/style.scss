@@ -2,6 +2,10 @@
   border-bottom: none !important;
 }
 
+[data-testid="ancillaries-bundle-body"] {
+  overflow: visible !important;
+}
+
 .new-protection-section {
   display: block;
 }
@@ -200,6 +204,11 @@ body.bundle-active .recomended {
 }
 
 .features [data-testid="ancillaries-bundle-item-excluded"] span {
+  color: rgba(167, 167, 167, 1) !important;
+  text-decoration: none;
+}
+
+.features [data-testid="ancillaries-bundle-item-excluded"] p {
   color: rgba(167, 167, 167, 1) !important;
   text-decoration: none;
 }
@@ -743,12 +752,6 @@ body.bundle-active .recomended {
   }
 }
 
-#avis-addOns-variation-A {
-  .protection-cards-column {
-    position: relative;
-  }
-}
-
 // =================================== NO OPT OUT SECTIONS TYLE
 [data-testid="ancillaries-bundle"][data-code="No Protection"] {
   display: none !important;
@@ -888,6 +891,13 @@ body.bundle-active .recomended {
     flex-direction: column;
   }
 
+  .cro-001-grid {
+    display: flex !important;
+    [data-testid="ancillaries-bundle"] {
+      width: 100%;
+    }
+  }
+
   .protection-card.highlight {
     margin-top: 0;
   }
@@ -931,6 +941,13 @@ body.bundle-active .recomended {
 }
 
 @media (max-width: 768px) {
+  .cro-001-grid {
+  flex-direction: column;
+  gap: 10px;
+  [data-testid="ancillaries-bundle"] {
+    width: 100%;
+  }
+}
   .card-content-header,
   .protection-card.highlight .card-content-header {
     min-height: fit-content;
