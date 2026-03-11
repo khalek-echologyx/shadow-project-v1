@@ -185,7 +185,7 @@
   padding: 16px 24px;
   background-color: #2e0009;
   border-radius: 7px 7px 0 0;
-  min-height: 176px;
+  min-height: 184px;
 }
 
 body.bundle-active .card-content-header {
@@ -262,7 +262,7 @@ body.bundle-active .recomended {
 }
 
 .protection-card.highlight .features {
-  min-height: 200px;
+  min-height: 215px;
 }
 
 .features [data-testid="ancillaries-bundle-item-excluded"] span {
@@ -428,15 +428,6 @@ body.bundle-active .recomended {
   grid-column: span 4;
   background-color: #fff;
   padding-left: 20px;
-}
-
-[data-testid="ancillaries-action-footer"] {
-  margin-top: 0 !important;
-  position: static !important;
-}
-[data-testid="ancillaries-action-footer"]::before,
-[data-testid="ancillaries-action-footer"]::after {
-  display: none !important;
 }
 
 .car-summary-column {
@@ -839,6 +830,16 @@ body.bundle-active .recomended {
   stroke: #fff;
 }
 
+/* hide protections modal */
+body.hide-prot-modal {
+  overflow: visible !important;
+}
+
+body.hide-prot-modal
+  > [role="presentation"]:has([aria-labelledby^="ldw-modal-title"]) {
+  display: none;
+}
+
 @media (max-width: 768px) {
   .protection-container-grid {
     grid-template-columns: 1fr;
@@ -900,6 +901,26 @@ body.bundle-active .recomended {
   .card-content-header,
   .protection-card.highlight .card-content-header {
     min-height: fit-content;
+  }
+}
+@media (min-width: 1025px) and (max-width: 1250px) {
+  .btn.primary {
+    flex-direction: column;
+  }
+}
+@media (min-width: 1024px) {
+  [data-testid="ancillaries-action-footer"] {
+    margin-top: 0 !important;
+    position: static !important;
+  }
+  [data-testid="ancillaries-action-footer"]::before,
+  [data-testid="ancillaries-action-footer"]::after {
+    display: none !important;
+  }
+}
+@media (max-width: 461px) {
+  #abg-adobe-target-main-content-block {
+    margin-top: 33px;
   }
 }
 `;
@@ -1044,12 +1065,31 @@ body.bundle-active .recomended {
       bundle.getAttribute("data-price") ||
       (newPriceEl ? newPriceEl.textContent.trim() : null);
 
+    // Description
+    var descEl = bundle.querySelector(
+      '[data-testid="ancillaries-bundle-description"]',
+    );
+    var description = null;
+    if (descEl) {
+      var descP = descEl.querySelector("p");
+      if (descP) {
+        var descSpan = descP.querySelector("span");
+        description = {
+          pText: descP.innerText || descP.textContent || "",
+          spanText: descSpan
+            ? descSpan.innerText || descSpan.textContent || ""
+            : "",
+        };
+      }
+    }
+
     return {
       features: features,
       oldPrice: oldPrice,
       newPrice: newPrice,
       element: bundle,
-      rating,
+      rating: rating,
+      description: description,
     };
   }
 
@@ -1107,6 +1147,11 @@ body.bundle-active .recomended {
     dropoff: { name: "", date: "", time: "" },
   };
   var hasProtectionBundles = true;
+  var hasAddOns = true;
+  var pickupUSA = true;
+  var residNotUSA = false;
+  var countryValue = "";
+  var residClean = "";
 
   function getSessionData() {
     try {
@@ -1119,6 +1164,8 @@ body.bundle-active .recomended {
             (state.protectionsData &&
               state.protectionsData.protectionBundles) ||
             [];
+          var addOns =
+            (state.addOnsData && state.addOnsData.addOnBundles) || [];
           var requiredBundles = [
             "Ultimate Protection",
             "Enhanced Protection",
@@ -1131,7 +1178,15 @@ body.bundle-active .recomended {
             return bundleCodes.indexOf(code) !== -1;
           });
           hasProtectionBundles = protectionBundles.length > 1 && hasAllRequired;
+          hasAddOns = addOns.length > 0;
           var rawName = state.vehicleModelDescription || "";
+          var isMysteryCar =
+            rawName === "Mystery Car May Be Gas, Hybrid, or EV or Similar";
+
+          //get pickup country value
+          countryValue = state.pickupCountryCode || "";
+          pickupUSA = countryValue === "US";
+
           if (rawName.indexOf("or Similar") !== -1) {
             vehicleData.name = rawName.replace("or Similar", "").trim();
             vehicleData.showSimilar = true;
@@ -1139,7 +1194,9 @@ body.bundle-active .recomended {
             vehicleData.name = rawName;
             vehicleData.showSimilar = false;
           }
-          vehicleData.image = state.vehicleImage || "";
+          vehicleData.image = isMysteryCar
+            ? "https://www.avis.com/_next/static/media/car-not-available.05cc2caa.png"
+            : "https://www.avis.com" + state.vehicleImage;
 
           var formatISO = function (isoStr) {
             if (!isoStr) return { date: "", time: "" };
@@ -1285,6 +1342,15 @@ body.bundle-active .recomended {
       ".protection-cards-column",
     );
     var optOutSection = document.querySelector(".opt-out-section");
+    var isAddOnsPage = !!document.querySelector(
+      '[data-testid="AddOns-container"]',
+    );
+
+    //hide element list
+    var sectionTitle = document.querySelector(".protection-title");
+    var singleProtContainer = document.querySelector(
+      '[data-testid="single-protections-list-section-container"]',
+    );
 
     if (protectionCards) {
       protectionCards.style.display = hasProtectionBundles ? "flex" : "none";
@@ -1293,13 +1359,46 @@ body.bundle-active .recomended {
       protectionBg.style.zIndex = hasProtectionBundles ? "0" : "-1";
     }
     if (protectionCardsColumn) {
-      protectionCardsColumn.style.marginBottom = hasProtectionBundles
-        ? "0px"
-        : "50px";
+      protectionCardsColumn.style.marginBottom =
+        isAddOnsPage && !hasAddOns
+          ? "50px"
+          : !hasProtectionBundles
+            ? "56px"
+            : "0px";
     }
     if (optOutSection) {
       optOutSection.style.marginTop = hasProtectionBundles ? "0px" : "50px";
     }
+
+    // if pickup is US but residency is not US
+    if (pickupUSA && residNotUSA) {
+      if (protectionCards) {
+        protectionCards.style.display = "none";
+        protectionBg.style.zIndex = "-1";
+        sectionTitle.style.marginBottom = 0;
+        singleProtContainer.style.paddingTop = 0;
+      }
+      // hide bundles and headings
+      var hideElems = $(
+        '[data-testid="ancillaries-bundles-container"], [data-testid="single-protections-list-heading"], [data-testid="single-protections-list-subheading"], [data-testid="single-protections-list-section-container"] > div > hr',
+      );
+      hideElems.hide();
+
+      // hide selected products
+      var hideItems = ["ALI", "LDW"];
+      $('[data-testid="single-protections-item-name"]')
+        .filter(function () {
+          // check if product code exists in array
+          var text = $(this).text();
+          return hideItems.some((code) => text.includes(code));
+        })
+        .closest('[data-testid="single-protections-item-card-container"]')
+        .parent()
+        .hide();
+    }
+
+    // hide protections modal
+    $("body").addClass("hide-prot-modal");
 
     // When our custom plans are hidden, show the original Avis bundles in our section
     var originalBundlesContainer = document.querySelector(
@@ -1320,7 +1419,10 @@ body.bundle-active .recomended {
       originalBundlesContainer.classList.add("cro-001-grid");
     } else if (hasProtectionBundles && originalBundlesContainer) {
       // If our plans are showing, keep the original container hidden
-      originalBundlesContainer.style.display = "none";
+
+      if (!isAddOnsPage) {
+        originalBundlesContainer.style.display = "none";
+      }
     }
 
     var totals = window.__AVIS_PRICE_CALC__
@@ -1358,10 +1460,10 @@ body.bundle-active .recomended {
       : "0.00";
     var totalSavings = Number(totalSavingsData).toFixed(2);
     var discountCodeSavings = priceCalc.savings
-      ? Number(priceCalc.savings.discountCodeSavings)
+      ? Number(priceCalc.savings.discountCodeSavings).toFixed(2)
       : "0.00";
     var payNowSaving = priceCalc.savings
-      ? Number(priceCalc.savings.payNowSavings)
+      ? Number(priceCalc.savings.payNowSavings).toFixed(2)
       : "0.00";
 
     var taxAndFees = priceCalc.taxAndFeeItems || [];
@@ -1393,7 +1495,10 @@ body.bundle-active .recomended {
           var itemAmount =
             i.code === "GSO" && (i.amount === 0 || i.amount === "0")
               ? "Market Price"
-              : formatPrice(currencySymbol, i.amountString || i.amount || 0);
+              : formatPrice(
+                  currencySymbol,
+                  i.amountString || i.amount.toFixed(2) || 0,
+                );
           var description = i.description || "";
           if (i.code === "GSO") {
             var gsoAmount = Number(i.netSubtotalPerUnit || 0).toFixed(2);
@@ -1422,7 +1527,7 @@ body.bundle-active .recomended {
     };
 
     var imageHtml = vehicleData.image
-      ? '<div class="vehicle-image-container"><img src="https://www.avis.com' +
+      ? '<div class="vehicle-image-container"><img src="' +
         vehicleData.image +
         '" data-testid="rental-summary-image" alt="vehicle image" class="car-image" loading="lazy" width="113" height="48" decoding="async" data-nimg="1"></div>'
       : "";
@@ -1556,7 +1661,8 @@ body.bundle-active .recomended {
       '">' +
       '     <div class="accordion-header-title">Savings & discounts</div>' +
       '     <div class="accordion-header-icon">' +
-      '      <div class="accordion-header-icon-price savings-price">-' +
+      '      <div class="accordion-header-icon-price savings-price">' +
+      (totalSavings > 0 ? "-" : "") +
       formatPrice(currencySymbol, totalSavings || "0.00") +
       "</div>" +
       '      <div class="accordion-header-icon-arrow" style="display: ' +
@@ -2050,6 +2156,18 @@ body.bundle-active .recomended {
         });
       }
 
+      // Description replace
+      var cardDescEl = card.querySelector(".card-desc");
+      if (cardDescEl && data.description) {
+        var descText =
+          prot.code === "Ultimate Protection"
+            ? data.description.spanText
+            : data.description.pText;
+        if (descText) {
+          cardDescEl.textContent = descText;
+        }
+      }
+
       //Rating replace
       var ratingEl = card.querySelector(".ancillary-bundle-rating");
       if (ratingEl && data.rating) {
@@ -2206,17 +2324,25 @@ body.bundle-active .recomended {
         ).filter(function () {
           return $(this).text() === "Included";
         }).length > 0;
-
       // check if decline checkbox is checked
       var declineChecked = $(
         '#avis-opt-out-option-a input[type="checkbox"]',
       ).is(":checked");
-
       // enable CTA if any selection made
       var shouldEnable =
-        activeBundle || activeItems || includedItems || declineChecked;
+        activeBundle ||
+        activeItems ||
+        includedItems ||
+        declineChecked ||
+        !hasProtectionBundles ||
+        residNotUSA;
       // hide opt-out section if a paid protection is active
-      var shouldHide = activeBundle || activeItems || includedItems;
+      var shouldHide =
+        activeBundle ||
+        activeItems ||
+        includedItems ||
+        !hasProtectionBundles ||
+        residNotUSA;
 
       var isDisabled = contCta.is(":disabled");
 
@@ -2341,6 +2467,14 @@ body.bundle-active .recomended {
       if (selectAddOnsList) cardsColumn.appendChild(selectAddOnsList);
     }
 
+    if (selectAddOnsList) {
+      selectAddOnsList.style.paddingTop = "65px";
+      if (window.innerWidth <= 1024) {
+        selectAddOnsList.style.paddingTop = "0px";
+        selectAddOnsList.style.position = "relative";
+      }
+    }
+
     // For Avis First: place the avis-first logo grandparent as the 2nd child of cardsColumn
     if (getTargetSelector() === TARGET_SELECTOR_AVIS_FIRST) {
       poll(
@@ -2381,6 +2515,18 @@ body.bundle-active .recomended {
   }
 
   function runProtection() {
+    //wait for body
+    poll(
+      function () {
+        return document.querySelector("body");
+      },
+      function () {
+        const params = new URLSearchParams(window.location.search);
+        const residencyValue = params.get("residency_value") || "";
+        residClean = residencyValue.trim().toUpperCase();
+        residNotUSA = residClean !== "US" && residClean !== "";
+      },
+    );
     // First wait for sessionStorage to be populated by the app (SPA navigation
     // writes reservation.store asynchronously after the URL changes).
     poll(
@@ -2402,8 +2548,6 @@ body.bundle-active .recomended {
           },
         );
       },
-      false,
-      10000,
     );
   }
 

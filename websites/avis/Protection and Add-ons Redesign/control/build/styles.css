@@ -77,6 +77,39 @@
   stroke: #fff;
 }
 
+[data-testid="ancillaries-bundle"][data-code="Ultimate Protection"] {
+  position: relative;
+}
+
+/* ultimate protection - badge */
+.recommended-badge {
+  background: #275075;
+  border-radius: 2px;
+  color: #fff;
+  font-family: AvisHeadline, "AvisHeadline Fallback", sans-serif;
+  font-size: 15px;
+  left: 50%;
+  line-height: 1;
+  padding: 6px;
+  position: absolute;
+  text-align: center;
+  text-transform: uppercase;
+  top: -15px;
+  transform: translateX(-50%);
+  width: 70%;
+  z-index: 2;
+}
+
+/* hide protections modal */
+body.hide-prot-modal {
+  overflow: visible !important;
+}
+
+body.hide-prot-modal
+  > [role="presentation"]:has([aria-labelledby^="ldw-modal-title"]) {
+  display: none;
+}
+
 @media (max-width: 768px) {
   [data-testid="ancillaries-bundles-container"] {
     grid-template-columns: repeat(1, 1fr) !important;

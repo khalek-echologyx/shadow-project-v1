@@ -30,6 +30,32 @@
 
   var mvtID = 'MVT-307';
 
+  var hasProtectionBundles = true;
+  var pickupUSA = false;
+  var residNotUSA = false;
+  var countryValue = ""
+  var residValue = ""
+  var residClean = ""
+
+  function getSessionData() {
+    try {
+      var reservationStoreRaw = sessionStorage.getItem("reservation.store");
+      if (reservationStoreRaw) { 
+        var store = JSON.parse(reservationStoreRaw);
+        if (store) {
+          var state = store.state || store;
+          var protectionBundles = (state.protectionsData && state.protectionsData.protectionBundles) || [];
+          var requiredBundles = ['Ultimate Protection', 'Enhanced Protection', 'Essential Protection'];
+          var bundleCodes = protectionBundles.map(function (b) { return b.code; });
+          var hasAllRequired = requiredBundles.every(function (code) { return bundleCodes.indexOf(code) !== -1; });
+          hasProtectionBundles = protectionBundles.length > 1 && hasAllRequired;
+        }
+      }
+    } catch (error) {
+      
+    }
+  }
+
   var optOutSection =
     '<div class="opt-out-section" id="avis-opt-out-container-control">' +
     '    <h4>Continue without protection</h4>' +
@@ -89,6 +115,31 @@
           });
         }
 
+        // identify bundles
+        var ultProt = $('[data-testid="ancillaries-bundle"][data-code="Ultimate Protection"]');
+        // add recommended badge to ultimate protection
+        var badgeLabel = 'Recommended';
+        var badgeHtml = '<span class="recommended-badge">' + badgeLabel + '</span>';
+        ultProt.prepend(badgeHtml);
+
+        //Hide bundle base on the residency
+        if (pickupUSA && residNotUSA) {
+          // hide bundles and headings
+          var hideElems = $('[data-testid="ancillaries-bundles-container"], [data-testid="single-protections-list-heading"], [data-testid="single-protections-list-subheading"], [data-testid="single-protections-list-section-container"] > div > hr');
+          hideElems.hide();
+          // hide selected products
+          var hideItems = ['ALI', 'LDW'];
+          $('[data-testid="single-protections-item-name"]').filter(function () {
+
+            // check if product code exists in array
+            var text = $(this).text();
+            return hideItems.some(code => text.includes(code));
+
+          }).closest('[data-testid="single-protections-item-card-container"]').parent().hide();
+        }
+
+        $('body').addClass('hide-prot-modal');
+
         // re-run checkState on any relevant interaction
         $(document).on(
           'click',
@@ -117,9 +168,9 @@
     var declineChecked = $('#avis-opt-out-option-control input[type="checkbox"]').is(':checked');
 
     // enable CTA if any selection made
-    var shouldEnable = activeBundle || activeItems || includedItems || declineChecked;
+    var shouldEnable = activeBundle || activeItems || includedItems || declineChecked || !hasProtectionBundles || residNotUSA;
     // hide opt-out section if a paid protection or individual item is active
-    var shouldHide = activeBundle || activeItems || includedItems;
+    var shouldHide = activeBundle || activeItems || includedItems || !hasProtectionBundles || residNotUSA;
 
     var contCta = $('button[data-testid="action-footer-cta-button"]');
     var isDisabled = contCta.is(':disabled');
@@ -146,6 +197,22 @@
 
   function handlePageChange() {
     if (isProtectionPage()) {
+      getSessionData()
+      //wait for body
+      poll(
+        function () {
+          return document.querySelector("body")
+        },
+        function () {
+          var params = new URLSearchParams(window.location.search);
+          var countryCode = params.get("country") || "";
+          countryValue = countryCode;
+          pickupUSA = countryValue.trim().toUpperCase() === 'US';
+          var residencyValue = params.get('residency_value') || "";
+          residClean = residencyValue.trim().toUpperCase();
+          residNotUSA = residClean !== 'US' && residClean !== '';
+        }
+      )
       injectOptOut();
     }
   }

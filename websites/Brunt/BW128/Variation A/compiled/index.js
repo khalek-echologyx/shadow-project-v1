@@ -73,7 +73,7 @@
         applyLimitedEditionStyle();
       }
     );
-    const productGridSection = document.querySelector(".product-list-grid");
+    const productGridSection = document.querySelector("#ResultsList");
     const productGridObserver = new MutationObserver((mutations) => {
       applyLimitedEditionStyle();
     });

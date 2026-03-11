@@ -108,12 +108,27 @@
     var newPriceEl = bundle.querySelector('[data-testid="ancillaries-bundle-price"]');
     var newPrice = bundle.getAttribute("data-price") || (newPriceEl ? newPriceEl.textContent.trim() : null);
 
+    // Description
+    var descEl = bundle.querySelector('[data-testid="ancillaries-bundle-description"]');
+    var description = null;
+    if (descEl) {
+      var descP = descEl.querySelector('p');
+      if (descP) {
+        var descSpan = descP.querySelector('span');
+        description = {
+          pText: descP.innerText || descP.textContent || '',
+          spanText: descSpan ? (descSpan.innerText || descSpan.textContent || '') : ''
+        };
+      }
+    }
+
     return {
       features: features,
       oldPrice: oldPrice,
       newPrice: newPrice,
       element: bundle,
-      rating
+      rating: rating,
+      description: description
     };
   }
 
@@ -161,6 +176,12 @@
     dropoff: { name: "", date: "", time: "" }
   };
   var hasProtectionBundles = true;
+  var hasAddOns = true;
+  var pickupUSA = true;
+  var residNotUSA = false;
+  var countryValue = ""
+  var residValue = ""
+  var residClean = ""
 
   function getSessionData() {
     try {
@@ -170,11 +191,22 @@
         if (store) {
           var state = store.state || store;
           var protectionBundles = (state.protectionsData && state.protectionsData.protectionBundles) || [];
+          var addOns = (state.addOnsData && state.addOnsData.addOnBundles) || [];
           var requiredBundles = ['Ultimate Protection', 'Enhanced Protection', 'Essential Protection'];
           var bundleCodes = protectionBundles.map(function (b) { return b.code; });
           var hasAllRequired = requiredBundles.every(function (code) { return bundleCodes.indexOf(code) !== -1; });
           hasProtectionBundles = protectionBundles.length > 1 && hasAllRequired;
+          hasAddOns = addOns.length > 0;
           var rawName = state.vehicleModelDescription || "";
+          var isMysteryCar = rawName === "Mystery Car May Be Gas, Hybrid, or EV or Similar"
+
+          //get pickup country value
+          countryValue = state.pickupCountryCode || '';
+          pickupUSA = countryValue === 'US';
+
+          // get residency value
+          residValue = state.residencyValue || '';
+
           if (rawName.indexOf("or Similar") !== -1) {
             vehicleData.name = rawName.replace("or Similar", "").trim();
             vehicleData.showSimilar = true;
@@ -182,7 +214,7 @@
             vehicleData.name = rawName;
             vehicleData.showSimilar = false;
           }
-          vehicleData.image = state.vehicleImage || "";
+          vehicleData.image = isMysteryCar ? "https://www.avis.com/_next/static/media/car-not-available.05cc2caa.png" : "https://www.avis.com" + state.vehicleImage;
 
           locationData.pickup.name = (state.pickupAddressLine1 + ", " + state.pickupCityName + ", " + state.pickupStateCode) || "";
           locationData.dropoff.name = (state.returnAddressLine1 + ", " + state.returnCityName + ", " + state.returnStateCode) || "";
@@ -295,6 +327,11 @@
     var protectionCards = document.querySelector(".protection-cards");
     var protectionBg = document.querySelector(".protection-bg");
     var protectionCardsColumn = document.querySelector(".protection-cards-column");
+    var isAddOnsPage = !!document.querySelector('[data-testid="AddOns-container"]');
+
+    //hide element list
+    var sectionTitle = document.querySelector(".protection-title")
+    var singleProtContainer = document.querySelector('[data-testid="single-protections-list-section-container"]')
 
     if (protectionCards) {
       protectionCards.style.display = hasProtectionBundles ? "flex" : "none";
@@ -303,8 +340,34 @@
       protectionBg.style.zIndex = hasProtectionBundles ? "0" : "-1";
     }
     if (protectionCardsColumn) {
-      protectionCardsColumn.style.marginBottom = hasProtectionBundles ? "0px" : "50px";
+      protectionCardsColumn.style.marginBottom = isAddOnsPage && !hasAddOns ? "50px" : hasProtectionBundles ? "0px" : "56px";
     }
+
+    // if pickup is US but residency is not US
+    if (pickupUSA && residNotUSA) {
+      if (protectionCards) {
+        protectionCards.style.display = "none";
+        protectionBg.style.zIndex = "-1";
+        sectionTitle.style.marginBottom = 0;
+        singleProtContainer.style.paddingTop = 0;
+      }
+      // hide bundles and headings
+      var hideElems = $('[data-testid="ancillaries-bundles-container"], [data-testid="single-protections-list-heading"], [data-testid="single-protections-list-subheading"], [data-testid="single-protections-list-section-container"] > div > hr');
+      hideElems.hide();
+
+      // hide selected products
+      var hideItems = ['ALI', 'LDW'];
+      $('[data-testid="single-protections-item-name"]').filter(function () {
+
+        // check if product code exists in array
+        var text = $(this).text();
+        return hideItems.some(code => text.includes(code));
+
+      }).closest('[data-testid="single-protections-item-card-container"]').parent().hide();
+    }
+
+    // hide protections modal
+    $('body').addClass('hide-prot-modal');
 
     // When our custom plans are hidden, show the original Avis bundles in our section =
     var originalBundlesContainer = document.querySelector('[data-testid="ancillaries-bundles-container"]');
@@ -318,7 +381,10 @@
       originalBundlesContainer.classList.add("cro-001-grid")
     } else if (hasProtectionBundles && originalBundlesContainer) {
       // If our plans are showing, keep the original container hidden
-      originalBundlesContainer.style.display = 'none';
+
+      if (!isAddOnsPage) {
+        originalBundlesContainer.style.display = 'none';
+      }
     }
 
     var totals = window.__AVIS_PRICE_CALC__ ? window.__AVIS_PRICE_CALC__.totals : {};
@@ -340,8 +406,8 @@
 
     var totalSavingsData = priceCalc.savings ? priceCalc.savings.totalSavings : "0.00";
     var totalSavings = Number(totalSavingsData).toFixed(2);
-    var discountCodeSavings = priceCalc.savings ? Number(priceCalc.savings.discountCodeSavings) : "0.00";
-    var payNowSaving = priceCalc.savings ? Number(priceCalc.savings.payNowSavings) : "0.00";
+    var discountCodeSavings = priceCalc.savings ? Number(priceCalc.savings.discountCodeSavings).toFixed(2) : "0.00";
+    var payNowSaving = priceCalc.savings ? Number(priceCalc.savings.payNowSavings).toFixed(2) : "0.00";
 
     var taxAndFees = priceCalc.taxAndFeeItems || [];
     var rateTerms = priceCalc.rateTerms || {};
@@ -365,7 +431,7 @@
     var buildList = function (items) {
       if (!items || !items.length) return '<div class="empty-list">None</div>';
       return items.map(function (i) {
-        var itemAmount = (i.code === "GSO" && (i.amount === 0 || i.amount === "0")) ? "Market Price" : formatPrice(currencySymbol, (i.amountString || i.amount || 0));
+        var itemAmount = (i.code === "GSO" && (i.amount === 0 || i.amount === "0")) ? "Market Price" : formatPrice(currencySymbol, (i.amountString || i.amount.toFixed(2) || 0));
         var description = i.description || "";
         if (i.code === 'GSO') {
           var gsoAmount = Number(i.netSubtotalPerUnit || 0).toFixed(2);
@@ -377,7 +443,7 @@
       }).join('');
     };
 
-    var imageHtml = vehicleData.image ? '<div class="vehicle-image-container"><img src="https://www.avis.com' + vehicleData.image + '" data-testid="rental-summary-image" alt="vehicle image" class="car-image" loading="lazy" width="113" height="48" decoding="async" data-nimg="1"></div>' : '';
+    var imageHtml = vehicleData.image ? '<div class="vehicle-image-container"><img src="' + vehicleData.image + '" data-testid="rental-summary-image" alt="vehicle image" class="car-image" loading="lazy" width="113" height="48" decoding="async" data-nimg="1"></div>' : '';
 
     var amazonHtml = '';
     if (amazonGiftCardAmount !== "0.00" && amazonGiftCardAmount !== 0) {
@@ -389,7 +455,7 @@
         '     <div class="amazon-gift-card-content">' +
         '       <div class="amazon-gift-card-info">' +
         '         <div class="amazon-gift-card-title">' +
-         '           <span class="amazon-reward-text">You will receive ' + formatPrice(currencySymbol, amazonGiftCardAmount) + '  on an Amazon.com Gift Card upon completing your rental!</span>' +
+        '           <span class="amazon-reward-text">You will receive ' + formatPrice(currencySymbol, amazonGiftCardAmount) + '  on an Amazon.com Gift Card upon completing your rental!</span>' +
         '         </div>' +
         '         <div class="amazon-gift-card-disclaimer">' +
         '           <span class="amazon-legal-text">*Restrictions apply, see Amazon.com/gc-legal</span>' +
@@ -458,7 +524,7 @@
       '    <div class="accordion-header" data-has-items="' + (totalSavings > 0) + '">' +
       '     <div class="accordion-header-title">Savings & discounts</div>' +
       '     <div class="accordion-header-icon">' +
-      '      <div class="accordion-header-icon-price savings-price">-' + formatPrice(currencySymbol, (totalSavings || "0.00")) + '</div>' +
+      '      <div class="accordion-header-icon-price savings-price">' + (totalSavings > 0 ? '-' : '') + formatPrice(currencySymbol, (totalSavings || "0.00")) + '</div>' +
       '      <div class="accordion-header-icon-arrow" style="display: ' + (totalSavings > 0 ? 'block' : 'none') + ';">' + arrowDown + '</div>' +
       '     </div>' +
       '    </div>' +
@@ -630,7 +696,7 @@
       '              <div class="protection-cards">' +
       '                <!-- Ultimate Protection Highlight -->' +
       '                <div class="protection-card highlight ultimate-card" data-target-code="Ultimate Protection">' +
-      '                  <div class="recomended"> '+ recommendCheckSvg +' <span>RECOMMENDED</span> </div>' +
+      '                  <div class="recomended"> ' + recommendCheckSvg + ' <span>RECOMMENDED</span> </div>' +
       '                  <div class="card-content-header">' +
       '                    <p class="card-title">Ultimate Protection</p>' +
       '                    <p class="ancillary-bundle-rating"><span class="active"></span> <span class="active"></span> <span class="active"></span> </p> ' +
@@ -803,6 +869,17 @@
         });
       }
 
+      // Description replace
+      var cardDescEl = card.querySelector('.card-desc');
+      if (cardDescEl && data.description) {
+        var descText = prot.code === 'Ultimate Protection'
+          ? data.description.spanText
+          : data.description.pText;
+        if (descText) {
+          cardDescEl.textContent = descText;
+        }
+      }
+
       //Rating replace
       var ratingEl = card.querySelector(".ancillary-bundle-rating")
       if (ratingEl && data.rating) {
@@ -906,6 +983,14 @@
       if (selectAddOnsList) cardsColumn.appendChild(selectAddOnsList);
     }
 
+    if (selectAddOnsList) {
+      selectAddOnsList.style.paddingTop = "65px"
+      if (window.innerWidth <= 1024) {
+        selectAddOnsList.style.paddingTop = "0px"
+        selectAddOnsList.style.position = "relative"
+      }
+    }
+
     // For Avis First: place the avis-first logo grandparent as the 2nd child of cardsColumn
     if (getTargetSelector() === TARGET_SELECTOR_AVIS_FIRST) {
       poll(
@@ -1003,6 +1088,18 @@
   }
 
   function runProtection() {
+    //wait for body
+    poll(
+      function () {
+        return document.querySelector("body")
+      },
+      function () {
+        const params = new URLSearchParams(window.location.search);
+        const residencyValue = params.get('residency_value') || "";
+        residClean = residencyValue.trim().toUpperCase();
+        residNotUSA = residClean !== 'US' && residClean !== '';
+      }
+    )
     // First wait for sessionStorage to be populated by the app (SPA navigation
     // writes reservation.store asynchronously after the URL changes).
     poll(

@@ -107,6 +107,7 @@
 
 .cro-001-grid {
   display: flex !important;
+
   [data-testid="ancillaries-bundle"] {
     width: 100%;
   }
@@ -139,6 +140,7 @@
   border: 1px solid rgb(167, 167, 167);
   border-bottom: 1px solid rgb(199, 199, 199);
 }
+
 .recomended {
   position: absolute;
   top: -11px;
@@ -177,16 +179,18 @@
   padding: 16px 24px;
   background-color: #2E0009;
   border-radius: 7px 7px 0 0;
-  min-height: 176px;
+  min-height: 184px;
 }
 
 // ===== Card header style bg changes on selection =====
 body.bundle-active .card-content-header {
   background-color: #000;
 }
+
 body.bundle-active .ultimate-card .card-content-header {
   background: #7C1620;
 }
+
 body.bundle-active .recomended {
   background-color: #000;
 }
@@ -253,7 +257,7 @@ body.bundle-active .recomended {
 }
 
 .protection-card.highlight .features {
-  min-height: 200px;
+  min-height: 215px;
 }
 
 //features
@@ -420,16 +424,6 @@ body.bundle-active .recomended {
   padding-left: 20px;
 }
 
-[data-testid="ancillaries-action-footer"] {
-  margin-top: 0 !important;
-  position: static !important;
-
-  &::before,
-  &::after {
-    display: none !important;
-  }
-}
-
 .car-summary-column {
   box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.08);
   background-color: #fff;
@@ -558,7 +552,7 @@ body.bundle-active .recomended {
     display: flex;
     gap: 8px;
     margin-bottom: 16px;
-    
+
 
     .amazon-gift-card-title {
       font-size: 16px;
@@ -889,6 +883,15 @@ body.bundle-active .recomended {
   stroke: #fff;
 }
 
+/* hide protections modal */
+body.hide-prot-modal {
+  overflow: visible !important;
+}
+
+body.hide-prot-modal>[role="presentation"]:has([aria-labelledby^="ldw-modal-title"]) {
+  display: none;
+}
+
 @media (max-width: 768px) {
   .protection-container-grid {
     grid-template-columns: 1fr;
@@ -938,6 +941,7 @@ body.bundle-active .recomended {
 }
 
 @media (max-width: 1359px) {
+
   .card-content-header,
   .protection-card.highlight .card-content-header {
     min-height: 252px;
@@ -946,15 +950,40 @@ body.bundle-active .recomended {
 
 @media (max-width: 768px) {
   .cro-001-grid {
-  flex-direction: column;
-  gap: 10px;
-  [data-testid="ancillaries-bundle"] {
-    width: 100%;
+    flex-direction: column;
+    gap: 10px;
+
+    [data-testid="ancillaries-bundle"] {
+      width: 100%;
+    }
   }
-}
 
   .card-content-header,
   .protection-card.highlight .card-content-header {
     min-height: fit-content;
+  }
+}
+
+@media (min-width: 1025px) and (max-width: 1250px) {
+  .btn.primary {
+    flex-direction: column;
+  }
+}
+
+@media (min-width: 1024px) {
+  [data-testid="ancillaries-action-footer"] {
+    margin-top: 0 !important;
+    position: static !important;
+
+    &::before,
+    &::after {
+      display: none !important;
+    }
+  }
+}
+
+@media (max-width: 461px) {
+  #abg-adobe-target-main-content-block {
+    margin-top: 33px;
   }
 }

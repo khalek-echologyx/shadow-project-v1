@@ -80,7 +80,7 @@
   var whiteCheckSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="14" viewBox="0 0 18 14" fill="none">' +
     '<path fill-rule="evenodd" clip-rule="evenodd" d="M16.8118 1.16363C17.0528 1.39107 17.0638 1.7708 16.8364 2.0118L6.96479 12.4723C6.72819 12.723 6.32948 12.7232 6.09257 12.4728L1.16415 7.2634C0.936413 7.02269 0.946938 6.64293 1.18766 6.4152C1.42837 6.18747 1.80812 6.19799 2.03586 6.43871L6.52788 11.1868L15.9636 1.1882C16.1911 0.947198 16.5708 0.9362 16.8118 1.16363Z" fill="white" stroke="white" stroke-width="2" stroke-linecap="round"/>' +
     '</svg>';
-    var recommendCheckSvg = '<svg focusable="false" aria-hidden="true" viewBox="0 0 11 9"><path d="M1 4L4 7L10 1" stroke-linecap="round" fill="none"></path></svg>';
+  var recommendCheckSvg = '<svg focusable="false" aria-hidden="true" viewBox="0 0 11 9"><path d="M1 4L4 7L10 1" stroke-linecap="round" fill="none"></path></svg>';
 
   function getProtectionData(dataCode) {
     var selector = '[data-testid="ancillaries-bundle"][data-code="' + dataCode + '"]';
@@ -105,12 +105,27 @@
     var newPriceEl = bundle.querySelector('[data-testid="ancillaries-bundle-price"]');
     var newPrice = bundle.getAttribute("data-price") || (newPriceEl ? newPriceEl.textContent.trim() : null);
 
+    // Description
+    var descEl = bundle.querySelector('[data-testid="ancillaries-bundle-description"]');
+    var description = null;
+    if (descEl) {
+      var descP = descEl.querySelector('p');
+      if (descP) {
+        var descSpan = descP.querySelector('span');
+        description = {
+          pText: descP.innerText || descP.textContent || '',
+          spanText: descSpan ? (descSpan.innerText || descSpan.textContent || '') : ''
+        };
+      }
+    }
+
     return {
       features: features,
       oldPrice: oldPrice,
       newPrice: newPrice,
       element: bundle,
-      rating
+      rating: rating,
+      description: description
     };
   }
 
@@ -154,6 +169,12 @@
     dropoff: { name: "", date: "", time: "" }
   };
   var hasProtectionBundles = true;
+  var hasAddOns = true;
+  var pickupUSA = true;
+  var residNotUSA = false;
+  var countryValue = "";
+  var residClean = "";
+  
 
   function getSessionData() {
     try {
@@ -163,8 +184,19 @@
         if (store) {
           var state = store.state || store;
           var protectionBundles = (state.protectionsData && state.protectionsData.protectionBundles) || [];
-          hasProtectionBundles = protectionBundles.length > 1;
+          var addOns = (state.addOnsData && state.addOnsData.addOnBundles) || [];
+          var requiredBundles = ['Ultimate Protection', 'Enhanced Protection', 'Essential Protection'];
+          var bundleCodes = protectionBundles.map(function (b) { return b.code; });
+          var hasAllRequired = requiredBundles.every(function (code) { return bundleCodes.indexOf(code) !== -1; });
+          hasProtectionBundles = protectionBundles.length > 1 && hasAllRequired;
+          hasAddOns = addOns.length > 0;
           var rawName = state.vehicleModelDescription || "";
+          var isMysteryCar = rawName === "Mystery Car May Be Gas, Hybrid, or EV or Similar";
+
+          //get pickup country value
+          countryValue = state.pickupCountryCode || '';
+          pickupUSA = countryValue === 'US';
+
           if (rawName.indexOf("or Similar") !== -1) {
             vehicleData.name = rawName.replace("or Similar", "").trim();
             vehicleData.showSimilar = true;
@@ -172,7 +204,7 @@
             vehicleData.name = rawName;
             vehicleData.showSimilar = false;
           }
-          vehicleData.image = state.vehicleImage || "";
+          vehicleData.image = isMysteryCar ? "https://www.avis.com/_next/static/media/car-not-available.05cc2caa.png" : "https://www.avis.com" + state.vehicleImage;
 
           var formatISO = function (isoStr) {
             if (!isoStr) return { date: "", time: "" };
@@ -286,6 +318,11 @@
     var protectionBg = document.querySelector(".protection-bg");
     var protectionCardsColumn = document.querySelector(".protection-cards-column");
     var optOutSection = document.querySelector(".opt-out-section");
+    var isAddOnsPage = !!document.querySelector('[data-testid="AddOns-container"]');
+
+    //hide element list
+    var sectionTitle = document.querySelector(".protection-title");
+    var singleProtContainer = document.querySelector('[data-testid="single-protections-list-section-container"]');
 
     if (protectionCards) {
       protectionCards.style.display = hasProtectionBundles ? "flex" : "none";
@@ -294,10 +331,54 @@
       protectionBg.style.zIndex = hasProtectionBundles ? "0" : "-1";
     }
     if (protectionCardsColumn) {
-      protectionCardsColumn.style.marginBottom = hasProtectionBundles ? "0px" : "50px";
+      protectionCardsColumn.style.marginBottom = isAddOnsPage && !hasAddOns ? "50px" : !hasProtectionBundles ? "56px" : "0px";
     }
     if (optOutSection) {
       optOutSection.style.marginTop = hasProtectionBundles ? "0px" : "50px";
+    }
+    
+    // if pickup is US but residency is not US
+    if (pickupUSA && residNotUSA) {
+      if (protectionCards) {
+        protectionCards.style.display = "none";
+        protectionBg.style.zIndex = "-1";
+        sectionTitle.style.marginBottom = 0;
+        singleProtContainer.style.paddingTop = 0;
+      }
+      // hide bundles and headings
+      var hideElems = $('[data-testid="ancillaries-bundles-container"], [data-testid="single-protections-list-heading"], [data-testid="single-protections-list-subheading"], [data-testid="single-protections-list-section-container"] > div > hr');
+      hideElems.hide();
+
+      // hide selected products
+      var hideItems = ['ALI', 'LDW'];
+      $('[data-testid="single-protections-item-name"]').filter(function () {
+
+        // check if product code exists in array
+        var text = $(this).text();
+        return hideItems.some(code => text.includes(code));
+
+      }).closest('[data-testid="single-protections-item-card-container"]').parent().hide();
+    }
+
+    // hide protections modal
+    $('body').addClass('hide-prot-modal');
+
+    // When our custom plans are hidden, show the original Avis bundles in our section
+    var originalBundlesContainer = document.querySelector('[data-testid="ancillaries-bundles-container"]');
+    if (!hasProtectionBundles && originalBundlesContainer) {
+      var sectionContent = document.querySelector('.protection-cards-section-content');
+      // Only move it once — check if it's already inside our section
+      if (sectionContent && !sectionContent.contains(originalBundlesContainer)) {
+        originalBundlesContainer.style.removeProperty('display');
+        sectionContent.appendChild(originalBundlesContainer);
+      }
+      originalBundlesContainer.classList.add("cro-001-grid");
+    } else if (hasProtectionBundles && originalBundlesContainer) {
+      // If our plans are showing, keep the original container hidden
+
+      if (!isAddOnsPage) {
+        originalBundlesContainer.style.display = 'none';
+      }
     }
 
     var totals = window.__AVIS_PRICE_CALC__ ? window.__AVIS_PRICE_CALC__.totals : {};
@@ -319,8 +400,8 @@
 
     var totalSavingsData = priceCalc.savings ? priceCalc.savings.totalSavings : "0.00";
     var totalSavings = Number(totalSavingsData).toFixed(2);
-    var discountCodeSavings = priceCalc.savings ? Number(priceCalc.savings.discountCodeSavings) : "0.00";
-    var payNowSaving = priceCalc.savings ? Number(priceCalc.savings.payNowSavings) : "0.00";
+    var discountCodeSavings = priceCalc.savings ? Number(priceCalc.savings.discountCodeSavings).toFixed(2) : "0.00";
+    var payNowSaving = priceCalc.savings ? Number(priceCalc.savings.payNowSavings).toFixed(2) : "0.00";
 
     var taxAndFees = priceCalc.taxAndFeeItems || [];
     var rateTerms = priceCalc.rateTerms || {};
@@ -344,8 +425,8 @@
     var buildList = function (items) {
       if (!items || !items.length) return '<div class="empty-list">None</div>';
       return items.map(function (i) {
-        var itemAmount = (i.code === "GSO" && (i.amount === 0 || i.amount === "0")) ? "Market Price" : formatPrice(currencySymbol, (i.amountString || i.amount || 0));
-        var description = i.description || i.name;
+        var itemAmount = (i.code === "GSO" && (i.amount === 0 || i.amount === "0")) ? "Market Price" : formatPrice(currencySymbol, (i.amountString || i.amount.toFixed(2) || 0));
+        var description = i.description || "";
         if (i.code === 'GSO') {
           var gsoAmount = Number(i.netSubtotalPerUnit || 0).toFixed(2);
           var gsoSuffix = (i.chargeType === "PER_GALLON") ? "/gal" : "";
@@ -356,7 +437,7 @@
       }).join('');
     };
 
-    var imageHtml = vehicleData.image ? '<div class="vehicle-image-container"><img src="https://www.avis.com' + vehicleData.image + '" data-testid="rental-summary-image" alt="vehicle image" class="car-image" loading="lazy" width="113" height="48" decoding="async" data-nimg="1"></div>' : '';
+    var imageHtml = vehicleData.image ? '<div class="vehicle-image-container"><img src="' + vehicleData.image + '" data-testid="rental-summary-image" alt="vehicle image" class="car-image" loading="lazy" width="113" height="48" decoding="async" data-nimg="1"></div>' : '';
 
     var amazonHtml = '';
     if (amazonGiftCardAmount !== "0.00" && amazonGiftCardAmount !== 0) {
@@ -437,7 +518,7 @@
       '    <div class="accordion-header" data-has-items="' + (totalSavings > 0) + '">' +
       '     <div class="accordion-header-title">Savings & discounts</div>' +
       '     <div class="accordion-header-icon">' +
-      '      <div class="accordion-header-icon-price savings-price">-' + formatPrice(currencySymbol, (totalSavings || "0.00")) + '</div>' +
+      '      <div class="accordion-header-icon-price savings-price">' + (totalSavings > 0 ? "-" : "") + formatPrice(currencySymbol, (totalSavings || "0.00")) + '</div>' +
       '      <div class="accordion-header-icon-arrow" style="display: ' + (totalSavings > 0 ? 'block' : 'none') + ';">' + arrowDown + '</div>' +
       '     </div>' +
       '    </div>' +
@@ -596,13 +677,13 @@
       '              </svg>' +
       '              <div class="protection-cards-section-content">' +
       '                <h2 class="protection-title">' +
-      '                2.5 Million + customers purchased our popular protection in 2025!' +
+      '                Protection Packages Built for Peace of Mind' +
       '                </h2>' +
       '    ' +
       '              <div class="protection-cards">' +
       '                <!-- Ultimate Protection Highlight -->' +
       '                <div class="protection-card highlight ultimate-card" data-target-code="Ultimate Protection">' +
-      '                  <div class="recomended"> '+ recommendCheckSvg +' <span>RECOMMENDED</span> </div>' +
+      '                  <div class="recomended"> ' + recommendCheckSvg + ' <span>RECOMMENDED</span> </div>' +
       '                  <div class="card-content-header">' +
       '                    <p class="card-title">Ultimate Protection</p>' +
       '                    <p class="ancillary-bundle-rating"><span class="active"></span> <span class="active"></span> <span class="active"></span> </p> ' +
@@ -782,6 +863,17 @@
         });
       }
 
+      // Description replace
+      var cardDescEl = card.querySelector('.card-desc');
+      if (cardDescEl && data.description) {
+        var descText = prot.code === 'Ultimate Protection'
+          ? data.description.spanText
+          : data.description.pText;
+        if (descText) {
+          cardDescEl.textContent = descText;
+        }
+      }
+
       //Rating replace
       var ratingEl = card.querySelector(".ancillary-bundle-rating");
       if (ratingEl && data.rating) {
@@ -907,18 +999,16 @@
       // check for active individual items
       var activeItems = $('div[data-testid="single-protections-item-add-to-trip-btn"] input:checked').length > 0;
 
-      // check for included items
+       // check for included items
       var includedItems = $('span[data-testid="single-protections-item-included-in-bundle"]').filter(function () {
         return $(this).text() === "Included";
       }).length > 0;
-
       // check if decline checkbox is checked
       var declineChecked = $('#avis-opt-out-option-a input[type="checkbox"]').is(':checked');
-
       // enable CTA if any selection made
-      var shouldEnable = activeBundle || activeItems || includedItems || declineChecked;
+      var shouldEnable = activeBundle || activeItems || includedItems || declineChecked || !hasProtectionBundles || residNotUSA;
       // hide opt-out section if a paid protection is active
-      var shouldHide = activeBundle || activeItems || includedItems;
+      var shouldHide = activeBundle || activeItems || includedItems || !hasProtectionBundles || residNotUSA;
 
       var isDisabled = contCta.is(':disabled');
 
@@ -1022,6 +1112,14 @@
       if (selectAddOnsList) cardsColumn.appendChild(selectAddOnsList);
     }
 
+    if (selectAddOnsList) {
+      selectAddOnsList.style.paddingTop = "65px";
+      if (window.innerWidth <= 1024) {
+        selectAddOnsList.style.paddingTop = "0px";
+        selectAddOnsList.style.position = "relative";
+      }
+    }
+
     // For Avis First: place the avis-first logo grandparent as the 2nd child of cardsColumn
     if (getTargetSelector() === TARGET_SELECTOR_AVIS_FIRST) {
       poll(
@@ -1059,21 +1157,36 @@
   }
 
   function runProtection() {
+    //wait for body
+    poll(
+      function () {
+        return document.querySelector("body")
+      },
+      function () {
+        const params = new URLSearchParams(window.location.search);
+        const residencyValue = params.get('residency_value') || "";
+        residClean = residencyValue.trim().toUpperCase();
+        residNotUSA = residClean !== 'US' && residClean !== '';
+      }
+    );
     // First wait for sessionStorage to be populated by the app (SPA navigation
     // writes reservation.store asynchronously after the URL changes).
     poll(
       function () {
-        try { return !!sessionStorage.getItem('reservation.store'); }
+        try {
+          return !!sessionStorage.getItem('reservation.store');
+        }
         catch (e) { return false; }
       },
       function () {
         var selector = getTargetSelector();
         poll(
           function () { return document.querySelector(selector); },
-          function () { injectProtectionLayout(); }
+          function () {
+            injectProtectionLayout();
+          }
         );
-      },
-      false, 10000
+      }
     );
   }
 

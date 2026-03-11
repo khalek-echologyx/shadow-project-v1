@@ -168,7 +168,7 @@
   padding: 16px 24px;
   background-color: #2e0009;
   border-radius: 7px 7px 0 0;
-  min-height: 176px;
+  min-height: 184px;
 }
 
 body.bundle-active .card-content-header {
@@ -245,7 +245,7 @@ body.bundle-active .recomended {
 }
 
 .protection-card.highlight .features {
-  min-height: 200px;
+  min-height: 215px;
 }
 
 .features [data-testid="ancillaries-bundle-item-excluded"] span {
@@ -410,15 +410,6 @@ body.bundle-active .recomended {
   grid-column: span 4;
   background-color: #fff;
   padding-left: 20px;
-}
-
-[data-testid="ancillaries-action-footer"] {
-  margin-top: 0 !important;
-  position: static !important;
-}
-[data-testid="ancillaries-action-footer"]::before,
-[data-testid="ancillaries-action-footer"]::after {
-  display: none !important;
 }
 
 .car-summary-column {
@@ -821,6 +812,16 @@ body.bundle-active .recomended {
   stroke: #fff;
 }
 
+/* hide protections modal */
+body.hide-prot-modal {
+  overflow: visible !important;
+}
+
+body.hide-prot-modal
+  > [role="presentation"]:has([aria-labelledby^="ldw-modal-title"]) {
+  display: none;
+}
+
 @media (max-width: 768px) {
   .protection-container-grid {
     grid-template-columns: 1fr;
@@ -876,5 +877,25 @@ body.bundle-active .recomended {
   .card-content-header,
   .protection-card.highlight .card-content-header {
     min-height: fit-content;
+  }
+}
+@media (min-width: 1025px) and (max-width: 1250px) {
+  .btn.primary {
+    flex-direction: column;
+  }
+}
+@media (min-width: 1024px) {
+  [data-testid="ancillaries-action-footer"] {
+    margin-top: 0 !important;
+    position: static !important;
+  }
+  [data-testid="ancillaries-action-footer"]::before,
+  [data-testid="ancillaries-action-footer"]::after {
+    display: none !important;
+  }
+}
+@media (max-width: 461px) {
+  #abg-adobe-target-main-content-block {
+    margin-top: 33px;
   }
 }
