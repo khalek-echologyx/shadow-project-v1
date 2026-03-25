@@ -1,0 +1,7 @@
+// padding added
+[data-swiper-slide-index="0"] picture img{
+    padding: 0 30px;
+    @media (max-width: 1199px){
+        padding: 0;
+    }
+}

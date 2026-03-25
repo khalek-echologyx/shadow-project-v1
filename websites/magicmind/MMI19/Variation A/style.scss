@@ -1,0 +1,30 @@
+.ab-mmi19{
+    .product-title-wrapper {
+        .main-product-v2__title{
+            margin: 0 !important;
+            font-weight: 900 !important;
+        }
+        .product-title-extention{
+            font-size: 35px;
+            font-weight: 500;
+            line-height: 55px;
+            letter-spacing: -0.03em;
+            margin-top: -8px;
+        }
+    }
+
+    @media (max-width: 1199px){
+        .product-title-wrapper {
+            .main-product-v2__title{
+                line-height: 39.6px !important;
+                font-size: 35px;
+            }
+            .product-title-extention{
+                text-align: center;
+                font-size: 30px;
+            }
+        }
+    }
+}
+
+

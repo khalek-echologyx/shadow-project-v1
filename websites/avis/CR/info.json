@@ -1,0 +1,13 @@
+{
+  "id": "1773652244929_2798_CR",
+  "name": "CR",
+  "type": "A/B",
+  "website": "avis",
+  "variations": [
+    "control",
+    "Var A"
+  ],
+  "createdAt": "2026-03-16T09:10:44.929Z",
+  "createdAtReadable": "3/16/2026, 3:10:44 PM",
+  "lastUpdated": "2026-03-16T09:10:45.049Z"
+}

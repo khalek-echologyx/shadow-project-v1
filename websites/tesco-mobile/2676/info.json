@@ -1,0 +1,13 @@
+{
+  "id": "1774262185053_8566_2676",
+  "name": "2676",
+  "type": "A/B",
+  "website": "tesco-mobile",
+  "variations": [
+    "control",
+    "Var 1"
+  ],
+  "createdAt": "2026-03-23T10:36:25.053Z",
+  "createdAtReadable": "3/23/2026, 4:36:25 PM",
+  "lastUpdated": "2026-03-23T10:36:25.184Z"
+}

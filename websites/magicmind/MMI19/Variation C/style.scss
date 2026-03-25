@@ -1,0 +1,21 @@
+.ab-mmi19 {
+  .main-product-v2__title {
+    display: none;
+  }
+  .new-title-mmi19 {
+    display: block !important;
+    font-style: italic;
+    text-align: center !important;
+  }
+
+  @media (max-width: 1199px){
+    .new-title-mmi19{
+      display: none !important;
+    }
+    .new-title-mmi19-mobile{
+      display: block !important;
+      font-style: italic;
+    }
+  }
+}
+    

@@ -1,0 +1,27 @@
+body > *:not(.loading-mask) {
+  display: none !important;
+}
+
+.loading-mask {
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 9999;
+  background: rgba(255, 255, 255, 0.5);
+}
+.loading-mask img {
+  bottom: 0;
+  left: 0;
+  margin: auto;
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 100;
+  width: 48px;
+}
+.loading-mask p {
+  display: none;
+}

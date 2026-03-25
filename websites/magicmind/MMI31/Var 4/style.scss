@@ -1,0 +1,13 @@
+[data-swiper-slide-index="0"] picture img {
+    padding: 0 30px;
+}
+
+.main-product-v2__thumbnails-wrapper [data-swiper-slide-index="0"] img {
+    height: auto !important;
+}
+
+@media (max-width: 1199px) {
+    [data-swiper-slide-index="0"] picture img {
+        padding: 0;
+    }
+}

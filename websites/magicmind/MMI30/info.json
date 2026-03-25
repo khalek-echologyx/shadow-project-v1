@@ -1,0 +1,14 @@
+{
+  "id": "1774179935288_1209_MMI30",
+  "name": "MMI30",
+  "type": "A/B",
+  "website": "magicmind",
+  "variations": [
+    "control",
+    "Var 1",
+    "Var 2"
+  ],
+  "createdAt": "2026-03-22T11:45:35.288Z",
+  "createdAtReadable": "3/22/2026, 5:45:35 PM",
+  "lastUpdated": "2026-03-22T14:12:11.651Z"
+}

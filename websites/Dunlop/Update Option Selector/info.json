@@ -1,0 +1,13 @@
+{
+  "id": "1774359706640_1204_Update_Option_Selector",
+  "name": "Update Option Selector",
+  "type": "A/B",
+  "website": "Dunlop",
+  "variations": [
+    "control",
+    "Var A"
+  ],
+  "createdAt": "2026-03-24T13:41:46.640Z",
+  "createdAtReadable": "3/24/2026, 7:41:46 PM",
+  "lastUpdated": "2026-03-24T13:41:46.760Z"
+}
