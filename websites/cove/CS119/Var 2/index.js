@@ -39,7 +39,7 @@
       );
   }
 
-   function fireGA4Event(eventName, eventLabel = '') {
+  function fireGA4Event(eventName, eventLabel = '') {
 
     window.dataLayer = window.dataLayer || [];
 
@@ -76,6 +76,16 @@
     poll(
       () => document.querySelectorAll("h2").length > 0,
       () => {
+        let disconnectTimer = null;
+
+        const scheduleDisconnect = () => {
+          clearTimeout(disconnectTimer);
+          disconnectTimer = setTimeout(() => {
+            observer.disconnect();
+            logInfo("observer disconnected after DOM settled");
+          }, 10000);
+        };
+
         const observer = new MutationObserver(() => {
           const targetH2Elements = document.querySelectorAll("h2")
           // order change targeted sections
@@ -90,10 +100,19 @@
               }
             } else if (el.textContent === "Smarter cameras. Smarter protection.") {
               const smartCamSection = el.parentElement;
-              const asSeenOnEl = [...document.querySelectorAll("section")].find(el => el.outerText === "As Seen On");
-              if (smartCamSection && smartCamSection.nextElementSibling !== asSeenOnEl) {
-                smartCamSection.insertAdjacentElement("afterend", asSeenOnEl)
-              }
+              poll(
+                () => [...document.querySelectorAll("section")].find(el => el.outerText.includes("As Seen On")),
+                () => {
+                  const asSeenOnEl = [...document.querySelectorAll("section")].find(el => el.outerText.includes("As Seen On"));
+                  if (smartCamSection && smartCamSection.nextElementSibling !== asSeenOnEl) {
+                    smartCamSection.insertAdjacentElement("afterend", asSeenOnEl);
+                    scheduleDisconnect();
+                  }
+                }
+              )
+            } else if (el.textContent === "Monitoring you can rely on.") {
+              const monitoringSection = el.parentElement.parentElement;
+              monitoringSection.style.marginBottom = "75px"
             }
           })
         })

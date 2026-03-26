@@ -1,10 +1,16 @@
-var id = "1773754146564_8197_control";
-var name = "control";
-var testInfo = {
-	id: id,
-	name: name};
-
 (() => {
+  const TEST_ID = "CS119";
+  const VARIANT_ID = "control";
+
+  function logInfo(message) {
+    console.log(
+      `%cAcadia%c${TEST_ID}-${VARIANT_ID}`,
+      "color: white; background: rgb(0, 0, 57); font-weight: 700; padding: 2px 4px; border-radius: 2px;",
+      "margin-left: 8px; color: white; background: rgb(0, 57, 57); font-weight: 700; padding: 2px 4px; border-radius: 2px;",
+      message
+    );
+  }
+  logInfo("fired");
   function waitForElem(
     waitFor,
     callback,
@@ -33,14 +39,85 @@ var testInfo = {
         );
   }
 
-  function mainJs([body]) {
-    console.table({ ID: testInfo.id, Variation: testInfo.name });
+  function poll(t, i, o = false, e = 10000, a = 25) {
+    e < 0 ||
+      (t()
+        ? i()
+        : setTimeout(() => {
+          poll(t, i, o, o ? e : e - a, a);
+        }, a));
+  }
 
-    console.log(
-      "%cname: v-01",
-      "background: black;border: 2px solid green;color: white;display: block;text-shadow: 0 1px 0 rgba(0, 0, 0, 0.3);text-align: center;font-weight: bold;padding : 10px;margin : 10px"
+  function fireGA4Event(eventName, eventLabel = '') {
+
+    window.dataLayer = window.dataLayer || [];
+
+    window.dataLayer.push({
+
+      event: 'GA4event',
+
+      'ga4-event-name': 'cro_event',
+
+      'ga4-event-p1-name': 'event_category',
+
+      'ga4-event-p1-value': eventName,
+
+      'ga4-event-p2-name': 'event_label',
+
+      'ga4-event-p2-value': eventLabel
+
+    });
+
+  }
+
+  function mainJs([body]) {
+    let hasFired = false;
+    let io = null;
+
+    poll(
+      () => document.querySelectorAll("section").length > 0,
+      () => {
+        const attachObserver = () => {
+          if (hasFired) return;
+
+          const sections = [...document.querySelectorAll("section")];
+
+          const targetSection = sections.find(section =>
+            section.textContent.includes("Try Risk-Free")
+          );
+
+          if (!targetSection) return;
+
+          // Disconnect old observer if exists
+          if (io) io.disconnect();
+
+          io = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+              if (!entry.isIntersecting && entry.boundingClientRect.top < 0) {
+                fireGA4Event("CS119_ViewBTF",);
+                hasFired = true;
+                io.disconnect();
+              }
+            });
+          });
+
+          io.observe(targetSection);
+        };
+
+        // Run initially
+        attachObserver();
+
+        // 🔥 Re-run when DOM changes (CRITICAL FIX)
+        const mo = new MutationObserver(() => {
+          if (!hasFired) attachObserver();
+        });
+
+        mo.observe(document.body, {
+          childList: true,
+          subtree: true,
+        });
+      }
     );
-    console.log("name: v-01");
   }
 
   waitForElem("body", mainJs);

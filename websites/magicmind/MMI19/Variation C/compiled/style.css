@@ -3,7 +3,7 @@
 }
 .ab-mmi19 .new-title-mmi19 {
   display: block !important;
-  font-style: italic;
+  font-style: italic !important;
   text-align: center !important;
 }
 @media (max-width: 1199px) {
@@ -12,6 +12,6 @@
   }
   .ab-mmi19 .new-title-mmi19-mobile {
     display: block !important;
-    font-style: italic;
+    font-style: italic !important;
   }
 }

@@ -20,8 +20,10 @@
                 font-size: 35px;
             }
             .product-title-extention{
-                text-align: center;
+                text-align: center !important;
                 font-size: 30px;
+                line-height: 1 !important;
+                margin-top: 2px;
             }
         }
     }

@@ -47,8 +47,56 @@
         isStockTabEnable = true;
       }
     );
+    if (isStockTabEnable) {
+      poll(
+        () => document.querySelector(
+          '.js-stock-visible[aria-labelledby*="stock-tab"]'
+        ),
+        () => {
+          const stockEl = document.querySelector(
+            '.js-stock-visible[aria-labelledby*="stock-tab"]'
+          );
 
-    console.log(isStockTabEnable, "isStockTabEnable");
+          const injectClasses = () => {
+            const tabContent = stockEl.querySelector('.tab-content');
+            if (!tabContent) return;
+            const headItems = tabContent.querySelectorAll(".attribute");
+
+            headItems.forEach(item => {
+              const optionList = item.querySelector(".select .select-wrapper");
+              const checkboxList = item.querySelector(".select-list");
+              if (optionList && !optionList.classList.contains("ab-option-wrapper")) {
+                optionList.classList.add("ab-option-wrapper");
+                const selectOptions = optionList.querySelectorAll(".select-option");
+                selectOptions.forEach(option => {
+                  if (option.classList.contains("disabled")) {
+                    option.classList.add("ab-option-disabled");
+                    const span = option.querySelector("span");
+                    if (span) span.style.display = "none";
+                  }
+                });
+              }
+              if (checkboxList && !checkboxList.classList.contains("ab-checkbox-wrapper")) {
+                checkboxList.classList.add("ab-checkbox-wrapper");
+              }
+            });
+          };
+
+          // Run once on load
+          injectClasses();
+
+          // Re-run whenever the site rebuilds the DOM inside stockEl
+          const stockObserver = new MutationObserver(() => {
+            injectClasses();
+          });
+
+          stockObserver.observe(stockEl, {
+            childList: true,
+            subtree: true,
+          });
+        }
+      );
+    }
   }
 
   waitForElem("body", mainJs);

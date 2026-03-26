@@ -15,7 +15,7 @@
     }
 
     .main-product-v2__container h2.main-product-v2__subtitle{
-      display: none;
+      display: none !important;
     }
 
     @media (max-width: 1199px){
@@ -25,8 +25,9 @@
                 font-size: 35px;
             }
             .product-title-extention{
-                text-align: center;
+                text-align: center !important;
                 font-size: 30px;
+                line-height: 1.2 !important;
             }
         }
     }

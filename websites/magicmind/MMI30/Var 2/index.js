@@ -1,5 +1,3 @@
-import testInfo from "./info.json" assert { type: "json" };
-
 (() => {
   const TEST_ID = "MMI30";
   const VARIANT_ID = "V2"; /* V1, V2, V3 */
