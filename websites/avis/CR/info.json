@@ -5,9 +5,10 @@
   "website": "avis",
   "variations": [
     "control",
-    "Var A"
+    "Var A",
+    "Var B"
   ],
   "createdAt": "2026-03-16T09:10:44.929Z",
   "createdAtReadable": "3/16/2026, 3:10:44 PM",
-  "lastUpdated": "2026-03-16T09:10:45.049Z"
+  "lastUpdated": "2026-03-29T13:07:26.044Z"
 }

@@ -7,6 +7,8 @@ main{
     width: 100% !important;
     z-index: 99999999 !important;
     top: 0 !important;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
 }
 
 #shopify-section-new-header-v4.MMI30_sticky-navbar {
@@ -14,4 +16,6 @@ main{
     left: 0 !important;
     width: 100% !important;
     z-index: 8888888 !important;
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
 }

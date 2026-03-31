@@ -1,6 +1,6 @@
 (() => {
   const TEST_ID = "MMI31";
-  const VARIANT_ID = "V1";
+  const VARIANT_ID = "V2";
 
   function logInfo(message) {
     console.log(
@@ -42,6 +42,7 @@
   function poll(t, i, o = !1, e = 1e4, a = 25) { e < 0 || (t() ? i() : setTimeout(() => { poll(t, i, o, o ? e : e - a, a) }, a)) }
 
   const replaceImg = `https://cdn.shopify.com/s/files/1/0612/5086/3345/files/mmi31-lifestyle-image-v2.png?v=1773655928`;
+  const replaceSourceImg = `https://cdn.shopify.com/s/files/1/0612/5086/3345/files/mmi31-lifestyle-image-v2-mobile.png?v=1774874778`;
 
   function mainJs() {
     poll(
@@ -51,10 +52,9 @@
         selectorImgTag.src = replaceImg;
         selectorImgTag.srcset = replaceImg;
         const selectorSourceTag = document.querySelector('[data-swiper-slide-index="0"] source')
-        selectorSourceTag.srcset = replaceImg;
-        //thumbnail image
+        selectorSourceTag.srcset = replaceSourceImg;
         const thumbnailImage = document.querySelector('.main-product-v2__thumbnails-wrapper [data-swiper-slide-index="0"] img');
-        thumbnailImage.src = replaceImg;
+        thumbnailImage.src = replaceSourceImg;
       }
     )
 

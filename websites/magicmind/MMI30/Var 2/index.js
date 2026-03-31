@@ -46,7 +46,7 @@
     const getNavbarTop = () => {
       const promoWrapper = document.querySelector(".MMI23_promo-wrapper");
       if (!promoWrapper) return "0px";
-      return window.innerWidth <= 768 ? "36px" : "45px";
+      return promoWrapper.offsetHeight + "px";
     };
 
     const updateNavbarStyles = () => {
@@ -57,16 +57,16 @@
       hasPromoBanner = !!promoWrapper;
       const isMobile = window.innerWidth <= 768;
 
-      navbar.style.top = getNavbarTop();
+      navbar.style.setProperty("top", getNavbarTop(), "important");
       
       // Handle margin-top for main element
       const main = document.querySelector("main");
       if (main) {
-        if (!hasPromoBanner) {
-          main.style.marginTop = isMobile ? "50px" : "66px"; // Assuming 50px for mobile header if no promo
-        } else {
-          main.style.marginTop = isMobile ? "104px" : "111px";
-        }
+        let promoHeight = hasPromoBanner ? promoWrapper.offsetHeight : 0;
+        let navbarHeight = navbar.offsetHeight || (isMobile ? 50 : 66);
+        let totalMargin = promoHeight + navbarHeight;
+        
+        main.style.setProperty("margin-top", totalMargin + "px", "important");
       }
     };
 
@@ -90,7 +90,13 @@
         navbar.classList.add("MMI30_sticky-navbar");
         updateNavbarStyles();
         
-        window.addEventListener("resize", updateNavbarStyles);
+        let lastWidth = window.innerWidth;
+        window.addEventListener("resize", () => {
+          if (window.innerWidth !== lastWidth) {
+            lastWidth = window.innerWidth;
+            updateNavbarStyles();
+          }
+        });
       }
     )
   }

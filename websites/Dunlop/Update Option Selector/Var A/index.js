@@ -1,4 +1,5 @@
 (() => {
+  
   function waitForElem(
     waitFor,
     callback,
@@ -40,9 +41,9 @@
     // stock tab identify
     let isStockTabEnable = false;
     poll(
-      () => document.querySelector(
+      () => !!(document.querySelector(".nav-tabs .nav-link") && document.querySelector(
         '.nav-tabs .nav-link'
-      )?.textContent.trim().toLowerCase().includes('stock'),
+      ).textContent.trim().toLowerCase().includes('stock')),
       () => {
         isStockTabEnable = true;
       }
