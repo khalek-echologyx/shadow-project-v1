@@ -28,6 +28,7 @@
   function runProtectionCoverage() {
     const queryParams = window.location.search;
     window.location.replace("https://www.avis.com/en/reservation/review-and-book" + queryParams);
+    console.log("Protection page detected =================")
   }
 
   //reusable params function
@@ -241,7 +242,7 @@
       <h2 class="prot-title">WHICH PROTECTION DO YOU NEED?</h2>
       <div class="prot-cards">
         ${finalProtectionBundleList?.map(prot => {
-          return `
+      return `
           <div class="prot-card selected" data-code="${prot.bundleName || ""}">
           <div class="card-body">
             <div class="card-info">
@@ -264,7 +265,7 @@
           </div>
         </div>
           `;
-        }).join("")}
+    }).join("")}
       </div>
       <div class="prot-all-packages">
         <button class="btn-all-packages">View all protection packages</button>
@@ -296,14 +297,14 @@
         <div class="add-on-bundles-section">
           <h3 class="add-ons-title">Select add-ons Bundles</h3>
           <div class="add-on-bundles-content">
-            ${finalAddOnBundleList.map(item=>{
-              return `
+            ${finalAddOnBundleList.map(item => {
+      return `
                   <div class="add-on-bundle-card" data-add-on-bundle-code="${item.bundleName}">
                     <div>${item.bundleName}</div>
                     <div class="add-on-bundle-select-btn">$${item.grossSubtotal}/day</div>
                   </div>
               `;
-            }).join("")}
+    }).join("")}
             
           </div>
         </div>
@@ -347,10 +348,10 @@
       target.insertAdjacentHTML("afterend", protSection);
       document.body.classList.add(`${TEST_ID}-${VARIATION}`);
 
-      // Protection Bundle Selection
+      // =============================== PROTECTION BUNDLE SELECTION==============================
       const protectionBundleCards = document.querySelectorAll(`#${TEST_ID} .prot-card`);
       protectionBundleCards.forEach(card => {
-        card.addEventListener("click", async() => {
+        card.addEventListener("click", async () => {
           const bundleCode = card.getAttribute("data-code");
           console.log(bundleCode, "bundleCode");
           const jsonBundle = finalProtectionBundleList.find(item => item.bundleName === bundleCode);
@@ -438,49 +439,67 @@
             }
           };
           console.log(calculatePayload, "calculatePayload");
+
           const calculateData = await calculatePrice(calculatePayload, corelationalIdentifier);
           console.log(calculateData, "calculateData");
           const calculateProtectionItems = calculateData.protectionItems || [];
-          const calculateAddonItems = calculateData.addOnItems || [];
-          let sessionProtectionItems = store.state.pricesProtectionItems || [];
-          let sessionAddonItems = store.state.pricesAddonItems || [];
           console.log(calculateProtectionItems, "calculateProtectionItems");
+          const calculateAddonItems = calculateData.addOnItems || [];
+          console.log(calculateAddonItems, "calculateAddonItems");
+          const latestRawStore = sessionStorage.getItem("reservation.store");
+          if (latestRawStore) {
+            const latestStore = JSON.parse(latestRawStore);
+            console.log(latestStore, "latestStore");
+            let sessionProtectionItems = latestStore.state.pricesProtectionItems || [];
+            let sessionAddOnItems = latestStore.state.pricesAddOnItems || [];
+            console.log(sessionProtectionItems, "sessionProtectionItems");
+            console.log(sessionAddOnItems, "sessionAddOnItems");
 
-          calculateProtectionItems.forEach(item => {
-            const formatteddItem = {
-            amount: extrasBundle?.netTotal,
-            chargeType: extrasBundle.chargeType,
-            code: item.code,
-            description: jsonBundleItems.find(i => i.code === item.code).name || "",
-            netSubtotal: item.netSubtotal,
-            netSubtotalPerUnit: item.netSubtotalPerUnit,
-            rentalItemUnits: item.rentalItemUnits,
+            calculateProtectionItems.forEach(item => {
+              console.log("Render protection items", item);
+              const formatteddItem = {
+                amount: extrasProtectionItemList.find(i=>i.code===item.code).netTotal,
+                chargeType: item.chargeType,
+                code: item.code,
+                description: jsonBundleItems.find(i => i.code === item.code).name || "",
+                discount: extrasProtectionItemList.find(i => i.code === item.code).discount || 0,
+                grossSubtotal: extrasProtectionItemList.find(i => i.code === item.code).grossSubtotal,
+                netSubtotal: item.netSubtotal,
+                netSubtotalPerUnit: item.netSubtotalPerUnit,
+                rentalItemUnits: item.rentalItemUnits,
+              }
+              const sessionItem = sessionProtectionItems.find(i => i.code === item.code);
+              if (!sessionItem) {
+                sessionProtectionItems.push(formatteddItem);
+              }
+            })
+
+            calculateAddonItems.forEach(item => {
+              console.log("Render addon items", item);
+              const formatteddItem = {
+                amount: extrasAddOnsItemList.find(i=>i.code===item.code).netTotal,
+                chargeType: item.chargeType,
+                code: item.code,
+                description: jsonBundleItems.find(i => i.code === item.code).name || "",
+                discount: extrasAddOnsItemList.find(i => i.code === item.code).discount || 0,
+                grossSubtotal: extrasAddOnsItemList.find(i => i.code === item.code).grossSubtotal,
+                displayElement: item.displayElement,
+                netSubtotal: item.netSubtotal,
+                netSubtotalPerUnit: item.netSubtotalPerUnit,
+                rentalItemUnits: item.rentalItemUnits,
+              }
+              const sessionItem = sessionAddOnItems.find(i => i.code === item.code);
+              if (!sessionItem) {
+                sessionAddOnItems.push(formatteddItem);
+              } else {
+                Object.assign(sessionItem, formatteddItem);
+              }
+            })
+            latestStore.state.pricesProtectionItems = sessionProtectionItems;
+            latestStore.state.pricesAddOnItems = sessionAddOnItems;
+            console.log(latestStore, "latestStore 2");
+            sessionStorage.setItem("reservation.store", JSON.stringify(latestStore));
           }
-            const sessionItem = sessionProtectionItems.find(i => i.code === item.code);
-            if (!sessionItem) {
-              sessionProtectionItems.push(formatteddItem);
-            } 
-          })
-          calculateAddonItems.forEach(item => {
-            const formatteddItem = {
-            amount: extrasBundle?.netTotal,
-            chargeType: extrasBundle.chargeType,
-            code: item.code,
-            description: jsonBundleItems.find(i => i.code === item.code).name || "",
-            netSubtotal: item.netSubtotal,
-            netSubtotalPerUnit: item.netSubtotalPerUnit,
-            rentalItemUnits: item.rentalItemUnits,
-          }
-            const sessionItem = sessionAddonItems.find(i => i.code === item.code);
-            if (!sessionItem) {
-              sessionAddonItems.push(formatteddItem);
-            } 
-          })
-          console.log(sessionProtectionItems, "sessionProtectionItems");
-          console.log(sessionAddonItems, "sessionAddonItems");
-          store.state.pricesProtectionItems = sessionProtectionItems;
-          store.state.pricesAddonItems = sessionAddonItems;
-          sessionStorage.setItem("reservation.store", JSON.stringify(store));
         });
       });
 
@@ -571,16 +590,122 @@
         });
       });
 
-      // Add-ons bungle selection
+      // ===================== Add-ons bundle selection =====================
       const uiAddOnsBundleList = document.querySelectorAll(".add-on-bundle-card");
       uiAddOnsBundleList.forEach(addOnBundle => {
         addOnBundle.addEventListener("click", async (e) => {
           const bundleCode = addOnBundle.getAttribute("data-add-on-bundle-code");
+          console.log(bundleCode, "bundleCode");
           const extrasBundle = extrasAddonBundleList.find(item => item.code === bundleCode)
           console.log(extrasBundle, "extrasBundle");
           const jsonBundle = addOnsBundleList.find(item => item.bundleName === bundleCode)
           console.log(jsonBundle, "jsonBundle");
-          
+          const rawStore = sessionStorage.getItem("reservation.store");
+          if (!rawStore) return;
+          const store = JSON.parse(rawStore) || {};
+          // store Add On items
+          const storeAddOnItems = store.state.addOnItems || "";
+          const formateStoreAddOnItems = storeAddOnItems.split(",").map(item => item.trim()).filter(Boolean);
+          //store Protection Bundles
+          store.state.addOnBundleCode = bundleCode;
+          const addOnBundleItems = [];
+          extrasBundle.items.forEach(item => {
+            addOnBundleItems.push(item.code);
+          })
+          store.state.addOnBundleItems = addOnBundleItems.join(",");
+          const imageSrc = jsonBundle.image?.source || jsonBundle.image?.path;
+          const selectedAddOnBundleObj = {
+            code: extrasBundle.code || "",
+            title: extrasBundle.code || "",
+            bookAgain: extrasBundle.bookAgain || false,
+            currencyCode: extrasBundle.currencyCode || "",
+            description: jsonBundle.bundleDescription.html || "",
+            image: imageSrc
+              ? { src: imageSrc, alt: "Bundle image" }
+              : { alt: "Bundle image" },
+            items: jsonBundle.includedAddons.map(item => {
+              return {
+                code: item.code || "",
+                description: item.description.html || "",
+                id: item.code || "",
+                included: extrasBundle.items.some(i => i.code === item.code) || false,
+                title: item.name || "",
+              }
+            }),
+            oldPrice: avisConfigData.pricingDisplay === "dailyRate" ? extrasBundle.grossSubtotal : extrasBundle.grossTotal,
+            price: avisConfigData.pricingDisplay === "dailyRate" ? extrasBundle.netSubtotal : extrasBundle.netTotal,
+          }
+          console.log(selectedAddOnBundleObj, "selectedAddOnBundleObj");
+          store.state.addOnBundleSelected = selectedAddOnBundleObj;
+          sessionStorage.setItem("reservation.store", JSON.stringify(store));
+
+          //calculate api payload
+          const calculatePayload = {
+            age: extrasAPIPayload.age,
+            countryOfResidence: extrasAPIPayload.countryOfResidence,
+            currencyCode: extrasAPIPayload.currencyCode,
+            discountCodes: extrasAPIPayload.discountCodes,
+            dropoffDate: extrasAPIPayload.dropoffDate,
+            dropoffTime: extrasAPIPayload.dropoffTime,
+            dropoffLocation: extrasAPIPayload.dropoffLocation,
+            pickupDate: extrasAPIPayload.pickupDate,
+            pickupTime: extrasAPIPayload.pickupTime,
+            pickupLocation: extrasAPIPayload.pickupLocation,
+            priceRateCode: extrasAPIPayload.priceRateCode,
+            priceType: extrasAPIPayload.priceType,
+            reservationId: extrasAPIPayload.reservationId,
+            priceView: extrasAPIPayload.priceView,
+            isAvisFirst: extrasAPIPayload.isAvisFirst,
+            vehicleCode: extrasAPIPayload.vehicleCode,
+            vehicleId: extrasAPIPayload.vehicleId,
+            addOnBundle: {
+              code: bundleCode,
+              items: jsonBundle.includedAddons.map(item => {
+                return {
+                  code: item.code,
+                }
+              })
+            },
+            addOnItems: formateStoreAddOnItems.map(item => {
+              return {
+                code: item,
+              }
+            }),
+            protectionBundle: {
+              code: 
+            }
+          };
+          console.log(calculatePayload, "calculatePayload");
+          //call calculate api
+          const calculateData = await calculatePrice(calculatePayload, corelationalIdentifier);
+          console.log(calculateData, "calculateData");
+          const calculateAddOnItems = calculateData.addOnItems || [];
+          const latestRawStore = sessionStorage.getItem("reservation.store");
+          if (!latestRawStore) return;
+          const latestStore = JSON.parse(latestRawStore);
+          let sessionPriceAddOnItems = latestStore.state.pricesAddOnItems || [];
+          calculateAddOnItems.forEach(addOnItem => {
+            const formatteddItem = {
+              amount: extrasBundle?.netTotal,
+              chargeType: addOnItem.chargeType,
+              code: addOnItem.code,
+              description: jsonBundle.includedAddons.find(i => i.code === addOnItem.code).name || "",
+              discount: extrasAddOnsItemList.find(i => i.code === addOnItem.code).discount || 0,
+              grossSubtotal: extrasAddOnsItemList.find(i => i.code === addOnItem.code).grossSubtotal,
+              displayElement: addOnItem.displayElement,
+              netSubtotal: addOnItem.netSubtotal,
+              netSubtotalPerUnit: addOnItem.netSubtotalPerUnit,
+              rentalItemUnits: addOnItem.rentalItemUnits,
+            }
+            const isIncluded = sessionPriceAddOnItems.some(item => item.code === addOnItem.code);
+            if (!isIncluded) {
+              sessionPriceAddOnItems.push(formatteddItem);
+            }
+          })
+          console.log(sessionPriceAddOnItems, "sessionPriceAddOnItems");
+          latestStore.state.pricesAddOnItems = sessionPriceAddOnItems;
+          console.log(latestStore, "addon b l s");
+          sessionStorage.setItem("reservation.store", JSON.stringify(latestStore));
         });
       });
 

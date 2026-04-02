@@ -1,12 +1,22 @@
 .ab-mmi19 .product-title-wrapper .main-product-v2__title {
   margin: 0 !important;
 }
+.ab-mmi19 .product-title-wrapper .italic-text {
+  font-style: italic;
+  font-family: inherit;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
 .ab-mmi19 .product-title-wrapper .product-title-extention {
   font-size: 35px;
   font-weight: 500;
   line-height: 55px;
   letter-spacing: -0.03em;
   margin-top: -8px;
+  margin-bottom: 4px;
+}
+.ab-mmi19 .main-product-v2__container h2.main-product-v2__subtitle {
+  display: none !important;
 }
 @media (max-width: 1199px) {
   .ab-mmi19 .product-title-wrapper .main-product-v2__title {
@@ -16,7 +26,6 @@
   .ab-mmi19 .product-title-wrapper .product-title-extention {
     text-align: center !important;
     font-size: 30px;
-    line-height: 1 !important;
-    margin-top: 2px;
+    line-height: 1.2 !important;
   }
 }
