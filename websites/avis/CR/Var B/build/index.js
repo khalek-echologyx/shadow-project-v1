@@ -22,12 +22,14 @@
     none: 0,
     low: 1,
     medium: 2,
-    high: 3
+    high: 3,
   };
   //redirect to review and book page
   function runProtectionCoverage() {
     const queryParams = window.location.search;
-    window.location.replace("https://www.avis.com/en/reservation/review-and-book" + queryParams);
+    window.location.replace(
+      "https://www.avis.com/en/reservation/review-and-book" + queryParams,
+    );
   }
 
   //reusable params function
@@ -38,7 +40,13 @@
   }
   //get protection & add-ons data
   async function getProtectionAndAddOnsData(dataKey, pickupLocation) {
-    let res = await fetch("https://www.avis.com/content/admin/location.json/avis/en_us/" + dataKey + "/" + pickupLocation + ".json");
+    let res = await fetch(
+      "https://www.avis.com/content/admin/location.json/avis/en_us/" +
+        dataKey +
+        "/" +
+        pickupLocation +
+        ".json",
+    );
     let data = await res.json();
     return data.data || {};
   }
@@ -49,19 +57,26 @@
   }
   //get corelational identifier
   function getCorelationalIdentifier() {
-    const corelationalIdentifier = sessionStorage.getItem("correlationIdentifier");
+    const corelationalIdentifier = sessionStorage.getItem(
+      "correlationIdentifier",
+    );
     return corelationalIdentifier;
   }
   //get extras api data
   async function getExtrasData(payload, corelationalIdentifier) {
     try {
-      let res = await fetch("https://www.avis.com/web/reservation/extras?context.locale=en-US&context.domainCountry=US&context.correlationIdentifier=" + corelationalIdentifier + "&device=WEB", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      let res = await fetch(
+        "https://www.avis.com/web/reservation/extras?context.locale=en-US&context.domainCountry=US&context.correlationIdentifier=" +
+          corelationalIdentifier +
+          "&device=WEB",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(payload),
         },
-        body: JSON.stringify(payload),
-      });
+      );
       if (!res.ok) {
         throw new Error("Extras API failed with status " + res.status);
       }
@@ -75,13 +90,18 @@
 
   // calculate price api
   async function calculatePrice(payload, corelationalIdentifier) {
-    let res = await fetch("https://www.avis.com/web/reservation/price/calculate?context.locale=en-US&context.domainCountry=US&context.correlationIdentifier=" + corelationalIdentifier + "&device=WEB", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    let res = await fetch(
+      "https://www.avis.com/web/reservation/price/calculate?context.locale=en-US&context.domainCountry=US&context.correlationIdentifier=" +
+        corelationalIdentifier +
+        "&device=WEB",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
       },
-      body: JSON.stringify(payload),
-    });
+    );
     let data = await res.json();
     return data;
   }
@@ -96,64 +116,94 @@
   //get price with currenty
   const getPriceWithCurrenty = function (code, amount) {
     const symbol = function () {
-      if (!code) return '$';
-      return (0).toLocaleString("en", {
-        style: "currency",
-        currency: code
-      }).replace(/[\d\s.,]/g, "");
+      if (!code) return "$";
+      return (0)
+        .toLocaleString("en", {
+          style: "currency",
+          currency: code,
+        })
+        .replace(/[\d\s.,]/g, "");
     };
-    return /[a-zA-Z]/.test(symbol()) ? symbol() + ' ' + amount : symbol() + amount;
+    return /[a-zA-Z]/.test(symbol())
+      ? symbol() + " " + amount
+      : symbol() + amount;
   };
 
   //prot and add-on item UI
-  var protAndAddOnItemUIWrapper = '<div id="mvt-36-summary-prot" class="MuiAccordionDetails-root mui-u31f1m"></div>';
+  var protAndAddOnItemUIWrapper =
+    '<div id="mvt-36-summary-prot" class="MuiAccordionDetails-root mui-u31f1m"></div>';
   var protAndAddOnItemUI = function (desc, amount) {
-    return '<div class="MuiBox-root mui-q27lzn">'
-      + '<span class="checkout-redesign MuiTypography-root MuiTypography-bodySmallRegular mui-1xb6ox">' + desc + '</span>'
-      + '<div class="MuiBox-root mui-u2acjg">'
-      + '<span class="MuiTypography-root MuiTypography-bodySmallRegular mui-1izwyf7">' + amount + '</span>'
-      + '</div>'
-      + '</div>';
+    return (
+      '<div class="MuiBox-root mui-q27lzn">' +
+      '<span class="checkout-redesign MuiTypography-root MuiTypography-bodySmallRegular mui-1xb6ox">' +
+      desc +
+      "</span>" +
+      '<div class="MuiBox-root mui-u2acjg">' +
+      '<span class="MuiTypography-root MuiTypography-bodySmallRegular mui-1izwyf7">' +
+      amount +
+      "</span>" +
+      "</div>" +
+      "</div>"
+    );
   };
 
   // =========== UPDATE UI: Car summary and Footer Price
   const updateCarSummaryAndFooterPrice = (calculateData) => {
     const currencyCode = calculateData.currencyCode;
     const sessionData = getSessionData();
-    const protAndAddOnsItems = [...sessionData.pricesProtectionItems, ...sessionData.pricesAddOnItems];
+    const protAndAddOnsItems = [
+      ...sessionData.pricesProtectionItems,
+      ...sessionData.pricesAddOnItems,
+    ];
     //protection & add-ons header price
-    const protAndAddOnsTotalHeader = document.querySelector('[data-testid="category-expand-button-protections-addons"]');
+    const protAndAddOnsTotalHeader = document.querySelector(
+      '[data-testid="category-expand-button-protections-addons"]',
+    );
     if (protAndAddOnsTotalHeader) {
       protAndAddOnsTotalHeader.classList.remove("disable-click");
     }
-    const protectionAndAddOnsHeaderPrice = document.querySelector('[data-testid="rental-summary-protection-addons-recent-cost"]');
-    protectionAndAddOnsHeaderPrice.textContent = getPriceWithCurrenty(currencyCode, calculateData.totals.rentalOptionsTotal.toFixed(2)) || 0;
-    const protAndAddOnItemListEl = document.querySelector('[aria-label="Protections & Add-ons"]');
+    const protectionAndAddOnsHeaderPrice = document.querySelector(
+      '[data-testid="rental-summary-protection-addons-recent-cost"]',
+    );
+    protectionAndAddOnsHeaderPrice.textContent =
+      getPriceWithCurrenty(
+        currencyCode,
+        calculateData.totals.rentalOptionsTotal.toFixed(2),
+      ) || 0;
+    const protAndAddOnItemListEl = document.querySelector(
+      '[aria-label="Protections & Add-ons"]',
+    );
     if (protAndAddOnItemListEl) {
       const existingEl = protAndAddOnItemListEl.querySelector(
-        ':scope > .MuiAccordionDetails-root'
+        ":scope > .MuiAccordionDetails-root",
       );
       if (existingEl) {
         existingEl.remove();
       }
       protAndAddOnItemListEl.insertAdjacentHTML(
         "beforeend",
-        protAndAddOnItemUIWrapper
+        protAndAddOnItemUIWrapper,
       );
-      const wrapper = document.querySelector('#mvt-36-summary-prot');
+      const wrapper = document.querySelector("#mvt-36-summary-prot");
       protAndAddOnsItems.forEach((item) => {
         wrapper.insertAdjacentHTML(
           "beforeend",
           protAndAddOnItemUI(
             item.description,
-            getPriceWithCurrenty(currencyCode, item.netSubtotal.toFixed(2))
-          )
+            getPriceWithCurrenty(currencyCode, item.netSubtotal.toFixed(2)),
+          ),
         );
       });
     }
-    const totalPriceEl = document.querySelector('[data-testid="rental-summary-total-value"]');
+    const totalPriceEl = document.querySelector(
+      '[data-testid="rental-summary-total-value"]',
+    );
     if (totalPriceEl) {
-      totalPriceEl.textContent = getPriceWithCurrenty(currencyCode, calculateData.totals.total.toFixed(2)) || 0;
+      totalPriceEl.textContent =
+        getPriceWithCurrenty(
+          currencyCode,
+          calculateData.totals.total.toFixed(2),
+        ) || 0;
     }
   };
 
@@ -162,21 +212,28 @@
 
   async function runReviewAndBook() {
     const SELECTORS = {
-      target: '[data-testid="rc-title"]'
+      target: '[data-testid="rc-title"]',
     };
     //Get pickup location
-    const pickupLocation = getParams("pickup_location_code").toLowerCase() || "";
+    const pickupLocation =
+      getParams("pickup_location_code").toLowerCase() || "";
 
-    //Get protection data 
-    let rowProtectionData = await getProtectionAndAddOnsData("protections", pickupLocation);
-    const protectionItems = rowProtectionData?.protectionReferencesList?.items[0]?.protectionList || [];
-    const protectionBundleList = rowProtectionData?.protectionBundleList?.items || [];
+    //Get protection data
+    let rowProtectionData = await getProtectionAndAddOnsData(
+      "protections",
+      pickupLocation,
+    );
+    const protectionItems =
+      rowProtectionData?.protectionReferencesList?.items[0]?.protectionList ||
+      [];
+    const protectionBundleList =
+      rowProtectionData?.protectionBundleList?.items || [];
     const sanitizedProtectionBundleList = protectionBundleList.map((item) => {
-      const includeItems = item?.includedProtections?.map(el => {
+      const includeItems = item?.includedProtections?.map((el) => {
         return {
           code: el?.code || "",
-          policy: el?.policy === "required" ? "MANDATORY" : "OPTIONAL"
-        }
+          policy: el?.policy === "required" ? "MANDATORY" : "OPTIONAL",
+        };
       });
       return {
         code: item?.bundleName || "",
@@ -185,17 +242,20 @@
     });
 
     //Get add-ons data
-    let rowAddOnsData = await getProtectionAndAddOnsData("add-ons", pickupLocation);
+    let rowAddOnsData = await getProtectionAndAddOnsData(
+      "add-ons",
+      pickupLocation,
+    );
     let concattedAddOnsList = [];
-    rowAddOnsData?.addOnCategoryList?.items?.forEach(item => {
+    rowAddOnsData?.addOnCategoryList?.items?.forEach((item) => {
       concattedAddOnsList.push(...item?.addOnList);
     });
     const addOnsBundleList = rowAddOnsData?.addOnBundleList?.items || [];
     const sanitizedAddOnsBundleList = addOnsBundleList.map((item) => {
-      const includeItems = item?.includedAddons?.map(el => {
+      const includeItems = item?.includedAddons?.map((el) => {
         return {
           code: el?.code || "",
-        }
+        };
       });
       return {
         code: item?.bundleName || "",
@@ -221,16 +281,25 @@
       vehicleId: sessionData.vehicleId,
       priceRateCode: sessionData.priceRateCode,
       priceType: sessionData.priceType,
-      protectionBundles: sanitizedProtectionBundleList.length > 0 ? sanitizedProtectionBundleList : [],
-      addOnBundles: sanitizedAddOnsBundleList.length > 0 ? sanitizedAddOnsBundleList : [],
-      isAvisFirst: sessionData.isAvisFirst
+      protectionBundles:
+        sanitizedProtectionBundleList.length > 0
+          ? sanitizedProtectionBundleList
+          : [],
+      addOnBundles:
+        sanitizedAddOnsBundleList.length > 0 ? sanitizedAddOnsBundleList : [],
+      isAvisFirst: sessionData.isAvisFirst,
     };
     const corelationalIdentifier = getCorelationalIdentifier();
     // ====================== GET EXTRAS DATA
-    const extrasData = await getExtrasData(extrasAPIPayload, corelationalIdentifier);
+    const extrasData = await getExtrasData(
+      extrasAPIPayload,
+      corelationalIdentifier,
+    );
 
     if (!extrasData) {
-      console.warn("Extras API failed. Aborting VWA test script for this session to prevent broken UI.");
+      console.warn(
+        "Extras API failed. Aborting VWA test script for this session to prevent broken UI.",
+      );
       return;
     }
 
@@ -239,129 +308,188 @@
 
     // PROTECTION SANITIZATION
     const extrasProtectionItemList = extrasData?.protectionItems || [];
-    const extrasProtectionBundleList = extrasData && extrasData?.protectionBundles || [];
+    const extrasProtectionBundleList =
+      (extrasData && extrasData?.protectionBundles) || [];
     const filteredProtectionItemList = protectionItems.filter((item) => {
-      return extrasProtectionItemList.some((protection) => protection.code === item.code);
+      return extrasProtectionItemList.some(
+        (protection) => protection.code === item.code,
+      );
     });
     //final protection item list
-    const finalProtectionItemList = filteredProtectionItemList.filter(item => item.enabled === true);
+    const finalProtectionItemList = filteredProtectionItemList.filter(
+      (item) => item.enabled === true,
+    );
     // final protection bundle list
-    const finalProtectionBundleList = protectionBundleList.map(item => {
-      const exProtBundle = extrasProtectionBundleList.find(ex => ex.code === item.bundleName);
+    const finalProtectionBundleList = protectionBundleList.map((item) => {
+      const exProtBundle = extrasProtectionBundleList.find(
+        (ex) => ex.code === item.bundleName,
+      );
       return {
         ...item,
         grossSubtotal: exProtBundle?.grossSubtotal || 0,
         grossTotal: exProtBundle?.grossTotal || 0,
         netSubtotal: exProtBundle?.netSubtotal || 0,
         netTotal: exProtBundle?.netTotal || 0,
-      }
+      };
     });
     // ADD-ONS SANITIZATION
     const extrasAddOnsItemList = extrasData?.addOnItems || [];
-    const filteredAddOnsItemList = concattedAddOnsList.map((item) => {
-      const matchedExtra = extrasAddOnsItemList.find(
-        (extra) => extra.code === item.code
-      );
-      if (!matchedExtra) return null;
-      return {
-        ...item,
-        grossSubtotal: matchedExtra?.grossSubtotal || 0
-      };
-    }).filter(Boolean);
+    const filteredAddOnsItemList = concattedAddOnsList
+      .map((item) => {
+        const matchedExtra = extrasAddOnsItemList.find(
+          (extra) => extra.code === item.code,
+        );
+        if (!matchedExtra) return null;
+        return {
+          ...item,
+          grossSubtotal: matchedExtra?.grossSubtotal || 0,
+        };
+      })
+      .filter(Boolean);
     // final add-ons list
-    const finalAddOnItemList = filteredAddOnsItemList.filter(item => item.enabled === true);
+    const finalAddOnItemList = filteredAddOnsItemList.filter(
+      (item) => item.enabled === true,
+    );
     // Add-ons bundle list
     const extrasAddonBundleList = extrasData?.addOnBundles || [];
     // final add-ons bundle list
-    const finalAddOnBundleList = addOnsBundleList.map(item => {
-      const exAddonBundle = extrasAddonBundleList.find(ex => ex.code === item.bundleName);
+    const finalAddOnBundleList = addOnsBundleList.map((item) => {
+      const exAddonBundle = extrasAddonBundleList.find(
+        (ex) => ex.code === item.bundleName,
+      );
       return {
         ...item,
         grossSubtotal: exAddonBundle?.grossSubtotal || 0,
         grossTotal: exAddonBundle?.grossTotal || 0,
         netSubtotal: exAddonBundle?.netSubtotal || 0,
         netTotal: exAddonBundle?.netTotal || 0,
-      }
+      };
     });
 
     //New section
-    var protSection = '<div class="new-prot-bundle" id="' + TEST_ID + '">'
-      + '<h2 class="prot-title">WHICH PROTECTION DO YOU NEED?</h2>'
-      + '<div class="prot-cards">'
-      + (finalProtectionBundleList ? finalProtectionBundleList.map(function (prot) {
-        return '<div class="prot-card selected" data-code="' + (prot.bundleName || "") + '">'
-          + '<div class="card-body">'
-          + '<div class="card-info">'
-          + '<h3 class="card-title">' + (prot.bundleName || "") + '</h3>'
-          + '<p class="card-subtitle text-red">Deductible: up to full vehicle value</p>'
-          + '</div>'
-          + '<div class="card-radio"><div class="radio-outer"><div class="radio-inner"></div></div></div>'
-          + '</div>'
-          + '<div class="card-actions">'
-          + '<div class="view-coverage">View coverage <span class="chevron"></span></div>'
-          + '<div class="price-info">$' + prot.grossSubtotal + '/day</div>'
-          + '</div>'
-          + '</div>';
-      }).join("") : "")
-      + '</div>'
-      + '<div class="prot-all-packages"><button class="btn-all-packages">View all protection packages</button></div>'
-      + '<div class="protection-items-section">'
-      + finalProtectionItemList.map(function (item) {
-        return '<div class="protection-item">'
-          + '<div class="protection-item-icon">'
-          + '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l9 6.5-3.5 10.5h-11L3 8.5 12 2z"></path></svg>'
-          + '</div>'
-          + '<div class="protection-item-info">'
-          + '<h4 class="protection-item-title">' + item.name + '</h4>'
-          + '<p class="protection-item-price">$00</p>'
-          + '</div>'
-          + '<div class="add-on-actions">'
-          + '<a href="#" class="add-on-details" data-code="' + item.code + '">Details</a>'
-          + '<label class="protection-item-toggle">'
-          + '<input type="checkbox" data-code="' + item.code + '">'
-          + '<span class="slider"></span>'
-          + '</label>'
-          + '</div>'
-          + '</div>';
-      }).join("")
-      + '</div>'
-      + '<div class="add-ons-section">'
-      + '<div class="add-on-bundles-section">'
-      + '<h3 class="add-ons-title">Select add-ons Bundles</h3>'
-      + '<div class="add-on-bundles-content">'
-      + finalAddOnBundleList.map(function (item) {
-        return '<div class="add-on-bundle-card" data-add-on-bundle-code="' + item.bundleName + '">'
-          + '<div>' + item.bundleName + '</div>'
-          + '<div class="add-on-bundle-select-btn">$' + item.grossSubtotal + '/day</div>'
-          + '</div>';
-      }).join("")
-      + '</div>'
-      + '</div>'
-      + '<h3 class="add-ons-title">Select add-ons</h3>'
-      + '<div class="add-ons-content">'
-      + finalAddOnItemList.map(function (item) {
-        return '<div class="add-on-card">'
-          + '<div class="add-on-icon">'
-          + '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l9 6.5-3.5 10.5h-11L3 8.5 12 2z"></path></svg>'
-          + '</div>'
-          + '<div class="add-on-info">'
-          + '<h4 class="add-on-title">' + item.name + '</h4>'
-          + '<p class="add-on-price">$' + item.grossSubtotal + '</p>'
-          + '</div>'
-          + '<div class="add-on-actions">'
-          + '<a href="#" class="add-on-details" data-code="' + item.code + '">Details</a>'
-          + '<label class="add-on-toggle">'
-          + '<input type="checkbox" data-code="' + item.code + '">'
-          + '<span class="slider"></span>'
-          + '</label>'
-          + '</div>'
-          + '</div>';
-      }).join("")
-      + '</div>'
-      + '<div class="add-ons-footer"><button class="btn-all-packages">View all add-ons options</button></div>'
-      + '</div>'
-      + '</div>';
-
+    var protSection =
+      '<div class="new-prot-bundle" id="' +
+      TEST_ID +
+      '">' +
+      '<h2 class="prot-title">WHICH PROTECTION DO YOU NEED?</h2>' +
+      '<div class="prot-cards">' +
+      (finalProtectionBundleList
+        ? finalProtectionBundleList
+            .map(function (prot) {
+              return (
+                '<div class="prot-card selected" data-code="' +
+                (prot.bundleName || "") +
+                '">' +
+                '<div class="card-body">' +
+                '<div class="card-info">' +
+                '<h3 class="card-title">' +
+                (prot.bundleName || "") +
+                "</h3>" +
+                '<p class="card-subtitle text-red">Deductible: up to full vehicle value</p>' +
+                "</div>" +
+                '<div class="card-radio"><div class="radio-outer"><div class="radio-inner"></div></div></div>' +
+                "</div>" +
+                '<div class="card-actions">' +
+                '<div class="view-coverage">View coverage <span class="chevron"></span></div>' +
+                '<div class="price-info">$' +
+                prot.grossSubtotal +
+                "/day</div>" +
+                "</div>" +
+                "</div>"
+              );
+            })
+            .join("")
+        : "") +
+      "</div>" +
+      '<div class="prot-all-packages"><button class="btn-all-packages">View all protection packages</button></div>' +
+      '<div class="protection-items-section">' +
+      finalProtectionItemList
+        .map(function (item) {
+          return (
+            '<div class="protection-item">' +
+            '<div class="protection-item-icon">' +
+            '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l9 6.5-3.5 10.5h-11L3 8.5 12 2z"></path></svg>' +
+            "</div>" +
+            '<div class="protection-item-info">' +
+            '<h4 class="protection-item-title">' +
+            item.name +
+            "</h4>" +
+            '<p class="protection-item-price">$00</p>' +
+            "</div>" +
+            '<div class="add-on-actions">' +
+            '<a href="#" class="add-on-details" data-code="' +
+            item.code +
+            '">Details</a>' +
+            '<label class="protection-item-toggle">' +
+            '<input type="checkbox" data-code="' +
+            item.code +
+            '">' +
+            '<span class="slider"></span>' +
+            "</label>" +
+            "</div>" +
+            "</div>"
+          );
+        })
+        .join("") +
+      "</div>" +
+      '<div class="add-ons-section">' +
+      '<div class="add-on-bundles-section">' +
+      '<h3 class="add-ons-title">Select add-ons Bundles</h3>' +
+      '<div class="add-on-bundles-content">' +
+      finalAddOnBundleList
+        .map(function (item) {
+          return (
+            '<div class="add-on-bundle-card" data-add-on-bundle-code="' +
+            item.bundleName +
+            '">' +
+            "<div>" +
+            item.bundleName +
+            "</div>" +
+            '<div class="add-on-bundle-select-btn">$' +
+            item.grossSubtotal +
+            "/day</div>" +
+            "</div>"
+          );
+        })
+        .join("") +
+      "</div>" +
+      "</div>" +
+      '<h3 class="add-ons-title">Select add-ons</h3>' +
+      '<div class="add-ons-content">' +
+      finalAddOnItemList
+        .map(function (item) {
+          return (
+            '<div class="add-on-card">' +
+            '<div class="add-on-icon">' +
+            '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l9 6.5-3.5 10.5h-11L3 8.5 12 2z"></path></svg>' +
+            "</div>" +
+            '<div class="add-on-info">' +
+            '<h4 class="add-on-title">' +
+            item.name +
+            "</h4>" +
+            '<p class="add-on-price">$' +
+            item.grossSubtotal +
+            "</p>" +
+            "</div>" +
+            '<div class="add-on-actions">' +
+            '<a href="#" class="add-on-details" data-code="' +
+            item.code +
+            '">Details</a>' +
+            '<label class="add-on-toggle">' +
+            '<input type="checkbox" data-code="' +
+            item.code +
+            '">' +
+            '<span class="slider"></span>' +
+            "</label>" +
+            "</div>" +
+            "</div>"
+          );
+        })
+        .join("") +
+      "</div>" +
+      '<div class="add-ons-footer"><button class="btn-all-packages">View all add-ons options</button></div>' +
+      "</div>" +
+      "</div>";
 
     /* ---------------- main injection ---------------- */
 
@@ -374,51 +502,73 @@
       document.body.classList.add(TEST_ID + "-" + VARIATION);
 
       // =============================== PROTECTION BUNDLE SELECTION==============================
-      const protectionBundleCards = document.querySelectorAll("#" + TEST_ID + " .prot-card");
-      protectionBundleCards.forEach(card => {
+      const protectionBundleCards = document.querySelectorAll(
+        "#" + TEST_ID + " .prot-card",
+      );
+      protectionBundleCards.forEach((card) => {
         card.addEventListener("click", async () => {
           const bundleCode = card.getAttribute("data-code");
-          const jsonBundle = finalProtectionBundleList.find(item => item.bundleName === bundleCode);
-          const jsonBundleItems = [...jsonBundle.includedProtections, ...jsonBundle.excludedProtections];
-          const extrasBundle = extrasProtectionBundleList.find(item => item.code === bundleCode);
+          const jsonBundle = finalProtectionBundleList.find(
+            (item) => item.bundleName === bundleCode,
+          );
+          const jsonBundleItems = [
+            ...jsonBundle.includedProtections,
+            ...jsonBundle.excludedProtections,
+          ];
+          const extrasBundle = extrasProtectionBundleList.find(
+            (item) => item.code === bundleCode,
+          );
           const rawStore = sessionStorage.getItem("reservation.store");
           if (!rawStore) return;
           const store = JSON.parse(rawStore) || {};
           store.state.protectionBundleCode = bundleCode;
           const protectionBundleItems = [];
-          extrasBundle.items.forEach(item => {
+          extrasBundle.items.forEach((item) => {
             protectionBundleItems.push(item.code);
           });
           store.state.protectionBundleItems = protectionBundleItems.join(",");
           const protectionBundleItemsTiers = [];
-          jsonBundle.includedProtections.forEach(item => {
-            protectionBundleItemsTiers.push(item.applyBundleTier === null ? "false" : "false");
+          jsonBundle.includedProtections.forEach((item) => {
+            protectionBundleItemsTiers.push(
+              item.applyBundleTier === null ? "false" : "false",
+            );
           });
-          store.state.protectionBundleItemsTiers = protectionBundleItemsTiers.join(",");
+          store.state.protectionBundleItemsTiers =
+            protectionBundleItemsTiers.join(",");
           const protectionBundleItemsPolicies = [];
-          jsonBundle.includedProtections.forEach(item => {
-            protectionBundleItemsPolicies.push(item.policy === "required" ? "MANDATORY" : "OPTIONAL");
+          jsonBundle.includedProtections.forEach((item) => {
+            protectionBundleItemsPolicies.push(
+              item.policy === "required" ? "MANDATORY" : "OPTIONAL",
+            );
           });
-          store.state.protectionBundleItemsPolicies = protectionBundleItemsPolicies.join(",");
+          store.state.protectionBundleItemsPolicies =
+            protectionBundleItemsPolicies.join(",");
           const selectedBundlePayload = {
             code: extrasBundle.code || "",
             title: extrasBundle?.code || "",
             defaultBundle: jsonBundle.defaultBundle || null,
             coverageRating: coverageRatings[jsonBundle.coverageRating] || 0,
             description: jsonBundle.bundleDescription.html || "",
-            items: jsonBundleItems.map(item => {
+            items: jsonBundleItems.map((item) => {
               return {
                 id: item.code || "",
                 code: item.code || "",
                 title: item.name || "",
                 description: item.description.html || "",
-                included: extrasBundle.items.some(i => i.code === item.code) || false,
+                included:
+                  extrasBundle.items.some((i) => i.code === item.code) || false,
                 currencyCode: extrasBundle.currencyCode || "",
                 policy: item.policy === "required" ? "MANDATORY" : "OPTIONAL",
-              }
+              };
             }),
-            oldPrice: avisConfigData.pricingDisplay === "dailyRate" ? extrasBundle.grossSubtotal : extrasBundle.grossTotal,
-            price: avisConfigData.pricingDisplay === "dailyRate" ? extrasBundle.netSubtotal : extrasBundle.netTotal,
+            oldPrice:
+              avisConfigData.pricingDisplay === "dailyRate"
+                ? extrasBundle.grossSubtotal
+                : extrasBundle.grossTotal,
+            price:
+              avisConfigData.pricingDisplay === "dailyRate"
+                ? extrasBundle.netSubtotal
+                : extrasBundle.netTotal,
             recommended: jsonBundle.recommendedBundle,
             warning: jsonBundle.alertMessageIfSelected || "",
             bookAgain: extrasBundle.bookAgain || false,
@@ -427,13 +577,21 @@
           store.state.protectionBundleSelected = selectedBundlePayload;
           // store Protection Item
           const storeProtItemList = store.state.protectionItems || "";
-          const formateStoreProtItemList = storeProtItemList.split(",").map(item => item.trim()).filter(Boolean) || [];
+          const formateStoreProtItemList =
+            storeProtItemList
+              .split(",")
+              .map((item) => item.trim())
+              .filter(Boolean) || [];
           //store AddOn Bundles
           const storeAddOnBundle = store.state.addOnBundleSelected || {};
           const hasAddOnBundleCode = storeAddOnBundle?.code;
           // store Add On items
           const storeAddOnItems = store.state.addOnItems || "";
-          const formateStoreAddOnItems = storeAddOnItems.split(",").map(item => item.trim()).filter(Boolean) || [];
+          const formateStoreAddOnItems =
+            storeAddOnItems
+              .split(",")
+              .map((item) => item.trim())
+              .filter(Boolean) || [];
 
           sessionStorage.setItem("reservation.store", JSON.stringify(store));
 
@@ -457,70 +615,91 @@
             vehicleId: extrasAPIPayload.vehicleId,
             protectionBundle: {
               code: bundleCode,
-              items: jsonBundle.includedProtections.map(item => {
+              items: jsonBundle.includedProtections.map((item) => {
                 return {
                   code: item.code,
                   policy: item.policy === "required" ? "MANDATORY" : "OPTIONAL",
-                }
-              })
+                };
+              }),
             },
-            protectionItems: formateStoreProtItemList.map(item => {
-              return {
-                code: item || "",
-              }
-            }) || [],
-            addOnItems: formateStoreAddOnItems.map(item => {
-              return {
-                code: item || "",
-              }
-            }) || [],
+            protectionItems:
+              formateStoreProtItemList.map((item) => {
+                return {
+                  code: item || "",
+                };
+              }) || [],
+            addOnItems:
+              formateStoreAddOnItems.map((item) => {
+                return {
+                  code: item || "",
+                };
+              }) || [],
           };
           if (hasAddOnBundleCode) {
             calculatePayload.addOnBundle = {
               code: storeAddOnBundle.code,
-              items: storeAddOnBundle.items.map(item => ({
+              items: storeAddOnBundle.items.map((item) => ({
                 code: item.code || "",
-              }))
+              })),
             };
           }
 
-          const calculateData = await calculatePrice(calculatePayload, corelationalIdentifier);
+          const calculateData = await calculatePrice(
+            calculatePayload,
+            corelationalIdentifier,
+          );
           const calculateProtectionItems = calculateData.protectionItems || [];
           const calculateAddonItems = calculateData.addOnItems || [];
           const latestRawStore = sessionStorage.getItem("reservation.store");
           if (latestRawStore) {
             const latestStore = JSON.parse(latestRawStore);
-            const newProtectionItems = calculateProtectionItems.map(item => {
+            const newProtectionItems = calculateProtectionItems.map((item) => {
               return {
-                amount: extrasProtectionItemList.find(i => i.code === item.code).netTotal,
+                amount: extrasProtectionItemList.find(
+                  (i) => i.code === item.code,
+                ).netTotal,
                 chargeType: item.chargeType,
                 code: item.code,
-                description: jsonBundleItems.find(i => i.code === item.code).name || "",
-                discount: extrasProtectionItemList.find(i => i.code === item.code).discount || 0,
-                grossSubtotal: extrasProtectionItemList.find(i => i.code === item.code).grossSubtotal,
+                description:
+                  jsonBundleItems.find((i) => i.code === item.code).name || "",
+                discount:
+                  extrasProtectionItemList.find((i) => i.code === item.code)
+                    .discount || 0,
+                grossSubtotal: extrasProtectionItemList.find(
+                  (i) => i.code === item.code,
+                ).grossSubtotal,
                 netSubtotal: item.netSubtotal,
                 netSubtotalPerUnit: item.netSubtotalPerUnit,
                 rentalItemUnits: item.rentalItemUnits,
-              }
+              };
             });
 
-            const newAddOnItems = calculateAddonItems.map(item => {
+            const newAddOnItems = calculateAddonItems.map((item) => {
               return {
-                amount: extrasAddOnsItemList.find(i => i.code === item.code).netTotal,
+                amount: extrasAddOnsItemList.find((i) => i.code === item.code)
+                  .netTotal,
                 chargeType: item.chargeType,
                 code: item.code,
-                description: jsonBundleItems.find(i => i.code === item.code).name || "",
-                discount: extrasAddOnsItemList.find(i => i.code === item.code).discount || 0,
-                grossSubtotal: extrasAddOnsItemList.find(i => i.code === item.code).grossSubtotal,
+                description:
+                  jsonBundleItems.find((i) => i.code === item.code).name || "",
+                discount:
+                  extrasAddOnsItemList.find((i) => i.code === item.code)
+                    .discount || 0,
+                grossSubtotal: extrasAddOnsItemList.find(
+                  (i) => i.code === item.code,
+                ).grossSubtotal,
                 displayElement: item.displayElement,
                 netSubtotal: item.netSubtotal,
                 netSubtotalPerUnit: item.netSubtotalPerUnit,
                 rentalItemUnits: item.rentalItemUnits,
-              }
+              };
             });
             latestStore.state.pricesProtectionItems = newProtectionItems;
             latestStore.state.pricesAddOnItems = newAddOnItems;
-            sessionStorage.setItem("reservation.store", JSON.stringify(latestStore));
+            sessionStorage.setItem(
+              "reservation.store",
+              JSON.stringify(latestStore),
+            );
 
             //Update UI
             updateCarSummaryAndFooterPrice(calculateData);
@@ -529,19 +708,30 @@
       });
 
       // Protection items toggle listener
-      const protectionToggles = document.querySelectorAll("#" + TEST_ID + " .protection-item-toggle input");
-      protectionToggles.forEach(toggle => {
+      const protectionToggles = document.querySelectorAll(
+        "#" + TEST_ID + " .protection-item-toggle input",
+      );
+      protectionToggles.forEach((toggle) => {
         toggle.addEventListener("change", async (e) => {
           const code = e.target.getAttribute("data-code");
-          const protectionItemPrice = extrasProtectionItemList.find(item => item.code === code);
-          const jsonProtectionItem = protectionItems?.find(item => item.code === code);
+          const protectionItemPrice = extrasProtectionItemList.find(
+            (item) => item.code === code,
+          );
+          const jsonProtectionItem = protectionItems?.find(
+            (item) => item.code === code,
+          );
 
           const rawStore = sessionStorage.getItem("reservation.store");
           if (!rawStore) return;
 
           const store = JSON.parse(rawStore);
           const currentCodes = store.state.protectionItems;
-          const codesArray = currentCodes ? currentCodes.split(",").map(c => c.trim()).filter(Boolean) : [];
+          const codesArray = currentCodes
+            ? currentCodes
+                .split(",")
+                .map((c) => c.trim())
+                .filter(Boolean)
+            : [];
           const index = codesArray.indexOf(code);
           if (index > -1) {
             codesArray.splice(index, 1);
@@ -549,11 +739,16 @@
             codesArray.push(code);
           }
           //store Protection Bundles
-          const storeProtectionBundle = store.state.protectionBundleSelected || {};
+          const storeProtectionBundle =
+            store.state.protectionBundleSelected || {};
           const hasProtectionCode = storeProtectionBundle?.code;
           // store Add On items
           const storeAddOnItems = store.state.addOnItems || "";
-          const formateStoreAddOnItems = storeAddOnItems.split(",").map(item => item.trim()).filter(Boolean) || [];
+          const formateStoreAddOnItems =
+            storeAddOnItems
+              .split(",")
+              .map((item) => item.trim())
+              .filter(Boolean) || [];
           //store AddOn Bundles
           const storeAddOnBundle = store.state.addOnBundleSelected || {};
           const hasAddOnBundleCode = storeAddOnBundle?.code;
@@ -581,38 +776,45 @@
             isAvisFirst: extrasAPIPayload.isAvisFirst,
             vehicleCode: extrasAPIPayload.vehicleCode,
             vehicleId: extrasAPIPayload.vehicleId,
-            protectionItems: codesArray.map(c => ({ code: c })),
-            addOnItems: formateStoreAddOnItems.map(item => {
-              return {
-                code: item || "",
-              }
-            }) || [],
+            protectionItems: codesArray.map((c) => ({ code: c })),
+            addOnItems:
+              formateStoreAddOnItems.map((item) => {
+                return {
+                  code: item || "",
+                };
+              }) || [],
           };
           if (hasProtectionCode) {
             const items = (storeProtectionBundle.items || [])
-              .filter(item => item.included)
-              .map(item => ({
+              .filter((item) => item.included)
+              .map((item) => ({
                 code: item.code || "",
-                policy: item.policy || ""
+                policy: item.policy || "",
               }));
 
             calculatePayload.protectionBundle = {
               code: storeProtectionBundle.code,
-              items
+              items,
             };
           }
           if (hasAddOnBundleCode) {
             calculatePayload.addOnBundle = {
               code: storeAddOnBundle.code,
-              items: storeAddOnBundle.items.map(item => ({
+              items: storeAddOnBundle.items.map((item) => ({
                 code: item.code || "",
-              }))
+              })),
             };
           }
 
           // //Call calculatePrice API
-          const calculateData = await calculatePrice(calculatePayload, corelationalIdentifier);
-          const calculateProtectionItem = calculateData?.protectionItems?.find(item => item.code === code) || {};
+          const calculateData = await calculatePrice(
+            calculatePayload,
+            corelationalIdentifier,
+          );
+          const calculateProtectionItem =
+            calculateData?.protectionItems?.find(
+              (item) => item.code === code,
+            ) || {};
           const pricePayloadProtectionItem = {
             amount: protectionItemPrice?.netTotal,
             chargeType: protectionItemPrice.chargeType,
@@ -627,9 +829,12 @@
             const latestStore = JSON.parse(latestRawStore);
             if (!latestStore.state) latestStore.state = {};
 
-            let pricesProtectionItems = latestStore.state.pricesProtectionItems || [];
+            let pricesProtectionItems =
+              latestStore.state.pricesProtectionItems || [];
 
-            const existingIndex = pricesProtectionItems.findIndex(item => item.code === code);
+            const existingIndex = pricesProtectionItems.findIndex(
+              (item) => item.code === code,
+            );
             if (existingIndex > -1) {
               // Item already exists — remove it (deselected)
               pricesProtectionItems.splice(existingIndex, 1);
@@ -639,33 +844,53 @@
             }
 
             latestStore.state.pricesProtectionItems = pricesProtectionItems;
-            sessionStorage.setItem("reservation.store", JSON.stringify(latestStore));
+            sessionStorage.setItem(
+              "reservation.store",
+              JSON.stringify(latestStore),
+            );
           }
         });
       });
 
       // ===================== Add-ons bundle selection =====================
-      const uiAddOnsBundleList = document.querySelectorAll(".add-on-bundle-card");
-      uiAddOnsBundleList.forEach(addOnBundle => {
+      const uiAddOnsBundleList = document.querySelectorAll(
+        ".add-on-bundle-card",
+      );
+      uiAddOnsBundleList.forEach((addOnBundle) => {
         addOnBundle.addEventListener("click", async (e) => {
-          const bundleCode = addOnBundle.getAttribute("data-add-on-bundle-code");
-          const extrasBundle = extrasAddonBundleList.find(item => item.code === bundleCode);
-          const jsonBundle = addOnsBundleList.find(item => item.bundleName === bundleCode);
+          const bundleCode = addOnBundle.getAttribute(
+            "data-add-on-bundle-code",
+          );
+          const extrasBundle = extrasAddonBundleList.find(
+            (item) => item.code === bundleCode,
+          );
+          const jsonBundle = addOnsBundleList.find(
+            (item) => item.bundleName === bundleCode,
+          );
           const rawStore = sessionStorage.getItem("reservation.store");
           if (!rawStore) return;
           const store = JSON.parse(rawStore) || {};
           // store Add On items
           const storeAddOnItems = store.state.addOnItems || "";
-          const formateStoreAddOnItems = storeAddOnItems.split(",").map(item => item.trim()).filter(Boolean) || [];
+          const formateStoreAddOnItems =
+            storeAddOnItems
+              .split(",")
+              .map((item) => item.trim())
+              .filter(Boolean) || [];
           //store Protection Bundles
-          const storeProtectionBundle = store.state.protectionBundleSelected || {};
+          const storeProtectionBundle =
+            store.state.protectionBundleSelected || {};
           const hasProtectionCode = storeProtectionBundle?.code;
           // store Protection Item
           const storeProtItemList = store.state.protectionItems || "";
-          const formateStoreProtItemList = storeProtItemList.split(",").map(item => item.trim()).filter(Boolean) || [];
+          const formateStoreProtItemList =
+            storeProtItemList
+              .split(",")
+              .map((item) => item.trim())
+              .filter(Boolean) || [];
           store.state.addOnBundleCode = bundleCode;
           const addOnBundleItems = [];
-          extrasBundle.items.forEach(item => {
+          extrasBundle.items.forEach((item) => {
             addOnBundleItems.push(item.code);
           });
           store.state.addOnBundleItems = addOnBundleItems.join(",");
@@ -679,17 +904,24 @@
             image: imageSrc
               ? { src: imageSrc, alt: "Bundle image" }
               : { alt: "Bundle image" },
-            items: jsonBundle.includedAddons.map(item => {
+            items: jsonBundle.includedAddons.map((item) => {
               return {
                 code: item.code || "",
                 description: item.description.html || "",
                 id: item.code || "",
-                included: extrasBundle.items.some(i => i.code === item.code) || false,
+                included:
+                  extrasBundle.items.some((i) => i.code === item.code) || false,
                 title: item.name || "",
-              }
+              };
             }),
-            oldPrice: avisConfigData.pricingDisplay === "dailyRate" ? extrasBundle.grossSubtotal : extrasBundle.grossTotal,
-            price: avisConfigData.pricingDisplay === "dailyRate" ? extrasBundle.netSubtotal : extrasBundle.netTotal,
+            oldPrice:
+              avisConfigData.pricingDisplay === "dailyRate"
+                ? extrasBundle.grossSubtotal
+                : extrasBundle.grossTotal,
+            price:
+              avisConfigData.pricingDisplay === "dailyRate"
+                ? extrasBundle.netSubtotal
+                : extrasBundle.netTotal,
           };
           store.state.addOnBundleSelected = selectedAddOnBundleObj;
           sessionStorage.setItem("reservation.store", JSON.stringify(store));
@@ -714,48 +946,54 @@
             vehicleId: extrasAPIPayload.vehicleId,
             addOnBundle: {
               code: bundleCode || "",
-              items: jsonBundle.includedAddons.map(item => {
-                return {
-                  code: item.code || "",
-                }
-              }) || [],
+              items:
+                jsonBundle.includedAddons.map((item) => {
+                  return {
+                    code: item.code || "",
+                  };
+                }) || [],
             },
-            addOnItems: formateStoreAddOnItems.map(item => {
-              return {
-                code: item || "",
-              }
-            }) || [],
-            protectionItems: formateStoreProtItemList.map(item => {
-              return {
-                code: item || "",
-              }
-            }) || [],
+            addOnItems:
+              formateStoreAddOnItems.map((item) => {
+                return {
+                  code: item || "",
+                };
+              }) || [],
+            protectionItems:
+              formateStoreProtItemList.map((item) => {
+                return {
+                  code: item || "",
+                };
+              }) || [],
           };
           if (hasProtectionCode) {
             const items = (storeProtectionBundle.items || [])
-              .filter(item => item.included)
-              .map(item => ({
+              .filter((item) => item.included)
+              .map((item) => ({
                 code: item.code || "",
-                policy: item.policy || ""
+                policy: item.policy || "",
               }));
 
             calculatePayload.protectionBundle = {
               code: storeProtectionBundle.code,
-              items
+              items,
             };
           }
           //call calculate api
-          const calculateData = await calculatePrice(calculatePayload, corelationalIdentifier);
+          const calculateData = await calculatePrice(
+            calculatePayload,
+            corelationalIdentifier,
+          );
           const calculateAddOnItems = calculateData.addOnItems || [];
           const latestRawStore = sessionStorage.getItem("reservation.store");
           if (!latestRawStore) return;
           const latestStore = JSON.parse(latestRawStore);
-          const newAddOnItems = calculateAddOnItems.map(addOnItem => {
+          const newAddOnItems = calculateAddOnItems.map((addOnItem) => {
             const includedItem = jsonBundle.includedAddons?.find(
-              i => i.code === addOnItem.code
+              (i) => i.code === addOnItem.code,
             );
             const extraItem = extrasAddOnsItemList?.find(
-              i => i.code === addOnItem.code
+              (i) => i.code === addOnItem.code,
             );
             return {
               amount: extrasBundle.netTotal || 0,
@@ -768,20 +1006,29 @@
               netSubtotal: addOnItem.netSubtotal || 0,
               netSubtotalPerUnit: addOnItem.netSubtotalPerUnit || 0,
               rentalItemUnits: addOnItem.rentalItemUnits || 0,
-            }
+            };
           });
           latestStore.state.pricesAddOnItems = newAddOnItems;
-          sessionStorage.setItem("reservation.store", JSON.stringify(latestStore));
+          sessionStorage.setItem(
+            "reservation.store",
+            JSON.stringify(latestStore),
+          );
         });
       });
 
       // Add-ons toggle listener
-      const addOnToggles = document.querySelectorAll("#" + TEST_ID + " .add-on-toggle input");
-      addOnToggles.forEach(toggle => {
+      const addOnToggles = document.querySelectorAll(
+        "#" + TEST_ID + " .add-on-toggle input",
+      );
+      addOnToggles.forEach((toggle) => {
         toggle.addEventListener("change", async (e) => {
           const code = e.target.getAttribute("data-code");
-          const addOnItemPrice = extrasAddOnsItemList.find(item => item.code === code);
-          const jsonAddonItem = concattedAddOnsList?.find(item => item.code === code);
+          const addOnItemPrice = extrasAddOnsItemList.find(
+            (item) => item.code === code,
+          );
+          const jsonAddonItem = concattedAddOnsList?.find(
+            (item) => item.code === code,
+          );
 
           const rawStore = sessionStorage.getItem("reservation.store");
           if (!rawStore) return;
@@ -794,13 +1041,16 @@
           // Get existing codes or initialize empty array
           const currentCodes = store.state.addOnItems;
           const codesArray = currentCodes
-            ? currentCodes.split(",").map(c => c.trim()).filter(Boolean)
+            ? currentCodes
+                .split(",")
+                .map((c) => c.trim())
+                .filter(Boolean)
             : [];
 
           // Always rebuild quantityArray to match codesArray length
           const addOnItemsQuantity = store.state.addOnItemsQuantity;
           let quantityArray = addOnItemsQuantity
-            ? addOnItemsQuantity.split(",").map(c => c.trim())
+            ? addOnItemsQuantity.split(",").map((c) => c.trim())
             : [];
 
           // Ensure quantityArray is in sync with codesArray
@@ -822,9 +1072,14 @@
 
           // store Protection Item
           const storeProtItemList = store.state.protectionItems || "";
-          const formateStoreProtItemList = storeProtItemList.split(",").map(item => item.trim()).filter(Boolean) || [];
+          const formateStoreProtItemList =
+            storeProtItemList
+              .split(",")
+              .map((item) => item.trim())
+              .filter(Boolean) || [];
           //store Protection Bundles
-          const storeProtectionBundle = store.state.protectionBundleSelected || {};
+          const storeProtectionBundle =
+            store.state.protectionBundleSelected || {};
           const hasProtectionCode = storeProtectionBundle?.code;
           //store AddOn Bundles
           const storeAddOnBundle = store.state.addOnBundleSelected || {};
@@ -852,37 +1107,43 @@
             isAvisFirst: extrasAPIPayload.isAvisFirst,
             vehicleCode: extrasAPIPayload.vehicleCode,
             vehicleId: extrasAPIPayload.vehicleId,
-            addOnItems: codesArray.map(c => ({ code: c })),
-            protectionItems: formateStoreProtItemList.map(item => {
-              return {
-                code: item || "",
-              }
-            }) || [],
+            addOnItems: codesArray.map((c) => ({ code: c })),
+            protectionItems:
+              formateStoreProtItemList.map((item) => {
+                return {
+                  code: item || "",
+                };
+              }) || [],
           };
           if (hasProtectionCode) {
             const items = (storeProtectionBundle.items || [])
-              .filter(item => item.included)
-              .map(item => ({
+              .filter((item) => item.included)
+              .map((item) => ({
                 code: item.code || "",
-                policy: item.policy || ""
+                policy: item.policy || "",
               }));
 
             calculatePayload.protectionBundle = {
               code: storeProtectionBundle.code,
-              items
+              items,
             };
           }
           if (hasAddOnBundleCode) {
             calculatePayload.addOnBundle = {
               code: storeAddOnBundle.code,
-              items: storeAddOnBundle.items.map(item => ({
+              items: storeAddOnBundle.items.map((item) => ({
                 code: item.code || "",
-              }))
+              })),
             };
           }
           // //Call calculatePrice API
-          const calculateData = await calculatePrice(calculatePayload, corelationalIdentifier);
-          const calculateAddonItem = calculateData?.addOnItems?.find(item => item.code === code);
+          const calculateData = await calculatePrice(
+            calculatePayload,
+            corelationalIdentifier,
+          );
+          const calculateAddonItem = calculateData?.addOnItems?.find(
+            (item) => item.code === code,
+          );
 
           const pricePayloadAddonItem = {
             amount: calculateAddonItem.grossSubtotal,
@@ -905,7 +1166,9 @@
 
             let pricesAddOnItems = latestStore.state.pricesAddOnItems || [];
 
-            const existingIndex = pricesAddOnItems.findIndex(item => item.code === code);
+            const existingIndex = pricesAddOnItems.findIndex(
+              (item) => item.code === code,
+            );
             if (existingIndex > -1) {
               // Item already exists — remove it (deselected)
               pricesAddOnItems.splice(existingIndex, 1);
@@ -915,7 +1178,10 @@
             }
 
             latestStore.state.pricesAddOnItems = pricesAddOnItems;
-            sessionStorage.setItem("reservation.store", JSON.stringify(latestStore));
+            sessionStorage.setItem(
+              "reservation.store",
+              JSON.stringify(latestStore),
+            );
           }
         });
       });
@@ -925,7 +1191,8 @@
       allCards.forEach((card, i) => {
         if (i >= 2) {
           card.classList.add("prot-card--extra");
-        }      });
+        }
+      });
 
       // accordion toggle
       const btn = document.querySelector("#" + TEST_ID + " .btn-all-packages");
@@ -934,7 +1201,9 @@
         btn.addEventListener("click", (e) => {
           e.preventDefault();
           const isExpanded = container.classList.toggle("show-all");
-          btn.textContent = isExpanded ? "View less" : "View all protection packages";
+          btn.textContent = isExpanded
+            ? "View less"
+            : "View all protection packages";
         });
       }
 
@@ -958,7 +1227,7 @@
             isInjectionInProgress = false;
             observeDOM();
           }, 800);
-        }
+        },
       );
     }
 
@@ -967,7 +1236,10 @@
 
       globalObserver = new MutationObserver((mutations) => {
         // If our element was removed, try to re-init
-        if (!document.getElementById(TEST_ID) && location.pathname.includes("/reservation/review-and-book")) {
+        if (
+          !document.getElementById(TEST_ID) &&
+          location.pathname.includes("/reservation/review-and-book")
+        ) {
           console.log(TEST_ID + " removed from DOM, re-initializing...");
           init();
         }
@@ -975,7 +1247,7 @@
 
       globalObserver.observe(document.body, {
         childList: true,
-        subtree: true
+        subtree: true,
       });
     }
 
@@ -985,18 +1257,18 @@
   const ROUTE_HANDLERS = [
     {
       path: "/reservation/protectioncoverage",
-      handler: runProtectionCoverage
+      handler: runProtectionCoverage,
     },
     {
       path: "/reservation/review-and-book",
-      handler: runReviewAndBook
-    }
+      handler: runReviewAndBook,
+    },
   ];
   // route handler
   function handleRoute(path) {
     ROUTE_HANDLERS.forEach((route) => {
       if (path.includes(route.path)) {
-        Promise.resolve(route.handler()).catch(err => {
+        Promise.resolve(route.handler()).catch((err) => {
           console.error("Route handler error:", err);
         });
       }
@@ -1055,8 +1327,7 @@
   safeRouteHander(location.pathname);
 
   // SPA navigation
-  onUrlChange(path => {
+  onUrlChange((path) => {
     safeRouteHander(path);
   });
-
 })();

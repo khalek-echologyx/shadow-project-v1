@@ -1,6 +1,5 @@
 (() => {
-  const TEST_ID = "POC";
-  const VARIATION = "VAR_A";
+  const TEST_ID = "MVT-36";
 
   /* ---------------- poll utility ---------------- */
 
@@ -92,6 +91,248 @@
     let res = await fetch(`https://www.avis.com/en/.config.json`);
     let data = await res.json();
     return data || {};
+  }
+
+  //get price with currenty
+  const getPriceWithCurrenty = function (code, amount) {
+    const formateAmount = Number(amount).toFixed(2);
+    const symbol = function () {
+      if (!code) return '$';
+      return (0).toLocaleString("en", {
+        style: "currency",
+        currency: code
+      }).replace(/[\d\s.,]/g, "");
+    };
+    return /[a-zA-Z]/.test(symbol()) ? symbol() + ' ' + formateAmount : symbol() + formateAmount;
+  };
+
+  //prot and add-on item UI
+  const protAndAddOnItemUIWrapper = `
+        <div id="mvt-36-summary-prot" class="MuiAccordionDetails-root mui-u31f1m">
+        </div>
+    `;
+  const protAndAddOnItemUI = (desc, amount, item) => {
+    const isGSO = desc === "Hassle-free Fuel Service";
+    return `
+          <div class="MuiBox-root mui-q27lzn mvt-36-summary-prot-item">
+            <span
+              class="checkout-redesign MuiTypography-root MuiTypography-bodySmallRegular mui-1xb6ox"
+              >${desc}
+              ${isGSO ? `<span class="est-price" style="display: block;">Est. USD ${item.netSubtotalPerUnit} ${item.chargeType === "PER_GALLON" ? "/gal" : "/L"}</span>` : ""}
+              </span
+            >
+            <div class="MuiBox-root mui-u2acjg">
+              <span
+          class="MuiTypography-root MuiTypography-bodySmallRegular mui-1izwyf7"
+          >${isGSO ? "Market Price" : amount}</span
+        >
+        </div>
+        </div>
+    `
+  }
+  const savingAndDisItemUI = (desc, amount) => {
+    return `
+          <div class="mvt-36-summary-regular-item">
+            <span class="item-desc saving-desc">${desc}</span>
+            <div class="item-amount">
+              <span class="">${amount}</span>
+            </div>
+          </div>
+    `
+  }
+
+  const taxAndFeesItemUI = (desc, amount, code, currencyCode) => {
+    return `
+          <a href="https://www.avis.com/en/customer-service/faqs/usa/fees-taxes#${code}" target="_blank" class="mvt-36-summary-regular-item tax-and-fees-item">
+            <span class="item-desc">${desc}</span>
+            <div class="item-amount">
+              <span class="">${getPriceWithCurrenty(currencyCode, amount)}</span>
+            </div>
+          </a>
+    `
+  }
+
+  //saving and discount UI logic
+  const savingAndDiscountUI = (currencyCode, calculateData) => {
+    // calculation
+    const savingAndDiscountTotal = getPriceWithCurrenty(currencyCode, calculateData.savings.totalSavings)
+    const payNowSavings = Number(calculateData.savings.payNowSavings);
+    const formatPayNowSavings = getPriceWithCurrenty(currencyCode, payNowSavings);
+    const extrasSavings = Number(calculateData.savings.extrasSavings);
+    const formatExtrasSavings = getPriceWithCurrenty(currencyCode, extrasSavings);
+    const discountCodeSavings = Number(calculateData.savings.discountCodeSavings);
+    const formatDiscountCodeSavings = getPriceWithCurrenty(currencyCode, discountCodeSavings);
+    const memberCreditAmt = Number(calculateData.savings.memberCreditAmt);
+    const formatMemberCreditAmt = getPriceWithCurrenty(currencyCode, memberCreditAmt);
+    // header price update
+    const savingAndDiscountEl = document.querySelector('[data-testid="rental-summary-savings-discounts-recent-cost"]');
+    if (savingAndDiscountEl) {
+      savingAndDiscountEl.textContent = savingAndDiscountTotal || 0;
+    }
+    const savingAndDisItemContainer = document.querySelector('[aria-label="Savings & discounts"]');
+    if (savingAndDisItemContainer) {
+      const existingEl = savingAndDisItemContainer.querySelector(
+        ':scope > .MuiAccordionDetails-root'
+      );
+      if (existingEl) {
+        existingEl.remove();
+      }
+      const existingElCustom = savingAndDisItemContainer.querySelector(
+        '#mvt-36-summary-saving'
+      );
+
+      if (existingElCustom) {
+        existingElCustom.remove();
+      }
+      const savingAndDiscountUIWrapper = `
+        <div id="mvt-36-summary-saving" class="accordion-wrapper">
+          ${payNowSavings ? savingAndDisItemUI("Pay Now Savings", formatPayNowSavings) : ""}
+          ${extrasSavings ? savingAndDisItemUI("Protection & Add-ons Savings", formatExtrasSavings) : ""}
+          ${discountCodeSavings ? savingAndDisItemUI("Discount Code Savings", formatDiscountCodeSavings) : ""}
+          ${memberCreditAmt ? savingAndDisItemUI("Member Credit", formatMemberCreditAmt) : ""}
+        </div>
+    `;
+      savingAndDisItemContainer.insertAdjacentHTML("beforeend", savingAndDiscountUIWrapper);
+    }
+  }
+  // tax and fees UI and logic
+  const taxAndFeesUI = (currencyCode, calculateData) => {
+    console.log("Render tax and fees UI")
+    const taxesAndFeesTotal = getPriceWithCurrenty(currencyCode, calculateData.totals.taxAndFreeTotal);
+    const taxAndFeesItems = calculateData.taxAndFeeItems || [];
+    //Updte UI
+    const taxAndFeesHeaderPrice = document.querySelector('[data-testid="rental-summary-taxes-fees-recent-cost"]');
+    if (taxAndFeesHeaderPrice) {
+      taxAndFeesHeaderPrice.textContent = taxesAndFeesTotal || 0;
+    }
+    const taxAndFeesItemContainer = document.querySelector('[aria-label="Taxes & Fees"]');
+    if (taxAndFeesItemContainer) {
+      const existingEl = taxAndFeesItemContainer.querySelector(
+        ':scope > .MuiAccordionDetails-root'
+      );
+      if (existingEl) {
+        existingEl.remove();
+      }
+      const existingElCustom = taxAndFeesItemContainer.querySelector(
+        '#mvt-36-summary-tax-and-fees'
+      );
+      if (existingElCustom) {
+        existingElCustom.remove();
+      }
+      const taxAndFeesUIWrapper = `
+        <div id="mvt-36-summary-tax-and-fees" class="accordion-wrapper">
+          ${taxAndFeesItems.length > 0 ? taxAndFeesItems.map((item) => {
+        return taxAndFeesItemUI(item.description, item.amount, item.code, currencyCode);
+      }).join('') : ""}
+        </div>
+    `;
+      taxAndFeesItemContainer.insertAdjacentHTML("beforeend", taxAndFeesUIWrapper);
+    }
+
+  }
+  const rateTermsUI = (calculateData) => {
+    console.log("Render rate UI")
+    const rateData = calculateData.rateTerms || {};
+    const rateNoteUI = document.querySelectorAll('[data-testid="rate-terms-notes-ul"] li');
+    rateNoteUI.forEach(el => {
+      console.log(el, "rate el")
+      const text = el.querySelector('span').textContent;
+      console.log(text, "text terms")
+      if (text.includes('Day  minimum rental required')) {
+        const textEl = el.querySelector('span');
+        textEl.textContent = `${rateData.minRequiredDays} Day  minimum rental required.`;
+      } else if (text.includes('hours maximum rental allowed')) {
+        const textEl = el.querySelector('span');
+        textEl.textContent = `${rateData.maxAllowedDays} Days ${rateData.maxAllowedHours} hours maximum rental allowed.`;
+      } else if (text.includes('If you need to cancel 24 hours')) {
+        const textEl = el.querySelector('span');
+        textEl.textContent = `If you need to cancel 24 hours prior to the scheduled pick-up time, we will refund the full prepaid amount less a ${rateData.cancelFeeBefore24h} processing fee.`
+      } else if (text.includes('If you need to cancel during the 24 hour')) {
+        const textEl = el.querySelector('span');
+        textEl.textContent = `If you need to cancel during the 24 hour period prior to the scheduled pick-up time, we will refund the full prepaid amount less a ${rateData.cancelFeeWithin24h} processing fee.`
+      }
+    })
+    const selectorForUnlimiteMilage = document.querySelector('[data-testid="rate-terms-notes-ul"]');
+    const hasUltimateEl = selectorForUnlimiteMilage.nextElementSibling;
+    console.log(hasUltimateEl, "hasUltimateEl")
+    const enableMilate = rateData.unlimitedMilage;
+    if(enableMilate){
+      if(!hasUltimateEl.textContent.includes("Unlimited Mileage")){
+        const unlimitedMilageUI = `<p class="MuiTypography-root MuiTypography-body1 mui-1kvhqhg"><svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-toqf8" focusable="false" aria-hidden="true" viewBox="0 0 11 9"><path d="M1 4L4 7L10 1" stroke-linecap="round" fill="none"></path></svg>Unlimited Mileage</p>`;
+        selectorForUnlimiteMilage.insertAdjacentHTML("afterend", unlimitedMilageUI);
+      }
+    }
+  }
+
+
+  // =========== UPDATE UI: Car summary and Footer Price
+  const updateCarSummaryAndFooterPrice = (calculateData) => {
+    console.log("Summary function call mvt-36")
+    // ================= PROTECTION & ADD-ONS =================
+    const currencyCode = calculateData.currencyCode;
+    const protTotal = getPriceWithCurrenty(currencyCode, calculateData.totals.rentalOptionsTotal.toFixed(2))
+    const sessionData = getSessionData();
+    const selectedProtBundle = sessionData.protectionBundleSelected || {};
+    const selectedProtBungleCode = selectedProtBundle.code;
+    const isSelectedNoProt = selectedProtBungleCode === "No Protection";
+    const protAndAddOnsItems = [...sessionData.pricesProtectionItems, ...sessionData.pricesAddOnItems];
+    //protection & add-ons header price
+    const protAndAddOnsTotalHeader = document.querySelector('[data-testid="category-expand-button-protections-addons"]');
+    if (protAndAddOnsTotalHeader && protTotal) {
+      protAndAddOnsTotalHeader.classList.remove("disable-click")
+    } else {
+      protAndAddOnsTotalHeader.classList.add("disable-click")
+    }
+    const protectionAndAddOnsHeaderPrice = document.querySelector('[data-testid="rental-summary-protection-addons-recent-cost"]');
+    protectionAndAddOnsHeaderPrice.textContent = protTotal || 0;
+    const protAndAddOnItemListEl = document.querySelector('[aria-label="Protections & Add-ons"]');
+    if (protAndAddOnItemListEl) {
+      const existingEl = protAndAddOnItemListEl.querySelector(
+        ':scope > .MuiAccordionDetails-root'
+      );
+      if (existingEl) {
+        existingEl.remove();
+      }
+      protAndAddOnItemListEl.insertAdjacentHTML(
+        "beforeend",
+        protAndAddOnItemUIWrapper
+      );
+      const wrapper = document.querySelector('#mvt-36-summary-prot');
+      protAndAddOnsItems.forEach((item) => {
+        wrapper.insertAdjacentHTML(
+          "beforeend",
+          protAndAddOnItemUI(
+            item.description,
+            getPriceWithCurrenty(currencyCode, item.netSubtotal.toFixed(2)),
+            item
+          )
+        );
+      });
+    }
+    // Summary total price update
+    const totalPriceEl = document.querySelector('[data-testid="rental-summary-total-value"]');
+    if (totalPriceEl) {
+      totalPriceEl.textContent = getPriceWithCurrenty(currencyCode, calculateData.totals.total.toFixed(2)) || 0;
+    }
+    // protecton not included title logic
+    const protNotAddEl = document.querySelector('[data-testid="rental-summary-wrapper"]');
+    if (protNotAddEl && !isSelectedNoProt) {
+      protNotAddEl.querySelectorAll('p').forEach(el => {
+        if (selectedProtBungleCode && el.innerText === "You have not added any protections or add-ons") {
+          el.innerText = selectedProtBungleCode;
+          el.classList.add("selected-prot-bundle-title");
+        } else if (el.querySelector(".selected-prot-bundle-title")) {
+          el.innerText = selectedProtBungleCode;
+        }
+      })
+    }
+
+    // =============== SAVING & DISCOUNT ===============
+    savingAndDiscountUI(currencyCode, calculateData);
+    // =============== TAXES & FEES ===============
+    taxAndFeesUI(currencyCode, calculateData);
+    // =============== RATE TERMS ===============
+    rateTermsUI(calculateData);
   }
 
   let globalObserver = null;
@@ -346,10 +587,10 @@
       if (!target) return;
       if (document.getElementById(TEST_ID)) return;
       target.insertAdjacentHTML("afterend", protSection);
-      document.body.classList.add(`${TEST_ID}-${VARIATION}`);
+      document.body.classList.add(`${TEST_ID}`);
 
       // =============================== PROTECTION BUNDLE SELECTION==============================
-      const protectionBundleCards = document.querySelectorAll(`#${TEST_ID} .prot-card`);
+      const protectionBundleCards = document.querySelectorAll(`.${TEST_ID} .prot-card`);
       protectionBundleCards.forEach(card => {
         card.addEventListener("click", async () => {
           const bundleCode = card.getAttribute("data-code");
@@ -406,6 +647,16 @@
           }
           console.log(selectedBundlePayload, "selectedBundlePayload");
           store.state.protectionBundleSelected = selectedBundlePayload;
+          // store Protection Item
+          const storeProtItemList = store.state.protectionItems || "";
+          const formateStoreProtItemList = storeProtItemList.split(",").map(item => item.trim()).filter(Boolean) || [];
+          //store AddOn Bundles
+          const storeAddOnBundle = store.state.addOnBundleSelected || {};
+          const hasAddOnBundleCode = storeAddOnBundle?.code;
+          // store Add On items
+          const storeAddOnItems = store.state.addOnItems || "";
+          const formateStoreAddOnItems = storeAddOnItems.split(",").map(item => item.trim()).filter(Boolean) || [];
+
           sessionStorage.setItem("reservation.store", JSON.stringify(store));
 
           //calculate api payload
@@ -422,12 +673,10 @@
             pickupLocation: extrasAPIPayload.pickupLocation,
             priceRateCode: extrasAPIPayload.priceRateCode,
             priceType: extrasAPIPayload.priceType,
-            reservationId: extrasAPIPayload.reservationId,
             priceView: extrasAPIPayload.priceView,
             isAvisFirst: extrasAPIPayload.isAvisFirst,
             vehicleCode: extrasAPIPayload.vehicleCode,
             vehicleId: extrasAPIPayload.vehicleId,
-            protectionItems: [],
             protectionBundle: {
               code: bundleCode,
               items: jsonBundle.includedProtections.map(item => {
@@ -436,8 +685,26 @@
                   policy: item.policy === "required" ? "MANDATORY" : "OPTIONAL",
                 }
               })
-            }
+            },
+            protectionItems: formateStoreProtItemList.map(item => {
+              return {
+                code: item || "",
+              }
+            }) || [],
+            addOnItems: formateStoreAddOnItems.map(item => {
+              return {
+                code: item || "",
+              }
+            }) || [],
           };
+          if (hasAddOnBundleCode) {
+            calculatePayload.addOnBundle = {
+              code: storeAddOnBundle.code,
+              items: storeAddOnBundle.items.map(item => ({
+                code: item.code || "",
+              }))
+            };
+          }
           console.log(calculatePayload, "calculatePayload");
 
           const calculateData = await calculatePrice(calculatePayload, corelationalIdentifier);
@@ -450,15 +717,10 @@
           if (latestRawStore) {
             const latestStore = JSON.parse(latestRawStore);
             console.log(latestStore, "latestStore");
-            let sessionProtectionItems = latestStore.state.pricesProtectionItems || [];
-            let sessionAddOnItems = latestStore.state.pricesAddOnItems || [];
-            console.log(sessionProtectionItems, "sessionProtectionItems");
-            console.log(sessionAddOnItems, "sessionAddOnItems");
 
-            calculateProtectionItems.forEach(item => {
-              console.log("Render protection items", item);
-              const formatteddItem = {
-                amount: extrasProtectionItemList.find(i=>i.code===item.code).netTotal,
+            const newProtectionItems = calculateProtectionItems.map(item => {
+              return {
+                amount: extrasProtectionItemList.find(i => i.code === item.code).netTotal,
                 chargeType: item.chargeType,
                 code: item.code,
                 description: jsonBundleItems.find(i => i.code === item.code).name || "",
@@ -468,19 +730,15 @@
                 netSubtotalPerUnit: item.netSubtotalPerUnit,
                 rentalItemUnits: item.rentalItemUnits,
               }
-              const sessionItem = sessionProtectionItems.find(i => i.code === item.code);
-              if (!sessionItem) {
-                sessionProtectionItems.push(formatteddItem);
-              }
             })
+            console.log(newProtectionItems, "newProtectionItems");
 
-            calculateAddonItems.forEach(item => {
-              console.log("Render addon items", item);
-              const formatteddItem = {
-                amount: extrasAddOnsItemList.find(i=>i.code===item.code).netTotal,
+            const newAddOnItems = calculateAddonItems.map(item => {
+              return {
+                amount: extrasAddOnsItemList.find(i => i.code === item.code).netTotal,
                 chargeType: item.chargeType,
                 code: item.code,
-                description: jsonBundleItems.find(i => i.code === item.code).name || "",
+                description: item.code === "GSO" ? "Hassle-free Fuel Service" : jsonBundleItems.find(i => i.code === item.code).name || "",
                 discount: extrasAddOnsItemList.find(i => i.code === item.code).discount || 0,
                 grossSubtotal: extrasAddOnsItemList.find(i => i.code === item.code).grossSubtotal,
                 displayElement: item.displayElement,
@@ -488,17 +746,15 @@
                 netSubtotalPerUnit: item.netSubtotalPerUnit,
                 rentalItemUnits: item.rentalItemUnits,
               }
-              const sessionItem = sessionAddOnItems.find(i => i.code === item.code);
-              if (!sessionItem) {
-                sessionAddOnItems.push(formatteddItem);
-              } else {
-                Object.assign(sessionItem, formatteddItem);
-              }
             })
-            latestStore.state.pricesProtectionItems = sessionProtectionItems;
-            latestStore.state.pricesAddOnItems = sessionAddOnItems;
+            console.log(newAddOnItems, "newAddOnItems");
+            latestStore.state.pricesProtectionItems = newProtectionItems;
+            latestStore.state.pricesAddOnItems = newAddOnItems;
             console.log(latestStore, "latestStore 2");
             sessionStorage.setItem("reservation.store", JSON.stringify(latestStore));
+
+            //Update UI
+            updateCarSummaryAndFooterPrice(calculateData);
           }
         });
       });
@@ -527,6 +783,16 @@
           } else {
             codesArray.push(code);
           }
+          //store Protection Bundles
+          const storeProtectionBundle = store.state.protectionBundleSelected || {};
+          const hasProtectionCode = storeProtectionBundle?.code;
+          // store Add On items
+          const storeAddOnItems = store.state.addOnItems || "";
+          const formateStoreAddOnItems = storeAddOnItems.split(",").map(item => item.trim()).filter(Boolean) || [];
+          //store AddOn Bundles
+          const storeAddOnBundle = store.state.addOnBundleSelected || {};
+          const hasAddOnBundleCode = storeAddOnBundle?.code;
+
           store.state.protectionItems = codesArray.join(",");
           sessionStorage.setItem("reservation.store", JSON.stringify(store));
           // window.location.reload();
@@ -546,13 +812,38 @@
             pickupLocation: extrasAPIPayload.pickupLocation,
             priceRateCode: extrasAPIPayload.priceRateCode,
             priceType: extrasAPIPayload.priceType,
-            reservationId: extrasAPIPayload.reservationId,
             priceView: extrasAPIPayload.priceView,
             isAvisFirst: extrasAPIPayload.isAvisFirst,
             vehicleCode: extrasAPIPayload.vehicleCode,
             vehicleId: extrasAPIPayload.vehicleId,
             protectionItems: codesArray.map(c => ({ code: c })),
+            addOnItems: formateStoreAddOnItems.map(item => {
+              return {
+                code: item || "",
+              }
+            }) || [],
           };
+          if (hasProtectionCode) {
+            const items = (storeProtectionBundle.items || [])
+              .filter(item => item.included)
+              .map(item => ({
+                code: item.code || "",
+                policy: item.policy || ""
+              }));
+
+            calculatePayload.protectionBundle = {
+              code: storeProtectionBundle.code,
+              items
+            };
+          }
+          if (hasAddOnBundleCode) {
+            calculatePayload.addOnBundle = {
+              code: storeAddOnBundle.code,
+              items: storeAddOnBundle.items.map(item => ({
+                code: item.code || "",
+              }))
+            };
+          }
 
           // //Call calculatePrice API
           const calculateData = await calculatePrice(calculatePayload, corelationalIdentifier);
@@ -603,10 +894,16 @@
           const rawStore = sessionStorage.getItem("reservation.store");
           if (!rawStore) return;
           const store = JSON.parse(rawStore) || {};
+          console.log(store, "store before update");
           // store Add On items
           const storeAddOnItems = store.state.addOnItems || "";
-          const formateStoreAddOnItems = storeAddOnItems.split(",").map(item => item.trim()).filter(Boolean);
+          const formateStoreAddOnItems = storeAddOnItems.split(",").map(item => item.trim()).filter(Boolean) || [];
           //store Protection Bundles
+          const storeProtectionBundle = store.state.protectionBundleSelected || {};
+          const hasProtectionCode = storeProtectionBundle?.code;
+          // store Protection Item
+          const storeProtItemList = store.state.protectionItems || "";
+          const formateStoreProtItemList = storeProtItemList.split(",").map(item => item.trim()).filter(Boolean) || [];
           store.state.addOnBundleCode = bundleCode;
           const addOnBundleItems = [];
           extrasBundle.items.forEach(item => {
@@ -653,28 +950,42 @@
             pickupLocation: extrasAPIPayload.pickupLocation,
             priceRateCode: extrasAPIPayload.priceRateCode,
             priceType: extrasAPIPayload.priceType,
-            reservationId: extrasAPIPayload.reservationId,
             priceView: extrasAPIPayload.priceView,
             isAvisFirst: extrasAPIPayload.isAvisFirst,
             vehicleCode: extrasAPIPayload.vehicleCode,
             vehicleId: extrasAPIPayload.vehicleId,
             addOnBundle: {
-              code: bundleCode,
+              code: bundleCode || "",
               items: jsonBundle.includedAddons.map(item => {
                 return {
-                  code: item.code,
+                  code: item.code || "",
                 }
-              })
+              }) || [],
             },
             addOnItems: formateStoreAddOnItems.map(item => {
               return {
-                code: item,
+                code: item || "",
               }
-            }),
-            protectionBundle: {
-              code: 
-            }
+            }) || [],
+            protectionItems: formateStoreProtItemList.map(item => {
+              return {
+                code: item || "",
+              }
+            }) || [],
           };
+          if (hasProtectionCode) {
+            const items = (storeProtectionBundle.items || [])
+              .filter(item => item.included)
+              .map(item => ({
+                code: item.code || "",
+                policy: item.policy || ""
+              }));
+
+            calculatePayload.protectionBundle = {
+              code: storeProtectionBundle.code,
+              items
+            };
+          }
           console.log(calculatePayload, "calculatePayload");
           //call calculate api
           const calculateData = await calculatePrice(calculatePayload, corelationalIdentifier);
@@ -683,28 +994,31 @@
           const latestRawStore = sessionStorage.getItem("reservation.store");
           if (!latestRawStore) return;
           const latestStore = JSON.parse(latestRawStore);
-          let sessionPriceAddOnItems = latestStore.state.pricesAddOnItems || [];
-          calculateAddOnItems.forEach(addOnItem => {
-            const formatteddItem = {
-              amount: extrasBundle?.netTotal,
-              chargeType: addOnItem.chargeType,
-              code: addOnItem.code,
-              description: jsonBundle.includedAddons.find(i => i.code === addOnItem.code).name || "",
-              discount: extrasAddOnsItemList.find(i => i.code === addOnItem.code).discount || 0,
-              grossSubtotal: extrasAddOnsItemList.find(i => i.code === addOnItem.code).grossSubtotal,
-              displayElement: addOnItem.displayElement,
-              netSubtotal: addOnItem.netSubtotal,
-              netSubtotalPerUnit: addOnItem.netSubtotalPerUnit,
-              rentalItemUnits: addOnItem.rentalItemUnits,
-            }
-            const isIncluded = sessionPriceAddOnItems.some(item => item.code === addOnItem.code);
-            if (!isIncluded) {
-              sessionPriceAddOnItems.push(formatteddItem);
+          console.log(calculateAddOnItems, "calculateAddOnItemsapi")
+
+          const newAddOnItems = calculateAddOnItems.map(addOnItem => {
+            const includedItem = jsonBundle.includedAddons?.find(
+              i => i.code === addOnItem.code
+            );
+            const extraItem = extrasAddOnsItemList?.find(
+              i => i.code === addOnItem.code
+            );
+            return {
+              amount: extrasBundle.netTotal || 0,
+              chargeType: addOnItem.chargeType || "",
+              code: addOnItem.code || "",
+              description: includedItem?.name || "",
+              discount: extraItem?.discount || 0,
+              grossSubtotal: extraItem?.grossSubtotal,
+              displayElement: addOnItem.displayElement || {},
+              netSubtotal: addOnItem.netSubtotal || 0,
+              netSubtotalPerUnit: addOnItem.netSubtotalPerUnit || 0,
+              rentalItemUnits: addOnItem.rentalItemUnits || 0,
             }
           })
-          console.log(sessionPriceAddOnItems, "sessionPriceAddOnItems");
-          latestStore.state.pricesAddOnItems = sessionPriceAddOnItems;
-          console.log(latestStore, "addon b l s");
+          console.log(newAddOnItems, "newAddOnItems");
+          latestStore.state.pricesAddOnItems = newAddOnItems;
+          console.log(latestStore, "addOn bundle store");
           sessionStorage.setItem("reservation.store", JSON.stringify(latestStore));
         });
       });
@@ -754,6 +1068,16 @@
             quantityArray.push("false");
           }
 
+          // store Protection Item
+          const storeProtItemList = store.state.protectionItems || "";
+          const formateStoreProtItemList = storeProtItemList.split(",").map(item => item.trim()).filter(Boolean) || [];
+          //store Protection Bundles
+          const storeProtectionBundle = store.state.protectionBundleSelected || {};
+          const hasProtectionCode = storeProtectionBundle?.code;
+          //store AddOn Bundles
+          const storeAddOnBundle = store.state.addOnBundleSelected || {};
+          const hasAddOnBundleCode = storeAddOnBundle?.code;
+
           store.state.addOnItems = codesArray.join(",");
           store.state.addOnItemsQuantity = quantityArray.join(",");
           sessionStorage.setItem("reservation.store", JSON.stringify(store));
@@ -772,13 +1096,38 @@
             pickupLocation: extrasAPIPayload.pickupLocation,
             priceRateCode: extrasAPIPayload.priceRateCode,
             priceType: extrasAPIPayload.priceType,
-            reservationId: extrasAPIPayload.reservationId,
             priceView: extrasAPIPayload.priceView,
             isAvisFirst: extrasAPIPayload.isAvisFirst,
             vehicleCode: extrasAPIPayload.vehicleCode,
             vehicleId: extrasAPIPayload.vehicleId,
-            addOnItems: codesArray.map(c => ({ code: c }))
+            addOnItems: codesArray.map(c => ({ code: c })),
+            protectionItems: formateStoreProtItemList.map(item => {
+              return {
+                code: item || "",
+              }
+            }) || [],
           };
+          if (hasProtectionCode) {
+            const items = (storeProtectionBundle.items || [])
+              .filter(item => item.included)
+              .map(item => ({
+                code: item.code || "",
+                policy: item.policy || ""
+              }));
+
+            calculatePayload.protectionBundle = {
+              code: storeProtectionBundle.code,
+              items
+            };
+          }
+          if (hasAddOnBundleCode) {
+            calculatePayload.addOnBundle = {
+              code: storeAddOnBundle.code,
+              items: storeAddOnBundle.items.map(item => ({
+                code: item.code || "",
+              }))
+            };
+          }
           // //Call calculatePrice API
           const calculateData = await calculatePrice(calculatePayload, corelationalIdentifier);
           const calculateAddonItem = calculateData?.addOnItems?.find(item => item.code === code);
@@ -831,11 +1180,17 @@
       // accordion toggle
       const btn = document.querySelector(`#${TEST_ID} .btn-all-packages`);
       const container = document.getElementById(TEST_ID);
+      const protCards = container.querySelectorAll(".prot-card");
       if (btn && container) {
         btn.addEventListener("click", (e) => {
           e.preventDefault();
-          const isExpanded = container.classList.toggle("show-all");
-          btn.textContent = isExpanded ? "View less" : "View all protection packages";
+          protCards.forEach((card, i) => {
+            if (i >= 2) {
+              card.classList.toggle("prot-card--extra")
+            };
+          });
+          container.classList.toggle("show-all");
+          btn.textContent = container.classList.contains("show-all") ? "View less" : "View all protection packages";
         });
       }
 

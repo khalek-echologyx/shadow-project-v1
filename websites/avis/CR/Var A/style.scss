@@ -1,4 +1,41 @@
-#POC {
+.MVT-36 {
+  .mvt-36-summary-prot-item {
+    display: flex !important;
+  }
+
+  .selected-prot-bundle-title {
+    color: #1ea238 !important;
+  }
+
+  .accordion-wrapper {
+    padding: 4px 24px;
+  }
+
+  //test
+  .mvt-36-summary-regular-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: rgb(115, 109, 109);
+    font-size: 14px;
+    line-height: 20px;
+    -webkit-box-pack: justify;
+
+    .saving-desc{
+      padding: 4px 0;
+    }
+  }
+  .mvt-36-summary-regular-item.tax-and-fees-item{
+    margin: 4px 0;
+  }
+  .mvt-36-summary-regular-item:hover{
+    background-color: rgb(244, 243, 242);
+  }
+
+  .new-prot-bundle {
+    transition: all 0.3s ease;
+  }
+
   padding: 32px 24px;
   background: white;
   color: #000;
@@ -169,7 +206,8 @@
       background: #fff;
       cursor: pointer;
       transition: box-shadow 0.2s, border-color 0.2s;
-      .protection-item-info{
+
+      .protection-item-info {
         flex: 1;
       }
 
@@ -243,11 +281,12 @@
     margin-top: 40px;
 
     .add-on-bundles-section {
-      .add-on-bundles-content{
+      .add-on-bundles-content {
         display: flex;
         flex-direction: column;
         gap: 16px;
-        .add-on-bundle-card{
+
+        .add-on-bundle-card {
           display: flex;
           justify-content: space-between;
           align-items: center;
@@ -255,7 +294,8 @@
           padding: 12px;
           border-radius: 12px;
           cursor: pointer;
-          .add-on-bundle-select-btn{
+
+          .add-on-bundle-select-btn {
             border: 1px solid #000;
             border-radius: 12px;
             padding: 12px;

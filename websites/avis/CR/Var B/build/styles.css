@@ -42,7 +42,9 @@
   justify-content: space-between;
   cursor: pointer;
   min-height: 160px;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
   background: #fff;
 }
 #POC .prot-card.prot-card--extra {
@@ -139,7 +141,9 @@
   padding: 24px;
   background: #fff;
   cursor: pointer;
-  transition: box-shadow 0.2s, border-color 0.2s;
+  transition:
+    box-shadow 0.2s,
+    border-color 0.2s;
 }
 #POC .protection-items-section .protection-item .protection-item-info {
   flex: 1;
@@ -149,27 +153,45 @@
   align-items: center;
   gap: 24px;
 }
-#POC .protection-items-section .protection-item .add-on-actions .add-on-details {
+#POC
+  .protection-items-section
+  .protection-item
+  .add-on-actions
+  .add-on-details {
   font-size: 14px;
   font-weight: 800;
   color: #000;
   text-decoration: underline;
   text-underline-offset: 3px;
 }
-#POC .protection-items-section .protection-item .add-on-actions .protection-item-toggle {
+#POC
+  .protection-items-section
+  .protection-item
+  .add-on-actions
+  .protection-item-toggle {
   position: relative;
   display: inline-block;
   width: 48px;
   height: 26px;
   margin: 0;
 }
-#POC .protection-items-section .protection-item .add-on-actions .protection-item-toggle input {
+#POC
+  .protection-items-section
+  .protection-item
+  .add-on-actions
+  .protection-item-toggle
+  input {
   opacity: 0;
   width: 0;
   height: 0;
   position: absolute;
 }
-#POC .protection-items-section .protection-item .add-on-actions .protection-item-toggle .slider {
+#POC
+  .protection-items-section
+  .protection-item
+  .add-on-actions
+  .protection-item-toggle
+  .slider {
   position: absolute;
   cursor: pointer;
   top: 0;
@@ -180,7 +202,12 @@
   transition: 0.3s;
   border-radius: 34px;
 }
-#POC .protection-items-section .protection-item .add-on-actions .protection-item-toggle .slider:before {
+#POC
+  .protection-items-section
+  .protection-item
+  .add-on-actions
+  .protection-item-toggle
+  .slider:before {
   position: absolute;
   content: "";
   height: 18px;
@@ -192,10 +219,22 @@
   border-radius: 50%;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
-#POC .protection-items-section .protection-item .add-on-actions .protection-item-toggle input:checked + .slider {
+#POC
+  .protection-items-section
+  .protection-item
+  .add-on-actions
+  .protection-item-toggle
+  input:checked
+  + .slider {
   background-color: #000;
 }
-#POC .protection-items-section .protection-item .add-on-actions .protection-item-toggle input:checked + .slider:before {
+#POC
+  .protection-items-section
+  .protection-item
+  .add-on-actions
+  .protection-item-toggle
+  input:checked
+  + .slider:before {
   transform: translateX(22px);
 }
 #POC .add-ons-section {
@@ -206,7 +245,11 @@
   flex-direction: column;
   gap: 16px;
 }
-#POC .add-ons-section .add-on-bundles-section .add-on-bundles-content .add-on-bundle-card {
+#POC
+  .add-ons-section
+  .add-on-bundles-section
+  .add-on-bundles-content
+  .add-on-bundle-card {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -215,7 +258,12 @@
   border-radius: 12px;
   cursor: pointer;
 }
-#POC .add-ons-section .add-on-bundles-section .add-on-bundles-content .add-on-bundle-card .add-on-bundle-select-btn {
+#POC
+  .add-ons-section
+  .add-on-bundles-section
+  .add-on-bundles-content
+  .add-on-bundle-card
+  .add-on-bundle-select-btn {
   border: 1px solid #000;
   border-radius: 12px;
   padding: 12px;
@@ -237,7 +285,9 @@
   padding: 24px;
   background: #fff;
   cursor: pointer;
-  transition: box-shadow 0.2s, border-color 0.2s;
+  transition:
+    box-shadow 0.2s,
+    border-color 0.2s;
 }
 #POC .add-on-card:hover {
   border-color: #d0d0d0;
@@ -321,7 +371,12 @@
 #POC .add-on-card .add-on-actions .add-on-toggle input:checked + .slider {
   background-color: #000;
 }
-#POC .add-on-card .add-on-actions .add-on-toggle input:checked + .slider:before {
+#POC
+  .add-on-card
+  .add-on-actions
+  .add-on-toggle
+  input:checked
+  + .slider:before {
   transform: translateX(22px);
 }
 @media (max-width: 768px) {
