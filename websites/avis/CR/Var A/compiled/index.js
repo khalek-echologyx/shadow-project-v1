@@ -263,6 +263,28 @@
       }
     }
   };
+  const footerPriceUI = (currencyCode, calculateData) => {
+    console.log("Rendered footer price UI");
+    const footerPriceEl = document.querySelector('[data-testid="action-footer-total-amount"]');
+    console.log(footerPriceEl, "footerPriceEl");
+    footerPriceEl.textContent = getPriceWithCurrenty(currencyCode, calculateData.totals.total.toFixed(2));
+  };
+  const updateProtectionCards = (currencyCode, calculateData) => {
+    const selectedBundle = calculateData.protectionBundle || {};
+    const selectedBundleName = selectedBundle.code || "";
+    console.log(selectedBundleName, "selectedBundleName");
+    const uiProtectionBundleCards = [...document.querySelectorAll(`.${TEST_ID} .prot-card`)];
+    const uiSelectedProtBundle = uiProtectionBundleCards.find(card => card.getAttribute("data-code") === selectedBundleName);
+    console.log(uiSelectedProtBundle, "uiSelectedProtBundle");
+    if (uiSelectedProtBundle && selectedBundleName !== "") {
+      uiProtectionBundleCards.forEach(card => {
+        card.classList.remove("selected");
+      });
+      uiSelectedProtBundle.classList.add("selected");
+    }
+  };
+
+
 
 
   // =========== UPDATE UI: Car summary and Footer Price
@@ -333,6 +355,24 @@
     taxAndFeesUI(currencyCode, calculateData);
     // =============== RATE TERMS ===============
     rateTermsUI(calculateData);
+    // =============== FOOTER PRICE =============
+    footerPriceUI(currencyCode, calculateData);
+    // =============== UPDATE PROTECTION CARDS =============
+    updateProtectionCards(currencyCode, calculateData);
+  };
+  // =============== INTIAL SELECTION UI ===============
+  const initalSelectUI = () => {
+    const sessionData = getSessionData();
+    const selectedProtBundle = sessionData.protectionBundleSelected || {};
+    const selectedProtBundleName = selectedProtBundle.code || "";
+    const uiProtectionBundleCards = [...document.querySelectorAll(`.${TEST_ID} .prot-card`)];
+    const uiSelectedProtBundle = uiProtectionBundleCards.find(card => card.getAttribute("data-code") === selectedProtBundleName);
+    if (uiSelectedProtBundle && selectedProtBundleName !== "") {
+      uiProtectionBundleCards.forEach(card => {
+        card.classList.remove("selected");
+      });
+      uiSelectedProtBundle.classList.add("selected");
+    }
   };
 
   let globalObserver = null;
@@ -419,6 +459,10 @@
       return;
     }
 
+    //Get currency code
+    const currencyCode = extrasData?.currencyCode || "USD";
+    console.log(currencyCode, "currencyCode");
+
     //Get avis config data
     const avisConfigData = await getAvisConfigData();
     console.log(avisConfigData, "avisConfigData");
@@ -434,6 +478,7 @@
     const finalProtectionItemList = filteredProtectionItemList.filter(item => item.enabled === true);
     console.log(finalProtectionItemList, "finalProtectionItemList");
     // final protection bundle list
+    const orderList = ["No Protection", "Essential Protection","Enhanced Protection", "Ultimate Protection" ];
     const finalProtectionBundleList = protectionBundleList.map(item => {
       const exProtBundle = extrasProtectionBundleList.find(ex => ex.code === item.bundleName);
       return {
@@ -443,7 +488,7 @@
         netSubtotal: exProtBundle?.netSubtotal || 0,
         netTotal: exProtBundle?.netTotal || 0,
       }
-    });
+    }).sort((a, b) => orderList.indexOf(a.bundleName) - orderList.indexOf(b.bundleName));
     console.log(finalProtectionBundleList, "finalProtectionBundleList");
     // ADD-ONS SANITIZATION
     const extrasAddOnsItemList = extrasData?.addOnItems || [];
@@ -477,32 +522,43 @@
     });
     console.log(finalAddOnBundleList, "finalAddOnBundleList");
 
-    //New section
+    //=========================New section=========================
+    const greenCheckSVG = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="12" viewBox="0 0 16 12" fill="none">
+<path fill-rule="evenodd" clip-rule="evenodd" d="M15.8118 0.163632C16.0528 0.391065 16.0638 0.770805 15.8364 1.0118L5.96479 11.4723C5.72819 11.723 5.32948 11.7232 5.09257 11.4728L0.164145 6.2634C-0.0635872 6.02269 -0.0530616 5.64293 0.187655 5.4152C0.428372 5.18747 0.808125 5.19799 1.03586 5.43871L5.52788 10.1868L14.9636 0.188198C15.1911 -0.0528017 15.5708 -0.0638003 15.8118 0.163632Z" fill="#1EA238"/>
+</svg>`;
     const protSection = `
       <div class="new-prot-bundle" id="${TEST_ID}">
       <h2 class="prot-title">WHICH PROTECTION DO YOU NEED?</h2>
       <div class="prot-cards">
         ${finalProtectionBundleList?.map(prot => {
+          const protitem = prot.includedProtections.length ? prot.includedProtections : [];
       return `
-          <div class="prot-card selected" data-code="${prot.bundleName || ""}">
+          <div class="prot-card" data-code="${prot.bundleName || ""}">
           <div class="card-body">
             <div class="card-info">
               <h3 class="card-title">${prot.bundleName || ""}</h3>
-              <p class="card-subtitle text-red">
-                Deductible: up to full vehicle value
-              </p>
-            </div>
-            <div class="card-radio">
-              <div class="radio-outer">
-                <div class="radio-inner"></div>
+              <div class="card-radio">
+                <div class="radio-outer">
+                  <div class="radio-inner"></div>
+                </div>
               </div>
+            </div>
+            <div class="card-features">
+            ${protitem.length > 0 ? protitem.map(item => {
+              return `
+              <div class="feature-item">
+                <div class="feature-icon">${greenCheckSVG}</div>
+                <div class="feature-text">${item.name}</div>
+              </div>
+              `
+            }).join("") : ""}
             </div>
           </div>
           <div class="card-actions">
             <div class="view-coverage">
-              View coverage <span class="chevron"></span>
+              View coverage
             </div>
-            <div class="price-info">$${prot.grossSubtotal}/day</div>
+            <div class="price-info">${getPriceWithCurrenty(currencyCode, prot.grossSubtotal)} <p class="per-day-slash">/<span class="per-day">day</span></p></div>
           </div>
         </div>
           `;
@@ -588,6 +644,9 @@
       if (document.getElementById(TEST_ID)) return;
       target.insertAdjacentHTML("afterend", protSection);
       document.body.classList.add(`${TEST_ID}`);
+
+      // =================== Intial selection handle ===============
+      initalSelectUI();
 
       // =============================== PROTECTION BUNDLE SELECTION==============================
       const protectionBundleCards = document.querySelectorAll(`.${TEST_ID} .prot-card`);
@@ -1188,7 +1247,7 @@
               card.classList.toggle("prot-card--extra");
             }          });
           container.classList.toggle("show-all");
-          btn.textContent = container.classList.contains("show-all") ? "View less" : "View all protection packages";
+          btn.textContent = container.classList.contains("show-all") ? "Hide protection package" : "View all protection packages";
         });
       }
 

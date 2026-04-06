@@ -1,6 +1,8 @@
 .MVT-36 {
   .mvt-36-summary-prot-item {
     display: flex !important;
+    justify-content: space-between;
+    color: rgb(82, 77, 77);
   }
 
   .selected-prot-bundle-title {
@@ -33,7 +35,12 @@
   }
 
   .new-prot-bundle {
-    transition: all 0.3s ease;
+   --Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);
+   box-shadow: var(--Paper-shadow);
+   border-radius: 8px;
+   background-color: #fff;
+   padding: 32px 24px 24px 24px;
+   margin-top: 16px;
   }
 
   padding: 32px 24px;
@@ -53,37 +60,31 @@
     letter-spacing: -0.8px;
     font-weight: 400 !important;
     margin: 0;
-    margin-bottom: 12px;
+    margin-bottom: 24px;
   }
 
   .prot-cards {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
     margin-bottom: 0;
     width: 100%;
     transition: all 0.3s ease;
 
     @media (max-width: 768px) {
-      flex-direction: column;
+      grid-template-columns: repeat(1, 1fr);
     }
   }
-
-  // cards beyond first 2 — hidden by default, revealed by JS toggle
-
-
   .prot-card {
-    flex: 0 0 calc(50% - 8px);
-    max-width: calc(50% - 8px);
-    border: 1px solid #e0e0e0;
-    border-radius: 20px;
+    border: 2px solid #D7DBE0;
+    border-radius: 8px;
     padding: 24px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     cursor: pointer;
     min-height: 160px;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    transition: border-color 0.2s ease-in-out;
     background: #fff;
 
     // hidden extra cards — compound selector beats plain .prot-card specificity
@@ -92,92 +93,105 @@
     }
 
     &.selected {
-      border: 3px solid #000;
-      padding: 22px; // Subtracting border diff to keep size consistent
+      border: 2px solid #393636;
 
       .card-radio .radio-outer {
-        background: #000;
+        background: #fff;
         border-color: #000;
 
         .radio-inner {
-          width: 12px;
-          height: 12px;
-          background: #fff;
+          width: 16px;
+          height: 16px;
+          background: #000;
           border-radius: 50%;
         }
       }
     }
 
     .card-body {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 30px;
     }
 
     .card-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
       .card-title {
         font-size: 20px;
-        font-weight: 800;
-        margin: 0 0 6px 0;
-        line-height: 1.2;
-      }
-
-      .card-subtitle {
-        font-size: 15px;
+        font-weight: 700;
+        line-height: 28px;
+        letter-spacing: 0.06px;
         margin: 0;
-
-        &.text-red {
-          color: #d62d2d;
-        }
-
-        &.text-green {
-          color: #2da14f;
-          font-weight: 500;
-        }
       }
     }
 
     .card-radio {
+      display: inline-block;
       .radio-outer {
-        width: 28px;
-        height: 28px;
+        width: 24px;
+        height: 24px;
         border-radius: 50%;
-        border: 2px solid #e5e5e5;
+        border: 1.5px solid #000;
         display: flex;
         align-items: center;
         justify-content: center;
+      }
+    }
+    .card-features{
+      .feature-item{
+        display: flex;
+        gap: 8px;
+        .feature-text{
+          font-size: 14px;
+          font-weight: 400;
+          line-height: 20px;
+          letter-spacing: 0.06px;
+        }
       }
     }
 
     .card-actions {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      margin-top: auto;
+      align-items: flex-end;
+      margin-top: 16px;
     }
 
     .view-coverage {
-      font-size: 16px;
+      font-size: 14px;
       font-weight: 700;
       text-decoration: underline;
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      color: #524D4D;
+      line-height: 20px;
+      letter-spacing: 0.06px;
 
-      .chevron {
-        width: 8px;
-        height: 8px;
-        border-left: 1px solid #000;
-        border-bottom: 1px solid #000;
-        transform: rotate(-45deg);
-        margin-top: -4px;
-      }
+      // .chevron {
+      //   width: 8px;
+      //   height: 8px;
+      //   border-left: 1px solid #000;
+      //   border-bottom: 1px solid #000;
+      //   transform: rotate(-45deg);
+      //   margin-top: -4px;
+      // }
     }
 
     .price-info {
-      font-size: 16px;
-      font-weight: 700;
+      font-size: 28px;
+      font-weight: 500;
+      line-height: 30px;
+      letter-spacing: 0px;
+      .per-day-slash{
+        display: inline;
+        font-size: 16px;
+        margin-left: -4px;
+        vertical-align: middle;
+        .per-day{
+          vertical-align: middle;
+        }
+      }
     }
+  }
+  .prot-card:hover{
+    border-color: #393636;
   }
 
   // reveal extra cards when .show-all is toggled on #POC
@@ -447,18 +461,13 @@
 
   .btn-all-packages {
     font-family: 'AvisSans', 'AvisSans Fallback', sans-serif;
-    background: #f1f2f2;
     border: none;
-    border-radius: 100px;
-    padding: 12px 28px;
     font-size: 14px;
-    font-weight: 800;
+    line-height: 14px;
+    font-weight: 400;
     cursor: pointer;
-    color: #333;
-    transition: background 0.2s;
-
-    &:hover {
-      background: #e5e5e5;
-    }
+    color: #000;
+    text-decoration: underline;
+    background-color: transparent;
   }
 }
