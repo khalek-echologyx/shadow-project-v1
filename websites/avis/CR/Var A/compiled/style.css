@@ -38,7 +38,7 @@
   background-color: rgb(244, 243, 242);
 }
 .MVT-36 .new-prot-bundle {
-  --Paper-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);
+  --Paper-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14), 0px 1px 3px 0px rgba(0, 0, 0, 0.12);
   box-shadow: var(--Paper-shadow);
   border-radius: 8px;
   background-color: #fff;
@@ -132,11 +132,12 @@
 }
 .MVT-36 .prot-card .card-actions {
   display: flex;
-  justify-content: space-between;
+  justify-content: end;
   align-items: flex-end;
   margin-top: 16px;
 }
 .MVT-36 .prot-card .view-coverage {
+  display: none;
   font-size: 14px;
   font-weight: 700;
   text-decoration: underline;
@@ -170,79 +171,94 @@
 }
 .MVT-36 .protection-items-section {
   margin-top: 24px;
-  display: flex;
-  flex-direction: column;
+  display: none;
+  grid-template-columns: repeat(2, 1fr);
   gap: 16px;
+}
+@media (max-width: 768px) {
+  .MVT-36 .protection-items-section {
+    grid-template-columns: repeat(1, 1fr);
+  }
 }
 .MVT-36 .protection-items-section .protection-item {
   display: flex;
-  align-items: center;
-  border: 1px solid #e0e0e0;
-  border-radius: 12px;
+  flex-direction: column;
+  gap: 16px;
+  justify-content: space-between;
+  border: 2px solid #D7DBE0;
+  border-radius: 8px;
   padding: 24px;
   background: #fff;
   cursor: pointer;
   transition: box-shadow 0.2s, border-color 0.2s;
 }
 .MVT-36 .protection-items-section .protection-item .protection-item-info {
-  flex: 1;
-}
-.MVT-36 .protection-items-section .protection-item .add-on-actions {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 24px;
 }
-.MVT-36 .protection-items-section .protection-item .add-on-actions .add-on-details {
-  font-size: 14px;
-  font-weight: 800;
-  color: #000;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
-.MVT-36 .protection-items-section .protection-item .add-on-actions .protection-item-toggle {
-  position: relative;
-  display: inline-block;
-  width: 48px;
-  height: 26px;
+.MVT-36 .protection-items-section .protection-item .protection-item-info .protection-item-title {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 28px;
+  letter-spacing: 0.06px;
   margin: 0;
 }
-.MVT-36 .protection-items-section .protection-item .add-on-actions .protection-item-toggle input {
-  opacity: 0;
-  width: 0;
-  height: 0;
-  position: absolute;
-}
-.MVT-36 .protection-items-section .protection-item .add-on-actions .protection-item-toggle .slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #d1d1d1;
-  transition: 0.3s;
-  border-radius: 34px;
-}
-.MVT-36 .protection-items-section .protection-item .add-on-actions .protection-item-toggle .slider:before {
-  position: absolute;
-  content: "";
-  height: 18px;
-  width: 18px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  transition: 0.3s;
+.MVT-36 .protection-items-section .protection-item .protection-item-info .radio-outer {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  border: 1.5px solid #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.MVT-36 .protection-items-section .protection-item .add-on-actions .protection-item-toggle input:checked + .slider {
-  background-color: #000;
+.MVT-36 .protection-items-section .protection-item.selected .card-radio {
+  background: #fff;
+  border-color: #000;
 }
-.MVT-36 .protection-items-section .protection-item .add-on-actions .protection-item-toggle input:checked + .slider:before {
-  transform: translateX(22px);
+.MVT-36 .protection-items-section .protection-item.selected .card-radio .radio-inner {
+  width: 16px;
+  height: 16px;
+  background: #000;
+  border-radius: 50%;
+}
+.MVT-36 .protection-items-section .protection-item .protection-item-actions {
+  display: flex;
+  justify-content: end;
+  align-items: flex-end;
+}
+.MVT-36 .protection-items-section .protection-item .protection-item-actions .price-info {
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 30px;
+  letter-spacing: 0px;
+}
+.MVT-36 .protection-items-section .protection-item .protection-item-actions .price-info .per-day-slash {
+  display: inline;
+  font-size: 16px;
+  margin-left: -4px;
+  vertical-align: middle;
+}
+.MVT-36 .protection-items-section .protection-item .protection-item-actions .price-info .per-day-slash .per-day {
+  vertical-align: middle;
 }
 .MVT-36 .add-ons-section {
   margin-top: 40px;
+}
+.MVT-36 .add-ons-section .add-on-title {
+  font-family: "AvisHeadline", "AvisHeadline Fallback", sans-serif;
+  text-transform: uppercase;
+  font-size: 24px;
+  line-height: 24px;
+  letter-spacing: -0.8px;
+  font-weight: 400 !important;
+  margin: 0;
+  margin-bottom: 16px;
+}
+.MVT-36 .add-ons-section .add-on-bundles-section {
+  display: none;
 }
 .MVT-36 .add-ons-section .add-on-bundles-section .add-on-bundles-content {
   display: flex;
@@ -268,50 +284,78 @@
   font-weight: 800;
 }
 .MVT-36 .add-ons-content {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  width: 100%;
+}
+@media (max-width: 768px) {
+  .MVT-36 .add-ons-content {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+.MVT-36 .add-on-card {
+  border: 2px solid #D7DBE0;
+  border-radius: 8px;
+  padding: 24px;
+  background: #fff;
+  transition: border-color 0.2s ease-in-out;
   display: flex;
   flex-direction: column;
   gap: 16px;
+  justify-content: space-between;
 }
-.MVT-36 .add-on-card {
+.MVT-36 .add-on-card .card-header {
   display: flex;
   align-items: center;
-  border: 1px solid #e0e0e0;
-  border-radius: 12px;
-  padding: 24px;
-  background: #fff;
-  cursor: pointer;
-  transition: box-shadow 0.2s, border-color 0.2s;
+  gap: 8px;
 }
 .MVT-36 .add-on-card:hover {
-  border-color: #d0d0d0;
+  border-color: #000;
 }
 .MVT-36 .add-on-card .add-on-icon {
-  margin-right: 20px;
   display: flex;
+  gap: 8px;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-}
-.MVT-36 .add-on-card .add-on-icon svg {
-  width: 26px;
-  height: 26px;
-  color: #000;
-  stroke-width: 1.5;
-}
-.MVT-36 .add-on-card .add-on-info {
-  flex: 1;
+  height: 24px;
+  width: 24px;
 }
 .MVT-36 .add-on-card .add-on-info .add-on-title {
-  font-size: 16px;
-  font-weight: 800;
-  margin: 0 0 10px 0;
-  line-height: 1.2;
+  margin: 0;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 28px;
+  letter-spacing: 0.06px;
 }
 .MVT-36 .add-on-card .add-on-info .add-on-price {
   font-size: 14px;
   font-weight: 800;
   margin: 0;
   color: #000;
+}
+.MVT-36 .add-on-card .card-footer {
+  display: flex;
+  align-items: flex-end;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 100%;
+}
+.MVT-36 .add-on-card .card-footer .price-info {
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 30px;
+  letter-spacing: 0px;
+}
+.MVT-36 .add-on-card .card-footer .price-info .per-day-slash {
+  display: inline;
+  font-size: 16px;
+  margin-left: -4px;
+  vertical-align: middle;
+}
+.MVT-36 .add-on-card .card-footer .price-info .per-day-slash .per-day {
+  vertical-align: middle;
 }
 .MVT-36 .add-on-card .add-on-actions {
   display: flex;
@@ -325,12 +369,51 @@
   text-decoration: underline;
   text-underline-offset: 3px;
 }
+.MVT-36 .add-on-card .add-on-actions .quantity-selector-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.MVT-36 .add-on-card .add-on-actions .quantity-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.MVT-36 .add-on-card .add-on-actions .quantity-selector .quantity-minus,
+.MVT-36 .add-on-card .add-on-actions .quantity-selector .quantity-plus {
+  border: 1px solid #C7C5C5;
+  border-radius: 4px;
+  padding: 4px;
+  background-color: #fff;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #C7C5C5;
+}
+.MVT-36 .add-on-card .add-on-actions .quantity-selector .quantity-input {
+  font-family: "AvisSans", "AvisSans Fallback", sans-serif;
+  border: none;
+  border-radius: 4px;
+  padding: 4px;
+  width: 30px;
+  height: 30px;
+  text-align: center;
+  color: #9F9E9E;
+  background-color: #F1F1F1;
+}
+.MVT-36 .add-on-card .add-on-actions .quantity-selector .quantity-input:focus-visible {
+  outline: none;
+}
 .MVT-36 .add-on-card .add-on-actions .add-on-toggle {
   position: relative;
-  display: inline-block;
-  width: 48px;
-  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   margin: 0;
+  cursor: pointer;
 }
 .MVT-36 .add-on-card .add-on-actions .add-on-toggle input {
   opacity: 0;
@@ -338,34 +421,44 @@
   height: 0;
   position: absolute;
 }
-.MVT-36 .add-on-card .add-on-actions .add-on-toggle .slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #d1d1d1;
-  transition: 0.3s;
-  border-radius: 34px;
+.MVT-36 .add-on-card .add-on-actions .add-on-toggle .toggle-label-text {
+  font-size: 14px;
+  font-weight: 400;
+  color: #524D4D;
+  white-space: nowrap;
+  user-select: none;
+  line-height: 20px;
 }
-.MVT-36 .add-on-card .add-on-actions .add-on-toggle .slider:before {
-  position: absolute;
+.MVT-36 .add-on-card .add-on-actions .add-on-toggle .checkbox-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #C7C5C5;
+  border-radius: 2px;
+  background-color: #fff;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  flex-shrink: 0;
+}
+.MVT-36 .add-on-card .add-on-actions .add-on-toggle .checkbox-mark:after {
   content: "";
-  height: 18px;
-  width: 18px;
-  left: 4px;
-  bottom: 4px;
-  background-color: white;
-  transition: 0.3s;
-  border-radius: 50%;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  display: none;
+  width: 5px;
+  height: 9px;
+  border: 2px solid #fff;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg) translate(-1px, -1px);
 }
-.MVT-36 .add-on-card .add-on-actions .add-on-toggle input:checked + .slider {
+.MVT-36 .add-on-card .add-on-actions .add-on-toggle input:checked + .toggle-label-text + .checkbox-mark,
+.MVT-36 .add-on-card .add-on-actions .add-on-toggle input:checked + .checkbox-mark {
   background-color: #000;
+  border-color: #000;
 }
-.MVT-36 .add-on-card .add-on-actions .add-on-toggle input:checked + .slider:before {
-  transform: translateX(22px);
+.MVT-36 .add-on-card .add-on-actions .add-on-toggle input:checked + .toggle-label-text + .checkbox-mark:after,
+.MVT-36 .add-on-card .add-on-actions .add-on-toggle input:checked + .checkbox-mark:after {
+  display: block;
 }
 @media (max-width: 768px) {
   .MVT-36 .add-on-card {
@@ -380,6 +473,40 @@
     margin-top: 20px;
     justify-content: space-between;
   }
+}
+.MVT-36 .add-on-card.default button.quantity-plus {
+  border: 1px solid #000 !important;
+  color: #000 !important;
+}
+.MVT-36 .add-on-card.default button.quantity-minus {
+  pointer-events: none !important;
+}
+.MVT-36 .add-on-card.ab-min-qty button.quantity-minus {
+  pointer-events: none;
+}
+.MVT-36 .add-on-card.ab-min-qty button.quantity-plus {
+  border: 1px solid #000 !important;
+  color: #000 !important;
+}
+.MVT-36 .add-on-card:not(.ab-min-qty):not(.ab-max-qty):not(.default) button.quantity-minus {
+  color: #fff;
+  background-color: rgb(212, 0, 42);
+  border-color: rgb(212, 0, 42);
+}
+.MVT-36 .add-on-card:not(.ab-min-qty):not(.ab-max-qty):not(.default) button.quantity-plus {
+  color: #fff;
+  background-color: rgb(212, 0, 42);
+  border-color: rgb(212, 0, 42);
+}
+.MVT-36 .add-on-card.ab-max-qty button.quantity-minus {
+  color: #fff !important;
+  background-color: rgb(212, 0, 42) !important;
+  border-color: rgb(212, 0, 42) !important;
+}
+.MVT-36 .add-on-card.ab-max-qty button.quantity-plus {
+  border: 1px solid #C7C7C7 !important;
+  color: #C7C7C7 !important;
+  pointer-events: none !important;
 }
 .MVT-36 .add-ons-footer {
   margin-top: 24px;
