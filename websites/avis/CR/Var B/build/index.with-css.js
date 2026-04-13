@@ -2091,12 +2091,8 @@
       "CIS",
       "CBS",
       "WFI",
-      "CSB",
       "ADD",
       "TPR",
-      "SKR",
-      "CFS",
-      "CSD",
     ];
     extrasAddOnsItemList.forEach((ex) => {
       extrasMap[ex.code] = ex;
@@ -2128,6 +2124,9 @@
         (item, index, arr) =>
           arr.findIndex((i) => i.code === item.code) === index,
       )
+      .filter(function (item) {
+        return addOnOrderList.indexOf(item.code) !== -1;
+      })
       .sort(
         (a, b) =>
           addOnOrderList.indexOf(a.code) - addOnOrderList.indexOf(b.code),

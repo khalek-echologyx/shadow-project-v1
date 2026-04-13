@@ -337,7 +337,7 @@
       } else {
         targetAddOnCard.classList.remove("selected")
       }
-    }) 
+    })
   }
   const updateProtectionItemsCards = () => {
     const sessionData = getSessionData();
@@ -855,7 +855,7 @@
     // final add-ons item list
     const extrasMap = {};
     const addOnWithQantity = ["CBS", "CSS", "CIS", "CFS", "CSB"]
-    const addOnOrderList = ["GSO", "TOL", "ADR", "RSN", "GPS", "XMR", "CSS", "CIS", "CBS", "WFI", "CSB", "ADD", "TPR", "SKR", "CFS", "CSD"]
+    const addOnOrderList = ["GSO", "TOL", "ADR", "RSN", "GPS", "XMR", "CSS", "CIS", "CBS", "WFI", "ADD", "TPR"]
     extrasAddOnsItemList.forEach(ex => {
       extrasMap[ex.code] = ex;
     });
@@ -884,7 +884,9 @@
       })
       .filter((item, index, arr) =>
         arr.findIndex(i => i.code === item.code) === index
-      )
+      ).filter(function (item) {
+        return addOnOrderList.indexOf(item.code) !== -1;
+      })
       .sort((a, b) => addOnOrderList.indexOf(a.code) - addOnOrderList.indexOf(b.code));
     console.log(finalAddOnItemList, "finalAddOnItemList");
     // Add-ons bundle list
@@ -2008,12 +2010,12 @@
         // if any selected protection bundle
         const prevSelectedProtBundle = sessionOne.protectionBundleSelected;
         let prevSelectedProtBundleItems = [];
-        if(prevSelectedProtBundle){
+        if (prevSelectedProtBundle) {
           prevSelectedProtBundleItems = prevSelectedProtBundle.items.filter(item => item.included).map(item => item.code);
         }
         console.log(prevSelectedProtBundleItems, "prevSelectedProtBundleItems");
         const prevAddOnItems = sessionOne.pricesAddOnItems || [];
-        let filteredPrevAddOnItems = prevAddOnItems.length > 0 ? prevAddOnItems.map(item=>{
+        let filteredPrevAddOnItems = prevAddOnItems.length > 0 ? prevAddOnItems.map(item => {
           return {
             code: item.code || "",
             quantity: item.quantity || null,
@@ -2058,31 +2060,31 @@
         })
         console.log(finalFilterPrevAddOnItems, "finalFilterPrevAddOnItems");
         const calculatePayload = {
-            age: extrasAPIPayload.age,
-            countryOfResidence: extrasAPIPayload.countryOfResidence,
-            currencyCode: extrasAPIPayload.currencyCode,
-            discountCodes: extrasAPIPayload.discountCodes,
-            dropoffDate: extrasAPIPayload.dropoffDate,
-            dropoffTime: extrasAPIPayload.dropoffTime,
-            dropoffLocation: extrasAPIPayload.dropoffLocation,
-            pickupDate: extrasAPIPayload.pickupDate,
-            pickupTime: extrasAPIPayload.pickupTime,
-            pickupLocation: extrasAPIPayload.pickupLocation,
-            priceRateCode: extrasAPIPayload.priceRateCode,
-            priceType: extrasAPIPayload.priceType,
-            priceView: extrasAPIPayload.priceView || "LOWEST_PRICE",
-            isAvisFirst: extrasAPIPayload.isAvisFirst,
-            vehicleCode: extrasAPIPayload.vehicleCode,
-            vehicleId: extrasAPIPayload.vehicleId,
-            protectionBundle: {
-              code: bundleCode,
-              items: jsonBundle.includedProtections.map(item => {
-                return {
-                  code: item.code,
-                  policy: item.policy === "required" ? "MANDATORY" : "OPTIONAL",
-                }
-              })
-            },
+          age: extrasAPIPayload.age,
+          countryOfResidence: extrasAPIPayload.countryOfResidence,
+          currencyCode: extrasAPIPayload.currencyCode,
+          discountCodes: extrasAPIPayload.discountCodes,
+          dropoffDate: extrasAPIPayload.dropoffDate,
+          dropoffTime: extrasAPIPayload.dropoffTime,
+          dropoffLocation: extrasAPIPayload.dropoffLocation,
+          pickupDate: extrasAPIPayload.pickupDate,
+          pickupTime: extrasAPIPayload.pickupTime,
+          pickupLocation: extrasAPIPayload.pickupLocation,
+          priceRateCode: extrasAPIPayload.priceRateCode,
+          priceType: extrasAPIPayload.priceType,
+          priceView: extrasAPIPayload.priceView || "LOWEST_PRICE",
+          isAvisFirst: extrasAPIPayload.isAvisFirst,
+          vehicleCode: extrasAPIPayload.vehicleCode,
+          vehicleId: extrasAPIPayload.vehicleId,
+          protectionBundle: {
+            code: bundleCode,
+            items: jsonBundle.includedProtections.map(item => {
+              return {
+                code: item.code,
+                policy: item.policy === "required" ? "MANDATORY" : "OPTIONAL",
+              }
+            })
+          },
           protectionItems: [],
           addOnItems: finalFilterPrevAddOnItems,
         };
@@ -2092,22 +2094,22 @@
         const calculateAddOnItems = calculateData.addOnItems || [];
 
         const newAddOnItems = calculateAddOnItems.map(addOnItem => {
-            const extraItem = extrasAddOnsItemList?.find(
-              i => i.code === addOnItem.code
-            );
-            return {
-              amount: addOnItem.amount || 0,
-              chargeType: addOnItem.chargeType || "",
-              code: addOnItem.code || "",
-              description: finalAddOnItemList.find(i => i.code === addOnItem.code).name || "",
-              discount: extraItem?.discount || 0,
-              grossSubtotal: extraItem?.grossSubtotal,
-              displayElement: addOnItem.displayElement || {},
-              netSubtotal: addOnItem.netSubtotal || 0,
-              netSubtotalPerUnit: addOnItem.netSubtotalPerUnit || 0,
-              rentalItemUnits: addOnItem.rentalItemUnits || 0,
-              quantity: addOnItem.quantity || 0,
-            }
+          const extraItem = extrasAddOnsItemList?.find(
+            i => i.code === addOnItem.code
+          );
+          return {
+            amount: addOnItem.amount || 0,
+            chargeType: addOnItem.chargeType || "",
+            code: addOnItem.code || "",
+            description: finalAddOnItemList.find(i => i.code === addOnItem.code).name || "",
+            discount: extraItem?.discount || 0,
+            grossSubtotal: extraItem?.grossSubtotal,
+            displayElement: addOnItem.displayElement || {},
+            netSubtotal: addOnItem.netSubtotal || 0,
+            netSubtotalPerUnit: addOnItem.netSubtotalPerUnit || 0,
+            rentalItemUnits: addOnItem.rentalItemUnits || 0,
+            quantity: addOnItem.quantity || 0,
+          }
         })
         console.log(newAddOnItems, "newAddOnItems");
         const sessionTwo = getSessionData();

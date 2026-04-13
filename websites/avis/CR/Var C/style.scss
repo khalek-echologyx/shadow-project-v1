@@ -1,15 +1,1041 @@
-html {
-  position: relative;
+.MVT-36 {
+  .mvt-36-summary-prot-item {
+    display: flex !important;
+    justify-content: space-between;
+    color: rgb(82, 77, 77);
+  }
 
-  &::before {
-    content: "AB test pilot CSS";
-    position: fixed;
-    top: 0;
-    left: 0;
-    z-index: 99999999999;
-    background: #ff0000;
-    color: #ffffff;
-    padding: 10px;
-    border: 7px solid #269b11;
+  .selected-prot-bundle-title {
+    color: #1ea238 !important;
+  }
+
+  .accordion-wrapper {
+    padding: 4px 24px;
+  }
+
+  //test
+  .mvt-36-summary-regular-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: rgb(115, 109, 109);
+    font-size: 14px;
+    line-height: 20px;
+    -webkit-box-pack: justify;
+
+    .saving-desc {
+      padding: 4px 0;
+    }
+  }
+
+  .mvt-36-summary-regular-item.tax-and-fees-item {
+    margin: 4px 0;
+  }
+
+  .mvt-36-summary-regular-item:hover {
+    background-color: rgb(244, 243, 242);
+  }
+
+  .new-prot-bundle {
+    box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 8px 0px;
+    border-radius: 8px;
+    background-color: #fff;
+    padding: 32px 24px 24px 24px;
+    margin-top: 16px;
+  }
+
+  padding: 32px 24px;
+  background: white;
+  color: #000;
+  margin: 0 auto;
+  margin-top: 16px;
+  box-shadow: 0px 2px 8px 0px rgba(124, 80, 80, 0.06);
+  border-radius: 8px;
+
+
+  .prot-title {
+    font-family: 'AvisHeadline', 'AvisHeadline Fallback', sans-serif;
+    text-transform: uppercase;
+    font-size: 24px;
+    line-height: 24px;
+    letter-spacing: -0.8px;
+    font-weight: 400 !important;
+    margin: 0;
+    margin-bottom: 24px;
+  }
+
+  .intial-prot-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 0;
+    width: 100%;
+    transition: all 0.3s ease;
+
+    @media (max-width: 768px) {
+      grid-template-columns: repeat(1, 1fr);
+    }
+
+    .protection-item {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      justify-content: space-between;
+      border: 2px solid #D7DBE0;
+      border-radius: 8px;
+      padding: 24px;
+      background: #fff;
+      cursor: pointer;
+      transition: box-shadow 0.2s, border-color 0.2s;
+
+      &:hover {
+        border-color: #393636;
+      }
+
+      .protection-item-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .protection-item-title {
+          font-size: 20px;
+          font-weight: 700;
+          line-height: 28px;
+          letter-spacing: 0.06px !important;
+          margin: 0;
+        }
+
+        .radio-outer {
+          display: inline-block;
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          border: 1.5px solid #000;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+      }
+
+      &.selected {
+        border-color: #000;
+
+        .card-radio {
+          background: #fff;
+          border-color: #000;
+
+          .radio-inner {
+            width: 16px;
+            height: 16px;
+            background: #000;
+            border-radius: 50%;
+          }
+        }
+      }
+
+
+      .protection-item-actions {
+        display: flex;
+        justify-content: end;
+        align-items: flex-end;
+
+        .price-info {
+          font-size: 28px;
+          font-weight: 500;
+          line-height: 21px;
+          letter-spacing: 0px;
+
+          .per-day-slash {
+            display: inline;
+            font-size: 16px;
+            margin-left: -4px;
+            vertical-align: middle;
+
+            .per-day {
+              vertical-align: middle;
+            }
+          }
+        }
+
+        .included-in-bundle-text {
+          display: none;
+          font-size: 14px;
+          font-weight: 700;
+          color: #524D4D;
+          white-space: nowrap;
+          user-select: none;
+          line-height: 20px;
+          margin: 0;
+        }
+      }
+    }
+
+    .protection-item.included-in-bundle {
+      border-color: #000;
+      pointer-events: none;
+
+      .price-info {
+        display: none;
+      }
+
+      .included-in-bundle-text {
+        display: block !important;
+      }
+
+      .card-radio {
+        background: #fff;
+        border-color: #000;
+
+        .radio-inner {
+          width: 16px;
+          height: 16px;
+          background: #000;
+          border-radius: 50%;
+        }
+      }
+    }
+
+    .static-no-prot-card {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      justify-content: space-between;
+      border: 2px solid #D7DBE0;
+      border-radius: 8px;
+      padding: 24px;
+      background: #fff;
+      cursor: pointer;
+      transition: box-shadow 0.2s, border-color 0.2s;
+
+      &:hover {
+        border-color: #393636;
+      }
+
+      .protection-item-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .protection-item-title {
+          font-size: 20px;
+          font-weight: 700;
+          line-height: 28px;
+          letter-spacing: 0.06px !important;
+          margin: 0;
+        }
+
+        .radio-outer {
+          display: inline-block;
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          border: 1.5px solid #000;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+      }
+
+      &.selected {
+        .card-radio {
+          background: #fff;
+          border-color: #000;
+
+          .radio-inner {
+            width: 16px;
+            height: 16px;
+            background: #000;
+            border-radius: 50%;
+          }
+        }
+      }
+
+
+      .protection-item-actions {
+        display: flex;
+        justify-content: end;
+        align-items: flex-end;
+
+        .price-info {
+          font-size: 28px;
+          font-weight: 500;
+          line-height: 21px;
+          letter-spacing: 0px;
+
+          .per-day-slash {
+            display: inline;
+            font-size: 16px;
+            margin-left: -4px;
+            vertical-align: middle;
+
+            .per-day {
+              vertical-align: middle;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .prot-cards {
+    display: none;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 0;
+    width: 100%;
+    max-height: 0px;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
+
+    @media (max-width: 768px) {
+      grid-template-columns: repeat(1, 1fr);
+    }
+
+    [data-code="No Protection"] {
+      display: none !important;
+    }
+  }
+
+  .prot-cards.show-all {
+    max-height: 700px;
+    margin-bottom: 24px;
+  }
+
+  .prot-card {
+    border: 2px solid #D7DBE0;
+    border-radius: 8px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    cursor: pointer;
+    min-height: 160px;
+    transition: border-color 0.2s ease-in-out;
+    background: #fff;
+
+    // hidden extra cards — compound selector beats plain .prot-card specificity
+    &.prot-card--extra {
+      display: none;
+    }
+
+    &.selected {
+      border: 2px solid #393636;
+
+      .card-radio .radio-outer {
+        background: #fff;
+        border-color: #000;
+
+        .radio-inner {
+          width: 16px;
+          height: 16px;
+          background: #000;
+          border-radius: 50%;
+        }
+      }
+    }
+
+    .card-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .card-title {
+        font-size: 20px;
+        font-weight: 700;
+        line-height: 28px;
+        letter-spacing: 0.06px;
+        margin: 0;
+      }
+    }
+
+    .card-radio {
+      display: inline-block;
+
+      .radio-outer {
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        border: 1.5px solid #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+    }
+
+    .card-features {
+      .feature-item {
+        display: flex;
+        gap: 8px;
+
+        .feature-text {
+          font-size: 14px;
+          font-weight: 400;
+          line-height: 20px;
+          letter-spacing: 0.06px;
+        }
+      }
+    }
+
+    .card-actions {
+      display: flex;
+      justify-content: end;
+      align-items: flex-end;
+      margin-top: 16px;
+    }
+
+    .view-coverage {
+      display: none;
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: underline;
+      color: #524D4D;
+      line-height: 20px;
+      letter-spacing: 0.06px;
+
+      // .chevron {
+      //   width: 8px;
+      //   height: 8px;
+      //   border-left: 1px solid #000;
+      //   border-bottom: 1px solid #000;
+      //   transform: rotate(-45deg);
+      //   margin-top: -4px;
+      // }
+    }
+
+    .price-info {
+      font-size: 28px;
+      font-weight: 500;
+      line-height: 21px;
+      letter-spacing: 0px;
+
+      .per-day-slash {
+        display: inline;
+        font-size: 16px;
+        margin-left: -4px;
+        vertical-align: middle;
+
+        .per-day {
+          vertical-align: middle;
+        }
+      }
+    }
+  }
+
+  .prot-card:hover {
+    border-color: #393636;
+  }
+
+  .protection-items-section {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    max-height: 0px;
+    overflow: hidden;
+    transition: max-height 0.3s ease-in-out;
+
+    @media (max-width: 768px) {
+      grid-template-columns: repeat(1, 1fr);
+    }
+
+    .protection-item {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      justify-content: space-between;
+      border: 2px solid #D7DBE0;
+      border-radius: 8px;
+      padding: 24px;
+      background: #fff;
+      cursor: pointer;
+      transition: box-shadow 0.2s, border-color 0.2s;
+
+      .protection-item-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        .protection-item-title {
+          font-size: 20px;
+          font-weight: 700;
+          line-height: 28px;
+          letter-spacing: 0.06px !important;
+          margin: 0;
+        }
+
+        .radio-outer {
+          display: inline-block;
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          border: 1.5px solid #000;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+      }
+
+      &:hover {
+        border-color: #000;
+      }
+
+      &.selected {
+        border-color: #000;
+
+        .card-radio {
+          background: #fff;
+          border-color: #000;
+
+          .radio-inner {
+            width: 16px;
+            height: 16px;
+            background: #000;
+            border-radius: 50%;
+          }
+        }
+      }
+
+
+      .protection-item-actions {
+        display: flex;
+        justify-content: end;
+        align-items: flex-end;
+
+        .price-info {
+          font-size: 28px;
+          font-weight: 500;
+          line-height: 21px;
+          letter-spacing: 0px;
+
+          .per-day-slash {
+            display: inline;
+            font-size: 16px;
+            margin-left: -4px;
+            vertical-align: middle;
+
+            .per-day {
+              vertical-align: middle;
+            }
+          }
+        }
+
+        .included-text {
+          display: none;
+        }
+
+        .included-in-bundle-text {
+          display: none;
+        }
+      }
+    }
+
+    .protection-item.included {
+      border-color: #000;
+      pointer-events: none;
+      cursor: default;
+
+      .card-radio {
+        background: #fff;
+        border-color: #000;
+
+        .radio-inner {
+          width: 16px;
+          height: 16px;
+          background: #000;
+          border-radius: 50%;
+        }
+      }
+
+      .included-text {
+        display: block !important;
+        font-size: 14px;
+        font-weight: 700;
+        color: #524D4D;
+        white-space: nowrap;
+        user-select: none;
+        line-height: 20px;
+        margin: 0;
+      }
+
+      .price-info {
+        display: none;
+      }
+    }
+
+    .protection-item.included-in-bundle {
+      pointer-events: none;
+      border-color: #000;
+
+      .price-info {
+        display: none;
+      }
+
+      .included-in-bundle-text {
+        display: block !important;
+        font-size: 14px;
+        font-weight: 700;
+        color: #524D4D;
+        white-space: nowrap;
+        user-select: none;
+        line-height: 20px;
+        margin: 0;
+      }
+
+      .card-radio {
+        background: #fff;
+        border-color: #000;
+
+        .radio-inner {
+          width: 16px;
+          height: 16px;
+          background: #000;
+          border-radius: 50%;
+        }
+      }
+    }
+  }
+
+  .protection-items-section.show-all {
+    max-height: 700px;
+    margin-top: 16px;
+  }
+
+  /* ---------------- add-ons section ---------------- */
+
+  .add-ons-section {
+    margin-top: 40px;
+
+    .add-on-title {
+      font-family: 'AvisHeadline', 'AvisHeadline Fallback', sans-serif;
+      text-transform: uppercase;
+      font-size: 24px;
+      line-height: 24px;
+      letter-spacing: -0.8px;
+      font-weight: 400 !important;
+      margin: 0;
+      margin-bottom: 16px;
+    }
+
+    .add-on-bundles-section {
+      display: none;
+
+      .add-on-bundles-content {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+
+        .add-on-bundle-card {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          background-color: #d1d1d1;
+          padding: 12px;
+          border-radius: 12px;
+          cursor: pointer;
+
+          .add-on-bundle-select-btn {
+            border: 1px solid #000;
+            border-radius: 12px;
+            padding: 12px;
+            background-color: #000;
+            color: #fff;
+            font-size: 16px;
+            font-weight: 800;
+          }
+        }
+
+      }
+    }
+  }
+
+  // ============================ Add on item style
+  .add-ons-content {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    width: 100%;
+
+    @media (max-width: 768px) {
+      grid-template-columns: repeat(1, 1fr);
+    }
+  }
+
+  .add-on-card {
+    border: 2px solid #D7DBE0;
+    border-radius: 8px;
+    padding: 24px;
+    background: #fff;
+    transition: border-color 0.2s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    justify-content: space-between;
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    &:hover {
+      border-color: #000;
+    }
+
+    .add-on-icon {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      height: 24px;
+      width: 24px;
+    }
+
+    .add-on-info {
+      .add-on-title {
+        margin: 0;
+        font-weight: 500;
+        font-size: 20px;
+        line-height: 28px;
+        letter-spacing: 0.06px !important;
+        text-transform: none;
+      }
+
+      .add-on-price {
+        font-size: 14px;
+        font-weight: 800;
+        margin: 0;
+        color: #000;
+      }
+    }
+
+    .card-footer {
+      display: flex;
+      align-items: flex-end;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      width: 100%;
+
+      .price-info {
+        font-size: 28px;
+        font-weight: 500;
+        line-height: 21px;
+        letter-spacing: 0px;
+
+        .per-day-slash {
+          display: inline;
+          font-size: 16px;
+          margin-left: -4px;
+          vertical-align: middle;
+
+          .per-day {
+            vertical-align: middle;
+          }
+        }
+      }
+    }
+
+    .add-on-actions {
+      display: flex;
+      align-items: flex-end;
+      gap: 24px;
+
+      .add-on-details {
+        font-size: 14px;
+        font-weight: 800;
+        color: #000;
+        text-decoration: underline;
+        text-underline-offset: 3px;
+      }
+
+      .quantity-selector-wrapper {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .quantity-selector {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        .quantity-minus,
+        .quantity-plus {
+          border: 1px solid #C7C5C5;
+          border-radius: 4px;
+          padding: 4px;
+          background-color: #fff;
+          cursor: pointer;
+          width: 30px;
+          height: 30px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #C7C5C5;
+        }
+
+        .quantity-input {
+          font-family: 'AvisSans', 'AvisSans Fallback', sans-serif;
+          border: none;
+          border-radius: 4px;
+          padding: 4px;
+          width: 30px;
+          height: 30px;
+          text-align: center;
+          color: #9F9E9E;
+          background-color: #F1F1F1;
+        }
+
+        .quantity-input:focus-visible {
+          outline: none;
+        }
+      }
+
+      .add-on-toggle {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin: 0;
+        cursor: pointer;
+
+        input {
+          opacity: 0;
+          width: 0;
+          height: 0;
+          position: absolute;
+        }
+
+        .toggle-label-text {
+          font-size: 14px;
+          font-weight: 400;
+          color: #524D4D;
+          white-space: nowrap;
+          user-select: none;
+          line-height: 20px;
+        }
+
+        .checkbox-mark {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 16px;
+          height: 16px;
+          border: 1px solid #C7C5C5;
+          border-radius: 2px;
+          background-color: #fff;
+          transition: background-color 0.2s ease, border-color 0.2s ease;
+          flex-shrink: 0;
+
+          &:after {
+            content: "";
+            display: none;
+            width: 5px;
+            height: 9px;
+            border: 2px solid #fff;
+            border-top: none;
+            border-left: none;
+            transform: rotate(45deg) translate(-1px, -1px);
+          }
+        }
+
+        input:checked+.toggle-label-text+.checkbox-mark,
+        input:checked+.checkbox-mark {
+          background-color: #000;
+          border-color: #000;
+
+          &:after {
+            display: block;
+          }
+        }
+
+        .included-text {
+          display: none;
+        }
+
+        .included-in-bundle-text {
+          display: none;
+        }
+      }
+    }
+
+    .add-on-details-content {
+      height: 0;
+      overflow: hidden;
+      transition: height 0.5s ease-in-out;
+      font-size: 14px !important;
+
+      .add-on-details-content-text {
+        margin: 0;
+      }
+    }
+
+    .add-on-details-content.expend {
+      height: auto !important;
+    }
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      align-items: flex-start;
+
+      .add-on-icon {
+        margin-bottom: 16px;
+      }
+
+      .add-on-actions {
+        width: 100%;
+        margin-top: 20px;
+        justify-content: space-between;
+      }
+    }
+  }
+
+  .add-on-card.included {
+    border-color: #000;
+    .add-on-toggle {
+      pointer-events: none !important;
+      cursor: default !important;
+    }
+
+    input,
+    .toggle-label-text,
+    .checkbox-mark {
+      display: none !important;
+      pointer-events: none !important;
+    }
+
+    .included-text {
+      display: block !important;
+      font-size: 14px;
+      font-weight: 700;
+      color: #524D4D;
+      white-space: nowrap;
+      user-select: none;
+      line-height: 20px;
+      margin: 0;
+    }
+  }
+
+  .add-on-card.selected {
+    border-color: #000;
+  }
+
+  .add-on-card.add-ons-extra-card {
+    display: none;
+  }
+
+  .add-on-card.included-in-bundle {
+    .add-on-toggle {
+      pointer-events: none !important;
+      cursor: default !important;
+    }
+
+    input,
+    .toggle-label-text,
+    .checkbox-mark {
+      display: none !important;
+      pointer-events: none !important;
+    }
+
+    .included-in-bundle-text {
+      display: block !important;
+      font-size: 14px;
+      font-weight: 700;
+      color: #524D4D;
+      white-space: nowrap;
+      user-select: none;
+      line-height: 20px;
+      margin: 0;
+    }
+  }
+
+  .add-on-card.default button.quantity-plus {
+    border: 1px solid #000 !important;
+    color: #000 !important;
+  }
+
+  .add-on-card.default button.quantity-minus {
+    pointer-events: none !important;
+  }
+
+  .add-on-card.ab-min-qty button.quantity-minus {
+    pointer-events: none;
+  }
+
+
+  .add-on-card.ab-min-qty button.quantity-plus {
+    border: 1px solid #000 !important;
+    color: #000 !important;
+  }
+
+  .add-on-card:not(.ab-min-qty):not(.ab-max-qty):not(.default) button.quantity-minus {
+    color: #fff;
+    background-color: rgb(212, 0, 42);
+    border-color: rgb(212, 0, 42);
+  }
+
+  .add-on-card:not(.ab-min-qty):not(.ab-max-qty):not(.default) button.quantity-plus {
+    color: #fff;
+    background-color: rgb(212, 0, 42);
+    border-color: rgb(212, 0, 42);
+  }
+
+
+  .add-on-card.ab-max-qty button.quantity-minus {
+    color: #fff !important;
+    background-color: rgb(212, 0, 42) !important;
+    border-color: rgb(212, 0, 42) !important;
+  }
+
+  .add-on-card.ab-max-qty button.quantity-plus {
+    border: 1px solid #C7C7C7 !important;
+    color: #C7C7C7 !important;
+    pointer-events: none !important;
+  }
+
+  .add-ons-footer {
+    margin-top: 16px;
+
+    .add-on-btn-all-packages {
+      font-family: 'AvisSans', 'AvisSans Fallback', sans-serif;
+      border: none;
+      font-size: 14px;
+      line-height: 14px;
+      font-weight: 400;
+      cursor: pointer;
+      color: #000;
+      text-decoration: underline;
+      background-color: transparent;
+      padding: 0;
+    }
+  }
+
+  .btn-all-packages {
+    font-family: 'AvisSans', 'AvisSans Fallback', sans-serif;
+    border: none;
+    font-size: 14px;
+    line-height: 14px;
+    font-weight: 400;
+    cursor: pointer;
+    color: #000;
+    text-decoration: underline;
+    background-color: transparent;
+    display: none;
+  }
+
+  .btn-all-packages-items {
+    font-family: 'AvisSans', 'AvisSans Fallback', sans-serif;
+    border: none;
+    font-size: 14px;
+    line-height: 14px;
+    font-weight: 400;
+    cursor: pointer;
+    color: #000;
+    text-decoration: underline;
+    background-color: transparent;
+    margin-top: 16px;
+    padding: 0;
   }
 }
