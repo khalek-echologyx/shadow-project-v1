@@ -204,9 +204,6 @@
   align-items: center;
   justify-content: center;
 }
-.MVT-36 .intial-prot-cards .static-no-prot-card.selected {
-  border-color: #000;
-}
 .MVT-36 .intial-prot-cards .static-no-prot-card.selected .card-radio {
   background: #fff;
   border-color: #000;
@@ -376,7 +373,6 @@
   border-radius: 8px;
   padding: 24px;
   background: #fff;
-  cursor: pointer;
   transition: box-shadow 0.2s, border-color 0.2s;
 }
 .MVT-36 .protection-items-section .protection-item .protection-item-info {
@@ -391,11 +387,31 @@
   letter-spacing: 0.06px !important;
   margin: 0;
 }
+.MVT-36 .protection-items-section .protection-item .protection-item-info .radio-outer {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1.5px solid #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 .MVT-36 .protection-items-section .protection-item:hover {
   border-color: #000;
 }
 .MVT-36 .protection-items-section .protection-item.selected {
   border-color: #000;
+}
+.MVT-36 .protection-items-section .protection-item.selected .card-radio {
+  background: #fff;
+  border-color: #000;
+}
+.MVT-36 .protection-items-section .protection-item.selected .card-radio .radio-inner {
+  width: 16px;
+  height: 16px;
+  background: #000;
+  border-radius: 50%;
 }
 .MVT-36 .protection-items-section .protection-item .protection-item-actions {
   display: flex;
@@ -492,10 +508,7 @@
 .MVT-36 .protection-items-section .protection-item .protection-item-actions .details-and-check .included-text {
   display: none;
 }
-.MVT-36 .protection-items-section .protection-item .protection-item-actions .included-text {
-  display: none;
-}
-.MVT-36 .protection-items-section .protection-item .protection-item-actions .included-in-bundle-text {
+.MVT-36 .protection-items-section .protection-item .protection-item-actions .details-and-check .included-in-bundle-text {
   display: none;
 }
 .MVT-36 .protection-items-section .protection-item .protection-item-actions .prot-details-content {
@@ -514,6 +527,16 @@
   border-color: #000;
   cursor: default;
 }
+.MVT-36 .protection-items-section .protection-item.included .card-radio {
+  background: #fff;
+  border-color: #000;
+}
+.MVT-36 .protection-items-section .protection-item.included .card-radio .radio-inner {
+  width: 16px;
+  height: 16px;
+  background: #000;
+  border-radius: 50%;
+}
 .MVT-36 .protection-items-section .protection-item.included .prot-checkbox-label {
   display: none !important;
 }
@@ -528,7 +551,6 @@
   margin: 0;
 }
 .MVT-36 .protection-items-section .protection-item.included-in-bundle {
-  pointer-events: none;
   border-color: #000;
 }
 .MVT-36 .protection-items-section .protection-item.included-in-bundle .prot-checkbox-label {
@@ -543,6 +565,16 @@
   user-select: none;
   line-height: 20px;
   margin: 0;
+}
+.MVT-36 .protection-items-section .protection-item.included-in-bundle .card-radio {
+  background: #fff;
+  border-color: #000;
+}
+.MVT-36 .protection-items-section .protection-item.included-in-bundle .card-radio .radio-inner {
+  width: 16px;
+  height: 16px;
+  background: #000;
+  border-radius: 50%;
 }
 .MVT-36 .protection-items-section.show-all {
   max-height: 700px;
@@ -919,12 +951,4 @@
   background-color: transparent;
   margin-top: 16px;
   padding: 0;
-}
-@media (max-width: 767px) {
-  .MVT-36 [data-testid=booking-summary-wrapper] {
-    margin-top: 24px;
-  }
-}
-.MVT-36 [data-testid=action-footer-total-amount] {
-  pointer-events: none !important;
 }

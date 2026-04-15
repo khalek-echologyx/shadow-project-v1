@@ -450,7 +450,6 @@
       border-radius: 8px;
       padding: 24px;
       background: #fff;
-      cursor: pointer;
       transition: box-shadow 0.2s, border-color 0.2s;
 
       .protection-item-info {
@@ -465,6 +464,18 @@
           letter-spacing: 0.06px !important;
           margin: 0;
         }
+
+        .radio-outer {
+          display: inline-block;
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          border: 1.5px solid #000;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
       }
 
       &:hover {
@@ -473,6 +484,18 @@
 
       &.selected {
         border-color: #000;
+
+        .card-radio {
+          background: #fff;
+          border-color: #000;
+
+          .radio-inner {
+            width: 16px;
+            height: 16px;
+            background: #000;
+            border-radius: 50%;
+          }
+        }
       }
 
 
@@ -584,14 +607,9 @@
             display: none;
           }
 
-        }
-
-        .included-text {
-          display: none;
-        }
-
-        .included-in-bundle-text {
-          display: none;
+          .included-in-bundle-text {
+            display: none;
+          }
         }
 
         .prot-details-content {
@@ -615,6 +633,18 @@
       border-color: #000;
       cursor: default;
 
+      .card-radio {
+        background: #fff;
+        border-color: #000;
+
+        .radio-inner {
+          width: 16px;
+          height: 16px;
+          background: #000;
+          border-radius: 50%;
+        }
+      }
+
       .prot-checkbox-label {
         display: none !important;
       }
@@ -632,7 +662,6 @@
     }
 
     .protection-item.included-in-bundle {
-      pointer-events: none;
       border-color: #000;
 
       .prot-checkbox-label {
@@ -648,6 +677,18 @@
         user-select: none;
         line-height: 20px;
         margin: 0;
+      }
+
+      .card-radio {
+        background: #fff;
+        border-color: #000;
+
+        .radio-inner {
+          width: 16px;
+          height: 16px;
+          background: #000;
+          border-radius: 50%;
+        }
       }
     }
   }
@@ -1095,13 +1136,11 @@
     padding: 0;
   }
 
-  //mobile responsive
   @media (max-width: 767px) {
     [data-testid="booking-summary-wrapper"] {
       margin-top: 24px;
     }
   }
-
   [data-testid="action-footer-total-amount"] {
     pointer-events: none !important;
   }

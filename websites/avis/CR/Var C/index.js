@@ -63,7 +63,10 @@
   </svg > ',
     TPR: '<svg xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Travel Partner" preserveAspectRatio="none" width="24" height="24" overflow="visible" style="display: block;" viewBox="0 0 23.9991 24.005" fill="none">\
   <path id="Icon" d="M23.5392 22.635C22.8794 22.395 22.1945 22.235 21.4996 22.16C20.4199 22.015 19.3901 21.63 18.4903 21.02C18.4853 21.015 18.4753 21.005 18.4653 21C17.6804 20.48 17.1306 19.68 16.9206 18.765C18.8602 18.045 20.1499 16.245 20.5548 13.65C20.7598 13.725 20.9798 13.765 21.1997 13.765H21.3247C22.3845 13.765 23.2443 12.905 23.2443 11.845V10.34C23.2443 9.28 22.3845 8.42 21.3247 8.42H21.1997C21.0297 8.42 20.8548 8.445 20.6898 8.49V7.29C20.7298 3.315 17.5455 0.055 13.5713 0H10.422C6.44279 0.05 3.25845 3.31 3.30344 7.29V8.49C3.13848 8.445 2.96851 8.42 2.79355 8.42H2.66857C1.60879 8.42 0.748973 9.28 0.748973 10.34V11.845C0.748973 12.905 1.60879 13.765 2.66857 13.765H2.79355C3.85333 13.765 4.71315 12.905 4.71315 11.845V7.29C4.66816 4.09 7.22262 1.46 10.422 1.415H13.5713C16.7706 1.465 19.3201 4.095 19.2801 7.29V11.845C19.2801 13.62 18.8402 17.71 14.876 17.71C14.6511 16.87 13.8912 16.29 13.0214 16.29H11.6167C10.5569 16.29 9.69711 17.15 9.69711 18.21V18.41C9.69711 19.47 10.5569 20.33 11.6167 20.33H13.0214C13.8063 20.33 14.5161 19.85 14.806 19.115C14.831 19.125 14.851 19.125 14.876 19.125C15.101 19.125 15.3259 19.115 15.5509 19.09C15.7309 19.89 16.1058 20.635 16.6407 21.255L14.0612 21.975C12.9214 22.265 11.7267 22.265 10.5869 21.975L7.47757 21.11C8.12244 20.315 8.49736 19.335 8.55235 18.31C8.55235 18.265 8.55235 18.215 8.53735 18.17C8.52735 18.125 8.51236 18.08 8.49736 18.04C8.47736 17.995 8.45737 17.955 8.43237 17.915C8.40238 17.88 8.38238 17.85 8.35239 17.82C8.3224 17.79 8.2874 17.76 8.24741 17.73C7.44758 17.2 6.74772 16.535 6.17284 15.77C7.86749 13.805 8.48736 11.435 8.06245 8.58H8.07245C9.79709 8.58 12.1916 8.06 13.5463 6.195C14.0762 6.985 14.871 7.535 16.0858 8.23V11.095C16.0858 11.095 16.0558 13.225 14.6461 13.71C14.2762 13.835 14.0812 14.235 14.2062 14.605C14.3311 14.975 14.7311 15.17 15.101 15.045C17.4655 14.235 17.4955 11.225 17.4955 11.095V7.815C17.4955 7.56 17.3555 7.325 17.1306 7.2C15.146 6.085 14.6061 5.64 14.2762 4.36C14.1812 3.98 13.7963 3.755 13.4213 3.85C13.1864 3.91 12.9964 4.085 12.9214 4.32C11.8467 7.64 7.47757 7.145 7.29261 7.115C7.06766 7.085 6.83771 7.17 6.68774 7.34C6.53277 7.505 6.46778 7.74 6.51777 7.965C7.17264 10.99 6.62275 13.29 4.78313 15.195C4.57818 15.41 4.52319 15.73 4.65816 15.995C5.26303 17.05 6.10286 17.955 7.10265 18.645C6.92269 19.615 6.35281 20.465 5.53298 21.005C4.62317 21.62 3.58838 22.02 2.49861 22.165C1.80375 22.24 1.1189 22.4 0.459034 22.64C0.0941096 22.775 -0.0908519 23.18 0.04412 23.545C0.149098 23.825 0.414043 24.005 0.708981 24.005C0.793964 24.005 0.878946 23.99 0.958929 23.96C1.51381 23.755 2.08869 23.62 2.67357 23.56C3.95331 23.395 5.17805 22.935 6.25283 22.22C6.29282 22.24 6.33281 22.255 6.3728 22.265L10.217 23.34C10.9019 23.515 11.6067 23.605 12.3116 23.605C13.0264 23.605 13.7363 23.515 14.4261 23.335L17.9454 22.35C18.9702 22.99 20.1199 23.405 21.3197 23.56C21.9046 23.62 22.4844 23.755 23.0393 23.96C23.1193 23.985 23.2043 24 23.2893 24.005C23.6792 24.005 23.9941 23.695 23.9991 23.305C23.9991 23.01 23.8192 22.745 23.5442 22.64M20.6948 10.34C20.6948 10.06 20.9198 9.835 21.1997 9.83H21.3247C21.6046 9.83 21.8296 10.06 21.8346 10.34V11.845C21.8346 12.125 21.6046 12.355 21.3247 12.355H21.1997C20.9198 12.355 20.6948 12.13 20.6898 11.85V10.34H20.6948ZM3.30844 11.845C3.30844 12.125 3.08349 12.35 2.80355 12.355H2.67857C2.39863 12.355 2.16868 12.125 2.16868 11.845V10.34C2.16868 10.06 2.39863 9.835 2.67857 9.83H2.80355C3.08349 9.83 3.30844 10.055 3.31344 10.335V11.845H3.30844ZM13.5313 18.405C13.5313 18.685 13.3014 18.91 13.0214 18.915H11.6167C11.3368 18.915 11.1118 18.685 11.1068 18.405V18.205C11.1068 17.925 11.3368 17.7 11.6167 17.695H13.0214C13.3014 17.695 13.5263 17.925 13.5313 18.205V18.405Z" fill="var(--fill-0, black)"/>\
-  </svg>'
+  </svg>',
+    CIS: '<svg xmlns="http://www.w3.org/2000/svg" width="20" height="24" viewBox="0 0 20 24" fill="none">\
+  <path d="M18.0091 15.8102C17.9768 15.7893 17.9434 15.7703 17.9091 15.7532C17.5593 15.6052 17.1817 15.5346 16.8021 15.5462V12.6462L18.6341 12.6562C18.7258 12.656 18.8167 12.6376 18.9013 12.602C18.9859 12.5665 19.0627 12.5145 19.1271 12.4492C19.257 12.3153 19.3289 12.1357 19.3271 11.9492V8.12716C19.3448 6.21463 18.6557 4.36288 17.3921 2.92715C16.4568 1.94488 15.3202 1.17646 14.0602 0.674525C12.8002 0.172592 11.4466 -0.0509748 10.0921 0.01916C10.0594 0.011128 10.0257 0.00775159 9.99207 0.00915022C8.62158 -0.0711687 7.25001 0.147299 5.97229 0.649409C4.69456 1.15152 3.54122 1.9253 2.59207 2.91717C1.32954 4.35547 0.641038 6.20842 0.658069 8.12216V11.9432C0.656599 12.1296 0.728423 12.3092 0.858069 12.4432C0.992498 12.5687 1.16732 12.6421 1.35107 12.6502L3.18407 12.6412V15.5492C2.80445 15.5374 2.42679 15.608 2.07707 15.7562L1.96507 15.8132C-0.127931 17.2622 -0.573931 19.5582 0.747069 22.1132C1.03724 22.6824 1.47892 23.1604 2.02344 23.4946C2.56796 23.8288 3.19418 24.0062 3.83307 24.0072H16.1401C16.781 24.0084 17.4098 23.8323 17.9569 23.4984C18.504 23.1645 18.9481 22.6857 19.2401 22.1152C20.5801 19.5152 20.1401 17.2782 18.0121 15.8152M2.04807 11.2352V8.12017C2.02992 6.5569 2.58973 5.04199 3.62007 3.86618C4.42912 3.03356 5.40743 2.38423 6.48892 1.96209C7.57041 1.53995 8.7299 1.3548 9.88907 1.41915C9.92607 1.41915 9.95407 1.42816 9.98907 1.42816C11.165 1.35052 12.3438 1.52911 13.4439 1.95159C14.5441 2.37408 15.5394 3.03041 16.3611 3.87518C17.3912 5.05109 17.951 6.56594 17.9331 8.12918V11.2452L16.7981 11.2352V9.35318C16.7909 8.54326 16.6183 7.74334 16.291 7.00247C15.9637 6.2616 15.4886 5.59537 14.8947 5.04464C14.3008 4.49391 13.6007 4.07028 12.8373 3.79971C12.0739 3.52914 11.2632 3.41734 10.4551 3.47116H9.51507C8.70731 3.41715 7.89704 3.52889 7.13405 3.79949C6.37106 4.0701 5.67146 4.49388 5.07824 5.04476C4.48502 5.59565 4.01071 6.26202 3.68446 7.00292C3.35821 7.74383 3.1869 8.54364 3.18107 9.35318V11.2262L2.04807 11.2352ZM11.8801 14.0352L13.4701 9.50817C13.5304 9.33198 13.5194 9.13916 13.4394 8.97097C13.3594 8.80278 13.2168 8.67255 13.0421 8.60815C12.9564 8.57653 12.8652 8.56246 12.7739 8.56677C12.6826 8.57107 12.5932 8.59366 12.5108 8.6332C12.4284 8.67275 12.3549 8.72846 12.2944 8.79699C12.234 8.86553 12.188 8.94549 12.1591 9.03216L10.4381 13.8972H9.53807L7.82607 9.03115C7.76366 8.85667 7.6346 8.71406 7.46721 8.63458C7.29981 8.5551 7.10773 8.54525 6.93307 8.60717C6.75934 8.67246 6.61819 8.80335 6.54001 8.97167C6.46183 9.14 6.45288 9.3323 6.51507 9.50717L8.10507 14.0342C7.76062 14.1794 7.46664 14.4229 7.25995 14.7344C7.05326 15.0459 6.94303 15.4113 6.94307 15.7852V17.8742C6.52497 17.7861 6.11175 17.6762 5.70507 17.5452C5.47934 16.9473 5.08938 16.4252 4.58007 16.0391V9.34716C4.58446 8.72085 4.71892 8.10226 4.97491 7.53063C5.23091 6.95901 5.60286 6.44679 6.0672 6.02645C6.53154 5.60612 7.07813 5.28685 7.67234 5.08883C8.26654 4.89082 8.89541 4.81838 9.51907 4.87615H10.4591C11.0834 4.81752 11.713 4.88929 12.3081 5.08688C12.9032 5.28446 13.4507 5.60357 13.9159 6.02395C14.3812 6.44433 14.754 6.95682 15.0106 7.52889C15.2673 8.10097 15.4023 8.72015 15.4071 9.34716V16.0391C14.8972 16.427 14.5044 16.9482 14.2721 17.5452C13.8688 17.6763 13.4589 17.7862 13.0441 17.8742V15.7852C13.0441 15.4113 12.9339 15.0459 12.7272 14.7344C12.5205 14.4229 12.2265 14.1794 11.8821 14.0342M11.6581 18.1092C10.5496 18.2512 9.42754 18.2512 8.31907 18.1092C8.33464 18.0673 8.34112 18.0227 8.33807 17.9782V15.7852C8.3378 15.6588 8.38746 15.5375 8.47624 15.4476C8.56502 15.3577 8.68573 15.3065 8.81207 15.3052H11.1731C11.2994 15.3065 11.4201 15.3577 11.5089 15.4476C11.5977 15.5375 11.6473 15.6588 11.6471 15.7852V17.9782C11.6456 18.022 11.6486 18.0659 11.6561 18.1092M18.0001 21.4602C17.825 21.8028 17.5587 22.0903 17.2304 22.291C16.9022 22.4916 16.5248 22.5976 16.1401 22.5972H3.83307C3.4506 22.5971 3.07553 22.4918 2.74901 22.2926C2.42249 22.0935 2.15714 21.8082 1.98207 21.4682C0.996069 19.5572 1.23807 18.0611 2.68907 17.0261C2.9662 16.9353 3.26694 16.9484 3.53507 17.0632C3.78044 17.2017 3.99543 17.3882 4.16723 17.6115C4.33903 17.8348 4.46413 18.0905 4.53507 18.3632C4.5691 18.4628 4.62516 18.5535 4.69909 18.6284C4.77302 18.7034 4.86291 18.7608 4.96207 18.7962C8.21867 19.9251 11.7605 19.9251 15.0171 18.7962C15.1184 18.7626 15.2105 18.706 15.2863 18.6309C15.3621 18.5558 15.4195 18.4641 15.4541 18.3632C15.525 18.0905 15.6501 17.8348 15.8219 17.6115C15.9937 17.3882 16.2087 17.2017 16.4541 17.0632C16.7222 16.9484 17.0229 16.9353 17.3001 17.0261C18.7511 18.0611 18.9931 19.5572 18.0071 21.4682" fill="black"/>\
+</svg>'
   }
   //coverage rating object
   const coverageRatings = {
@@ -142,9 +145,13 @@
     return data || {};
   }
 
-  //get price with currenty
+  //get price with currenty fun
   const getPriceWithCurrenty = function (code, amount) {
-    const formateAmount = Number(amount).toFixed(2);
+    const formateAmount = Number(amount).toLocaleString("en", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    });
+
     const symbol = function () {
       if (!code) return '$';
       return (0).toLocaleString("en", {
@@ -152,7 +159,10 @@
         currency: code
       }).replace(/[\d\s.,]/g, "");
     };
-    return /[a-zA-Z]/.test(symbol()) ? symbol() + ' ' + formateAmount : symbol() + formateAmount;
+
+    return /[a-zA-Z]/.test(symbol())
+      ? symbol() + ' ' + formateAmount
+      : symbol() + formateAmount;
   };
 
   //prot and add-on item UI
@@ -192,13 +202,9 @@
     const protTotal = getPriceWithCurrenty(currencyCode, calculateData.totals.rentalOptionsTotal.toFixed(2))
     const sessionData = getSessionData();
     const isAvisFirst = sessionData.isAvisFirst || false;
-    const selectedProtBundle = sessionData.protectionBundleSelected || {};
-    const selectedProtBungleCode = selectedProtBundle.code;
-    const isSelectedNoProt = selectedProtBungleCode === "No Protection";
-    const protAndAddOnsItems = [
-      ...sessionData.pricesProtectionItems,
-      ...sessionData.pricesAddOnItems
-    ].filter(item => item.netSubtotal !== 0 || item.code === "GSO");
+    const sessionPriceProtectionItems = sessionData.pricesProtectionItems || [];
+    const sessionPriceAddOnItems = sessionData.pricesAddOnItems || [];
+    const protAndAddOnsItems = [...sessionPriceProtectionItems, ...sessionPriceAddOnItems].filter(item => item.netSubtotal !== 0 || item.code === "GSO");
     console.log(protAndAddOnsItems, "protAndAddOnsItems")
     //protection & add-ons header price
     const protAndAddOnsTotalHeader = document.querySelector('[data-testid="category-expand-button-protections-addons"]');
@@ -321,26 +327,36 @@
       console.log(text, "text terms")
       if (text.includes('Day  minimum rental required')) {
         const textEl = el.querySelector('span');
-        textEl.textContent = rateData.minRequiredDays + ' Day  minimum rental required.';
+        if (textEl) {
+          textEl.textContent = rateData.minRequiredDays + ' Day  minimum rental required.';
+        }
       } else if (text.includes('hours maximum rental allowed')) {
         const textEl = el.querySelector('span');
-        textEl.textContent = rateData.maxAllowedDays + ' Days ' + rateData.maxAllowedHours + ' hours maximum rental allowed.';
+        if (textEl) {
+          textEl.textContent = rateData.maxAllowedDays + ' Days ' + rateData.maxAllowedHours + ' hours maximum rental allowed.';
+        }
       } else if (text.includes('If you need to cancel 24 hours')) {
         const textEl = el.querySelector('span');
-        textEl.textContent = 'If you need to cancel 24 hours prior to the scheduled pick-up time, we will refund the full prepaid amount less a ' + rateData.cancelFeeBefore24h + ' processing fee.';
+        if (textEl) {
+          textEl.textContent = 'If you need to cancel 24 hours prior to the scheduled pick-up time, we will refund the full prepaid amount less a ' + rateData.cancelFeeBefore24h + ' processing fee.';
+        }
       } else if (text.includes('If you need to cancel during the 24 hour')) {
         const textEl = el.querySelector('span');
-        textEl.textContent = 'If you need to cancel during the 24 hour period prior to the scheduled pick-up time, we will refund the full prepaid amount less a ' + rateData.cancelFeeWithin24h + ' processing fee.';
+        if (textEl) {
+          textEl.textContent = 'If you need to cancel during the 24 hour period prior to the scheduled pick-up time, we will refund the full prepaid amount less a ' + rateData.cancelFeeWithin24h + ' processing fee.';
+        }
       }
     })
     const selectorForUnlimiteMilage = document.querySelector('[data-testid="rate-terms-notes-ul"]');
-    const hasUltimateEl = selectorForUnlimiteMilage.nextElementSibling;
-    console.log(hasUltimateEl, "hasUltimateEl")
-    const enableMilate = rateData.unlimitedMilage;
-    if (enableMilate) {
-      if (!hasUltimateEl.textContent.includes("Unlimited Mileage")) {
-        var unlimitedMilageUI = '<p class="MuiTypography-root MuiTypography-body1 mui-1kvhqhg"><svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-toqf8" focusable="false" aria-hidden="true" viewBox="0 0 11 9"><path d="M1 4L4 7L10 1" stroke-linecap="round" fill="none"></path></svg>Unlimited Mileage</p>';
-        selectorForUnlimiteMilage.insertAdjacentHTML("afterend", unlimitedMilageUI);
+    if (selectorForUnlimiteMilage) {
+      const hasUltimateEl = selectorForUnlimiteMilage.nextElementSibling;
+      console.log(hasUltimateEl, "hasUltimateEl")
+      const enableMilate = rateData.unlimitedMilage;
+      if (enableMilate) {
+        if (!hasUltimateEl.textContent.includes("Unlimited Mileage")) {
+          var unlimitedMilageUI = '<p class="MuiTypography-root MuiTypography-body1 mui-1kvhqhg"><svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium mui-toqf8" focusable="false" aria-hidden="true" viewBox="0 0 11 9"><path d="M1 4L4 7L10 1" stroke-linecap="round" fill="none"></path></svg>Unlimited Mileage</p>';
+          selectorForUnlimiteMilage.insertAdjacentHTML("afterend", unlimitedMilageUI);
+        }
       }
     }
   }
@@ -415,8 +431,10 @@
       const dataCode = item.getAttribute("data-code");
       console.log(dataCode, "dataCodeInsideProtectionItem")
       const isSelected = protItemsBackupArray.includes(dataCode);
+      const itemInputField = item.querySelector("input");
       if (isSelected) {
         item.classList.add("selected")
+        if (itemInputField) itemInputField.checked = true;
       }
       if (selectedProtBundleItemsArray.includes(dataCode)) {
         item.classList.add("included-in-bundle")
@@ -424,6 +442,7 @@
       if (!isSelected && !selectedProtBundleItemsArray.includes(dataCode)) {
         item.classList.remove("selected")
         item.classList.remove("included-in-bundle")
+        if (itemInputField) itemInputField.checked = false;
       }
     })
     if (protItemsBackupArray.length > 0) {
@@ -436,7 +455,7 @@
   const updateStaticProtectionCard = () => {
     const sessionData = getSessionData();
     const selectedProtBundle = sessionData.protectionBundleSelected || {};
-    const selectedProtBungleCode = selectedProtBundle.code;
+    const selectedProtBungleCode = selectedProtBundle.code || sessionData.protectionBundleCode || "";
     console.log(selectedProtBungleCode, "selectedProtBungleCode")
     const isSelectedNoProt = selectedProtBungleCode === "No Protection";
     const protectionItemBackup = sessionData.protectionItemsBackup;
@@ -707,6 +726,7 @@
     const residNotUSA = residClean !== 'US' && residClean !== '';
     console.log(residNotUSA, "residNotUSA");
 
+
     //Get protection data 
     let rowProtectionData = await getProtectionAndAddOnsData("protections", pickupLocation);
     console.log(rowProtectionData, "rowProtectionData");
@@ -752,6 +772,8 @@
 
     //Get session data
     let sessionData = getSessionData();
+    const pickupUSA = sessionData.pickupCountryCode === "US";
+    console.log(pickupUSA, "pickupUSA");
     const extrasAPIPayload = {
       pickupLocation: sessionData.pickupLocationCode,
       dropoffLocation: sessionData.returnLocationCode,
@@ -836,14 +858,14 @@
       })
       .filter(Boolean);
     //final protection item list
-    const hideItems = ['ALI', 'LDW'];
+    const hideItems = ['ALI', 'CDW'];
     const protectionOrderList = ["CDW", "ALI", "PAI", "PEP"]
     const finalProtectionItemList = filteredProtectionItemList.filter(item => {
       // keep only enabled items first
       if (!item.enabled) return false;
 
       // if not USA → remove items in hideItems
-      if (residNotUSA && hideItems.includes(item.code)) {
+      if (pickupUSA && residNotUSA && hideItems.includes(item.code)) {
         return false;
       }
 
@@ -866,7 +888,7 @@
         };
       })
       .filter(item => {
-        if (residNotUSA) {
+        if (pickupUSA && residNotUSA) {
           return !orderList.includes(item.bundleName);
         }
         return true;
@@ -974,12 +996,24 @@
       return '<div class="protection-item ' + (item.freeCDWIndicator ? 'included' : '') + '" data-code="' + (item.code || '') + '">'
         + '<div class="protection-item-info">'
         + '<h4 class="protection-item-title">' + item.name + '</h4>'
-        + '<div class="card-radio"><div class="radio-outer"><div class="radio-inner"></div></div></div>'
         + '</div>'
         + '<div class="protection-item-actions">'
         + '<div class="price-info">' + getPriceWithCurrenty(currencyCode, item.grossSubtotal) + ' <p class="per-day-slash">/<span class="per-day">day</span></p></div>'
+        + '<div class="details-and-check">'
+        + '<div class="prot-details">Details</div>'
+        + '<div class="prot-checkbox-section">'
+        + '<label class="prot-checkbox-label">'
+        + '<input type="checkbox" data-code="' + item.code + '">'
+        + '<span class="toggle-label-text">Add to Trip</span>'
+        + '<span class="checkbox-mark"></span>'
+        + '</label> '
         + '<div class="included-text">Included</div>'
         + '<div class="included-in-bundle-text">Included in bundle</div>'
+        + '</div> '
+        + '</div>'
+        + '<div class="prot-details-content">'
+        + '<p class="prot-details-content-text">' + item.description.html + '</p>'
+        + '</div>'
         + '</div>'
         + '</div>';
     }).join('');
@@ -995,7 +1029,15 @@
       + '</div>'
       + '</div>';
 
-    var essentialProtBundle = (finalProtectionBundleList.find(function (b) { return b.bundleName === 'Essential Protection'; }) || finalProtectionBundleList[1]) || null;
+    var essentialProtBundle =
+      finalProtectionBundleList.find(function (b) {
+        return b.bundleName === "Essential Protection";
+      }) ||
+      finalProtectionBundleList.find(function (b) {
+        return b.bundleName === "Basic Cover";
+      }) ||
+      finalProtectionBundleList[1] ||
+      null;
     var staticEssentialProtCard = '';
     if (essentialProtBundle) {
       var essProtItems = essentialProtBundle.includedProtections && essentialProtBundle.includedProtections.length ? essentialProtBundle.includedProtections : [];
@@ -1065,9 +1107,9 @@
       + '<h2 class="prot-title">WHICH PROTECTION DO YOU NEED?</h2>'
       + '<div class="intial-prot-cards">' + staticNoProtectionCard + staticEssentialProtCard + '</div>'
       + '<div class="prot-cards">' + protBundleCardsHTML + '</div>'
-      + '<div class="prot-all-packages"><button class="btn-all-packages">View all protection packages</button></div>'
+      + '<div class="prot-all-packages">' + (finalProtectionBundleList.length > 2 ? '<button type="button" class="btn-all-packages">View all protection packages</button>' : '') + '</div>'
       + '<div class="protection-items-section">' + protItemsHTML + '</div>'
-      + '<div class="protection-items-section-footer"><button class="btn-all-packages-items">View all protection packages</button></div>'
+      + '<div class="protection-items-section-footer">' + (finalProtectionItemList.length > 1 ? '<button type="button" class="btn-all-packages-items">View all protection options</button>' : '') + '</div>'
       + '<!-- Add-ons section -->'
       + '<div class="add-ons-section">'
       + '<div class="add-on-bundles-section">'
@@ -1076,7 +1118,7 @@
       + '</div>'
       + '<h3 class="add-on-title">Have you selected your ADD-ONS?</h3>'
       + '<div class="add-ons-content">' + addOnItemCardsHTML + '</div>'
-      + '<div class="add-ons-footer"><button class="add-on-btn-all-packages">View all add-ons options</button></div>'
+      + '<div class="add-ons-footer">' + (finalAddOnItemList.length > 4 ? '<button type="button" class="add-on-btn-all-packages">View all add-ons options</button>' : '') + '</div>'
       + '</div>'
       + '</div>';
 
@@ -1288,7 +1330,7 @@
       });
 
       // Protection items toggle listener
-      const protectionToggles = document.querySelectorAll("#" + TEST_ID + " .protection-item");
+      const protectionToggles = document.querySelectorAll("#" + TEST_ID + " .prot-checkbox-label input");
       protectionToggles.forEach(toggle => {
         toggle.addEventListener("click", async (e) => {
           const code = toggle.getAttribute("data-code");
@@ -2047,9 +2089,11 @@
         e.preventDefault();
         const bundleCode = staticNoProtCard.getAttribute("data-code");
         console.log(bundleCode, "bundleCode");
-        const jsonBundle = finalProtectionBundleList.find(item => item.bundleName === bundleCode);
-        const extrasBundle = extrasProtectionBundleList.find(item => item.code === bundleCode);
-        const jsonBundleItems = [...jsonBundle.includedProtections, ...jsonBundle.excludedProtections];
+        const extrasBundle = extrasProtectionBundleList.find(item => item.code === bundleCode) || {};
+        const jsonBundle = finalProtectionBundleList.find(item => item.bundleName === bundleCode) || {};
+        const jsonBundleIncludeItems = jsonBundle.includedProtections || [];
+        const jsonBundleExcludeItems = jsonBundle.excludedProtections || [];
+        const jsonBundleItems = [...jsonBundleIncludeItems, ...jsonBundleExcludeItems];
         const sessionOne = getSessionData();
         sessionOne.protectionBundleCode = bundleCode;
         sessionOne.protectionBundleCodeBackup = bundleCode;
@@ -2059,9 +2103,9 @@
         sessionOne.protectionBundleItemsPolicies = "";
 
         // if any selected protection bundle
-        const prevSelectedProtBundle = sessionOne.protectionBundleSelected;
+        const prevSelectedProtBundle = sessionOne.protectionBundleSelected || {};
         let prevSelectedProtBundleItems = [];
-        if (prevSelectedProtBundle) {
+        if (Object.keys(prevSelectedProtBundle).length > 0) {
           prevSelectedProtBundleItems = prevSelectedProtBundle.items.filter(item => item.included).map(item => item.code);
         }
         console.log(prevSelectedProtBundleItems, "prevSelectedProtBundleItems");
@@ -2075,29 +2119,32 @@
         console.log(filteredPrevAddOnItems, "filteredPrevAddOnItems");
 
         //bundle select payload
-        const selectedBundlePayload = {
-          code: extrasBundle.code || "",
-          title: extrasBundle?.code || "",
-          defaultBundle: jsonBundle.defaultBundle || null,
-          coverageRating: coverageRatings[jsonBundle.coverageRating] || 0,
-          description: jsonBundle.bundleDescription.html || "",
-          items: jsonBundleItems.map(item => {
-            return {
-              id: item.code || "",
-              code: item.code || "",
-              title: item.name || "",
-              description: item.description.html || "",
-              included: extrasBundle.items.some(i => i.code === item.code) || false,
-              currencyCode: extrasBundle.currencyCode || "",
-              policy: item.policy === "required" ? "MANDATORY" : "OPTIONAL",
-            }
-          }),
-          oldPrice: avisConfigData.pricingDisplay === "dailyRate" ? extrasBundle.grossSubtotal : extrasBundle.grossTotal,
-          price: avisConfigData.pricingDisplay === "dailyRate" ? extrasBundle.netSubtotal : extrasBundle.netTotal,
-          recommended: jsonBundle.recommendedBundle,
-          warning: jsonBundle.alertMessageIfSelected || "",
-          bookAgain: extrasBundle.bookAgain || false,
-          currencyCode: extrasBundle.currencyCode || "",
+        let selectedBundlePayload = {};
+        if (Object.keys(extrasBundle).length > 0) {
+          selectedBundlePayload = {
+            code: extrasBundle.code || "",
+            title: extrasBundle?.code || "",
+            defaultBundle: jsonBundle.defaultBundle || null,
+            coverageRating: coverageRatings[jsonBundle.coverageRating] || 0,
+            description: jsonBundle.bundleDescription.html || "",
+            items: jsonBundleItems.map(item => {
+              return {
+                id: item.code || "",
+                code: item.code || "",
+                title: item.name || "",
+                description: item.description.html || "",
+                included: extrasBundle.items.some(i => i.code === item.code) || false,
+                currencyCode: extrasBundle.currencyCode || "",
+                policy: item.policy === "required" ? "MANDATORY" : "OPTIONAL",
+              }
+            }),
+            oldPrice: avisConfigData.pricingDisplay === "dailyRate" ? extrasBundle.grossSubtotal : extrasBundle.grossTotal,
+            price: avisConfigData.pricingDisplay === "dailyRate" ? extrasBundle.netSubtotal : extrasBundle.netTotal,
+            recommended: jsonBundle.recommendedBundle,
+            warning: jsonBundle.alertMessageIfSelected || "",
+            bookAgain: extrasBundle.bookAgain || false,
+            currencyCode: extrasBundle.currencyCode || "",
+          }
         }
         sessionOne.protectionBundleSelected = selectedBundlePayload;
         sessionOne.protectionItems = "";
@@ -2111,7 +2158,7 @@
         })
         console.log(finalFilterPrevAddOnItems, "finalFilterPrevAddOnItems");
         const calculatePayload = {
-          age: extrasAPIPayload.age,
+          age: extrasAPIPayload.age || 25,
           countryOfResidence: extrasAPIPayload.countryOfResidence,
           currencyCode: extrasAPIPayload.currencyCode,
           discountCodes: extrasAPIPayload.discountCodes,
@@ -2183,6 +2230,18 @@
         })
       })
 
+      // protection item details toggle
+      const protDetailsBtn = document.querySelectorAll("#" + TEST_ID + " .prot-details");
+      protDetailsBtn.forEach((detail) => {
+        detail.addEventListener("click", (e) => {
+          e.preventDefault();
+          console.log("cickicng details")
+          const addOnCard = detail.closest(".protection-item");
+          const addOnDetailsContent = addOnCard.querySelector(".prot-details-content");
+          addOnDetailsContent.classList.toggle("expend")
+        })
+      })
+
       // dynamically hide all add-on cards beyond the first 4
       const allCards = document.querySelectorAll("#" + TEST_ID + " .add-ons-content .add-on-card");
       console.log(allCards, "allCards");
@@ -2196,15 +2255,17 @@
       // Add-On items view all toggle 
       const addOnBtn = document.querySelector("#" + TEST_ID + " .add-on-btn-all-packages");
       const addOnItems = document.querySelectorAll("#" + TEST_ID + " .add-ons-content .add-on-card");
-      addOnBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        addOnItems.forEach((item, i) => {
-          if (i >= 4) {
-            item.classList.toggle("add-ons-extra-card");
-          }
+      if (addOnBtn) {
+        addOnBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          addOnItems.forEach((item, i) => {
+            if (i >= 4) {
+              item.classList.toggle("add-ons-extra-card");
+            }
+          });
+          addOnBtn.textContent = addOnBtn.textContent === "View all add-ons options" ? "Hide all add-ons options" : "View all add-ons options";
         });
-        addOnBtn.textContent = addOnBtn.textContent === "View all add-ons options" ? "Hide all add-ons options" : "View all add-ons options";
-      });
+      }
       // Protection budle toggle
       const btn = document.querySelector("#" + TEST_ID + " .btn-all-packages");
       const container = document.querySelector("#" + TEST_ID + " .prot-cards");
@@ -2223,8 +2284,35 @@
         btnItems.addEventListener("click", (e) => {
           e.preventDefault();
           containerItems.classList.toggle("show-all");
-          btnItems.textContent = containerItems.classList.contains("show-all") ? "Hide protection package" : "View all protection packages";
+          btnItems.textContent = containerItems.classList.contains("show-all") ? "Hide protection options" : "View all protection options";
         });
+      }
+      //progress bar number change to 3
+      poll(
+        () => document.querySelector('[data-testid="stepper-step-label-4"] .Mui-active div'),
+        () => {
+          const activeCircle = document.querySelector('[data-testid="stepper-step-label-4"] .Mui-active div');
+          if (activeCircle) {
+            activeCircle.textContent = '3';
+          }
+        }
+      )
+
+      // change summary order on mobile devices
+      if (window.matchMedia("(max-width: 767px)").matches) {
+        poll(
+          () => document.querySelector('[data-testid="ancillaries-action-footer"]'),
+          () => {
+            const selectorEl = document.querySelector('[data-testid="ancillaries-action-footer"]');
+            const targetEl = document.querySelector('[data-testid="booking-summary-wrapper"]')
+            if (targetEl) {
+              const targetParentEl = targetEl.parentElement;
+              if (targetParentEl) {
+                selectorEl.insertAdjacentElement("beforebegin", targetParentEl)
+              }
+            }
+          }
+        )
       }
 
       console.log(TEST_ID + " injected");

@@ -67,7 +67,7 @@
   .intial-prot-cards {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+    gap: 16px;
     margin-bottom: 0;
     width: 100%;
     transition: all 0.3s ease;
@@ -137,8 +137,17 @@
 
       .protection-item-actions {
         display: flex;
-        justify-content: end;
+        justify-content: space-between;
         align-items: flex-end;
+
+        .prot-details {
+          font-size: 14px;
+          font-weight: 800;
+          color: #000;
+          text-decoration: underline;
+          text-underline-offset: 3px;
+          cursor: pointer;
+        }
 
         .price-info {
           font-size: 28px;
@@ -169,6 +178,22 @@
           margin: 0;
         }
       }
+
+      .prot-details-content {
+        height: 0;
+        overflow: hidden;
+        transition: height 0.5s ease-in-out;
+        font-size: 14px !important;
+
+        .prot-details-content-text {
+          margin: 0;
+        }
+      }
+
+      .prot-details-content.expend {
+        height: auto !important;
+      }
+
     }
 
     .protection-item.included {
@@ -239,6 +264,8 @@
       }
 
       &.selected {
+        border-color: #000;
+        
         .card-radio {
           background: #fff;
           border-color: #000;
@@ -257,6 +284,15 @@
         display: flex;
         justify-content: end;
         align-items: flex-end;
+
+        .prot-details {
+          font-size: 14px;
+          font-weight: 800;
+          color: #000;
+          text-decoration: underline;
+          text-underline-offset: 3px;
+          cursor: pointer;
+        }
 
         .price-info {
           font-size: 28px;
@@ -393,15 +429,6 @@
       color: #524D4D;
       line-height: 20px;
       letter-spacing: 0.06px;
-
-      // .chevron {
-      //   width: 8px;
-      //   height: 8px;
-      //   border-left: 1px solid #000;
-      //   border-bottom: 1px solid #000;
-      //   transform: rotate(-45deg);
-      //   margin-top: -4px;
-      // }
     }
 
     .price-info {
@@ -448,7 +475,6 @@
       border-radius: 8px;
       padding: 24px;
       background: #fff;
-      cursor: pointer;
       transition: box-shadow 0.2s, border-color 0.2s;
 
       .protection-item-info {
@@ -464,17 +490,6 @@
           margin: 0;
         }
 
-        .radio-outer {
-          display: inline-block;
-          width: 24px;
-          height: 24px;
-          border-radius: 50%;
-          border: 1.5px solid #000;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
-
       }
 
       &:hover {
@@ -484,24 +499,18 @@
       &.selected {
         border-color: #000;
 
-        .card-radio {
-          background: #fff;
-          border-color: #000;
-
-          .radio-inner {
-            width: 16px;
-            height: 16px;
-            background: #000;
-            border-radius: 50%;
-          }
+        .toggle-label-text {
+          color: #000;
         }
       }
 
 
       .protection-item-actions {
         display: flex;
-        justify-content: end;
+        justify-content: space-between;
         align-items: flex-end;
+        flex-wrap: wrap;
+        gap: 5px;
 
         .price-info {
           font-size: 28px;
@@ -521,8 +530,109 @@
           }
         }
 
+        .details-and-check {
+          display: flex;
+          gap: 24px;
+
+          .prot-details {
+            font-size: 14px;
+            font-weight: 800;
+            color: #000;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            cursor: pointer;
+          }
+
+          .prot-checkbox-section {
+            display: flex;
+          }
+
+          .prot-checkbox-label {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin: 0;
+            cursor: pointer;
+
+            input {
+              opacity: 0;
+              width: 0;
+              height: 0;
+              position: absolute;
+            }
+
+            .toggle-label-text {
+              font-size: 14px;
+              font-weight: 400;
+              color: #524D4D;
+              white-space: nowrap;
+              user-select: none;
+              line-height: 20px;
+
+              &:hover {
+                color: #000;
+              }
+            }
+
+            .checkbox-mark {
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              width: 16px;
+              height: 16px;
+              border: 1px solid #C7C5C5;
+              border-radius: 2px;
+              background-color: #fff;
+              transition: background-color 0.2s ease, border-color 0.2s ease;
+              flex-shrink: 0;
+
+              &:after {
+                content: "";
+                display: none;
+                width: 5px;
+                height: 9px;
+                border: 2px solid #fff;
+                border-top: none;
+                border-left: none;
+                transform: rotate(45deg) translate(-1px, -1px);
+              }
+            }
+
+            input:checked+.toggle-label-text+.checkbox-mark,
+            input:checked+.checkbox-mark {
+              background-color: #000;
+              border-color: #000;
+
+              &:after {
+                display: block;
+              }
+            }
+          }
+
+          .included-text {
+            display: none;
+          }
+
+        }
+
         .included-text {
           display: none;
+        }
+
+        .prot-details-content {
+          height: 0;
+          overflow: hidden;
+          transition: height 0.5s ease-in-out;
+          font-size: 14px !important;
+
+          .prot-details-content-text {
+            margin: 0;
+          }
+        }
+
+        .prot-details-content.expend {
+          height: auto !important;
         }
       }
     }
@@ -534,24 +644,19 @@
     .protection-item.included {
       pointer-events: none;
       border-color: #000;
-      .price-info {
-        display: none;
+
+      .prot-checkbox-label {
+        display: none !important;
       }
 
       .included-text {
         display: block !important;
-      }
-
-      .card-radio {
-        background: #fff;
-        border-color: #000;
-
-        .radio-inner {
-          width: 16px;
-          height: 16px;
-          background: #000;
-          border-radius: 50%;
-        }
+        font-size: 14px;
+        font-weight: 500;
+        color: #524D4D;
+        white-space: nowrap;
+        user-select: none;
+        line-height: 20px;
       }
     }
   }
@@ -880,10 +985,6 @@
     }
   }
 
-  .add-on-card.included:hover {
-    border-color: #D7DBE0 !important;
-  }
-
   .add-on-card.default button.quantity-plus {
     border: 1px solid #000 !important;
     color: #000 !important;
@@ -970,5 +1071,15 @@
     background-color: transparent;
     margin-top: 16px;
     padding: 0;
+  }
+
+  @media (max-width: 767px) {
+    [data-testid="booking-summary-wrapper"] {
+      margin-top: 24px;
+    }
+  }
+  //disable footer price click
+  [data-testid="action-footer-total-amount"] {
+    pointer-events: none !important;
   }
 }

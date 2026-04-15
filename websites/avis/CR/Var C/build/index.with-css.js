@@ -63,7 +63,7 @@
 .MVT-36 .intial-prot-cards {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
+  gap: 16px;
   margin-bottom: 0;
   width: 100%;
   transition: all 0.3s ease;
@@ -168,7 +168,7 @@
   .intial-prot-cards
   .protection-item
   .protection-item-actions
-  .included-text {
+  .included-in-bundle-text {
   display: none;
   font-size: 14px;
   font-weight: 700;
@@ -178,21 +178,28 @@
   line-height: 20px;
   margin: 0;
 }
-.MVT-36 .intial-prot-cards .protection-item.included {
+.MVT-36 .intial-prot-cards .protection-item.included-in-bundle {
   border-color: #000;
   pointer-events: none;
 }
-.MVT-36 .intial-prot-cards .protection-item.included .price-info {
+.MVT-36 .intial-prot-cards .protection-item.included-in-bundle .price-info {
   display: none;
 }
-.MVT-36 .intial-prot-cards .protection-item.included .included-text {
+.MVT-36
+  .intial-prot-cards
+  .protection-item.included-in-bundle
+  .included-in-bundle-text {
   display: block !important;
 }
-.MVT-36 .intial-prot-cards .protection-item.included .card-radio {
+.MVT-36 .intial-prot-cards .protection-item.included-in-bundle .card-radio {
   background: #fff;
   border-color: #000;
 }
-.MVT-36 .intial-prot-cards .protection-item.included .card-radio .radio-inner {
+.MVT-36
+  .intial-prot-cards
+  .protection-item.included-in-bundle
+  .card-radio
+  .radio-inner {
   width: 16px;
   height: 16px;
   background: #000;
@@ -454,44 +461,17 @@
   letter-spacing: 0.06px !important;
   margin: 0;
 }
-.MVT-36
-  .protection-items-section
-  .protection-item
-  .protection-item-info
-  .radio-outer {
-  display: inline-block;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  border: 1.5px solid #000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 .MVT-36 .protection-items-section .protection-item:hover {
   border-color: #000;
 }
 .MVT-36 .protection-items-section .protection-item.selected {
   border-color: #000;
 }
-.MVT-36 .protection-items-section .protection-item.selected .card-radio {
-  background: #fff;
-  border-color: #000;
-}
-.MVT-36
-  .protection-items-section
-  .protection-item.selected
-  .card-radio
-  .radio-inner {
-  width: 16px;
-  height: 16px;
-  background: #000;
-  border-radius: 50%;
-}
 .MVT-36 .protection-items-section .protection-item .protection-item-actions {
   display: flex;
-  justify-content: end;
+  justify-content: space-between;
   align-items: flex-end;
+  flex-wrap: wrap;
 }
 .MVT-36
   .protection-items-section
@@ -527,15 +507,210 @@
   .protection-items-section
   .protection-item
   .protection-item-actions
+  .details-and-check {
+  display: flex;
+  gap: 24px;
+}
+.MVT-36
+  .protection-items-section
+  .protection-item
+  .protection-item-actions
+  .details-and-check
+  .prot-details {
+  font-size: 14px;
+  font-weight: 800;
+  color: #000;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.MVT-36
+  .protection-items-section
+  .protection-item
+  .protection-item-actions
+  .details-and-check
+  .prot-checkbox-section {
+  display: flex;
+}
+.MVT-36
+  .protection-items-section
+  .protection-item
+  .protection-item-actions
+  .details-and-check
+  .prot-checkbox-label {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  cursor: pointer;
+}
+.MVT-36
+  .protection-items-section
+  .protection-item
+  .protection-item-actions
+  .details-and-check
+  .prot-checkbox-label
+  input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+.MVT-36
+  .protection-items-section
+  .protection-item
+  .protection-item-actions
+  .details-and-check
+  .prot-checkbox-label
+  .toggle-label-text {
+  font-size: 14px;
+  font-weight: 400;
+  color: #524d4d;
+  white-space: nowrap;
+  user-select: none;
+  line-height: 20px;
+}
+.MVT-36
+  .protection-items-section
+  .protection-item
+  .protection-item-actions
+  .details-and-check
+  .prot-checkbox-label
+  .toggle-label-text:hover {
+  color: #000;
+}
+.MVT-36
+  .protection-items-section
+  .protection-item
+  .protection-item-actions
+  .details-and-check
+  .prot-checkbox-label
+  .checkbox-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #c7c5c5;
+  border-radius: 2px;
+  background-color: #fff;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+  flex-shrink: 0;
+}
+.MVT-36
+  .protection-items-section
+  .protection-item
+  .protection-item-actions
+  .details-and-check
+  .prot-checkbox-label
+  .checkbox-mark:after {
+  content: "";
+  display: none;
+  width: 5px;
+  height: 9px;
+  border: 2px solid #fff;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg) translate(-1px, -1px);
+}
+.MVT-36
+  .protection-items-section
+  .protection-item
+  .protection-item-actions
+  .details-and-check
+  .prot-checkbox-label
+  input:checked
+  + .toggle-label-text
+  + .checkbox-mark,
+.MVT-36
+  .protection-items-section
+  .protection-item
+  .protection-item-actions
+  .details-and-check
+  .prot-checkbox-label
+  input:checked
+  + .checkbox-mark {
+  background-color: #000;
+  border-color: #000;
+}
+.MVT-36
+  .protection-items-section
+  .protection-item
+  .protection-item-actions
+  .details-and-check
+  .prot-checkbox-label
+  input:checked
+  + .toggle-label-text
+  + .checkbox-mark:after,
+.MVT-36
+  .protection-items-section
+  .protection-item
+  .protection-item-actions
+  .details-and-check
+  .prot-checkbox-label
+  input:checked
+  + .checkbox-mark:after {
+  display: block;
+}
+.MVT-36
+  .protection-items-section
+  .protection-item
+  .protection-item-actions
+  .details-and-check
   .included-text {
   display: none;
 }
-.MVT-36 .protection-items-section .protection-item.included {
-  pointer-events: none;
-  border-color: #000;
-}
-.MVT-36 .protection-items-section .protection-item.included .price-info {
+.MVT-36
+  .protection-items-section
+  .protection-item
+  .protection-item-actions
+  .included-text {
   display: none;
+}
+.MVT-36
+  .protection-items-section
+  .protection-item
+  .protection-item-actions
+  .included-in-bundle-text {
+  display: none;
+}
+.MVT-36
+  .protection-items-section
+  .protection-item
+  .protection-item-actions
+  .prot-details-content {
+  height: 0;
+  overflow: hidden;
+  transition: height 0.5s ease-in-out;
+  font-size: 14px !important;
+}
+.MVT-36
+  .protection-items-section
+  .protection-item
+  .protection-item-actions
+  .prot-details-content
+  .prot-details-content-text {
+  margin: 0;
+}
+.MVT-36
+  .protection-items-section
+  .protection-item
+  .protection-item-actions
+  .prot-details-content.expend {
+  height: auto !important;
+}
+.MVT-36 .protection-items-section .protection-item.included {
+  border-color: #000;
+  cursor: default;
+}
+.MVT-36
+  .protection-items-section
+  .protection-item.included
+  .prot-checkbox-label {
+  display: none !important;
 }
 .MVT-36 .protection-items-section .protection-item.included .included-text {
   display: block !important;
@@ -547,19 +722,28 @@
   line-height: 20px;
   margin: 0;
 }
-.MVT-36 .protection-items-section .protection-item.included .card-radio {
-  background: #fff;
+.MVT-36 .protection-items-section .protection-item.included-in-bundle {
+  pointer-events: none;
   border-color: #000;
 }
 .MVT-36
   .protection-items-section
-  .protection-item.included
-  .card-radio
-  .radio-inner {
-  width: 16px;
-  height: 16px;
-  background: #000;
-  border-radius: 50%;
+  .protection-item.included-in-bundle
+  .prot-checkbox-label {
+  display: none !important;
+}
+.MVT-36
+  .protection-items-section
+  .protection-item.included-in-bundle
+  .included-in-bundle-text {
+  display: block !important;
+  font-size: 14px;
+  font-weight: 700;
+  color: #524d4d;
+  white-space: nowrap;
+  user-select: none;
+  line-height: 20px;
+  margin: 0;
 }
 .MVT-36 .protection-items-section.show-all {
   max-height: 700px;
@@ -822,6 +1006,9 @@
 .MVT-36 .add-on-card .add-on-actions .add-on-toggle .included-text {
   display: none;
 }
+.MVT-36 .add-on-card .add-on-actions .add-on-toggle .included-in-bundle-text {
+  display: none;
+}
 .MVT-36 .add-on-card .add-on-details-content {
   height: 0;
   overflow: hidden;
@@ -848,11 +1035,8 @@
     justify-content: space-between;
   }
 }
-.MVT-36 .add-on-card.selected {
+.MVT-36 .add-on-card.included {
   border-color: #000;
-}
-.MVT-36 .add-on-card.add-ons-extra-card {
-  display: none;
 }
 .MVT-36 .add-on-card.included .add-on-toggle {
   pointer-events: none !important;
@@ -865,6 +1049,32 @@
   pointer-events: none !important;
 }
 .MVT-36 .add-on-card.included .included-text {
+  display: block !important;
+  font-size: 14px;
+  font-weight: 700;
+  color: #524d4d;
+  white-space: nowrap;
+  user-select: none;
+  line-height: 20px;
+  margin: 0;
+}
+.MVT-36 .add-on-card.selected {
+  border-color: #000;
+}
+.MVT-36 .add-on-card.add-ons-extra-card {
+  display: none;
+}
+.MVT-36 .add-on-card.included-in-bundle .add-on-toggle {
+  pointer-events: none !important;
+  cursor: default !important;
+}
+.MVT-36 .add-on-card.included-in-bundle input,
+.MVT-36 .add-on-card.included-in-bundle .toggle-label-text,
+.MVT-36 .add-on-card.included-in-bundle .checkbox-mark {
+  display: none !important;
+  pointer-events: none !important;
+}
+.MVT-36 .add-on-card.included-in-bundle .included-in-bundle-text {
   display: block !important;
   font-size: 14px;
   font-weight: 700;
@@ -951,6 +1161,11 @@
   background-color: transparent;
   margin-top: 16px;
   padding: 0;
+}
+@media (max-width: 767px) {
+  .MVT-36 [data-testid="booking-summary-wrapper"] {
+    margin-top: 24px;
+  }
 }
 `;
       document.head.appendChild(style);
@@ -1124,9 +1339,13 @@
     return data || {};
   }
 
-  //get price with currenty
+  //get price with currenty fun
   const getPriceWithCurrenty = function (code, amount) {
-    const formateAmount = Number(amount).toFixed(2);
+    const formateAmount = Number(amount).toLocaleString("en", {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    });
+
     const symbol = function () {
       if (!code) return "$";
       return (0)
@@ -1136,6 +1355,7 @@
         })
         .replace(/[\d\s.,]/g, "");
     };
+
     return /[a-zA-Z]/.test(symbol())
       ? symbol() + " " + formateAmount
       : symbol() + formateAmount;
@@ -1144,8 +1364,14 @@
   //prot and add-on item UI
   var protAndAddOnItemUIWrapper =
     '<div id="mvt-36-summary-prot" class="MuiAccordionDetails-root mui-u31f1m"></div>';
-  var protAndAddOnItemUI = function (desc, amount, item, quantity) {
-    var isGSO = desc === "Hassle-free Fuel Service";
+  var protAndAddOnItemUI = function (
+    desc,
+    amount,
+    item,
+    quantity,
+    isAvisFirst,
+  ) {
+    var isGSO = item.code === "GSO";
     var gsoSpan = isGSO
       ? '<span class="est-price" style="display: block;">Est. USD ' +
         item.netSubtotalPerUnit +
@@ -1195,6 +1421,64 @@
       "</span></div>" +
       "</a>"
     );
+  };
+
+  // Update protection & Add-On UI into summary
+  const updateProtAndAddOnSection = (calculateData) => {
+    const currencyCode = calculateData.currencyCode;
+    const protTotal = getPriceWithCurrenty(
+      currencyCode,
+      calculateData.totals.rentalOptionsTotal.toFixed(2),
+    );
+    const sessionData = getSessionData();
+    sessionData.isAvisFirst || false;
+    const sessionPriceProtectionItems = sessionData.pricesProtectionItems || [];
+    const sessionPriceAddOnItems = sessionData.pricesAddOnItems || [];
+    const protAndAddOnsItems = [
+      ...sessionPriceProtectionItems,
+      ...sessionPriceAddOnItems,
+    ].filter((item) => item.netSubtotal !== 0 || item.code === "GSO");
+    console.log(protAndAddOnsItems, "protAndAddOnsItems");
+    //protection & add-ons header price
+    const protAndAddOnsTotalHeader = document.querySelector(
+      '[data-testid="category-expand-button-protections-addons"]',
+    );
+    if (protAndAddOnsTotalHeader && protTotal) {
+      protAndAddOnsTotalHeader.classList.remove("disable-click");
+    } else {
+      protAndAddOnsTotalHeader.classList.add("disable-click");
+    }
+    const protectionAndAddOnsHeaderPrice = document.querySelector(
+      '[data-testid="rental-summary-protection-addons-recent-cost"]',
+    );
+    protectionAndAddOnsHeaderPrice.textContent = protTotal || 0;
+    const protAndAddOnItemListEl = document.querySelector(
+      '[aria-label="Protections & Add-ons"]',
+    );
+    if (protAndAddOnItemListEl) {
+      const existingEl = protAndAddOnItemListEl.querySelector(
+        ":scope > .MuiAccordionDetails-root",
+      );
+      if (existingEl) {
+        existingEl.remove();
+      }
+      protAndAddOnItemListEl.insertAdjacentHTML(
+        "beforeend",
+        protAndAddOnItemUIWrapper,
+      );
+      const wrapper = document.querySelector("#mvt-36-summary-prot");
+      protAndAddOnsItems.forEach((item) => {
+        wrapper.insertAdjacentHTML(
+          "beforeend",
+          protAndAddOnItemUI(
+            item.description,
+            getPriceWithCurrenty(currencyCode, item.netSubtotal.toFixed(2)),
+            item,
+            item.quantity,
+          ),
+        );
+      });
+    }
   };
 
   //saving and discount UI logic
@@ -1341,27 +1625,35 @@
       console.log(text, "text terms");
       if (text.includes("Day  minimum rental required")) {
         const textEl = el.querySelector("span");
-        textEl.textContent =
-          rateData.minRequiredDays + " Day  minimum rental required.";
+        if (textEl) {
+          textEl.textContent =
+            rateData.minRequiredDays + " Day  minimum rental required.";
+        }
       } else if (text.includes("hours maximum rental allowed")) {
         const textEl = el.querySelector("span");
-        textEl.textContent =
-          rateData.maxAllowedDays +
-          " Days " +
-          rateData.maxAllowedHours +
-          " hours maximum rental allowed.";
+        if (textEl) {
+          textEl.textContent =
+            rateData.maxAllowedDays +
+            " Days " +
+            rateData.maxAllowedHours +
+            " hours maximum rental allowed.";
+        }
       } else if (text.includes("If you need to cancel 24 hours")) {
         const textEl = el.querySelector("span");
-        textEl.textContent =
-          "If you need to cancel 24 hours prior to the scheduled pick-up time, we will refund the full prepaid amount less a " +
-          rateData.cancelFeeBefore24h +
-          " processing fee.";
+        if (textEl) {
+          textEl.textContent =
+            "If you need to cancel 24 hours prior to the scheduled pick-up time, we will refund the full prepaid amount less a " +
+            rateData.cancelFeeBefore24h +
+            " processing fee.";
+        }
       } else if (text.includes("If you need to cancel during the 24 hour")) {
         const textEl = el.querySelector("span");
-        textEl.textContent =
-          "If you need to cancel during the 24 hour period prior to the scheduled pick-up time, we will refund the full prepaid amount less a " +
-          rateData.cancelFeeWithin24h +
-          " processing fee.";
+        if (textEl) {
+          textEl.textContent =
+            "If you need to cancel during the 24 hour period prior to the scheduled pick-up time, we will refund the full prepaid amount less a " +
+            rateData.cancelFeeWithin24h +
+            " processing fee.";
+        }
       }
     });
     const selectorForUnlimiteMilage = document.querySelector(
@@ -1382,17 +1674,17 @@
     }
   };
   const footerPriceUI = (currencyCode, calculateData) => {
-    console.log("Rendered footer price UI");
     const footerPriceEl = document.querySelector(
       '[data-testid="action-footer-total-amount"]',
     );
-    console.log(footerPriceEl, "footerPriceEl");
-    footerPriceEl.textContent = getPriceWithCurrenty(
-      currencyCode,
-      calculateData.totals.total.toFixed(2),
-    );
+    if (footerPriceEl) {
+      footerPriceEl.textContent = getPriceWithCurrenty(
+        currencyCode,
+        calculateData.totals.total.toFixed(2),
+      );
+    }
   };
-  const updateProtectionCards = (currencyCode, calculateData) => {
+  const updateProtectionCards = (calculateData) => {
     const selectedBundle = calculateData.protectionBundle || {};
     const selectedBundleName = selectedBundle.code || "";
     console.log(selectedBundleName, "selectedBundleName");
@@ -1423,27 +1715,42 @@
     console.log(selectedBundleItems, "selectedBundleItems");
     const pricesAddOnItems = sessionData.pricesAddOnItems || [];
     console.log(pricesAddOnItems, "pricesAddOnItems");
+    const isAvistFirst = sessionData.isAvisFirst || false;
+    console.log(isAvistFirst, "isAvistFirst");
     addOnCardsCheckbox.forEach((checkbox) => {
       const dataCode = checkbox
         .querySelector("input")
         .getAttribute("data-code");
       console.log(dataCode, "dataCodeInsideAddOnCard");
+      const isGSO = dataCode === "GSO";
       const isIncluded = selectedBundleItems.some(
         (item) => item.code === dataCode,
       );
       const targetAddOnCard = checkbox.closest(".add-on-card");
       if (isIncluded) {
-        targetAddOnCard.classList.add("included");
+        targetAddOnCard.classList.add("included-in-bundle");
       } else {
-        targetAddOnCard.classList.remove("included");
+        targetAddOnCard.classList.remove("included-in-bundle");
       }
       const isSelected = pricesAddOnItems.some(
         (item) => item.code === dataCode,
       );
-      if (isSelected) {
+      console.log(
+        isSelected,
+        isGSO,
+        isAvistFirst,
+        dataCode,
+        "isSelected inside update addOn Items",
+      );
+      if (isAvistFirst && isSelected && isGSO) {
+        targetAddOnCard.classList.add("included");
+        targetAddOnCard.classList.remove("selected");
+      } else if (isSelected) {
         targetAddOnCard.classList.add("selected");
+        targetAddOnCard.classList.remove("included");
       } else {
         targetAddOnCard.classList.remove("selected");
+        targetAddOnCard.classList.remove("included");
       }
     });
   };
@@ -1468,13 +1775,18 @@
       const dataCode = item.getAttribute("data-code");
       console.log(dataCode, "dataCodeInsideProtectionItem");
       const isSelected = protItemsBackupArray.includes(dataCode);
+      const itemInputField = item.querySelector("input");
       if (isSelected) {
         item.classList.add("selected");
-      } else if (selectedProtBundleItemsArray.includes(dataCode)) {
-        item.classList.add("included");
-      } else {
+        if (itemInputField) itemInputField.checked = true;
+      }
+      if (selectedProtBundleItemsArray.includes(dataCode)) {
+        item.classList.add("included-in-bundle");
+      }
+      if (!isSelected && !selectedProtBundleItemsArray.includes(dataCode)) {
         item.classList.remove("selected");
-        item.classList.remove("included");
+        item.classList.remove("included-in-bundle");
+        if (itemInputField) itemInputField.checked = false;
       }
     });
     if (protItemsBackupArray.length > 0) {
@@ -1509,60 +1821,9 @@
   // =========== UPDATE UI: Car summary and Footer Price
   const updateCarSummaryAndFooterPrice = (calculateData) => {
     console.log("Summary function call mvt-36");
-    // ================= PROTECTION & ADD-ONS =================
     const currencyCode = calculateData.currencyCode;
-    const protTotal = getPriceWithCurrenty(
-      currencyCode,
-      calculateData.totals.rentalOptionsTotal.toFixed(2),
-    );
-    const sessionData = getSessionData();
-    const selectedProtBundle = sessionData.protectionBundleSelected || {};
-    selectedProtBundle.code;
-    const protAndAddOnsItems = [
-      ...sessionData.pricesProtectionItems,
-      ...sessionData.pricesAddOnItems,
-    ].filter((item) => item.netSubtotal > 0);
-    console.log(protAndAddOnsItems, "protAndAddOnsItems");
-    //protection & add-ons header price
-    const protAndAddOnsTotalHeader = document.querySelector(
-      '[data-testid="category-expand-button-protections-addons"]',
-    );
-    if (protAndAddOnsTotalHeader && protTotal) {
-      protAndAddOnsTotalHeader.classList.remove("disable-click");
-    } else {
-      protAndAddOnsTotalHeader.classList.add("disable-click");
-    }
-    const protectionAndAddOnsHeaderPrice = document.querySelector(
-      '[data-testid="rental-summary-protection-addons-recent-cost"]',
-    );
-    protectionAndAddOnsHeaderPrice.textContent = protTotal || 0;
-    const protAndAddOnItemListEl = document.querySelector(
-      '[aria-label="Protections & Add-ons"]',
-    );
-    if (protAndAddOnItemListEl) {
-      const existingEl = protAndAddOnItemListEl.querySelector(
-        ":scope > .MuiAccordionDetails-root",
-      );
-      if (existingEl) {
-        existingEl.remove();
-      }
-      protAndAddOnItemListEl.insertAdjacentHTML(
-        "beforeend",
-        protAndAddOnItemUIWrapper,
-      );
-      const wrapper = document.querySelector("#mvt-36-summary-prot");
-      protAndAddOnsItems.forEach((item) => {
-        wrapper.insertAdjacentHTML(
-          "beforeend",
-          protAndAddOnItemUI(
-            item.description,
-            getPriceWithCurrenty(currencyCode, item.netSubtotal.toFixed(2)),
-            item,
-            item.quantity,
-          ),
-        );
-      });
-    }
+    // ================= PROTECTION & ADD-ONS =================
+    updateProtAndAddOnSection(calculateData);
     // Summary total price update
     const totalPriceEl = document.querySelector(
       '[data-testid="rental-summary-total-value"]',
@@ -1596,7 +1857,7 @@
     // =============== FOOTER PRICE =============
     footerPriceUI(currencyCode, calculateData);
     // =============== UPDATE PROTECTION CARDS =============
-    updateProtectionCards(currencyCode, calculateData);
+    updateProtectionCards(calculateData);
     // =============== UPDATE ADD-ONS CARDS =============
     updateAddOnsCards();
     // =============== UPDATE PROTECTION ITEMS CARDS =============
@@ -1647,7 +1908,7 @@
     const storeAddOnBundle = sessionData.addOnBundleSelected || {};
     const hasAddOnBundleCode = storeAddOnBundle?.code;
     const calculatePayload = {
-      age: Number(sessionData.age),
+      age: Number(sessionData.age) || 25,
       countryOfResidence: sessionData.residencyValue,
       currencyCode: sessionData.userSelectedCurrency,
       discountCodes: [],
@@ -1841,15 +2102,21 @@
           (el) => el.code === itemCode,
         );
         console.log(itemData, "itemDta inside checkboxAddOnItems");
-        if (itemData) {
+        const isGSO = itemCode === "GSO";
+        const isAvistFirst = sessionData.isAvisFirst || false;
+        if (isAvistFirst && itemData && isGSO) {
+          inputEl.checked = true;
+          item.closest(".add-on-card").classList.add("included");
+        } else if (itemData) {
           inputEl.checked = true;
           item.closest(".add-on-card").classList.add("selected");
         } else {
           inputEl.checked = false;
           item.closest(".add-on-card").classList.remove("selected");
+          item.closest(".add-on-card").classList.remove("included");
         }
       });
-
+      updateProtAndAddOnSection(calculateData);
       updateAddOnsCards();
       updateProtectionItemsCards();
       updateStaticProtectionCard();
@@ -2227,13 +2494,30 @@
           '<h4 class="protection-item-title">' +
           item.name +
           "</h4>" +
-          '<div class="card-radio"><div class="radio-outer"><div class="radio-inner"></div></div></div>' +
           "</div>" +
           '<div class="protection-item-actions">' +
           '<div class="price-info">' +
           getPriceWithCurrenty(currencyCode, item.grossSubtotal) +
           ' <p class="per-day-slash">/<span class="per-day">day</span></p></div>' +
+          '<div class="details-and-check">' +
+          '<div class="prot-details">Details</div>' +
+          '<div class="prot-checkbox-section">' +
+          '<label class="prot-checkbox-label">' +
+          '<input type="checkbox" data-code="' +
+          item.code +
+          '">' +
+          '<span class="toggle-label-text">Add to Trip</span>' +
+          '<span class="checkbox-mark"></span>' +
+          "</label> " +
           '<div class="included-text">Included</div>' +
+          '<div class="included-in-bundle-text">Included in bundle</div>' +
+          "</div> " +
+          "</div>" +
+          '<div class="prot-details-content">' +
+          '<p class="prot-details-content-text">' +
+          item.description.html +
+          "</p>" +
+          "</div>" +
           "</div>" +
           "</div>"
         );
@@ -2341,6 +2625,7 @@
             '<span class="toggle-label-text">Add to Trip</span>' +
             '<span class="checkbox-mark"></span>' +
             '<p class="included-text">Included</p>' +
+            '<div class="included-in-bundle-text">Included in bundle</div>' +
             "</label>";
         return (
           '<div class="add-on-card ' +
@@ -2391,7 +2676,7 @@
       '<div class="protection-items-section">' +
       protItemsHTML +
       "</div>" +
-      '<div class="protection-items-section-footer"><button class="btn-all-packages-items">View all protection packages</button></div>' +
+      '<div class="protection-items-section-footer"><button class="btn-all-packages-items">View all protection options</button></div>' +
       "<!-- Add-ons section -->" +
       '<div class="add-ons-section">' +
       '<div class="add-on-bundles-section">' +
@@ -2686,7 +2971,7 @@
 
       // Protection items toggle listener
       const protectionToggles = document.querySelectorAll(
-        "#" + TEST_ID + " .protection-item",
+        "#" + TEST_ID + " .prot-checkbox-label input",
       );
       protectionToggles.forEach((toggle) => {
         toggle.addEventListener("click", async (e) => {
@@ -3801,6 +4086,22 @@
         });
       });
 
+      // protection item details toggle
+      const protDetailsBtn = document.querySelectorAll(
+        "#" + TEST_ID + " .prot-details",
+      );
+      protDetailsBtn.forEach((detail) => {
+        detail.addEventListener("click", (e) => {
+          e.preventDefault();
+          console.log("cickicng details");
+          const addOnCard = detail.closest(".protection-item");
+          const addOnDetailsContent = addOnCard.querySelector(
+            ".prot-details-content",
+          );
+          addOnDetailsContent.classList.toggle("expend");
+        });
+      });
+
       // dynamically hide all add-on cards beyond the first 4
       const allCards = document.querySelectorAll(
         "#" + TEST_ID + " .add-ons-content .add-on-card",
@@ -3857,9 +4158,46 @@
           e.preventDefault();
           containerItems.classList.toggle("show-all");
           btnItems.textContent = containerItems.classList.contains("show-all")
-            ? "Hide protection package"
-            : "View all protection packages";
+            ? "Hide protection options"
+            : "View all protection options";
         });
+      }
+      //progress bar number change to 3
+      poll(
+        () =>
+          document.querySelector(
+            '[data-testid="stepper-step-label-4"] .Mui-active div',
+          ),
+        () => {
+          const activeCircle = document.querySelector(
+            '[data-testid="stepper-step-label-4"] .Mui-active div',
+          );
+          if (activeCircle) {
+            activeCircle.textContent = "3";
+          }
+        },
+      );
+
+      // change summary order on mobile devices
+      if (window.matchMedia("(max-width: 767px)").matches) {
+        poll(
+          () =>
+            document.querySelector('[data-testid="ancillaries-action-footer"]'),
+          () => {
+            const selectorEl = document.querySelector(
+              '[data-testid="ancillaries-action-footer"]',
+            );
+            const targetEl = document.querySelector(
+              '[data-testid="booking-summary-wrapper"]',
+            );
+            if (targetEl) {
+              const targetParentEl = targetEl.parentElement;
+              if (targetParentEl) {
+                selectorEl.insertAdjacentElement("beforebegin", targetParentEl);
+              }
+            }
+          },
+        );
       }
 
       console.log(TEST_ID + " injected");

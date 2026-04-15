@@ -57,7 +57,7 @@
 .MVT-36 .intial-prot-cards {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
+  gap: 16px;
   margin-bottom: 0;
   width: 100%;
   transition: all 0.3s ease;
@@ -119,8 +119,16 @@
 }
 .MVT-36 .intial-prot-cards .protection-item .protection-item-actions {
   display: flex;
-  justify-content: end;
+  justify-content: space-between;
   align-items: flex-end;
+}
+.MVT-36 .intial-prot-cards .protection-item .protection-item-actions .prot-details {
+  font-size: 14px;
+  font-weight: 800;
+  color: #000;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
 }
 .MVT-36 .intial-prot-cards .protection-item .protection-item-actions .price-info {
   font-size: 28px;
@@ -146,6 +154,18 @@
   user-select: none;
   line-height: 20px;
   margin: 0;
+}
+.MVT-36 .intial-prot-cards .protection-item .prot-details-content {
+  height: 0;
+  overflow: hidden;
+  transition: height 0.5s ease-in-out;
+  font-size: 14px !important;
+}
+.MVT-36 .intial-prot-cards .protection-item .prot-details-content .prot-details-content-text {
+  margin: 0;
+}
+.MVT-36 .intial-prot-cards .protection-item .prot-details-content.expend {
+  height: auto !important;
 }
 .MVT-36 .intial-prot-cards .protection-item.included {
   border-color: #000;
@@ -204,6 +224,9 @@
   align-items: center;
   justify-content: center;
 }
+.MVT-36 .intial-prot-cards .static-no-prot-card.selected {
+  border-color: #000;
+}
 .MVT-36 .intial-prot-cards .static-no-prot-card.selected .card-radio {
   background: #fff;
   border-color: #000;
@@ -218,6 +241,14 @@
   display: flex;
   justify-content: end;
   align-items: flex-end;
+}
+.MVT-36 .intial-prot-cards .static-no-prot-card .protection-item-actions .prot-details {
+  font-size: 14px;
+  font-weight: 800;
+  color: #000;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
 }
 .MVT-36 .intial-prot-cards .static-no-prot-card .protection-item-actions .price-info {
   font-size: 28px;
@@ -373,7 +404,6 @@
   border-radius: 8px;
   padding: 24px;
   background: #fff;
-  cursor: pointer;
   transition: box-shadow 0.2s, border-color 0.2s;
 }
 .MVT-36 .protection-items-section .protection-item .protection-item-info {
@@ -388,36 +418,21 @@
   letter-spacing: 0.06px;
   margin: 0;
 }
-.MVT-36 .protection-items-section .protection-item .protection-item-info .radio-outer {
-  display: inline-block;
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  border: 1.5px solid #000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 .MVT-36 .protection-items-section .protection-item:hover {
   border-color: #000;
 }
 .MVT-36 .protection-items-section .protection-item.selected {
   border-color: #000;
 }
-.MVT-36 .protection-items-section .protection-item.selected .card-radio {
-  background: #fff;
-  border-color: #000;
-}
-.MVT-36 .protection-items-section .protection-item.selected .card-radio .radio-inner {
-  width: 16px;
-  height: 16px;
-  background: #000;
-  border-radius: 50%;
+.MVT-36 .protection-items-section .protection-item.selected .toggle-label-text {
+  color: #000;
 }
 .MVT-36 .protection-items-section .protection-item .protection-item-actions {
   display: flex;
-  justify-content: end;
+  justify-content: space-between;
   align-items: flex-end;
+  flex-wrap: wrap;
+  gap: 5px;
 }
 .MVT-36 .protection-items-section .protection-item .protection-item-actions .price-info {
   font-size: 28px;
@@ -434,8 +449,94 @@
 .MVT-36 .protection-items-section .protection-item .protection-item-actions .price-info .per-day-slash .per-day {
   vertical-align: middle;
 }
+.MVT-36 .protection-items-section .protection-item .protection-item-actions .details-and-check {
+  display: flex;
+  gap: 24px;
+}
+.MVT-36 .protection-items-section .protection-item .protection-item-actions .details-and-check .prot-details {
+  font-size: 14px;
+  font-weight: 800;
+  color: #000;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.MVT-36 .protection-items-section .protection-item .protection-item-actions .details-and-check .prot-checkbox-section {
+  display: flex;
+}
+.MVT-36 .protection-items-section .protection-item .protection-item-actions .details-and-check .prot-checkbox-label {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  cursor: pointer;
+}
+.MVT-36 .protection-items-section .protection-item .protection-item-actions .details-and-check .prot-checkbox-label input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+  position: absolute;
+}
+.MVT-36 .protection-items-section .protection-item .protection-item-actions .details-and-check .prot-checkbox-label .toggle-label-text {
+  font-size: 14px;
+  font-weight: 400;
+  color: #524D4D;
+  white-space: nowrap;
+  user-select: none;
+  line-height: 20px;
+}
+.MVT-36 .protection-items-section .protection-item .protection-item-actions .details-and-check .prot-checkbox-label .toggle-label-text:hover {
+  color: #000;
+}
+.MVT-36 .protection-items-section .protection-item .protection-item-actions .details-and-check .prot-checkbox-label .checkbox-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #C7C5C5;
+  border-radius: 2px;
+  background-color: #fff;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+  flex-shrink: 0;
+}
+.MVT-36 .protection-items-section .protection-item .protection-item-actions .details-and-check .prot-checkbox-label .checkbox-mark:after {
+  content: "";
+  display: none;
+  width: 5px;
+  height: 9px;
+  border: 2px solid #fff;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg) translate(-1px, -1px);
+}
+.MVT-36 .protection-items-section .protection-item .protection-item-actions .details-and-check .prot-checkbox-label input:checked + .toggle-label-text + .checkbox-mark,
+.MVT-36 .protection-items-section .protection-item .protection-item-actions .details-and-check .prot-checkbox-label input:checked + .checkbox-mark {
+  background-color: #000;
+  border-color: #000;
+}
+.MVT-36 .protection-items-section .protection-item .protection-item-actions .details-and-check .prot-checkbox-label input:checked + .toggle-label-text + .checkbox-mark:after,
+.MVT-36 .protection-items-section .protection-item .protection-item-actions .details-and-check .prot-checkbox-label input:checked + .checkbox-mark:after {
+  display: block;
+}
+.MVT-36 .protection-items-section .protection-item .protection-item-actions .details-and-check .included-text {
+  display: none;
+}
 .MVT-36 .protection-items-section .protection-item .protection-item-actions .included-text {
   display: none;
+}
+.MVT-36 .protection-items-section .protection-item .protection-item-actions .prot-details-content {
+  height: 0;
+  overflow: hidden;
+  transition: height 0.5s ease-in-out;
+  font-size: 14px !important;
+}
+.MVT-36 .protection-items-section .protection-item .protection-item-actions .prot-details-content .prot-details-content-text {
+  margin: 0;
+}
+.MVT-36 .protection-items-section .protection-item .protection-item-actions .prot-details-content.expend {
+  height: auto !important;
 }
 .MVT-36 .protection-items-section .protection-item[data-code=CDW] {
   display: none !important;
@@ -444,21 +545,17 @@
   pointer-events: none;
   border-color: #000;
 }
-.MVT-36 .protection-items-section .protection-item.included .price-info {
-  display: none;
+.MVT-36 .protection-items-section .protection-item.included .prot-checkbox-label {
+  display: none !important;
 }
 .MVT-36 .protection-items-section .protection-item.included .included-text {
   display: block !important;
-}
-.MVT-36 .protection-items-section .protection-item.included .card-radio {
-  background: #fff;
-  border-color: #000;
-}
-.MVT-36 .protection-items-section .protection-item.included .card-radio .radio-inner {
-  width: 16px;
-  height: 16px;
-  background: #000;
-  border-radius: 50%;
+  font-size: 14px;
+  font-weight: 500;
+  color: #524D4D;
+  white-space: nowrap;
+  user-select: none;
+  line-height: 20px;
 }
 .MVT-36 .protection-items-section.show-all {
   max-height: 700px;
@@ -736,9 +833,6 @@
   line-height: 20px;
   margin: 0;
 }
-.MVT-36 .add-on-card.included:hover {
-  border-color: #D7DBE0 !important;
-}
 .MVT-36 .add-on-card.default button.quantity-plus {
   border: 1px solid #000 !important;
   color: #000 !important;
@@ -812,4 +906,12 @@
   background-color: transparent;
   margin-top: 16px;
   padding: 0;
+}
+@media (max-width: 767px) {
+  .MVT-36 [data-testid=booking-summary-wrapper] {
+    margin-top: 24px;
+  }
+}
+.MVT-36 [data-testid=action-footer-total-amount] {
+  pointer-events: none !important;
 }

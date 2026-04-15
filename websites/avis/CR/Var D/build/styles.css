@@ -72,12 +72,14 @@
   flex-direction: column;
   gap: 16px;
   justify-content: space-between;
-  border: 2px solid #D7DBE0;
+  border: 2px solid #d7dbe0;
   border-radius: 8px;
   padding: 24px;
   background: #fff;
   cursor: pointer;
-  transition: box-shadow 0.2s, border-color 0.2s;
+  transition:
+    box-shadow 0.2s,
+    border-color 0.2s;
 }
 .MVT-36 .intial-prot-cards .protection-item:hover {
   border-color: #393636;
@@ -87,7 +89,11 @@
   justify-content: space-between;
   align-items: center;
 }
-.MVT-36 .intial-prot-cards .protection-item .protection-item-info .protection-item-title {
+.MVT-36
+  .intial-prot-cards
+  .protection-item
+  .protection-item-info
+  .protection-item-title {
   font-size: 20px;
   font-weight: 700;
   line-height: 28px;
@@ -122,26 +128,45 @@
   justify-content: end;
   align-items: flex-end;
 }
-.MVT-36 .intial-prot-cards .protection-item .protection-item-actions .price-info {
+.MVT-36
+  .intial-prot-cards
+  .protection-item
+  .protection-item-actions
+  .price-info {
   font-size: 28px;
   font-weight: 500;
   line-height: 21px;
   letter-spacing: 0px;
 }
-.MVT-36 .intial-prot-cards .protection-item .protection-item-actions .price-info .per-day-slash {
+.MVT-36
+  .intial-prot-cards
+  .protection-item
+  .protection-item-actions
+  .price-info
+  .per-day-slash {
   display: inline;
   font-size: 16px;
   margin-left: -4px;
   vertical-align: middle;
 }
-.MVT-36 .intial-prot-cards .protection-item .protection-item-actions .price-info .per-day-slash .per-day {
+.MVT-36
+  .intial-prot-cards
+  .protection-item
+  .protection-item-actions
+  .price-info
+  .per-day-slash
+  .per-day {
   vertical-align: middle;
 }
-.MVT-36 .intial-prot-cards .protection-item .protection-item-actions .included-in-bundle-text {
+.MVT-36
+  .intial-prot-cards
+  .protection-item
+  .protection-item-actions
+  .included-in-bundle-text {
   display: none;
   font-size: 14px;
   font-weight: 700;
-  color: #524D4D;
+  color: #524d4d;
   white-space: nowrap;
   user-select: none;
   line-height: 20px;
@@ -154,14 +179,21 @@
 .MVT-36 .intial-prot-cards .protection-item.included-in-bundle .price-info {
   display: none;
 }
-.MVT-36 .intial-prot-cards .protection-item.included-in-bundle .included-in-bundle-text {
+.MVT-36
+  .intial-prot-cards
+  .protection-item.included-in-bundle
+  .included-in-bundle-text {
   display: block !important;
 }
 .MVT-36 .intial-prot-cards .protection-item.included-in-bundle .card-radio {
   background: #fff;
   border-color: #000;
 }
-.MVT-36 .intial-prot-cards .protection-item.included-in-bundle .card-radio .radio-inner {
+.MVT-36
+  .intial-prot-cards
+  .protection-item.included-in-bundle
+  .card-radio
+  .radio-inner {
   width: 16px;
   height: 16px;
   background: #000;
@@ -172,12 +204,14 @@
   flex-direction: column;
   gap: 16px;
   justify-content: space-between;
-  border: 2px solid #D7DBE0;
+  border: 2px solid #d7dbe0;
   border-radius: 8px;
   padding: 24px;
   background: #fff;
   cursor: pointer;
-  transition: box-shadow 0.2s, border-color 0.2s;
+  transition:
+    box-shadow 0.2s,
+    border-color 0.2s;
 }
 .MVT-36 .intial-prot-cards .static-no-prot-card:hover {
   border-color: #393636;
@@ -187,14 +221,22 @@
   justify-content: space-between;
   align-items: center;
 }
-.MVT-36 .intial-prot-cards .static-no-prot-card .protection-item-info .protection-item-title {
+.MVT-36
+  .intial-prot-cards
+  .static-no-prot-card
+  .protection-item-info
+  .protection-item-title {
   font-size: 20px;
   font-weight: 700;
   line-height: 28px;
   letter-spacing: 0.06px !important;
   margin: 0;
 }
-.MVT-36 .intial-prot-cards .static-no-prot-card .protection-item-info .radio-outer {
+.MVT-36
+  .intial-prot-cards
+  .static-no-prot-card
+  .protection-item-info
+  .radio-outer {
   display: inline-block;
   width: 24px;
   height: 24px;
@@ -204,14 +246,15 @@
   align-items: center;
   justify-content: center;
 }
-.MVT-36 .intial-prot-cards .static-no-prot-card.selected {
-  border-color: #000;
-}
 .MVT-36 .intial-prot-cards .static-no-prot-card.selected .card-radio {
   background: #fff;
   border-color: #000;
 }
-.MVT-36 .intial-prot-cards .static-no-prot-card.selected .card-radio .radio-inner {
+.MVT-36
+  .intial-prot-cards
+  .static-no-prot-card.selected
+  .card-radio
+  .radio-inner {
   width: 16px;
   height: 16px;
   background: #000;
@@ -222,19 +265,34 @@
   justify-content: end;
   align-items: flex-end;
 }
-.MVT-36 .intial-prot-cards .static-no-prot-card .protection-item-actions .price-info {
+.MVT-36
+  .intial-prot-cards
+  .static-no-prot-card
+  .protection-item-actions
+  .price-info {
   font-size: 28px;
   font-weight: 500;
   line-height: 21px;
   letter-spacing: 0px;
 }
-.MVT-36 .intial-prot-cards .static-no-prot-card .protection-item-actions .price-info .per-day-slash {
+.MVT-36
+  .intial-prot-cards
+  .static-no-prot-card
+  .protection-item-actions
+  .price-info
+  .per-day-slash {
   display: inline;
   font-size: 16px;
   margin-left: -4px;
   vertical-align: middle;
 }
-.MVT-36 .intial-prot-cards .static-no-prot-card .protection-item-actions .price-info .per-day-slash .per-day {
+.MVT-36
+  .intial-prot-cards
+  .static-no-prot-card
+  .protection-item-actions
+  .price-info
+  .per-day-slash
+  .per-day {
   vertical-align: middle;
 }
 .MVT-36 .prot-cards {
@@ -260,7 +318,7 @@
   margin-bottom: 24px;
 }
 .MVT-36 .prot-card {
-  border: 2px solid #D7DBE0;
+  border: 2px solid #d7dbe0;
   border-radius: 8px;
   padding: 24px;
   display: flex;
@@ -332,7 +390,7 @@
   font-size: 14px;
   font-weight: 700;
   text-decoration: underline;
-  color: #524D4D;
+  color: #524d4d;
   line-height: 20px;
   letter-spacing: 0.06px;
 }
@@ -372,24 +430,43 @@
   flex-direction: column;
   gap: 16px;
   justify-content: space-between;
-  border: 2px solid #D7DBE0;
+  border: 2px solid #d7dbe0;
   border-radius: 8px;
   padding: 24px;
   background: #fff;
-  cursor: pointer;
-  transition: box-shadow 0.2s, border-color 0.2s;
+  transition:
+    box-shadow 0.2s,
+    border-color 0.2s;
 }
 .MVT-36 .protection-items-section .protection-item .protection-item-info {
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-.MVT-36 .protection-items-section .protection-item .protection-item-info .protection-item-title {
+.MVT-36
+  .protection-items-section
+  .protection-item
+  .protection-item-info
+  .protection-item-title {
   font-size: 20px;
   font-weight: 700;
   line-height: 28px;
   letter-spacing: 0.06px !important;
   margin: 0;
+}
+.MVT-36
+  .protection-items-section
+  .protection-item
+  .protection-item-info
+  .radio-outer {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1.5px solid #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .MVT-36 .protection-items-section .protection-item:hover {
   border-color: #000;
@@ -397,32 +474,70 @@
 .MVT-36 .protection-items-section .protection-item.selected {
   border-color: #000;
 }
+.MVT-36 .protection-items-section .protection-item.selected .card-radio {
+  background: #fff;
+  border-color: #000;
+}
+.MVT-36
+  .protection-items-section
+  .protection-item.selected
+  .card-radio
+  .radio-inner {
+  width: 16px;
+  height: 16px;
+  background: #000;
+  border-radius: 50%;
+}
 .MVT-36 .protection-items-section .protection-item .protection-item-actions {
   display: flex;
   justify-content: space-between;
   align-items: flex-end;
   flex-wrap: wrap;
 }
-.MVT-36 .protection-items-section .protection-item .protection-item-actions .price-info {
+.MVT-36
+  .protection-items-section
+  .protection-item
+  .protection-item-actions
+  .price-info {
   font-size: 28px;
   font-weight: 500;
   line-height: 21px;
   letter-spacing: 0px;
 }
-.MVT-36 .protection-items-section .protection-item .protection-item-actions .price-info .per-day-slash {
+.MVT-36
+  .protection-items-section
+  .protection-item
+  .protection-item-actions
+  .price-info
+  .per-day-slash {
   display: inline;
   font-size: 16px;
   margin-left: -4px;
   vertical-align: middle;
 }
-.MVT-36 .protection-items-section .protection-item .protection-item-actions .price-info .per-day-slash .per-day {
+.MVT-36
+  .protection-items-section
+  .protection-item
+  .protection-item-actions
+  .price-info
+  .per-day-slash
+  .per-day {
   vertical-align: middle;
 }
-.MVT-36 .protection-items-section .protection-item .protection-item-actions .details-and-check {
+.MVT-36
+  .protection-items-section
+  .protection-item
+  .protection-item-actions
+  .details-and-check {
   display: flex;
   gap: 24px;
 }
-.MVT-36 .protection-items-section .protection-item .protection-item-actions .details-and-check .prot-details {
+.MVT-36
+  .protection-items-section
+  .protection-item
+  .protection-item-actions
+  .details-and-check
+  .prot-details {
   font-size: 14px;
   font-weight: 800;
   color: #000;
@@ -430,10 +545,20 @@
   text-underline-offset: 3px;
   cursor: pointer;
 }
-.MVT-36 .protection-items-section .protection-item .protection-item-actions .details-and-check .prot-checkbox-section {
+.MVT-36
+  .protection-items-section
+  .protection-item
+  .protection-item-actions
+  .details-and-check
+  .prot-checkbox-section {
   display: flex;
 }
-.MVT-36 .protection-items-section .protection-item .protection-item-actions .details-and-check .prot-checkbox-label {
+.MVT-36
+  .protection-items-section
+  .protection-item
+  .protection-item-actions
+  .details-and-check
+  .prot-checkbox-label {
   position: relative;
   display: inline-flex;
   align-items: center;
@@ -441,36 +566,68 @@
   margin: 0;
   cursor: pointer;
 }
-.MVT-36 .protection-items-section .protection-item .protection-item-actions .details-and-check .prot-checkbox-label input {
+.MVT-36
+  .protection-items-section
+  .protection-item
+  .protection-item-actions
+  .details-and-check
+  .prot-checkbox-label
+  input {
   opacity: 0;
   width: 0;
   height: 0;
   position: absolute;
 }
-.MVT-36 .protection-items-section .protection-item .protection-item-actions .details-and-check .prot-checkbox-label .toggle-label-text {
+.MVT-36
+  .protection-items-section
+  .protection-item
+  .protection-item-actions
+  .details-and-check
+  .prot-checkbox-label
+  .toggle-label-text {
   font-size: 14px;
   font-weight: 400;
-  color: #524D4D;
+  color: #524d4d;
   white-space: nowrap;
   user-select: none;
   line-height: 20px;
 }
-.MVT-36 .protection-items-section .protection-item .protection-item-actions .details-and-check .prot-checkbox-label .toggle-label-text:hover {
+.MVT-36
+  .protection-items-section
+  .protection-item
+  .protection-item-actions
+  .details-and-check
+  .prot-checkbox-label
+  .toggle-label-text:hover {
   color: #000;
 }
-.MVT-36 .protection-items-section .protection-item .protection-item-actions .details-and-check .prot-checkbox-label .checkbox-mark {
+.MVT-36
+  .protection-items-section
+  .protection-item
+  .protection-item-actions
+  .details-and-check
+  .prot-checkbox-label
+  .checkbox-mark {
   display: flex;
   align-items: center;
   justify-content: center;
   width: 16px;
   height: 16px;
-  border: 1px solid #C7C5C5;
+  border: 1px solid #c7c5c5;
   border-radius: 2px;
   background-color: #fff;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
   flex-shrink: 0;
 }
-.MVT-36 .protection-items-section .protection-item .protection-item-actions .details-and-check .prot-checkbox-label .checkbox-mark:after {
+.MVT-36
+  .protection-items-section
+  .protection-item
+  .protection-item-actions
+  .details-and-check
+  .prot-checkbox-label
+  .checkbox-mark:after {
   content: "";
   display: none;
   width: 5px;
@@ -480,69 +637,158 @@
   border-left: none;
   transform: rotate(45deg) translate(-1px, -1px);
 }
-.MVT-36 .protection-items-section .protection-item .protection-item-actions .details-and-check .prot-checkbox-label input:checked + .toggle-label-text + .checkbox-mark,
-.MVT-36 .protection-items-section .protection-item .protection-item-actions .details-and-check .prot-checkbox-label input:checked + .checkbox-mark {
+.MVT-36
+  .protection-items-section
+  .protection-item
+  .protection-item-actions
+  .details-and-check
+  .prot-checkbox-label
+  input:checked
+  + .toggle-label-text
+  + .checkbox-mark,
+.MVT-36
+  .protection-items-section
+  .protection-item
+  .protection-item-actions
+  .details-and-check
+  .prot-checkbox-label
+  input:checked
+  + .checkbox-mark {
   background-color: #000;
   border-color: #000;
 }
-.MVT-36 .protection-items-section .protection-item .protection-item-actions .details-and-check .prot-checkbox-label input:checked + .toggle-label-text + .checkbox-mark:after,
-.MVT-36 .protection-items-section .protection-item .protection-item-actions .details-and-check .prot-checkbox-label input:checked + .checkbox-mark:after {
+.MVT-36
+  .protection-items-section
+  .protection-item
+  .protection-item-actions
+  .details-and-check
+  .prot-checkbox-label
+  input:checked
+  + .toggle-label-text
+  + .checkbox-mark:after,
+.MVT-36
+  .protection-items-section
+  .protection-item
+  .protection-item-actions
+  .details-and-check
+  .prot-checkbox-label
+  input:checked
+  + .checkbox-mark:after {
   display: block;
 }
-.MVT-36 .protection-items-section .protection-item .protection-item-actions .details-and-check .included-text {
+.MVT-36
+  .protection-items-section
+  .protection-item
+  .protection-item-actions
+  .details-and-check
+  .included-text {
   display: none;
 }
-.MVT-36 .protection-items-section .protection-item .protection-item-actions .included-text {
+.MVT-36
+  .protection-items-section
+  .protection-item
+  .protection-item-actions
+  .details-and-check
+  .included-in-bundle-text {
   display: none;
 }
-.MVT-36 .protection-items-section .protection-item .protection-item-actions .included-in-bundle-text {
-  display: none;
-}
-.MVT-36 .protection-items-section .protection-item .protection-item-actions .prot-details-content {
+.MVT-36
+  .protection-items-section
+  .protection-item
+  .protection-item-actions
+  .prot-details-content {
   height: 0;
   overflow: hidden;
   transition: height 0.5s ease-in-out;
   font-size: 14px !important;
 }
-.MVT-36 .protection-items-section .protection-item .protection-item-actions .prot-details-content .prot-details-content-text {
+.MVT-36
+  .protection-items-section
+  .protection-item
+  .protection-item-actions
+  .prot-details-content
+  .prot-details-content-text {
   margin: 0;
 }
-.MVT-36 .protection-items-section .protection-item .protection-item-actions .prot-details-content.expend {
+.MVT-36
+  .protection-items-section
+  .protection-item
+  .protection-item-actions
+  .prot-details-content.expend {
   height: auto !important;
 }
 .MVT-36 .protection-items-section .protection-item.included {
   border-color: #000;
   cursor: default;
 }
-.MVT-36 .protection-items-section .protection-item.included .prot-checkbox-label {
+.MVT-36 .protection-items-section .protection-item.included .card-radio {
+  background: #fff;
+  border-color: #000;
+}
+.MVT-36
+  .protection-items-section
+  .protection-item.included
+  .card-radio
+  .radio-inner {
+  width: 16px;
+  height: 16px;
+  background: #000;
+  border-radius: 50%;
+}
+.MVT-36
+  .protection-items-section
+  .protection-item.included
+  .prot-checkbox-label {
   display: none !important;
 }
 .MVT-36 .protection-items-section .protection-item.included .included-text {
   display: block !important;
   font-size: 14px;
   font-weight: 700;
-  color: #524D4D;
+  color: #524d4d;
   white-space: nowrap;
   user-select: none;
   line-height: 20px;
   margin: 0;
 }
 .MVT-36 .protection-items-section .protection-item.included-in-bundle {
-  pointer-events: none;
   border-color: #000;
 }
-.MVT-36 .protection-items-section .protection-item.included-in-bundle .prot-checkbox-label {
+.MVT-36
+  .protection-items-section
+  .protection-item.included-in-bundle
+  .prot-checkbox-label {
   display: none !important;
 }
-.MVT-36 .protection-items-section .protection-item.included-in-bundle .included-in-bundle-text {
+.MVT-36
+  .protection-items-section
+  .protection-item.included-in-bundle
+  .included-in-bundle-text {
   display: block !important;
   font-size: 14px;
   font-weight: 700;
-  color: #524D4D;
+  color: #524d4d;
   white-space: nowrap;
   user-select: none;
   line-height: 20px;
   margin: 0;
+}
+.MVT-36
+  .protection-items-section
+  .protection-item.included-in-bundle
+  .card-radio {
+  background: #fff;
+  border-color: #000;
+}
+.MVT-36
+  .protection-items-section
+  .protection-item.included-in-bundle
+  .card-radio
+  .radio-inner {
+  width: 16px;
+  height: 16px;
+  background: #000;
+  border-radius: 50%;
 }
 .MVT-36 .protection-items-section.show-all {
   max-height: 700px;
@@ -569,7 +815,11 @@
   flex-direction: column;
   gap: 16px;
 }
-.MVT-36 .add-ons-section .add-on-bundles-section .add-on-bundles-content .add-on-bundle-card {
+.MVT-36
+  .add-ons-section
+  .add-on-bundles-section
+  .add-on-bundles-content
+  .add-on-bundle-card {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -578,7 +828,12 @@
   border-radius: 12px;
   cursor: pointer;
 }
-.MVT-36 .add-ons-section .add-on-bundles-section .add-on-bundles-content .add-on-bundle-card .add-on-bundle-select-btn {
+.MVT-36
+  .add-ons-section
+  .add-on-bundles-section
+  .add-on-bundles-content
+  .add-on-bundle-card
+  .add-on-bundle-select-btn {
   border: 1px solid #000;
   border-radius: 12px;
   padding: 12px;
@@ -599,7 +854,7 @@
   }
 }
 .MVT-36 .add-on-card {
-  border: 2px solid #D7DBE0;
+  border: 2px solid #d7dbe0;
   border-radius: 8px;
   padding: 24px;
   background: #fff;
@@ -686,7 +941,7 @@
 }
 .MVT-36 .add-on-card .add-on-actions .quantity-selector .quantity-minus,
 .MVT-36 .add-on-card .add-on-actions .quantity-selector .quantity-plus {
-  border: 1px solid #C7C5C5;
+  border: 1px solid #c7c5c5;
   border-radius: 4px;
   padding: 4px;
   background-color: #fff;
@@ -696,7 +951,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #C7C5C5;
+  color: #c7c5c5;
 }
 .MVT-36 .add-on-card .add-on-actions .quantity-selector .quantity-input {
   font-family: "AvisSans", "AvisSans Fallback", sans-serif;
@@ -706,10 +961,14 @@
   width: 30px;
   height: 30px;
   text-align: center;
-  color: #9F9E9E;
-  background-color: #F1F1F1;
+  color: #9f9e9e;
+  background-color: #f1f1f1;
 }
-.MVT-36 .add-on-card .add-on-actions .quantity-selector .quantity-input:focus-visible {
+.MVT-36
+  .add-on-card
+  .add-on-actions
+  .quantity-selector
+  .quantity-input:focus-visible {
   outline: none;
 }
 .MVT-36 .add-on-card .add-on-actions .add-on-toggle {
@@ -729,7 +988,7 @@
 .MVT-36 .add-on-card .add-on-actions .add-on-toggle .toggle-label-text {
   font-size: 14px;
   font-weight: 400;
-  color: #524D4D;
+  color: #524d4d;
   white-space: nowrap;
   user-select: none;
   line-height: 20px;
@@ -740,10 +999,12 @@
   justify-content: center;
   width: 16px;
   height: 16px;
-  border: 1px solid #C7C5C5;
+  border: 1px solid #c7c5c5;
   border-radius: 2px;
   background-color: #fff;
-  transition: background-color 0.2s ease, border-color 0.2s ease;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
   flex-shrink: 0;
 }
 .MVT-36 .add-on-card .add-on-actions .add-on-toggle .checkbox-mark:after {
@@ -756,13 +1017,35 @@
   border-left: none;
   transform: rotate(45deg) translate(-1px, -1px);
 }
-.MVT-36 .add-on-card .add-on-actions .add-on-toggle input:checked + .toggle-label-text + .checkbox-mark,
-.MVT-36 .add-on-card .add-on-actions .add-on-toggle input:checked + .checkbox-mark {
+.MVT-36
+  .add-on-card
+  .add-on-actions
+  .add-on-toggle
+  input:checked
+  + .toggle-label-text
+  + .checkbox-mark,
+.MVT-36
+  .add-on-card
+  .add-on-actions
+  .add-on-toggle
+  input:checked
+  + .checkbox-mark {
   background-color: #000;
   border-color: #000;
 }
-.MVT-36 .add-on-card .add-on-actions .add-on-toggle input:checked + .toggle-label-text + .checkbox-mark:after,
-.MVT-36 .add-on-card .add-on-actions .add-on-toggle input:checked + .checkbox-mark:after {
+.MVT-36
+  .add-on-card
+  .add-on-actions
+  .add-on-toggle
+  input:checked
+  + .toggle-label-text
+  + .checkbox-mark:after,
+.MVT-36
+  .add-on-card
+  .add-on-actions
+  .add-on-toggle
+  input:checked
+  + .checkbox-mark:after {
   display: block;
 }
 .MVT-36 .add-on-card .add-on-actions .add-on-toggle .included-text {
@@ -814,7 +1097,7 @@
   display: block !important;
   font-size: 14px;
   font-weight: 700;
-  color: #524D4D;
+  color: #524d4d;
   white-space: nowrap;
   user-select: none;
   line-height: 20px;
@@ -840,7 +1123,7 @@
   display: block !important;
   font-size: 14px;
   font-weight: 700;
-  color: #524D4D;
+  color: #524d4d;
   white-space: nowrap;
   user-select: none;
   line-height: 20px;
@@ -860,12 +1143,16 @@
   border: 1px solid #000 !important;
   color: #000 !important;
 }
-.MVT-36 .add-on-card:not(.ab-min-qty):not(.ab-max-qty):not(.default) button.quantity-minus {
+.MVT-36
+  .add-on-card:not(.ab-min-qty):not(.ab-max-qty):not(.default)
+  button.quantity-minus {
   color: #fff;
   background-color: rgb(212, 0, 42);
   border-color: rgb(212, 0, 42);
 }
-.MVT-36 .add-on-card:not(.ab-min-qty):not(.ab-max-qty):not(.default) button.quantity-plus {
+.MVT-36
+  .add-on-card:not(.ab-min-qty):not(.ab-max-qty):not(.default)
+  button.quantity-plus {
   color: #fff;
   background-color: rgb(212, 0, 42);
   border-color: rgb(212, 0, 42);
@@ -876,8 +1163,8 @@
   border-color: rgb(212, 0, 42) !important;
 }
 .MVT-36 .add-on-card.ab-max-qty button.quantity-plus {
-  border: 1px solid #C7C7C7 !important;
-  color: #C7C7C7 !important;
+  border: 1px solid #c7c7c7 !important;
+  color: #c7c7c7 !important;
   pointer-events: none !important;
 }
 .MVT-36 .add-ons-footer {
@@ -921,10 +1208,7 @@
   padding: 0;
 }
 @media (max-width: 767px) {
-  .MVT-36 [data-testid=booking-summary-wrapper] {
+  .MVT-36 [data-testid="booking-summary-wrapper"] {
     margin-top: 24px;
   }
-}
-.MVT-36 [data-testid=action-footer-total-amount] {
-  pointer-events: none !important;
 }
