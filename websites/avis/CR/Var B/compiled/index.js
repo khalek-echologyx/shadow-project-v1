@@ -368,7 +368,7 @@
           "beforeend",
           protAndAddOnItemUI(
             item.description,
-            getPriceWithCurrenty(currencyCode, item.netSubtotal.toFixed(2)),
+            getPriceWithCurrenty(currencyCode, item.netSubtotal ? item.netSubtotal.toFixed(2) : 0),
             item,
             item.quantity
           )
@@ -424,6 +424,24 @@
     const taxesAndFeesTotal = getPriceWithCurrenty(currencyCode, calculateData.totals.taxAndFreeTotal);
     const taxAndFeesItems = calculateData.taxAndFeeItems || [];
     //Updte UI
+    const taxAndFeesHeader = document.querySelector('[data-testid="category-expand-button-taxes-fees"]');
+    const summaryWrapper = document.querySelector('[data-testid="rental-summary-wrapper"]');
+    if (taxAndFeesHeader && summaryWrapper) {
+      if (!summaryWrapper.classList.contains("mvt-36-summary-wrapper") && taxAndFeesItems.length > 0) {
+        summaryWrapper.classList.add("mvt-36-summary-wrapper");
+      }
+    }
+    //arrow update
+    if (taxAndFeesHeader && taxAndFeesItems.length > 0) {
+      const headerBtn = taxAndFeesHeader.querySelector("button");
+      if (headerBtn) {
+        const hasChevronIcon = headerBtn.querySelector("svg");
+        if (!hasChevronIcon) {
+          const buttonFirstSpan = headerBtn.querySelector("span");
+          buttonFirstSpan.insertAdjacentHTML("afterend", chevronForSum);
+        }
+      }
+    }
     const taxAndFeesHeaderPrice = document.querySelector('[data-testid="rental-summary-taxes-fees-recent-cost"]');
     if (taxAndFeesHeaderPrice) {
       taxAndFeesHeaderPrice.textContent = taxesAndFeesTotal || 0;
@@ -1225,7 +1243,7 @@
       + '<div class="prot-cards">' + protBundleCardsHTML + '</div>'
       + '<div class="prot-all-packages"><button class="btn-all-packages">View all protection packages</button></div>'
       + '<div class="protection-items-section">' + protItemsHTML + '</div>'
-      + '<div class="protection-items-section-footer">' + (finalProtectionItemList.length > 0 ? '<button type="button" class="btn-all-packages-items">View all protection options</button>' : '') + '</div>'
+      + '<div class="protection-items-section-footer">' + (finalProtectionItemList.length > 1 ? '<button type="button" class="btn-all-packages-items">View all protection options</button>' : '') + '</div>'
       + '<!-- Add-ons section -->'
       + '<div class="add-ons-section">'
       + '<div class="add-on-bundles-section">'
@@ -2349,6 +2367,15 @@
           chevron.classList.toggle("rotate-chevron");
         }
       });
+      // toggle summary tax and fees
+      const taxAndFeesTotalHeader = document.querySelector('[data-testid="category-expand-button-taxes-fees"]');
+      taxAndFeesTotalHeader.addEventListener("click", () => {
+        console.log("taxAndFeesTotalHeaderClick");
+        const chevron = taxAndFeesTotalHeader.querySelector(".mvt-36-chevron");
+        if (chevron) {
+          chevron.classList.toggle("rotate-chevron");
+        }
+      });
 
       // add-on details toggle
       const addOnDetails = document.querySelectorAll("#" + TEST_ID + " .add-on-details");
@@ -2426,7 +2453,8 @@
         const nextEl = el.nextElementSibling;
         if (nextEl) {
           const hasSavings = nextEl?.textContent?.toLowerCase().includes("savings");
-          if (hasSavings) {
+          const hasMaxDiscount = nextEl.textContent.includes("MAX DISCOUNT");
+          if (hasSavings || hasMaxDiscount) {
             nextEl.style.display = "none";
           }
         }

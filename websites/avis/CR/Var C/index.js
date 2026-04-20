@@ -989,7 +989,7 @@
 
         return {
           ...item,
-          grossSubtotal: matched.grossSubtotal || 0,
+          netSubtotal: matched.netSubtotal || 0,
           freeCDWIndicator: matched.freeCDWIndicator || false,
         };
       })
@@ -1049,7 +1049,7 @@
       if (!matchedExtra) return null;
       return {
         ...item,
-        grossSubtotal: matchedExtra?.grossSubtotal || 0,
+        netSubtotal: matchedExtra?.netSubtotal || 0,
         freeCDWIndicator: matchedExtra.freeCDWIndicator || false,
       };
     }).filter(Boolean);
@@ -1070,7 +1070,7 @@
           .filter(sub => extrasMap[sub.code])
           .map(sub => ({
             ...sub,
-            grossSubtotal: extrasMap[sub.code].grossSubtotal,
+            netSubtotal: extrasMap[sub.code].netSubtotal,
             isShowQuantityUI: addOnWithQantity.includes(sub.code),
             freeCDWIndicator: extrasMap[sub.code].freeCDWIndicator || false,
           }));
@@ -1141,7 +1141,7 @@
         + '<h4 class="protection-item-title">' + item.name + '</h4>'
         + '</div>'
         + '<div class="protection-item-actions">'
-        + '<div class="price-info">' + getPriceWithCurrenty(currencyCode, item.grossSubtotal) + ' <p class="per-day-slash">/<span class="per-day">day</span></p></div>'
+        + '<div class="price-info">' + getPriceWithCurrenty(currencyCode, item.netSubtotal) + ' <p class="per-day-slash">/<span class="per-day">day</span></p></div>'
         + '<div class="details-and-check">'
         + '<div class="prot-details">Details</div>'
         + '<div class="prot-checkbox-section">'
@@ -1179,6 +1179,9 @@
       finalProtectionBundleList.find(function (b) {
         return b.bundleName === "Basic Cover";
       }) ||
+      finalProtectionBundleList.find(function (b) {
+        return b.bundleName === "Essential Package";
+      }) ||
       finalProtectionBundleList[1] ||
       null;
     var staticEssentialProtCard = '';
@@ -1201,7 +1204,7 @@
         + '</div>'
         + '<div class="card-actions">'
         + '<div class="view-coverage">View coverage</div>'
-        + '<div class="price-info">' + getPriceWithCurrenty(currencyCode, essentialProtBundle.grossSubtotal) + ' <p class="per-day-slash">/<span class="per-day">day</span></p></div>'
+        + '<div class="price-info">' + getPriceWithCurrenty(currencyCode, essentialProtBundle.netSubtotal) + ' <p class="per-day-slash">/<span class="per-day">day</span></p></div>'
         + '</div>'
         + '</div>';
     }
@@ -1209,7 +1212,7 @@
     var addOnBundleCardsHTML = finalAddOnBundleList.map(function (item) {
       return '<div class="add-on-bundle-card" data-add-on-bundle-code="' + item.bundleName + '">'
         + '<div>' + item.bundleName + '</div>'
-        + '<div class="add-on-bundle-select-btn">' + getPriceWithCurrenty(currencyCode, item.grossSubtotal) + '/day</div>'
+        + '<div class="add-on-bundle-select-btn">' + getPriceWithCurrenty(currencyCode, item.netSubtotal) + '/day</div>'
         + '</div>';
     }).join('');
 
@@ -1234,7 +1237,7 @@
         + '<div class="add-on-info"><h4 class="add-on-title">' + item.name + '</h4></div>'
         + '</div>'
         + '<div class="card-footer">'
-        + '<div class="price-info">' + getPriceWithCurrenty(currencyCode, item.grossSubtotal) + ' <p class="per-day-slash">/<span class="per-day">day</span></p></div>'
+        + '<div class="price-info">' + getPriceWithCurrenty(currencyCode, item.netSubtotal) + ' <p class="per-day-slash">/<span class="per-day">day</span></p></div>'
         + '<div class="add-on-actions">'
         + '<a href="#" class="add-on-details" data-code="' + item.code + '">Details</a>'
         + controlHTML
@@ -2253,6 +2256,10 @@
           prevSelectedProtBundleItems = prevSelectedProtBundle.items.filter(item => item.included).map(item => item.code);
         }
         console.log(prevSelectedProtBundleItems, "prevSelectedProtBundleItems");
+        // get user selected add on items
+        const userSelectedAddOnItems = sessionOne.addOnItems || "";
+        const userSelectedAddOnItemsArr = userSelectedAddOnItems ? userSelectedAddOnItems.split(",").map(item => item.trim()).filter(Boolean) : [];
+        console.log(userSelectedAddOnItemsArr, "userSelectedAddOnItemsArr");
         const prevAddOnItems = sessionOne.pricesAddOnItems || [];
         let filteredPrevAddOnItems = prevAddOnItems.length > 0 ? prevAddOnItems.map(item => {
           return {
@@ -2296,10 +2303,12 @@
 
         sessionStorage.setItem("reservation.store", JSON.stringify({ state: sessionOne, version: 0 }));
         const finalFilterPrevAddOnItems = filteredPrevAddOnItems.filter(item => {
-          const isIncluded = prevSelectedProtBundleItems.some(i => i === item.code)
-          console.log(isIncluded, "isIncluded");
-          return !isIncluded
-        })
+          const isInPrevBundle = prevSelectedProtBundleItems.includes(item.code);
+          const isUserSelected = userSelectedAddOnItemsArr.includes(item.code);
+
+          // Remove ONLY if it's in prev bundle AND NOT user selected
+          return !(isInPrevBundle && !isUserSelected);
+        });
         console.log(finalFilterPrevAddOnItems, "finalFilterPrevAddOnItems");
         const calculatePayload = {
           age: extrasAPIPayload.age || 25,

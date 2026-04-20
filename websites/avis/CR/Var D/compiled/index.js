@@ -1262,7 +1262,7 @@
       + '<div class="add-ons-footer">' + (finalAddOnItemList.length > 4 ? '<button type="button" class="add-on-btn-all-packages">View all add-ons options</button>' : '') + '</div>'
       + '</div>'
       + '</div>';
-    
+
     /* ---------------- main injection ---------------- */
     function inject() {
       const rawTarget = document.querySelector(SELECTORS.target);
@@ -2249,6 +2249,10 @@
           prevSelectedProtBundleItems = prevSelectedProtBundle.items.filter(item => item.included).map(item => item.code);
         }
         console.log(prevSelectedProtBundleItems, "prevSelectedProtBundleItems");
+        // get user selected add on items
+        const userSelectedAddOnItems = sessionOne.addOnItems || "";
+        const userSelectedAddOnItemsArr = userSelectedAddOnItems.split(",").map(item => item.trim()).filter(Boolean);
+        console.log(userSelectedAddOnItemsArr, "userSelectedAddOnItemsArr");
         const prevAddOnItems = sessionOne.pricesAddOnItems || [];
         let filteredPrevAddOnItems = prevAddOnItems.length > 0 ? prevAddOnItems.map(item => {
           return {
@@ -2292,9 +2296,11 @@
 
         sessionStorage.setItem("reservation.store", JSON.stringify({ state: sessionOne, version: 0 }));
         const finalFilterPrevAddOnItems = filteredPrevAddOnItems.filter(item => {
-          const isIncluded = prevSelectedProtBundleItems.some(i => i === item.code);
-          console.log(isIncluded, "isIncluded");
-          return !isIncluded
+          const isInPrevBundle = prevSelectedProtBundleItems.includes(item.code);
+          const isUserSelected = userSelectedAddOnItemsArr.includes(item.code);
+
+          // Remove ONLY if it's in prev bundle AND NOT user selected
+          return !(isInPrevBundle && !isUserSelected);
         });
         console.log(finalFilterPrevAddOnItems, "finalFilterPrevAddOnItems");
         const calculatePayload = {
@@ -2444,12 +2450,13 @@
         const nextEl = el.nextElementSibling;
         if (nextEl) {
           const hasSavings = nextEl?.textContent?.toLowerCase().includes("savings");
-          if (hasSavings) {
+          const hasMaxDiscount = nextEl.textContent.includes("MAX DISCOUNT");
+          if (hasSavings || hasMaxDiscount) {
             nextEl.style.display = "none";
           }
         }
       }
-      
+
       //progress bar number change to 3
       poll(
         () => document.querySelector('[data-testid="stepper-step-label-4"] .Mui-active div'),

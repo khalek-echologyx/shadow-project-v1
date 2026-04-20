@@ -22,6 +22,9 @@
 .MVT-36 .mvt-36-summary-wrapper [data-testid=category-expand-button-protections-addons] {
   pointer-events: all !important;
 }
+.MVT-36 .mvt-36-summary-wrapper [data-testid=category-expand-button-taxes-fees] {
+  pointer-events: all !important;
+}
 .MVT-36 .rotate-chevron {
   transform: rotate(180deg) !important;
   transition: transform 0.3s ease-in-out;

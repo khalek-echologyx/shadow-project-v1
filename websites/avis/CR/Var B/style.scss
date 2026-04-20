@@ -17,6 +17,10 @@
     pointer-events: all !important;
   }
 
+  .mvt-36-summary-wrapper [data-testid="category-expand-button-taxes-fees"] {
+    pointer-events: all !important;
+  }
+
   .rotate-chevron {
     transform: rotate(180deg) !important;
     transition: transform 0.3s ease-in-out;
