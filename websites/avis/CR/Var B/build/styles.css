@@ -13,6 +13,21 @@
   justify-content: space-between;
   color: rgb(82, 77, 77);
 }
+.MVT-36 .mvt-36-summary-prot-item .sum-prot-item-desc {
+  color: #1ea238 !important;
+}
+.MVT-36 .mvt-36-summary-prot-item .sum-prot-item-desc svg {
+  margin-right: 2px;
+}
+.MVT-36
+  .mvt-36-summary-wrapper
+  [data-testid="category-expand-button-protections-addons"] {
+  pointer-events: all !important;
+}
+.MVT-36 .rotate-chevron {
+  transform: rotate(180deg) !important;
+  transition: transform 0.3s ease-in-out;
+}
 .MVT-36 .selected-prot-bundle-title {
   color: #1ea238 !important;
 }
@@ -71,7 +86,6 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  justify-content: space-between;
   border: 2px solid #d7dbe0;
   border-radius: 8px;
   padding: 24px;
@@ -189,6 +203,7 @@
   overflow: hidden;
   transition: height 0.5s ease-in-out;
   font-size: 14px !important;
+  display: none;
 }
 .MVT-36
   .intial-prot-cards
@@ -198,7 +213,9 @@
   margin: 0;
 }
 .MVT-36 .intial-prot-cards .protection-item .prot-details-content.expend {
+  display: block;
   height: auto !important;
+  margin-top: 10px;
 }
 .MVT-36 .intial-prot-cards .protection-item.included {
   border-color: #000;
@@ -224,7 +241,6 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  justify-content: space-between;
   border: 2px solid #d7dbe0;
   border-radius: 8px;
   padding: 24px;
@@ -266,6 +282,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+.MVT-36 .intial-prot-cards .static-no-prot-card.selected {
+  border-color: #000;
 }
 .MVT-36 .intial-prot-cards .static-no-prot-card.selected .card-radio {
   background: #fff;
@@ -327,6 +346,10 @@
   .per-day-slash
   .per-day {
   vertical-align: middle;
+}
+.MVT-36 .intial-prot-cards .static-no-prot-card.disabled {
+  pointer-events: none;
+  opacity: 0.5;
 }
 .MVT-36 .prot-cards {
   display: none;
@@ -462,7 +485,6 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  justify-content: space-between;
   border: 2px solid #d7dbe0;
   border-radius: 8px;
   padding: 24px;
@@ -709,6 +731,7 @@
   overflow: hidden;
   transition: height 0.5s ease-in-out;
   font-size: 14px !important;
+  display: none;
 }
 .MVT-36
   .protection-items-section
@@ -723,7 +746,9 @@
   .protection-item
   .protection-item-actions
   .prot-details-content.expend {
+  display: block;
   height: auto !important;
+  margin-top: 10px;
 }
 .MVT-36 .protection-items-section .protection-item[data-code="CDW"] {
   display: none !important;
@@ -819,7 +844,6 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  justify-content: space-between;
 }
 .MVT-36 .add-on-card .card-header {
   display: flex;
@@ -1018,7 +1042,9 @@
   margin: 0;
 }
 .MVT-36 .add-on-card .add-on-details-content.expend {
+  display: block;
   height: auto !important;
+  margin-top: 10px;
 }
 @media (max-width: 768px) {
   .MVT-36 .add-on-card {
@@ -1142,4 +1168,7 @@
   .MVT-36 [data-testid="booking-summary-wrapper"] {
     margin-top: 24px;
   }
+}
+.MVT-36 [data-testid="action-footer-total-amount"] {
+  pointer-events: none !important;
 }

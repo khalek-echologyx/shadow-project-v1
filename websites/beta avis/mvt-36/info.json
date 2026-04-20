@@ -1,0 +1,13 @@
+{
+  "id": "1776420946009_5928_mvt_36",
+  "name": "mvt-36",
+  "type": "A/B",
+  "website": "beta avis",
+  "variations": [
+    "control",
+    "Var B"
+  ],
+  "createdAt": "2026-04-17T10:15:46.009Z",
+  "createdAtReadable": "4/17/2026, 4:15:46 PM",
+  "lastUpdated": "2026-04-17T10:15:46.165Z"
+}

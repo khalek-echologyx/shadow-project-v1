@@ -3,6 +3,23 @@
     display: flex !important;
     justify-content: space-between;
     color: rgb(82, 77, 77);
+
+    .sum-prot-item-desc {
+      color: #1ea238 !important;
+
+      svg {
+        margin-right: 2px;
+      }
+    }
+  }
+
+  .mvt-36-summary-wrapper [data-testid="category-expand-button-protections-addons"] {
+    pointer-events: all !important;
+  }
+
+  .rotate-chevron {
+    transform: rotate(180deg) !important;
+    transition: transform 0.3s ease-in-out;
   }
 
   .selected-prot-bundle-title {
@@ -279,6 +296,11 @@
         }
       }
     }
+
+    .static-no-prot-card.disabled {
+      pointer-events: none;
+      opacity: 0.5;
+    }
   }
 
   .prot-cards {
@@ -445,7 +467,7 @@
       display: flex;
       flex-direction: column;
       gap: 16px;
-      justify-content: space-between;
+      // justify-content: space-between;
       border: 2px solid #D7DBE0;
       border-radius: 8px;
       padding: 24px;
@@ -625,6 +647,7 @@
 
         .prot-details-content.expend {
           height: auto !important;
+          margin-top: 10px;
         }
       }
     }
@@ -767,7 +790,7 @@
     display: flex;
     flex-direction: column;
     gap: 16px;
-    justify-content: space-between;
+    // justify-content: space-between;
 
     .card-header {
       display: flex;
@@ -970,6 +993,7 @@
 
     .add-on-details-content.expend {
       height: auto !important;
+      margin-top: 10px;
     }
 
     @media (max-width: 768px) {
@@ -1141,6 +1165,7 @@
       margin-top: 24px;
     }
   }
+
   [data-testid="action-footer-total-amount"] {
     pointer-events: none !important;
   }
