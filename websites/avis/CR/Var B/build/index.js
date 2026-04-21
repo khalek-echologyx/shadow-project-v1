@@ -714,7 +714,7 @@
       uiSelectedProtBundle.classList.add("selected");
     }
   };
-  const updateAddOnsCards = () => {
+  const updateAddOnsCards = (extrasAddOnsItemList) => {
     const addOnCardsCheckbox = document.querySelectorAll(
       "#" + TEST_ID + " .add-on-toggle",
     );
@@ -728,6 +728,7 @@
 
       const isIncluded = isAvisFirst && dataCode === "GSO";
       const targetAddOnCard = checkbox.closest(".add-on-card");
+
       if (isIncluded) {
         targetAddOnCard.classList.add("included");
       } else {
@@ -741,10 +742,62 @@
       } else {
         targetAddOnCard.classList.remove("selected");
       }
+      // update price
+      const priceEl = targetAddOnCard
+        ? targetAddOnCard.querySelector(".price-info")
+        : null;
+      if (!priceEl || !dataCode) return;
+      const perDayEl = priceEl.querySelector(".per-day-slash");
+      const currency =
+        sessionData && sessionData.userSelectedCurrency
+          ? sessionData.userSelectedCurrency
+          : "USD";
+
+      // helper: safely replace only the text node in priceEl
+      function updatePriceText(formattedPrice) {
+        try {
+          priceEl.childNodes.forEach(function (node) {
+            if (node.nodeType === Node.TEXT_NODE) node.remove();
+          });
+          priceEl.insertBefore(
+            document.createTextNode(formattedPrice + " "),
+            perDayEl || null,
+          );
+        } catch (e) {}
+      }
+
+      const sessionItem =
+        pricesAddOnItems && pricesAddOnItems.length > 0
+          ? pricesAddOnItems.find(function (item) {
+              return item.code === dataCode;
+            })
+          : null;
+
+      if (sessionItem) {
+        var unitPrice =
+          sessionItem.netSubtotalPerUnit !== undefined &&
+          sessionItem.netSubtotalPerUnit !== null
+            ? sessionItem.netSubtotalPerUnit
+            : sessionItem.netSubtotal || 0;
+        updatePriceText(getPriceWithCurrenty(currency, unitPrice));
+      } else {
+        var extrasItem =
+          extrasAddOnsItemList && extrasAddOnsItemList.length > 0
+            ? extrasAddOnsItemList.find(function (item) {
+                return item.code === dataCode;
+              })
+            : null;
+        var fallbackPrice =
+          extrasItem && extrasItem.netSubtotal != null
+            ? extrasItem.netSubtotal
+            : 0;
+        updatePriceText(getPriceWithCurrenty(currency, fallbackPrice));
+      }
     });
   };
-  const updateProtectionItemsCards = () => {
+  const updateProtectionItemsCards = (extrasProtectionItemList) => {
     const sessionData = getSessionData();
+    const pricesProtectionItems = sessionData.pricesProtectionItems || [];
     const protectionItemBackup = sessionData.protectionItemsBackup;
     const protItemsBackupArray = protectionItemBackup
       ? protectionItemBackup.split(",")
@@ -765,12 +818,55 @@
         item.classList.remove("selected");
         if (itemInputField) itemInputField.checked = false;
       }
+      //update UI price
+      const priceEl = item.querySelector(".price-info");
+      const perDayEl = priceEl.querySelector(".per-day-slash");
+      const currency =
+        sessionData && sessionData.userSelectedCurrency
+          ? sessionData.userSelectedCurrency
+          : "USD";
+      function updatePriceText(formattedPrice) {
+        try {
+          priceEl.childNodes.forEach(function (node) {
+            if (node.nodeType === Node.TEXT_NODE) node.remove();
+          });
+          priceEl.insertBefore(
+            document.createTextNode(formattedPrice + " "),
+            perDayEl || null,
+          );
+        } catch (e) {}
+      }
+      const sessionItem =
+        pricesProtectionItems && pricesProtectionItems.length > 0
+          ? pricesProtectionItems.find(function (item) {
+              return item.code === dataCode;
+            })
+          : null;
+      if (sessionItem) {
+        var unitPrice =
+          sessionItem.netSubtotalPerUnit !== undefined &&
+          sessionItem.netSubtotalPerUnit !== null
+            ? sessionItem.netSubtotalPerUnit
+            : 0;
+        updatePriceText(getPriceWithCurrenty(currency, unitPrice));
+      } else {
+        var extrasItem =
+          extrasProtectionItemList && extrasProtectionItemList.length > 0
+            ? extrasProtectionItemList.find(function (item) {
+                return item.code === dataCode;
+              })
+            : null;
+        var fallbackPrice =
+          extrasItem && extrasItem.netSubtotal != null
+            ? extrasItem.netSubtotal
+            : 0;
+        updatePriceText(getPriceWithCurrenty(currency, fallbackPrice));
+      }
     });
     if (protItemsBackupArray.length > 0) {
       const staticNoProtCard = document.querySelector(
         "#" + TEST_ID + " .static-no-prot-card",
       );
-
       staticNoProtCard.classList.remove("selected");
     }
   };
@@ -794,7 +890,11 @@
     }
   };
   // =========== UPDATE UI: Car summary and Footer Price
-  const updateCarSummaryAndFooterPrice = (calculateData) => {
+  const updateCarSummaryAndFooterPrice = (
+    calculateData,
+    extrasAddOnsItemList,
+    extrasProtectionItemList,
+  ) => {
     // ================= PROTECTION & ADD-ONS =================
     const currencyCode = calculateData.currencyCode;
     updateProtAndAddOnSection(calculateData);
@@ -832,9 +932,9 @@
     // =============== UPDATE PROTECTION CARDS =============
     updateProtectionCards(currencyCode, calculateData);
     // =============== UPDATE ADD-ONS CARDS =============
-    updateAddOnsCards();
+    updateAddOnsCards(extrasAddOnsItemList);
     // =============== UPDATE PROTECTION ITEMS CARDS =============
-    updateProtectionItemsCards();
+    updateProtectionItemsCards(extrasProtectionItemList);
     // =============== STATIC PROTECTION SELECTED =============
     updateStaticProtectionCard();
   };
@@ -1085,8 +1185,8 @@
         }
       });
       updateProtAndAddOnSection(calculateData);
-      updateAddOnsCards();
-      updateProtectionItemsCards();
+      updateAddOnsCards(extrasAddOnsItemList);
+      updateProtectionItemsCards(extrasProtectionItemList);
       updateStaticProtectionCard();
     }
   };
@@ -1926,7 +2026,11 @@
             );
 
             //Update UI
-            updateCarSummaryAndFooterPrice(calculateData);
+            updateCarSummaryAndFooterPrice(
+              calculateData,
+              extrasAddOnsItemList,
+              extrasProtectionItemList,
+            );
           }
         });
       });
@@ -2084,7 +2188,11 @@
               JSON.stringify(latestStore),
             );
           }
-          updateCarSummaryAndFooterPrice(calculateData);
+          updateCarSummaryAndFooterPrice(
+            calculateData,
+            extrasAddOnsItemList,
+            extrasProtectionItemList,
+          );
         });
       });
 
@@ -2453,7 +2561,11 @@
               JSON.stringify(latestStore),
             );
           }
-          updateCarSummaryAndFooterPrice(calculateData);
+          updateCarSummaryAndFooterPrice(
+            calculateData,
+            extrasAddOnsItemList,
+            extrasProtectionItemList,
+          );
         });
       });
 
@@ -2678,7 +2790,11 @@
           } else {
             plusBtn.closest(".add-on-card")?.classList.remove("ab-min-qty");
           }
-          updateCarSummaryAndFooterPrice(calculateData);
+          updateCarSummaryAndFooterPrice(
+            calculateData,
+            extrasAddOnsItemList,
+            extrasProtectionItemList,
+          );
         });
 
         plusBtn.addEventListener("click", async (e) => {
@@ -2880,7 +2996,11 @@
             plusBtn.closest(".add-on-card")?.classList.remove("ab-max-qty");
             plusBtn.closest(".add-on-card")?.classList.remove("default");
           }
-          updateCarSummaryAndFooterPrice(calculateData);
+          updateCarSummaryAndFooterPrice(
+            calculateData,
+            extrasAddOnsItemList,
+            extrasProtectionItemList,
+          );
         });
       });
 
@@ -3072,7 +3192,11 @@
           JSON.stringify({ state: sessionTwo, version: 0 }),
         );
         //update UI
-        updateCarSummaryAndFooterPrice(calculateData);
+        updateCarSummaryAndFooterPrice(
+          calculateData,
+          extrasAddOnsItemList,
+          extrasProtectionItemList,
+        );
       });
 
       // Toggle the summary protection section
