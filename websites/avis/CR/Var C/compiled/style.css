@@ -22,6 +22,12 @@
 .MVT-36 .mvt-36-summary-wrapper [data-testid=category-expand-button-protections-addons] {
   pointer-events: all !important;
 }
+.MVT-36 .mvt-36-summary-wrapper [data-testid=category-expand-button-taxes-fees] {
+  pointer-events: all !important;
+}
+.MVT-36 .mvt-36-summary-wrapper [data-testid=category-expand-button-savings-discounts] {
+  pointer-events: all !important;
+}
 .MVT-36 .rotate-chevron {
   transform: rotate(180deg) !important;
   transition: transform 0.3s ease-in-out;
@@ -46,6 +52,10 @@
 }
 .MVT-36 .mvt-36-summary-regular-item.tax-and-fees-item {
   margin: 4px 0;
+  text-decoration: none;
+}
+.MVT-36 .mvt-36-summary-regular-item.tax-and-fees-item .item-desc {
+  text-decoration: underline;
 }
 .MVT-36 .mvt-36-summary-regular-item:hover {
   background-color: rgb(244, 243, 242);

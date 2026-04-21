@@ -7,7 +7,6 @@
   box-shadow: 0px 2px 8px 0px rgba(124, 80, 80, 0.06);
   border-radius: 8px;
   /* ---------------- add-ons section ---------------- */
-  /* ---------------- saving toggle ---------------- */
 }
 .MVT-36 .mvt-36-summary-prot-item {
   display: flex !important;
@@ -21,6 +20,12 @@
   margin-right: 2px;
 }
 .MVT-36 .mvt-36-summary-wrapper [data-testid=category-expand-button-protections-addons] {
+  pointer-events: all !important;
+}
+.MVT-36 .mvt-36-summary-wrapper [data-testid=category-expand-button-taxes-fees] {
+  pointer-events: all !important;
+}
+.MVT-36 .mvt-36-summary-wrapper [data-testid=category-expand-button-savings-discounts] {
   pointer-events: all !important;
 }
 .MVT-36 .rotate-chevron {
@@ -47,6 +52,10 @@
 }
 .MVT-36 .mvt-36-summary-regular-item.tax-and-fees-item {
   margin: 4px 0;
+  text-decoration: none;
+}
+.MVT-36 .mvt-36-summary-regular-item.tax-and-fees-item .item-desc {
+  text-decoration: underline;
 }
 .MVT-36 .mvt-36-summary-regular-item:hover {
   background-color: rgb(244, 243, 242);
@@ -980,68 +989,4 @@
 }
 .MVT-36 [data-testid=action-footer-total-amount] {
   pointer-events: none !important;
-}
-.MVT-36 .mvt-36-saving-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  vertical-align: middle;
-  cursor: pointer;
-  height: 18px;
-  width: 33px;
-}
-.MVT-36 .mvt-36-saving-toggle .saving-checkbox {
-  position: absolute;
-  width: 0;
-  height: 0;
-  opacity: 0;
-  pointer-events: none;
-}
-.MVT-36 .mvt-36-saving-toggle .saving-track {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  flex-shrink: 0;
-  width: 33px;
-  height: 18px;
-  border-radius: 100px;
-  background-color: rgb(232, 230, 230);
-  transition: background-color 0.25s ease;
-  cursor: pointer;
-}
-.MVT-36 .mvt-36-saving-toggle .saving-track:hover {
-  background-color: rgb(145, 0, 29);
-}
-.MVT-36 .mvt-36-saving-toggle .saving-track:has(.saving-checkbox:checked), .MVT-36 .mvt-36-saving-toggle.is-checked .saving-track {
-  background-color: rgb(212, 0, 42);
-}
-.MVT-36 .mvt-36-saving-toggle .saving-thumb {
-  position: absolute;
-  width: 14px;
-  height: 14px;
-  left: 2px;
-  border-radius: 50%;
-  background-color: #fff;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.25);
-  transition: left 0.25s ease, box-shadow 0.25s ease;
-  z-index: 1;
-}
-.MVT-36 .mvt-36-saving-toggle .saving-label {
-  font-size: 14px;
-  font-weight: 400;
-  color: #524D4D;
-  line-height: 20px;
-  user-select: none;
-  white-space: nowrap;
-}
-.MVT-36 .mvt-36-saving-toggle .saving-track:has(.saving-checkbox:checked), .MVT-36 .mvt-36-saving-toggle.is-checked .saving-track {
-  background-color: rgb(212, 0, 42);
-}
-.MVT-36 .mvt-36-saving-toggle .saving-track .saving-checkbox:checked + .saving-thumb {
-  left: calc(100% - 18px);
-  margin: 2px;
-}
-.MVT-36 .mvt-36-saving-toggle .saving-track:has(.saving-checkbox:focus-visible) {
-  outline: 2px solid rgb(212, 0, 42);
-  outline-offset: 2px;
 }

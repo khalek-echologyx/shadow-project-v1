@@ -379,7 +379,8 @@
   //saving and discount UI logic
   const savingAndDiscountUI = (currencyCode, calculateData) => {
     // calculation
-    const savingAndDiscountTotal = getPriceWithCurrenty(currencyCode, calculateData.savings.totalSavings)
+    const savingTotal = calculateData.savings.totalSavings ? Number(calculateData.savings.totalSavings) : 0;
+    const savingAndDiscountTotal = getPriceWithCurrenty(currencyCode, savingTotal)
     const payNowSavings = Number(calculateData.savings.payNowSavings);
     const formatPayNowSavings = getPriceWithCurrenty(currencyCode, payNowSavings);
     const extrasSavings = Number(calculateData.savings.extrasSavings);
@@ -389,6 +390,24 @@
     const memberCreditAmt = Number(calculateData.savings.memberCreditAmt);
     const formatMemberCreditAmt = getPriceWithCurrenty(currencyCode, memberCreditAmt);
     // header price update
+    const savingAndDiscountHeader = document.querySelector('[data-testid="category-expand-button-savings-discounts"]');
+    const summaryWrapper = document.querySelector('[data-testid="rental-summary-wrapper"]');
+    if (savingAndDiscountHeader && summaryWrapper) {
+      if (!summaryWrapper.classList.contains("mvt-36-summary-wrapper") && Number(savingTotal) > 0) {
+        summaryWrapper.classList.add("mvt-36-summary-wrapper")
+      }
+    }
+    //arrow update
+    if (savingAndDiscountHeader && savingTotal > 0) {
+      const headerBtn = savingAndDiscountHeader.querySelector("button");
+      if (headerBtn) {
+        const hasChevronIcon = headerBtn.querySelector("svg");
+        if (!hasChevronIcon) {
+          const buttonFirstSpan = headerBtn.querySelector("span")
+          buttonFirstSpan.insertAdjacentHTML("afterend", chevronForSum);
+        }
+      }
+    }
     const savingAndDiscountEl = document.querySelector('[data-testid="rental-summary-savings-discounts-recent-cost"]');
     if (savingAndDiscountEl) {
       savingAndDiscountEl.textContent = savingAndDiscountTotal || 0;
@@ -423,6 +442,24 @@
     const taxesAndFeesTotal = getPriceWithCurrenty(currencyCode, calculateData.totals.taxAndFreeTotal);
     const taxAndFeesItems = calculateData.taxAndFeeItems || [];
     //Updte UI
+    const taxAndFeesHeader = document.querySelector('[data-testid="category-expand-button-taxes-fees"]');
+    const summaryWrapper = document.querySelector('[data-testid="rental-summary-wrapper"]');
+    if (taxAndFeesHeader && summaryWrapper) {
+      if (!summaryWrapper.classList.contains("mvt-36-summary-wrapper") && taxAndFeesItems.length > 0) {
+        summaryWrapper.classList.add("mvt-36-summary-wrapper")
+      }
+    }
+    //arrow update
+    if (taxAndFeesHeader && taxAndFeesItems.length > 0) {
+      const headerBtn = taxAndFeesHeader.querySelector("button");
+      if (headerBtn) {
+        const hasChevronIcon = headerBtn.querySelector("svg");
+        if (!hasChevronIcon) {
+          const buttonFirstSpan = headerBtn.querySelector("span")
+          buttonFirstSpan.insertAdjacentHTML("afterend", chevronForSum);
+        }
+      }
+    }
     const taxAndFeesHeaderPrice = document.querySelector('[data-testid="rental-summary-taxes-fees-recent-cost"]');
     if (taxAndFeesHeaderPrice) {
       taxAndFeesHeaderPrice.textContent = taxesAndFeesTotal || 0;
@@ -2371,6 +2408,24 @@
       protAndAddOnsTotalHeader.addEventListener("click", () => {
         console.log("protAndAddOnsItemsClick")
         const chevron = protAndAddOnsTotalHeader.querySelector(".mvt-36-chevron");
+        if (chevron) {
+          chevron.classList.toggle("rotate-chevron")
+        }
+      })
+      // toggle summary tax and fees
+      const taxAndFeesTotalHeader = document.querySelector('[data-testid="category-expand-button-taxes-fees"]');
+      taxAndFeesTotalHeader.addEventListener("click", () => {
+        console.log("taxAndFeesTotalHeaderClick")
+        const chevron = taxAndFeesTotalHeader.querySelector(".mvt-36-chevron");
+        if (chevron) {
+          chevron.classList.toggle("rotate-chevron")
+        }
+      })
+      //toggle summary saving and discount
+      const savingAndDiscountHeader = document.querySelector('[data-testid="category-expand-button-savings-discounts"]');
+      savingAndDiscountHeader.addEventListener("click", () => {
+        console.log("savingAndDiscountHeaderClick")
+        const chevron = savingAndDiscountHeader.querySelector(".mvt-36-chevron");
         if (chevron) {
           chevron.classList.toggle("rotate-chevron")
         }

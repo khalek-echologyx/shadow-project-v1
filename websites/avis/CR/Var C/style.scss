@@ -17,6 +17,15 @@
     pointer-events: all !important;
   }
 
+  .mvt-36-summary-wrapper [data-testid="category-expand-button-taxes-fees"] {
+    pointer-events: all !important;
+  }
+  //saving and discount
+  .mvt-36-summary-wrapper [data-testid="category-expand-button-savings-discounts"] {
+    pointer-events: all !important;
+  }
+
+
   .rotate-chevron {
     transform: rotate(180deg) !important;
     transition: transform 0.3s ease-in-out;
@@ -47,6 +56,11 @@
 
   .mvt-36-summary-regular-item.tax-and-fees-item {
     margin: 4px 0;
+    text-decoration: none;
+
+    .item-desc{
+      text-decoration: underline;
+    }
   }
 
   .mvt-36-summary-regular-item:hover {
