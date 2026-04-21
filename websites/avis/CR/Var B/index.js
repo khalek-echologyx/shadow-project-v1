@@ -106,17 +106,12 @@
         if (inj.protectionItems) payload.protectionItems = inj.protectionItems;
         if (inj.addOnItems) payload.addOnItems = inj.addOnItems;
         init.body = JSON.stringify(payload);
-        console.log("[AvisTest] injected:", inj, "final payload:", payload);
       }
     } catch (e) {
       console.warn("[AvisTest] hook error", e);
     }
     return originalFetch.apply(this, arguments);
   };
-
-  console.log(
-    "[AvisTest] fetch wrapper installed (reads live from reservation.store)",
-  );
 })();
 
   /* ---------------- poll utility ---------------- */
@@ -202,7 +197,6 @@
   function runProtectionCoverage() {
     const queryParams = window.location.search;
     window.location.replace("https://www.avis.com/en/reservation/review-and-book" + queryParams);
-    console.log("Protection page detected =================")
   }
 
   //reusable params function
@@ -326,7 +320,6 @@
     const sessionPriceAddOnItems = sessionData.pricesAddOnItems || [];
     const sessionPriceProtectionItems = sessionData.pricesProtectionItems || [];
     const protAndAddOnsItems = [...sessionPriceProtectionItems, ...sessionPriceAddOnItems].filter(item => item.netSubtotal !== 0 || item.code === "GSO");
-    console.log(protAndAddOnsItems, "protAndAddOnsItems")
     //protection & add-ons header price =
     const protAndAddOnsTotalHeader = document.querySelector('[data-testid="category-expand-button-protections-addons"]');
     const summaryWrapper = document.querySelector('[data-testid="rental-summary-wrapper"]')
@@ -439,7 +432,6 @@
   }
   // tax and fees UI and logic
   const taxAndFeesUI = (currencyCode, calculateData) => {
-    console.log("Render tax and fees UI")
     const taxesAndFeesTotal = getPriceWithCurrenty(currencyCode, calculateData.totals.taxAndFreeTotal);
     const taxAndFeesItems = calculateData.taxAndFeeItems || [];
     //Updte UI
@@ -489,13 +481,12 @@
 
   }
   const rateTermsUI = (calculateData) => {
-    console.log("Render rate UI")
     const rateData = calculateData.rateTerms || {};
     const rateNoteUI = document.querySelectorAll('[data-testid="rate-terms-notes-ul"] li');
     rateNoteUI.forEach(el => {
-      console.log(el, "rate el")
+
       const text = el.querySelector('span').textContent;
-      console.log(text, "text terms")
+
       if (text.includes('Day  minimum rental required')) {
         const textEl = el.querySelector('span');
         if (textEl) {
@@ -521,7 +512,7 @@
     const selectorForUnlimiteMilage = document.querySelector('[data-testid="rate-terms-notes-ul"]');
     if (selectorForUnlimiteMilage) {
       const hasUltimateEl = selectorForUnlimiteMilage.nextElementSibling;
-      console.log(hasUltimateEl, "hasUltimateEl")
+
       const enableMilate = rateData.unlimitedMilage;
       if (enableMilate) {
         if (hasUltimateEl) {
@@ -534,18 +525,14 @@
     }
   }
   const footerPriceUI = (currencyCode, calculateData) => {
-    console.log("Rendered footer price UI")
     const footerPriceEl = document.querySelector('[data-testid="action-footer-total-amount"]');
-    console.log(footerPriceEl, "footerPriceEl")
     footerPriceEl.textContent = getPriceWithCurrenty(currencyCode, calculateData.totals.total.toFixed(2));
   }
   const updateProtectionCards = (currencyCode, calculateData) => {
     const selectedBundle = calculateData.protectionBundle || {};
     const selectedBundleName = selectedBundle.code || "";
-    console.log(selectedBundleName, "selectedBundleName")
     const uiProtectionBundleCards = [...document.querySelectorAll("." + TEST_ID + " .prot-card")];
     const uiSelectedProtBundle = uiProtectionBundleCards.find(card => card.getAttribute("data-code") === selectedBundleName);
-    console.log(uiSelectedProtBundle, "uiSelectedProtBundle")
     if (uiSelectedProtBundle && selectedBundleName !== "") {
       uiProtectionBundleCards.forEach(card => {
         card.classList.remove("selected");
@@ -558,10 +545,9 @@
     const sessionData = getSessionData();
     const isAvisFirst = sessionData.isAvisFirst || false;
     const pricesAddOnItems = sessionData.pricesAddOnItems || [];
-    console.log(pricesAddOnItems, "pricesAddOnItems")
     addOnCardsCheckbox.forEach(checkbox => {
       const dataCode = checkbox.querySelector("input").getAttribute("data-code");
-      console.log(dataCode, "dataCodeInsideAddOnCard")
+
       const isIncluded = isAvisFirst && dataCode === "GSO";
       const targetAddOnCard = checkbox.closest(".add-on-card");
       if (isIncluded) {
@@ -581,13 +567,11 @@
     const sessionData = getSessionData();
     const protectionItemBackup = sessionData.protectionItemsBackup;
     const protItemsBackupArray = protectionItemBackup ? protectionItemBackup.split(",") : [];
-    console.log(protItemsBackupArray, "protItemsBackupArray")
     const protItemsUI = [...document.querySelectorAll("#" + TEST_ID + " .protection-item")];
-    console.log(protItemsUI, "protItemsUI")
 
     protItemsUI.forEach(item => {
       const dataCode = item.getAttribute("data-code");
-      console.log(dataCode, "dataCodeInsideProtectionItem")
+
       const isSelected = protItemsBackupArray.includes(dataCode);
       const itemInputField = item.querySelector("input");
       if (isSelected) {
@@ -599,9 +583,9 @@
       }
     })
     if (protItemsBackupArray.length > 0) {
-      console.log("protItemsBackupArray is not empty")
+
       const staticNoProtCard = document.querySelector("#" + TEST_ID + " .static-no-prot-card");
-      console.log(staticNoProtCard, "staticNoProtCard")
+
       staticNoProtCard.classList.remove("selected")
     }
   }
@@ -609,11 +593,9 @@
     const sessionData = getSessionData();
     const selectedProtBundle = sessionData.protectionBundleSelected || {};
     const selectedProtBungleCode = selectedProtBundle.code || sessionData.protectionBundleCode || "";
-    console.log(selectedProtBungleCode, "selectedProtBungleCode")
     const isSelectedNoProt = selectedProtBungleCode === "No Protection";
     const protectionItemBackup = sessionData.protectionItemsBackup;
     const protItemsBackupArray = protectionItemBackup ? protectionItemBackup.split(",") : [];
-    console.log(isSelectedNoProt, "isSelectedNoProt")
     const staticNoProtCard = document.querySelector("#" + TEST_ID + " .static-no-prot-card");
     if (isSelectedNoProt && protItemsBackupArray.length === 0) {
       staticNoProtCard.classList.add("selected")
@@ -623,7 +605,6 @@
   }
   // =========== UPDATE UI: Car summary and Footer Price
   const updateCarSummaryAndFooterPrice = (calculateData) => {
-    console.log("Summary function call mvt-36")
     // ================= PROTECTION & ADD-ONS =================
     const currencyCode = calculateData.currencyCode;
     updateProtAndAddOnSection(calculateData);
@@ -634,7 +615,6 @@
     }
     // protecton not included title logic
     const noProtOrAddOnsTitle = document.querySelector('[data-testid="category-expand-button-protections-addons"]').nextSibling;
-    console.log(noProtOrAddOnsTitle, "noProtOrAddOnsTitle")
     if (noProtOrAddOnsTitle) {
       if (noProtOrAddOnsTitle.textContent = 'You have not added any protections or add-ons') {
         noProtOrAddOnsTitle.style.display = "none";
@@ -662,7 +642,6 @@
     const isEmptyProtectionBundleList = finalProtectionBundleList.length === 0;
 
     const sessionData = getSessionData();
-    console.log(sessionData, "line 415 sessionData");
 
     //Create calculate api payload
     const protectionItemsForCalc = sessionData.protectionItemsBackup ? sessionData.protectionItemsBackup.split(",").map(item => {
@@ -670,11 +649,10 @@
         code: item || "",
       }
     }) : [];
-    console.log(protectionItemsForCalc, "protectionItemsForCalc");
     const addOnItemsForCalc = sessionData.addOnItemsBackup ? sessionData.addOnItemsBackup.split(",").map((item, index) => {
       return {
         code: item || "",
-        quantity: sessionData.addOnItemsQuantityBackup.split(",")[index] === "false" ? null : Number(sessionData.addOnItemsQuantityBackup.split(",")[index]) || "",
+        quantity: sessionData.addOnItemsQuantity.split(",")[index] === "false" ? null : Number(sessionData.addOnItemsQuantity.split(",")[index]) || "",
       }
     }) : [];
     //store Protection Bundles
@@ -689,10 +667,22 @@
       currencyCode: sessionData.userSelectedCurrency,
       discountCodes: [],
       dropoffDate: sessionData.returnDatetime.split("T")[0],
-      dropoffTime: sessionData.returnHour + ":00",
+      dropoffTime: (function() {
+        var h = parseInt(sessionData.returnHour, 10);
+        var ampm = (sessionData.returnAmPm || "").toUpperCase();
+        if (ampm === "PM" && h !== 12) h += 12;
+        if (ampm === "AM" && h === 12) h = 0;
+        return (h < 10 ? "0" + h : String(h)) + ":00";
+      })(),
       dropoffLocation: sessionData.returnLocationCode,
       pickupDate: sessionData.pickupDatetime.split("T")[0],
-      pickupTime: sessionData.pickupHour + ":00",
+      pickupTime: (function() {
+        var h = parseInt(sessionData.pickupHour, 10);
+        var ampm = (sessionData.pickupAmPm || "").toUpperCase();
+        if (ampm === "PM" && h !== 12) h += 12;
+        if (ampm === "AM" && h === 12) h = 0;
+        return (h < 10 ? "0" + h : String(h)) + ":00";
+      })(),
       pickupLocation: sessionData.pickupLocationCode,
       priceRateCode: sessionData.priceRateCode,
       priceType: sessionData.priceType || "",
@@ -748,10 +738,8 @@
         }))
       };
     }
-    console.log(calculatePayload, "calculatePayload");
     // //Call calculatePrice API
     const calculateData = await calculatePrice(calculatePayload, corelationalIdentifier);
-    console.log(calculateData, "calculateDataIntial");
     const windowPriceAddOnList = calculateData.addOnItems || [];
     const windowPriceProtectionList = calculateData.protectionItems || [];
     // =============== PROTECTION BUNDLE SELECTION ===============
@@ -791,7 +779,7 @@
       const newAddOnItems = windowPriceAddOnList.map(item => {
         const isGSO = item.code === "GSO";
         const getDesc = finalAddOnItemList.find(i => i.code === item.code).name || "";
-        console.log(getDesc, "getDesc");
+
         return {
           amount: extrasAddOnsItemList.find(i => i.code === item.code).netTotal,
           chargeType: item.chargeType,
@@ -806,23 +794,23 @@
           quantity: item.quantity || 0,
         }
       })
-      console.log({ newAddOnItems, newProtectionItems }, "line 515 newAddOnItems, newProtectionItems");
+
       sessionData.pricesAddOnItems = newAddOnItems;
       sessionData.pricesProtectionItems = newProtectionItems;
       sessionStorage.setItem("reservation.store", JSON.stringify({ state: sessionData, version: 0 }));
 
       const sessionPricesAddOnItems = sessionData.pricesAddOnItems || [];
-      console.log(sessionPricesAddOnItems, "line 433 sessionPricesAddOnItems");
+
       // update quantity selector
       const quantityAddOnItems = document.querySelectorAll("." + TEST_ID + " .add-on-card .quantity-selector");
       quantityAddOnItems.forEach(item => {
         item.closest(".add-on-card").classList.add("default");
         const itemCode = item.getAttribute("data-code");
         const itemMaxQuantity = Number(item.getAttribute("data-max-quantity"));
-        console.log(itemCode, "line 436 itemCode");
+
         if (sessionPricesAddOnItems.length > 0) {
           const itemData = sessionPricesAddOnItems.find(el => el.code === itemCode) || {};
-          console.log(itemData, "line 437 itemData");
+
           if (itemData) {
             item.querySelector(".quantity-input").value = itemData.quantity || 0;
             if (itemData.quantity > 0) {
@@ -840,7 +828,7 @@
         const inputEl = item.querySelector("input");
         const itemCode = inputEl.getAttribute("data-code");
         const itemData = sessionPricesAddOnItems.some(el => el.code === itemCode);
-        console.log(itemData, "itemDta inside checkboxAddOnItems")
+
         if (itemData) {
           inputEl.checked = true;
           item.closest(".add-on-card").classList.add("selected")
@@ -869,15 +857,11 @@
     // Get Residency value
     const residClean = getParams("residency_value") || "";
     const residNotUSA = residClean !== 'US' && residClean !== '';
-    console.log(residNotUSA, "residNotUSA");
 
     //Get protection data 
     let rowProtectionData = await getProtectionAndAddOnsData("protections", pickupLocation);
-    console.log(rowProtectionData, "rowProtectionData");
     const protectionItems = rowProtectionData?.protectionReferencesList?.items[0]?.protectionList || [];
-    console.log(protectionItems, "protectionItems");
     const protectionBundleList = rowProtectionData?.protectionBundleList?.items || [];
-    console.log(protectionBundleList, "protectionBundleList");
     const sanitizedProtectionBundleList = protectionBundleList.map((item) => {
       const includeItems = item?.includedProtections?.map(el => {
         return {
@@ -891,7 +875,6 @@
       };
     });
 
-    console.log(sanitizedProtectionBundleList, "sanitizedProtectionBundleList");
 
     //Get add-ons data
     let rowAddOnsData = await getProtectionAndAddOnsData("add-ons", pickupLocation);
@@ -899,9 +882,7 @@
     rowAddOnsData?.addOnCategoryList?.items?.forEach(item => {
       concattedAddOnsList.push(...item?.addOnList)
     });
-    console.log(concattedAddOnsList, "concattedAddOnsList");
     const addOnsBundleList = rowAddOnsData?.addOnBundleList?.items || [];
-    console.log(addOnsBundleList, "addOnsBundleList");
     const sanitizedAddOnsBundleList = addOnsBundleList.map((item) => {
       const includeItems = item?.includedAddons?.map(el => {
         return {
@@ -917,14 +898,25 @@
     //Get session data
     let sessionData = getSessionData();
     const pickupUSA = sessionData.pickupCountryCode === "US";
-    console.log(pickupUSA, "pickupUSA");
     const extrasAPIPayload = {
       pickupLocation: sessionData.pickupLocationCode,
       dropoffLocation: sessionData.returnLocationCode,
       pickupDate: sessionData.pickupDatetime.split("T")[0],
-      pickupTime: sessionData.pickupHour + ":00",
+      pickupTime: (function() {
+        var h = parseInt(sessionData.pickupHour, 10);
+        var ampm = (sessionData.pickupAmPm || "").toUpperCase();
+        if (ampm === "PM" && h !== 12) h += 12;
+        if (ampm === "AM" && h === 12) h = 0;
+        return (h < 10 ? "0" + h : String(h)) + ":00";
+      })(),
       dropoffDate: sessionData.returnDatetime.split("T")[0],
-      dropoffTime: sessionData.returnHour + ":00",
+      dropoffTime: (function() {
+        var h = parseInt(sessionData.returnHour, 10);
+        var ampm = (sessionData.returnAmPm || "").toUpperCase();
+        if (ampm === "PM" && h !== 12) h += 12;
+        if (ampm === "AM" && h === 12) h = 0;
+        return (h < 10 ? "0" + h : String(h)) + ":00";
+      })(),
       age: Number(sessionData.age) || 25,
       discountCodes: [],
       priceView: sessionData.priceView || "LOWEST_PRICE",
@@ -964,9 +956,7 @@
     }
     const corelationalIdentifier = getCorelationalIdentifier();
     // ====================== GET EXTRAS DATA
-    console.log(extrasAPIPayload, "extrasAPIPayload");
     const extrasData = await getExtrasData(extrasAPIPayload, corelationalIdentifier);
-    console.log(extrasData, "extrasData");
 
     if (!extrasData) {
       console.warn("Extras API failed. Aborting VWA test script for this session to prevent broken UI.");
@@ -975,16 +965,13 @@
 
     //Get currency code
     const currencyCode = extrasData?.currencyCode || "USD";
-    console.log(currencyCode, "currencyCode");
 
     //Get avis config data
     const avisConfigData = await getAvisConfigData();
-    console.log(avisConfigData, "avisConfigData");
 
     // PROTECTION SANITIZATION
     const extrasProtectionItemList = extrasData?.protectionItems || [];
     const extrasProtectionBundleList = extrasData && extrasData?.protectionBundles || [];
-    console.log(extrasProtectionBundleList, "extrasProtectionBundleList");
     const filteredProtectionItemList = protectionItems
       .map(item => {
         const matched = extrasProtectionItemList.find(
@@ -1015,7 +1002,6 @@
 
       return true;
     }).sort((a, b) => protectionOrderList.indexOf(a.code) - protectionOrderList.indexOf(b.code));
-    console.log(finalProtectionItemList, "finalProtectionItemList");
     // select item by priority + remove from list
     var selectedItemForInitalSection = null;
     var remainingList = finalProtectionItemList.slice(); // clone list
@@ -1037,15 +1023,12 @@
     var hasFreeCDW = finalProtectionItemList.some(function (item) {
       return item.freeCDWIndicator === true;
     });
-    console.log(hasFreeCDW, "hasFreeCDW");
 
     // fallback → first item
     if (!selectedItemForInitalSection && remainingList.length > 0) {
       selectedItemForInitalSection = remainingList[0];
       remainingList.splice(0, 1);
     }
-    console.log(selectedItemForInitalSection, "selectedItemForInitalSection");
-    console.log(remainingList, "remainingList");
     // final protection bundle list
     const orderList = ["No Protection", "Essential Protection", "Enhanced Protection", "Ultimate Protection"]
     const finalProtectionBundleList = protectionBundleList
@@ -1068,11 +1051,8 @@
         return true;
       })
       .sort((a, b) => orderList.indexOf(a.bundleName) - orderList.indexOf(b.bundleName));
-    console.log(finalProtectionBundleList, "finalProtectionBundleList");
     // ADD-ONS SANITIZATION
     const extrasAddOnsItemList = extrasData?.addOnItems || [];
-    console.log(extrasAddOnsItemList, "extrasAddOnsItemList");
-    console.log(concattedAddOnsList, "concattedAddOnsList");
     const filteredAddOnsItemList = concattedAddOnsList.map((item) => {
       const matchedExtra = extrasAddOnsItemList.find(
         (extra) => extra.code === item.code
@@ -1120,10 +1100,8 @@
         return addOnOrderList.indexOf(item.code) !== -1;
       })
       .sort((a, b) => addOnOrderList.indexOf(a.code) - addOnOrderList.indexOf(b.code));
-    console.log(finalAddOnItemList, "finalAddOnItemList");
     // Add-ons bundle list
     const extrasAddonBundleList = extrasData?.addOnBundles || [];
-    console.log(extrasAddonBundleList, "extrasAddonBundleList");
     // final add-ons bundle list
     const finalAddOnBundleList = addOnsBundleList.map(item => {
       const exAddonBundle = extrasAddonBundleList.find(ex => ex.code === item.bundleName)
@@ -1135,7 +1113,6 @@
         netTotal: exAddonBundle?.netTotal || 0,
       }
     })
-    console.log(finalAddOnBundleList, "finalAddOnBundleList");
 
     //=========================New section=========================
     var greenCheckSVG = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="12" viewBox="0 0 16 12" fill="none">'
@@ -1166,7 +1143,7 @@
     }).join('');
 
     var protItemsHTML = remainingList.map(function (item) {
-      console.log(item, 'itemOfProtection');
+
       return '<div class="protection-item ' + (item.freeCDWIndicator ? 'included' : '') + '" data-code="' + (item.code || '') + '">'
         + '<div class="protection-item-info">'
         + '<h4 class="protection-item-title">' + item.name + '</h4>'
@@ -1225,7 +1202,7 @@
     }).join('');
 
     var addOnItemCardsHTML = finalAddOnItemList.map(function (item) {
-      console.log(item, 'item');
+
       var controlHTML = item.isShowQuantityUI
         ? '<div class="quantity-selector" data-code="' + item.code + '" data-max-quantity="' + (item.maxQuantity || 1) + '">'
         + '<button class="quantity-minus">-</button>'
@@ -1294,31 +1271,31 @@
       protectionBundleCards.forEach(card => {
         card.addEventListener("click", async () => {
           const bundleCode = card.getAttribute("data-code");
-          console.log(bundleCode, "bundleCode");
+
           const jsonBundle = finalProtectionBundleList.find(item => item.bundleName === bundleCode);
-          console.log(jsonBundle, "jsonBundle");
+
           const jsonBundleItems = [...jsonBundle.includedProtections, ...jsonBundle.excludedProtections];
-          console.log(jsonBundleItems, "jsonBundleItems");
+
           const extrasBundle = extrasProtectionBundleList.find(item => item.code === bundleCode);
-          console.log(extrasBundle, "extrasBundle");
+
           const rawStore = sessionStorage.getItem("reservation.store");
           if (!rawStore) return;
           const store = JSON.parse(rawStore) || {};
           // trigger no protection if bundle already selected. 
           const selectedBundleName = store.state.protectionBundleCode;
-          console.log(selectedBundleName === bundleCode, "selectedBundleName");
+
           if (selectedBundleName === bundleCode) {
-            console.log("No Protection trigger")
+
             const noProtBundle = document.querySelector('[data-code="No Protection"]');
             if (noProtBundle) {
-              console.log("No Protection trigger")
+
               noProtBundle.click();
             }
             return;
           }
           store.state.protectionBundleCode = bundleCode;
           store.state.protectionBundleCodeBackup = bundleCode;
-          console.log(store, "store");
+
           const protectionBundleItems = [];
           extrasBundle.items.forEach(item => {
             protectionBundleItems.push(item.code);
@@ -1358,7 +1335,7 @@
             bookAgain: extrasBundle.bookAgain || false,
             currencyCode: extrasBundle.currencyCode || "",
           }
-          console.log(selectedBundlePayload, "selectedBundlePayload");
+
           store.state.protectionBundleSelected = selectedBundlePayload;
           // store Protection Item
           const storeProtItemList = store.state.protectionItems || "";
@@ -1371,8 +1348,8 @@
           const formateStoreAddOnItems = storeAddOnItems.split(",").map(item => item.trim()).filter(Boolean) || [];
           const storeAddOnItemsQuantity = store.state.addOnItemsQuantity || "";
           const formateStoreAddOnItemsQuantity = storeAddOnItemsQuantity.split(",").map(item => item.trim()).filter(Boolean) || [];
-          console.log(formateStoreAddOnItems, "formateStoreAddOnItems");
-          console.log(formateStoreAddOnItemsQuantity, "formateStoreAddOnItemsQuantity");
+
+
 
           sessionStorage.setItem("reservation.store", JSON.stringify(store));
 
@@ -1424,18 +1401,18 @@
               }))
             };
           }
-          console.log(calculatePayload, "calculatePayload");
+
 
           const calculateData = await calculatePrice(calculatePayload, corelationalIdentifier);
-          console.log(calculateData, "calculateData");
+
           const calculateProtectionItems = calculateData.protectionItems || [];
-          console.log(calculateProtectionItems, "calculateProtectionItems");
+
           const calculateAddonItems = calculateData.addOnItems || [];
-          console.log(calculateAddonItems, "calculateAddonItems");
+
           const latestRawStore = sessionStorage.getItem("reservation.store");
           if (latestRawStore) {
             const latestStore = JSON.parse(latestRawStore);
-            console.log(latestStore, "latestStore");
+
 
             const newProtectionItems = calculateProtectionItems.map(item => {
               return {
@@ -1450,12 +1427,12 @@
                 rentalItemUnits: item.rentalItemUnits,
               }
             })
-            console.log(newProtectionItems, "newProtectionItems");
+
 
             const newAddOnItems = calculateAddonItems.map(item => {
               const isGSO = item.code === "GSO";
               const getDesc = finalAddOnItemList.find(i => i.code === item.code).name || "";
-              console.log(getDesc, "getDesc");
+
               return {
                 amount: extrasAddOnsItemList.find(i => i.code === item.code).netTotal,
                 chargeType: item.chargeType,
@@ -1470,10 +1447,10 @@
                 quantity: item.quantity,
               }
             })
-            console.log(newAddOnItems, "newAddOnItems");
+
             latestStore.state.pricesProtectionItems = newProtectionItems;
             latestStore.state.pricesAddOnItems = newAddOnItems;
-            console.log(latestStore, "latestStore 2");
+
             sessionStorage.setItem("reservation.store", JSON.stringify(latestStore));
 
             //Update UI
@@ -1484,22 +1461,22 @@
 
       // Protection items toggle listener
       const protectionToggles = [...document.querySelectorAll("#" + TEST_ID + " .protection-item .prot-checkbox-label input"), ...document.querySelectorAll("#" + TEST_ID + " .intial-prot-cards .protection-item")];
-      console.log(protectionToggles, "protectionToggles");
+
       protectionToggles.forEach(toggle => {
         toggle.addEventListener("click", async (e) => {
           const code = toggle.getAttribute("data-code");
           const protectionItemPrice = extrasProtectionItemList.find(item => item.code === code)
-          console.log(protectionItemPrice, "protectionItemPrice");
+
           const jsonProtectionItem = protectionItems?.find(item => item.code === code)
-          console.log(jsonProtectionItem, "jsonProtectionItem");
+
 
           const rawStore = sessionStorage.getItem("reservation.store");
-          console.log(rawStore, "rawStore");
+
           if (!rawStore) return;
 
           const store = JSON.parse(rawStore);
           const currentCodes = store.state.protectionItems;
-          console.log(currentCodes, "currentCodes");
+
           const codesArray = currentCodes ? currentCodes.split(",").map(c => c.trim()).filter(Boolean) : [];
           const index = codesArray.indexOf(code);
           if (index > -1) {
@@ -1582,7 +1559,7 @@
             netSubtotalPerUnit: calculateProtectionItem.netSubtotalPerUnit,
             rentalItemUnits: calculateProtectionItem.rentalItemUnits,
           }
-          console.log(pricePayloadProtectionItem, "pricePayloadProtectionItem");
+
           const latestRawStore = sessionStorage.getItem("reservation.store");
           if (latestRawStore) {
             const latestStore = JSON.parse(latestRawStore);
@@ -1601,7 +1578,7 @@
 
             latestStore.state.pricesProtectionItems = pricesProtectionItems;
             sessionStorage.setItem("reservation.store", JSON.stringify(latestStore));
-            console.log("pricesProtectionItems updated:", pricesProtectionItems);
+
           }
           updateCarSummaryAndFooterPrice(calculateData)
         });
@@ -1612,15 +1589,15 @@
       uiAddOnsBundleList.forEach(addOnBundle => {
         addOnBundle.addEventListener("click", async (e) => {
           const bundleCode = addOnBundle.getAttribute("data-add-on-bundle-code");
-          console.log(bundleCode, "bundleCode");
+
           const extrasBundle = extrasAddonBundleList.find(item => item.code === bundleCode)
-          console.log(extrasBundle, "extrasBundle");
+
           const jsonBundle = addOnsBundleList.find(item => item.bundleName === bundleCode)
-          console.log(jsonBundle, "jsonBundle");
+
           const rawStore = sessionStorage.getItem("reservation.store");
           if (!rawStore) return;
           const store = JSON.parse(rawStore) || {};
-          console.log(store, "store before update");
+
           // store Add On items
           const storeAddOnItems = store.state.addOnItems || "";
           const formateStoreAddOnItems = storeAddOnItems.split(",").map(item => item.trim()).filter(Boolean) || [];
@@ -1658,7 +1635,7 @@
             oldPrice: avisConfigData.pricingDisplay === "dailyRate" ? extrasBundle.grossSubtotal : extrasBundle.grossTotal,
             price: avisConfigData.pricingDisplay === "dailyRate" ? extrasBundle.netSubtotal : extrasBundle.netTotal,
           }
-          console.log(selectedAddOnBundleObj, "selectedAddOnBundleObj");
+
           store.state.addOnBundleSelected = selectedAddOnBundleObj;
           sessionStorage.setItem("reservation.store", JSON.stringify(store));
 
@@ -1712,15 +1689,15 @@
               items
             };
           }
-          console.log(calculatePayload, "calculatePayload");
+
           //call calculate api
           const calculateData = await calculatePrice(calculatePayload, corelationalIdentifier);
-          console.log(calculateData, "calculateData");
+
           const calculateAddOnItems = calculateData.addOnItems || [];
           const latestRawStore = sessionStorage.getItem("reservation.store");
           if (!latestRawStore) return;
           const latestStore = JSON.parse(latestRawStore);
-          console.log(calculateAddOnItems, "calculateAddOnItemsapi")
+
 
           const newAddOnItems = calculateAddOnItems.map(addOnItem => {
             const includedItem = jsonBundle.includedAddons?.find(
@@ -1742,16 +1719,16 @@
               rentalItemUnits: addOnItem.rentalItemUnits || 0,
             }
           })
-          console.log(newAddOnItems, "newAddOnItems");
+
           latestStore.state.pricesAddOnItems = newAddOnItems;
-          console.log(latestStore, "addOn bundle store");
+
           sessionStorage.setItem("reservation.store", JSON.stringify(latestStore));
         });
       });
 
       // ================= Add-ons items toggle listener =================
       const addOnToggles = document.querySelectorAll("#" + TEST_ID + " .add-on-toggle input");
-      console.log(addOnToggles, "addOnToggles");
+
       addOnToggles.forEach(toggle => {
         toggle.addEventListener("change", async (e) => {
           const code = e.target.getAttribute("data-code");
@@ -1864,7 +1841,7 @@
           const calculateData = await calculatePrice(calculatePayload, corelationalIdentifier);
           const calculateAddOnItems = calculateData.addOnItems || [];
           const calculateProtectionItems = calculateData.protectionItems || [];
-          console.log(calculateProtectionItems, "calculateProtectionItems");
+
           const newAddOnItems = calculateAddOnItems.map(addOnItem => {
             const extraItem = extrasAddOnsItemList?.find(
               i => i.code === addOnItem.code
@@ -1883,7 +1860,7 @@
               quantity: addOnItem.quantity || 0,
             }
           })
-          console.log(newAddOnItems, "newAddOnItems");
+
           //new protection items
           const newProtectionItems = calculateProtectionItems.map(item => {
               return {
@@ -1898,7 +1875,7 @@
                 rentalItemUnits: item.rentalItemUnits || 0,
               }
             })
-          console.log(newProtectionItems, "newProtectionItems");
+
           // Update pricesAddOnItems in sessionStorage
           const latestRawStore = sessionStorage.getItem("reservation.store");
           if (latestRawStore) {
@@ -1914,12 +1891,12 @@
 
       // ================= Add-ons quantity listener =================
       const addOnQuantity = document.querySelectorAll("#" + TEST_ID + " .quantity-selector");
-      console.log(addOnQuantity, "addOnQuantity");
+
       addOnQuantity.forEach(selector => {
         const code = selector.getAttribute("data-code");
         const maxQuantity = Number(selector.getAttribute("data-max-quantity"));
         let quantity = Number(selector.querySelector("input").value);
-        console.log(quantity, "quantity");
+
         const minusBtn = selector.querySelector(".quantity-minus");
         const plusBtn = selector.querySelector(".quantity-plus");
 
@@ -1999,7 +1976,7 @@
 
           // Call calculatePrice with the updated addOnItems
           const addOnItems = codesArray.map(c => ({ code: c, quantity: addOnItemsQuantityArray[codesArray.indexOf(c)] === "false" ? null : addOnItemsQuantityArray[codesArray.indexOf(c)] }));
-          console.log(addOnItems, "addOnItemscalcPayload");
+
 
           const calculatePayload = {
             age: extrasAPIPayload.age,
@@ -2047,16 +2024,16 @@
             };
           }
 
-          console.log(calculatePayload, "calculatePayload");
+
 
           // //Call calculatePrice API
           const calculateData = await calculatePrice(calculatePayload, corelationalIdentifier);
-          console.log(calculateData, "calculateData");
+
           const calculateAddOnItems = calculateData.addOnItems || [];
           const latestRawStore = sessionStorage.getItem("reservation.store");
           if (!latestRawStore) return;
           const latestStore = JSON.parse(latestRawStore);
-          console.log(calculateAddOnItems, "calculateAddOnItemsapi")
+
 
           const newAddOnItems = calculateAddOnItems.map(addOnItem => {
             const extraItem = extrasAddOnsItemList?.find(
@@ -2077,7 +2054,7 @@
             }
           })
 
-          console.log(newAddOnItems, "newAddOnItems");
+
           latestStore.state.pricesAddOnItems = newAddOnItems;
           sessionStorage.setItem("reservation.store", JSON.stringify(latestStore));
 
@@ -2100,7 +2077,7 @@
             quantity++;
             selector.querySelector("input").value = quantity;
           }
-          console.log(quantity, "quantity");
+
 
           const rawStore = sessionStorage.getItem("reservation.store");
           if (!rawStore) return;
@@ -2160,7 +2137,7 @@
 
           // Call calculatePrice with the updated addOnItems
           const addOnItems = codesArray.map(c => ({ code: c, quantity: addOnItemsQuantityArray[codesArray.indexOf(c)] === "false" ? null : addOnItemsQuantityArray[codesArray.indexOf(c)] }));
-          console.log(addOnItems, "addOnItemscalcPayload");
+
 
           const calculatePayload = {
             age: extrasAPIPayload.age,
@@ -2209,12 +2186,12 @@
           }
           // //Call calculatePrice API
           const calculateData = await calculatePrice(calculatePayload, corelationalIdentifier);
-          console.log(calculateData, "calculateData");
+
           const calculateAddOnItems = calculateData.addOnItems || [];
           const latestRawStore = sessionStorage.getItem("reservation.store");
           if (!latestRawStore) return;
           const latestStore = JSON.parse(latestRawStore);
-          console.log(calculateAddOnItems, "calculateAddOnItemsapi")
+
 
           const newAddOnItems = calculateAddOnItems.map(addOnItem => {
             const extraItem = extrasAddOnsItemList?.find(
@@ -2234,18 +2211,18 @@
               quantity: addOnItem.quantity || 0,
             }
           })
-          console.log(newAddOnItems, "newAddOnItems");
+
           latestStore.state.pricesAddOnItems = newAddOnItems;
           sessionStorage.setItem("reservation.store", JSON.stringify(latestStore));
 
           // disable the plus button if the quantity is equal to the max quantity
           const plusBtn = selector.querySelector(".quantity-plus");
           const minusBtn = selector.querySelector(".quantity-minus");
-          console.log("C render +++")
+
           plusBtn.closest('.add-on-card')?.classList.remove("ab-min-qty")
           if (quantity === maxQuantity) {
             plusBtn.closest('.add-on-card')?.classList.add("ab-max-qty")
-            console.log("render a")
+
           } else {
             plusBtn.closest('.add-on-card')?.classList.remove("ab-max-qty")
             plusBtn.closest('.add-on-card')?.classList.remove("default")
@@ -2260,10 +2237,10 @@
       staticNoProtCard.addEventListener("click", async (e) => {
         e.preventDefault();
         const bundleCode = staticNoProtCard.getAttribute("data-code");
-        console.log(bundleCode, "bundleCode");
+
         const extrasBundle = extrasProtectionBundleList.find(item => item.code === bundleCode) || {};
         const jsonBundle = finalProtectionBundleList.find(item => item.bundleName === bundleCode) || {};
-        console.log(extrasBundle, "extrasBundleStatic");
+
         const hasJsonBundle = Object.keys(jsonBundle).length > 0;
         const jsonBundleIncludeItems = hasJsonBundle ? jsonBundle.includedProtections : [];
         const jsonBundleExcludeItems = hasJsonBundle ? jsonBundle.excludedProtections : [];
@@ -2278,13 +2255,13 @@
 
         // if any selected protection bundle
         const prevSelectedProtBundle = sessionOne.protectionBundleSelected || {};
-        console.log(prevSelectedProtBundle, "prevSelectedProtBundle");
+
         let prevSelectedProtBundleItems = [];
         if (Object.keys(prevSelectedProtBundle).length > 0) {
-          console.log(prevSelectedProtBundle.items, "renderStaticItem");
+
           prevSelectedProtBundleItems = prevSelectedProtBundle.items.filter(item => item.included).map(item => item.code);
         }
-        console.log(prevSelectedProtBundleItems, "prevSelectedProtBundleItems");
+
         const prevAddOnItems = sessionOne.pricesAddOnItems || [];
         let filteredPrevAddOnItems = prevAddOnItems.length > 0 ? prevAddOnItems.map(item => {
           return {
@@ -2292,7 +2269,7 @@
             quantity: item.quantity || null,
           }
         }) : [];
-        console.log(filteredPrevAddOnItems, "filteredPrevAddOnItems");
+
 
         //bundle select payload
         let selectedBundlePayload = {};
@@ -2322,7 +2299,7 @@
             currencyCode: extrasBundle.currencyCode || "",
           }
         }
-        console.log(selectedBundlePayload, "selectedBundlePayload");
+
         sessionOne.protectionBundleSelected = selectedBundlePayload;
         sessionOne.protectionItems = "";
         sessionOne.protectionItemsBackup = "";
@@ -2330,10 +2307,10 @@
         sessionStorage.setItem("reservation.store", JSON.stringify({ state: sessionOne, version: 0 }));
         const finalFilterPrevAddOnItems = filteredPrevAddOnItems.length > 0 ? filteredPrevAddOnItems.filter(item => {
           const isIncluded = prevSelectedProtBundleItems.some(i => i === item.code)
-          console.log(isIncluded, "isIncluded");
+
           return !isIncluded
         }) : [];
-        console.log(finalFilterPrevAddOnItems, "finalFilterPrevAddOnItems");
+
         const calculatePayload = {
           age: extrasAPIPayload.age || 25,
           countryOfResidence: extrasAPIPayload.countryOfResidence,
@@ -2363,9 +2340,9 @@
           protectionItems: [],
           addOnItems: finalFilterPrevAddOnItems,
         };
-        console.log(calculatePayload, "calculatePayload static prot");
+
         const calculateData = await calculatePrice(calculatePayload, corelationalIdentifier);
-        console.log(calculateData, "calculateData static prot");
+
         const calculateAddOnItems = calculateData.addOnItems || [];
 
         const newAddOnItems = calculateAddOnItems.map(addOnItem => {
@@ -2386,7 +2363,7 @@
             quantity: addOnItem.quantity || 0,
           }
         })
-        console.log(newAddOnItems, "newAddOnItems");
+
         const sessionTwo = getSessionData();
         sessionTwo.pricesProtectionItems = calculateData.protectionItems;
         sessionTwo.pricesAddOnItems = newAddOnItems || [];
@@ -2398,7 +2375,7 @@
       // Toggle the summary protection section
       const protAndAddOnsTotalHeader = document.querySelector('[data-testid="category-expand-button-protections-addons"]');
       protAndAddOnsTotalHeader.addEventListener("click", () => {
-        console.log("protAndAddOnsItemsClick")
+
         const chevron = protAndAddOnsTotalHeader.querySelector(".mvt-36-chevron");
         if (chevron) {
           chevron.classList.toggle("rotate-chevron")
@@ -2407,7 +2384,7 @@
       // toggle summary tax and fees
       const taxAndFeesTotalHeader = document.querySelector('[data-testid="category-expand-button-taxes-fees"]');
       taxAndFeesTotalHeader.addEventListener("click", () => {
-        console.log("taxAndFeesTotalHeaderClick")
+
         const chevron = taxAndFeesTotalHeader.querySelector(".mvt-36-chevron");
         if (chevron) {
           chevron.classList.toggle("rotate-chevron")
@@ -2416,7 +2393,7 @@
       //toggle summary saving and discount
       const savingAndDiscountHeader = document.querySelector('[data-testid="category-expand-button-savings-discounts"]');
       savingAndDiscountHeader.addEventListener("click", () => {
-        console.log("savingAndDiscountHeaderClick")
+
         const chevron = savingAndDiscountHeader.querySelector(".mvt-36-chevron");
         if (chevron) {
           chevron.classList.toggle("rotate-chevron")
@@ -2428,7 +2405,7 @@
       addOnDetails.forEach((detail) => {
         detail.addEventListener("click", (e) => {
           e.preventDefault();
-          console.log("cickicng details")
+
           const addOnCard = detail.closest(".add-on-card");
           const addOnDetailsContent = addOnCard.querySelector(".add-on-details-content");
           addOnDetailsContent.classList.toggle("expend")
@@ -2441,7 +2418,7 @@
         detail.addEventListener("click", (e) => {
           e.preventDefault();
           e.stopPropagation();
-          console.log("cickicng details")
+
           const addOnCard = detail.closest(".protection-item");
           const addOnDetailsContent = addOnCard.querySelector(".prot-details-content");
           addOnDetailsContent.classList.toggle("expend")
@@ -2450,10 +2427,10 @@
 
       // dynamically hide all add-on cards beyond the first 4
       const allCards = document.querySelectorAll("#" + TEST_ID + " .add-ons-content .add-on-card");
-      console.log(allCards, "allCards");
+
       allCards.forEach((card, i) => {
         if (i >= 4) {
-          console.log(i, "card index");
+
           card.classList.add("add-ons-extra-card")
         };
       });
@@ -2534,9 +2511,6 @@
           }
         )
       }
-
-
-      console.log(TEST_ID + " injected");
     }
 
     /* ---------------- poll/observer manager ---------------- */
@@ -2566,7 +2540,7 @@
       globalObserver = new MutationObserver((mutations) => {
         // If our element was removed, try to re-init
         if (!document.getElementById(TEST_ID) && location.pathname.includes("/reservation/review-and-book")) {
-          console.log(TEST_ID + " removed from DOM, re-initializing...");
+
           init();
         }
       });

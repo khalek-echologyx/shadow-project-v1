@@ -549,6 +549,7 @@
     console.log(uiSelectedProtBundle, "uiSelectedProtBundle");
     if (uiSelectedProtBundle && selectedBundleName !== "") {
       uiProtectionBundleCards.forEach(card => {
+        console.log("card123", card);
         card.classList.remove("selected");
       });
       uiSelectedProtBundle.classList.add("selected");
@@ -695,7 +696,7 @@
     const addOnItemsForCalc = sessionData.addOnItemsBackup ? sessionData.addOnItemsBackup.split(",").map((item, index) => {
       return {
         code: item || "",
-        quantity: sessionData.addOnItemsQuantityBackup.split(",")[index] === "false" ? null : Number(sessionData.addOnItemsQuantityBackup.split(",")[index]) || "",
+        quantity: sessionData.addOnItemsQuantity.split(",")[index] === "false" ? null : Number(sessionData.addOnItemsQuantity.split(",")[index]) || "",
       }
     }) : [];
     //store Protection Bundles
@@ -710,10 +711,22 @@
       currencyCode: sessionData.userSelectedCurrency,
       discountCodes: [],
       dropoffDate: sessionData.returnDatetime.split("T")[0],
-      dropoffTime: sessionData.returnHour + ":00",
+      dropoffTime: (function() {
+        var h = parseInt(sessionData.returnHour, 10);
+        var ampm = (sessionData.returnAmPm || "").toUpperCase();
+        if (ampm === "PM" && h !== 12) h += 12;
+        if (ampm === "AM" && h === 12) h = 0;
+        return (h < 10 ? "0" + h : String(h)) + ":00";
+      })(),
       dropoffLocation: sessionData.returnLocationCode,
       pickupDate: sessionData.pickupDatetime.split("T")[0],
-      pickupTime: sessionData.pickupHour + ":00",
+      pickupTime: (function() {
+        var h = parseInt(sessionData.pickupHour, 10);
+        var ampm = (sessionData.pickupAmPm || "").toUpperCase();
+        if (ampm === "PM" && h !== 12) h += 12;
+        if (ampm === "AM" && h === 12) h = 0;
+        return (h < 10 ? "0" + h : String(h)) + ":00";
+      })(),
       pickupLocation: sessionData.pickupLocationCode,
       priceRateCode: sessionData.priceRateCode,
       priceType: sessionData.priceType || "",
@@ -952,9 +965,21 @@
       pickupLocation: sessionData.pickupLocationCode,
       dropoffLocation: sessionData.returnLocationCode,
       pickupDate: sessionData.pickupDatetime.split("T")[0],
-      pickupTime: sessionData.pickupHour + ":00",
+      pickupTime: (function() {
+        var h = parseInt(sessionData.pickupHour, 10);
+        var ampm = (sessionData.pickupAmPm || "").toUpperCase();
+        if (ampm === "PM" && h !== 12) h += 12;
+        if (ampm === "AM" && h === 12) h = 0;
+        return (h < 10 ? "0" + h : String(h)) + ":00";
+      })(),
       dropoffDate: sessionData.returnDatetime.split("T")[0],
-      dropoffTime: sessionData.returnHour + ":00",
+      dropoffTime: (function() {
+        var h = parseInt(sessionData.returnHour, 10);
+        var ampm = (sessionData.returnAmPm || "").toUpperCase();
+        if (ampm === "PM" && h !== 12) h += 12;
+        if (ampm === "AM" && h === 12) h = 0;
+        return (h < 10 ? "0" + h : String(h)) + ":00";
+      })(),
       age: Number(sessionData.age) || 25,
       discountCodes: [],
       priceView: sessionData.priceView || "LOWEST_PRICE",
