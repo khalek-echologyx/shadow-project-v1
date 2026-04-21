@@ -1025,7 +1025,7 @@
 
         return {
           ...item,
-          grossSubtotal: matched.grossSubtotal || 0,
+          netSubtotal: matched.netSubtotal || 0,
           freeCDWIndicator: matched.freeCDWIndicator || false,
         };
       })
@@ -1085,7 +1085,7 @@
       if (!matchedExtra) return null;
       return {
         ...item,
-        grossSubtotal: matchedExtra?.grossSubtotal || 0,
+        netSubtotal: matchedExtra?.netSubtotal || 0,
         freeCDWIndicator: matchedExtra.freeCDWIndicator || false,
       };
     }).filter(Boolean);
@@ -1106,7 +1106,7 @@
           .filter(sub => extrasMap[sub.code])
           .map(sub => ({
             ...sub,
-            grossSubtotal: extrasMap[sub.code].grossSubtotal,
+            netSubtotal: extrasMap[sub.code].netSubtotal,
             isShowQuantityUI: addOnWithQantity.includes(sub.code),
             freeCDWIndicator: extrasMap[sub.code].freeCDWIndicator || false,
           }));
@@ -1165,7 +1165,7 @@
         + '</div>'
         + '<div class="card-actions">'
         + '<div class="view-coverage">View coverage</div>'
-        + '<div class="price-info">' + getPriceWithCurrenty(currencyCode, prot.grossSubtotal) + ' <p class="per-day-slash">/<span class="per-day">day</span></p></div>'
+        + '<div class="price-info">' + getPriceWithCurrenty(currencyCode, prot.netSubtotal) + ' <p class="per-day-slash">/<span class="per-day">day</span></p></div>'
         + '</div>'
         + '</div>';
     }).join('');
@@ -1177,7 +1177,7 @@
         + '<h4 class="protection-item-title">' + item.name + '</h4>'
         + '</div>'
         + '<div class="protection-item-actions">'
-        + '<div class="price-info">' + getPriceWithCurrenty(currencyCode, item.grossSubtotal) + ' <p class="per-day-slash">/<span class="per-day">day</span></p></div>'
+        + '<div class="price-info">' + getPriceWithCurrenty(currencyCode, item.netSubtotal) + ' <p class="per-day-slash">/<span class="per-day">day</span></p></div>'
         + '<div class="details-and-check">'
         + '<div class="prot-details">Details</div>'
         + '<div class="prot-checkbox-section">'
@@ -1236,7 +1236,7 @@
         + '</div>'
         + '<div class="card-actions">'
         + '<div class="view-coverage">View coverage</div>'
-        + '<div class="price-info">' + getPriceWithCurrenty(currencyCode, ultimateProtBundle.grossSubtotal) + ' <p class="per-day-slash">/<span class="per-day">day</span></p></div>'
+        + '<div class="price-info">' + getPriceWithCurrenty(currencyCode, ultimateProtBundle.netSubtotal) + ' <p class="per-day-slash">/<span class="per-day">day</span></p></div>'
         + '</div>'
         + '</div>';
     }
@@ -1244,7 +1244,7 @@
     var addOnBundleCardsHTML = finalAddOnBundleList.map(function (item) {
       return '<div class="add-on-bundle-card" data-add-on-bundle-code="' + item.bundleName + '">'
         + '<div>' + item.bundleName + '</div>'
-        + '<div class="add-on-bundle-select-btn">' + getPriceWithCurrenty(currencyCode, item.grossSubtotal) + '/day</div>'
+        + '<div class="add-on-bundle-select-btn">' + getPriceWithCurrenty(currencyCode, item.netSubtotal) + '/day</div>'
         + '</div>';
     }).join('');
 
@@ -1269,7 +1269,7 @@
         + '<div class="add-on-info"><h4 class="add-on-title">' + item.name + '</h4></div>'
         + '</div>'
         + '<div class="card-footer">'
-        + '<div class="price-info">' + getPriceWithCurrenty(currencyCode, item.grossSubtotal) + ' <p class="per-day-slash">/<span class="per-day">day</span></p></div>'
+        + '<div class="price-info">' + getPriceWithCurrenty(currencyCode, item.netSubtotal) + ' <p class="per-day-slash">/<span class="per-day">day</span></p></div>'
         + '<div class="add-on-actions">'
         + '<a href="#" class="add-on-details" data-code="' + item.code + '">Details</a>'
         + controlHTML
@@ -1885,6 +1885,8 @@
           // //Call calculatePrice API
           const calculateData = await calculatePrice(calculatePayload, corelationalIdentifier);
           const calculateAddOnItems = calculateData.addOnItems || [];
+          const calculateProtectionItems = calculateData.protectionItems || [];
+          console.log(calculateProtectionItems, "calculateProtectionItems");
           const newAddOnItems = calculateAddOnItems.map(addOnItem => {
             const extraItem = extrasAddOnsItemList?.find(
               i => i.code === addOnItem.code
@@ -1904,12 +1906,28 @@
             }
           });
           console.log(newAddOnItems, "newAddOnItems");
+          //new protection items
+          const newProtectionItems = calculateProtectionItems.map(item => {
+              return {
+                amount: extrasProtectionItemList.find(i => i.code === item.code).netTotal || 0,
+                chargeType: item.chargeType || "",
+                code: item.code || "",
+                description: filteredProtectionItemList.find(i => i.code === item.code).name || "",
+                discount: extrasProtectionItemList.find(i => i.code === item.code).discount || 0,
+                grossSubtotal: extrasProtectionItemList.find(i => i.code === item.code).grossSubtotal || 0,
+                netSubtotal: item.netSubtotal || 0,
+                netSubtotalPerUnit: item.netSubtotalPerUnit || 0,
+                rentalItemUnits: item.rentalItemUnits || 0,
+              }
+            });
+          console.log(newProtectionItems, "newProtectionItems");
           // Update pricesAddOnItems in sessionStorage
           const latestRawStore = sessionStorage.getItem("reservation.store");
           if (latestRawStore) {
             const latestStore = JSON.parse(latestRawStore);
             if (!latestStore.state) latestStore.state = {};
             latestStore.state.pricesAddOnItems = newAddOnItems;
+            latestStore.state.pricesProtectionItems = newProtectionItems.length > 0 ? newProtectionItems : [];
             sessionStorage.setItem("reservation.store", JSON.stringify(latestStore));
           }
           updateCarSummaryAndFooterPrice(calculateData);

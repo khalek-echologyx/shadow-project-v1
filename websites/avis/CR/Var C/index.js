@@ -1033,6 +1033,7 @@
         };
       })
       .filter(Boolean);
+    console.log(filteredProtectionItemList, "filteredProtectionItemList");
     //final protection item list
     const hideItems = ['ALI', 'CDW'];
     const protectionOrderList = ["CDW", "ALI", "PAI", "PEP"]
@@ -1894,6 +1895,8 @@
           // //Call calculatePrice API
           const calculateData = await calculatePrice(calculatePayload, corelationalIdentifier);
           const calculateAddOnItems = calculateData.addOnItems || [];
+          const calculateProtectionItems = calculateData.protectionItems || [];
+          console.log(calculateProtectionItems, "calculateProtectionItems");
           const newAddOnItems = calculateAddOnItems.map(addOnItem => {
             const extraItem = extrasAddOnsItemList?.find(
               i => i.code === addOnItem.code
@@ -1913,12 +1916,28 @@
             }
           })
           console.log(newAddOnItems, "newAddOnItems");
+          //new protection items
+          const newProtectionItems = calculateProtectionItems.map(item => {
+              return {
+                amount: extrasProtectionItemList.find(i => i.code === item.code).netTotal || 0,
+                chargeType: item.chargeType || "",
+                code: item.code || "",
+                description: filteredProtectionItemList.find(i => i.code === item.code).name || "",
+                discount: extrasProtectionItemList.find(i => i.code === item.code).discount || 0,
+                grossSubtotal: extrasProtectionItemList.find(i => i.code === item.code).grossSubtotal || 0,
+                netSubtotal: item.netSubtotal || 0,
+                netSubtotalPerUnit: item.netSubtotalPerUnit || 0,
+                rentalItemUnits: item.rentalItemUnits || 0,
+              }
+            })
+          console.log(newProtectionItems, "newProtectionItems");
           // Update pricesAddOnItems in sessionStorage
           const latestRawStore = sessionStorage.getItem("reservation.store");
           if (latestRawStore) {
             const latestStore = JSON.parse(latestRawStore);
             if (!latestStore.state) latestStore.state = {};
             latestStore.state.pricesAddOnItems = newAddOnItems;
+            latestStore.state.pricesProtectionItems = newProtectionItems.length > 0 ? newProtectionItems : [];
             sessionStorage.setItem("reservation.store", JSON.stringify(latestStore));
           }
           updateCarSummaryAndFooterPrice(calculateData)
