@@ -1,0 +1,16 @@
+{
+  "id": "1776937307289_7124_MVT_50",
+  "name": "MVT-50",
+  "type": "A/B",
+  "website": "avis",
+  "variations": [
+    "control",
+    "Var A",
+    "Var B",
+    "Var C",
+    "Var C-1"
+  ],
+  "createdAt": "2026-04-23T09:41:47.289Z",
+  "createdAtReadable": "4/23/2026, 3:41:47 PM",
+  "lastUpdated": "2026-04-23T14:34:44.585Z"
+}

@@ -1,11 +1,4 @@
 .MVT-36 {
-  padding: 32px 24px;
-  background: white;
-  color: #000;
-  margin: 0 auto;
-  margin-top: 16px;
-  box-shadow: 0px 2px 8px 0px rgba(124, 80, 80, 0.06);
-  border-radius: 8px;
   /* ---------------- add-ons section ---------------- */
 }
 .MVT-36 .mvt-36-summary-prot-item {
@@ -151,6 +144,7 @@
   text-decoration: underline;
   text-underline-offset: 3px;
   cursor: pointer;
+  pointer-events: auto !important;
 }
 .MVT-36 .intial-prot-cards .protection-item .protection-item-actions .price-info {
   font-size: 28px;
@@ -273,6 +267,7 @@
   text-decoration: underline;
   text-underline-offset: 3px;
   cursor: pointer;
+  pointer-events: auto !important;
 }
 .MVT-36 .intial-prot-cards .static-no-prot-card .protection-item-actions .price-info {
   font-size: 28px;
@@ -312,7 +307,7 @@
   display: none !important;
 }
 .MVT-36 .prot-cards.show-all {
-  max-height: 700px;
+  max-height: 1000px;
   margin-bottom: 24px;
 }
 .MVT-36 .prot-card {
@@ -487,6 +482,7 @@
   text-decoration: underline;
   text-underline-offset: 3px;
   cursor: pointer;
+  pointer-events: auto !important;
 }
 .MVT-36 .protection-items-section .protection-item .protection-item-actions .details-and-check .prot-checkbox-section {
   display: flex;
@@ -575,6 +571,9 @@
   pointer-events: none;
   border-color: #000;
 }
+.MVT-36 .protection-items-section .protection-item.included .prot-details {
+  pointer-events: auto !important;
+}
 .MVT-36 .protection-items-section .protection-item.included .prot-checkbox-label {
   display: none !important;
 }
@@ -588,7 +587,7 @@
   line-height: 20px;
 }
 .MVT-36 .protection-items-section.show-all {
-  max-height: 700px;
+  max-height: 1000px;
   margin-top: 16px;
 }
 .MVT-36 .add-ons-section {

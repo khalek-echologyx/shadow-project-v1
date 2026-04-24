@@ -5,13 +5,6 @@
       clearInterval(interval); // Stop checking once found
       var style = document.createElement("style");
       style.innerHTML = `.MVT-36 {
-  padding: 32px 24px;
-  background: white;
-  color: #000;
-  margin: 0 auto;
-  margin-top: 16px;
-  box-shadow: 0px 2px 8px 0px rgba(124, 80, 80, 0.06);
-  border-radius: 8px;
   /* ---------------- add-ons section ---------------- */
 }
 .MVT-36 .mvt-36-summary-prot-item {
@@ -173,6 +166,7 @@
   text-decoration: underline;
   text-underline-offset: 3px;
   cursor: pointer;
+  pointer-events: auto !important;
 }
 .MVT-36
   .intial-prot-cards
@@ -336,6 +330,7 @@
   text-decoration: underline;
   text-underline-offset: 3px;
   cursor: pointer;
+  pointer-events: auto !important;
 }
 .MVT-36
   .intial-prot-cards
@@ -390,7 +385,7 @@
   display: none !important;
 }
 .MVT-36 .prot-cards.show-all {
-  max-height: 700px;
+  max-height: 1000px;
   margin-bottom: 24px;
 }
 .MVT-36 .prot-card {
@@ -595,6 +590,7 @@
   text-decoration: underline;
   text-underline-offset: 3px;
   cursor: pointer;
+  pointer-events: auto !important;
 }
 .MVT-36
   .protection-items-section
@@ -777,6 +773,9 @@
   pointer-events: none;
   border-color: #000;
 }
+.MVT-36 .protection-items-section .protection-item.included .prot-details {
+  pointer-events: auto !important;
+}
 .MVT-36
   .protection-items-section
   .protection-item.included
@@ -793,7 +792,7 @@
   line-height: 20px;
 }
 .MVT-36 .protection-items-section.show-all {
-  max-height: 700px;
+  max-height: 1000px;
   margin-top: 16px;
 }
 .MVT-36 .add-ons-section {
@@ -2265,8 +2264,6 @@
     const windowPriceProtectionList = calculateData.protectionItems || [];
     // =============== PROTECTION BUNDLE SELECTION ===============
     if (isEmptyProtectionBundleList) {
-      const protTitle = document.querySelector("." + TEST_ID + " .prot-title");
-      protTitle.style.display = "none";
       const viewAllPkgBtn = document.querySelector(
         "." + TEST_ID + " .prot-all-packages",
       );
@@ -2594,7 +2591,7 @@
     }
     //has free cdw
     var hasFreeCDW = finalProtectionItemList.some(function (item) {
-      return item.freeCDWIndicator === true;
+      return item.freeCDWIndicator === true || item.netSubtotal === 0;
     });
 
     // fallback → first item
@@ -2775,7 +2772,9 @@
       .map(function (item) {
         return (
           '<div class="protection-item ' +
-          (item.freeCDWIndicator ? "included" : "") +
+          (item.freeCDWIndicator || Number(item.netSubtotal) === 0
+            ? "included"
+            : "") +
           '" data-code="' +
           (item.code || "") +
           '">' +
@@ -2829,7 +2828,10 @@
 
     var selectedItemForInitalSectionHTML =
       '<div class="protection-item ' +
-      (selectedItemForInitalSection.freeCDWIndicator ? "included" : "") +
+      (selectedItemForInitalSection.freeCDWIndicator ||
+      Number(selectedItemForInitalSection.netSubtotal) === 0
+        ? "included"
+        : "") +
       '" data-code="' +
       (selectedItemForInitalSection.code || "") +
       '">' +
@@ -2895,7 +2897,9 @@
             "</label>";
         return (
           '<div class="add-on-card ' +
-          (item.freeCDWIndicator ? "included" : "") +
+          (item.freeCDWIndicator || Number(item.netSubtotal) === 0
+            ? "included"
+            : "") +
           '">' +
           '<div class="card-header">' +
           '<div class="add-on-icon">' +
@@ -3246,7 +3250,6 @@
           "#" + TEST_ID + " .intial-prot-cards .protection-item",
         ),
       ];
-
       protectionToggles.forEach((toggle) => {
         toggle.addEventListener("click", async (e) => {
           const code = toggle.getAttribute("data-code");

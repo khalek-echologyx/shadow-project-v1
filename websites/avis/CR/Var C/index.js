@@ -540,14 +540,12 @@
   const updateProtectionCards = (calculateData) => {
     const selectedBundle = calculateData.protectionBundle || {};
     const selectedBundleName = selectedBundle.code || "";
-
-    const uiProtectionBundleCards = [...document.querySelectorAll("#" + TEST_ID + " .prot-card")];
-
-    const uiSelectedProtBundle = uiProtectionBundleCards.find(card => card.getAttribute("data-code") === selectedBundleName);
-
+    const uiProtectionBundleCards = [...document.querySelectorAll("#" + TEST_ID + " .prot-card"), document.querySelector("#" + TEST_ID + " .intial-prot-cards .static-no-prot-card")];
+    const uiSelectedProtBundle = uiProtectionBundleCards.find(card => {
+      return card.getAttribute("data-code") === selectedBundleName
+    });
     if (uiSelectedProtBundle && selectedBundleName !== "") {
       uiProtectionBundleCards.forEach(card => {
-
         card.classList.remove("selected");
       })
       uiSelectedProtBundle.classList.add("selected");
@@ -558,14 +556,10 @@
     const sessionData = getSessionData();
     const selectedProtBundle = sessionData.protectionBundleSelected || {};
     const selectedBundleItems = Object.keys(selectedProtBundle).length > 0 ? selectedProtBundle.items.filter(item => item.included) : [];
-
     const pricesAddOnItems = sessionData.pricesAddOnItems || [];
-
     const isAvistFirst = sessionData.isAvisFirst || false;
-
     addOnCardsCheckbox.forEach(checkbox => {
       const dataCode = checkbox.querySelector("input").getAttribute("data-code");
-
       const isGSO = dataCode === "GSO";
       const isIncluded = selectedBundleItems.some(item => item.code === dataCode);
       const targetAddOnCard = checkbox.closest(".add-on-card");
@@ -842,8 +836,6 @@
     const windowPriceProtectionList = calculateData.protectionItems || [];
     // =============== PROTECTION BUNDLE SELECTION ===============
     if (isEmptyProtectionBundleList) {
-      const protTitle = document.querySelector("." + TEST_ID + " .prot-title");
-      protTitle.style.display = "none";
       const viewAllPkgBtn = document.querySelector("." + TEST_ID + " .prot-all-packages");
       viewAllPkgBtn.style.display = "none";
     }
@@ -1126,7 +1118,7 @@
 
     //has free cdw
     var hasFreeCDW = finalProtectionItemList.some(function (item) {
-      return item.freeCDWIndicator === true;
+      return item.freeCDWIndicator === true || item.netSubtotal === 0;
     });
 
     // final protection bundle list
@@ -1249,9 +1241,82 @@
         + '</div>';
     }).join('');
 
-    var protItemsHTML = finalProtectionItemList.map(function (item) {
+    var staticNoProtectionCard =
+      '<div class="static-no-prot-card ' + (hasFreeCDW ? 'disabled' : '') + '" data-code="No Protection">'
+      + '<div class="protection-item-info">'
+      + '<h4 class="protection-item-title">No Extra Protection</h4>'
+      + '<div class="card-radio"><div class="radio-outer"><div class="radio-inner"></div></div></div>'
+      + '</div>'
+      + '<div class="protection-item-actions">'
+      + '<div class="price-info">' + getPriceWithCurrenty(currencyCode, 0) + ' <p class="per-day-slash">/<span class="per-day">day</span></p></div>'
+      + '</div>'
+      + '</div>';
 
-      return '<div class="protection-item ' + (item.freeCDWIndicator ? 'included' : '') + '" data-code="' + (item.code || '') + '">'
+    var essentialProtBundle =
+      finalProtectionBundleList.find(function (b) {
+        return b.bundleName === "Essential Protection";
+      }) ||
+      finalProtectionBundleList.find(function (b) {
+        return b.bundleName === "Basic Cover";
+      }) ||
+      finalProtectionBundleList.find(function (b) {
+        return b.bundleName === "Essential Package";
+      }) ||
+      finalProtectionBundleList[1] ||
+      null;
+
+    var staticEssentialProtCard = '';
+    if (essentialProtBundle) {
+      var essProtItems = essentialProtBundle.includedProtections && essentialProtBundle.includedProtections.length ? essentialProtBundle.includedProtections : [];
+      var essProtFeaturesHTML = essProtItems.map(function (item) {
+        return '<div class="feature-item">'
+          + '<div class="feature-icon">' + greenCheckSVG + '</div>'
+          + '<div class="feature-text">' + item.name + '</div>'
+          + '</div>';
+      }).join('');
+      staticEssentialProtCard =
+        '<div class="prot-card" data-code="' + (essentialProtBundle.bundleName || '') + '">'
+        + '<div class="card-body">'
+        + '<div class="card-info">'
+        + '<h3 class="card-title">' + (essentialProtBundle.bundleName || '') + '</h3>'
+        + '<div class="card-radio"><div class="radio-outer"><div class="radio-inner"></div></div></div>'
+        + '</div>'
+        + '<div class="card-features">' + essProtFeaturesHTML + '</div>'
+        + '</div>'
+        + '<div class="card-actions">'
+        + '<div class="view-coverage">View coverage</div>'
+        + '<div class="price-info">' + getPriceWithCurrenty(currencyCode, essentialProtBundle.netSubtotal) + ' <p class="per-day-slash">/<span class="per-day">day</span></p></div>'
+        + '</div>'
+        + '</div>';
+    } else {
+      // essentialProtBundle is null – pull a fallback protection item from finalProtectionItemList
+      var fallbackItemIndex = finalProtectionItemList.findIndex(function (item) {
+        return item.code === 'CDW';
+      });
+      if (fallbackItemIndex === -1) {
+        fallbackItemIndex = finalProtectionItemList.length > 0 ? 0 : -1;
+      }
+      if (fallbackItemIndex !== -1) {
+        var fallbackProtItem = finalProtectionItemList.splice(fallbackItemIndex, 1)[0];
+        staticEssentialProtCard ='<div class="protection-item ' + (fallbackProtItem.freeCDWIndicator || Number(fallbackProtItem.netSubtotal) === 0 ? 'included' : '') + '" data-code="' + (fallbackProtItem.code || '') + '">'
+      + '<div class="protection-item-info">'
+      + '<h4 class="protection-item-title">' + fallbackProtItem.name + '</h4>'
+      + '<div class="card-radio"><div class="radio-outer"><div class="radio-inner"></div></div></div>'
+      + '</div>'
+      + '<div class="protection-item-actions">'
+      + '<div class="prot-details">Details</div>'
+      + '<div class="price-info">' + getPriceWithCurrenty(currencyCode, fallbackProtItem.netSubtotal) + ' <p class="per-day-slash">/<span class="per-day">day</span></p></div>'
+      + '<p class="included-text">Included</p>'
+      + '</div>'
+      + '<div class="prot-details-content">'
+      + '<p class="prot-details-content-text">' + fallbackProtItem.description.html + '</p>'
+      + '</div>'
+      + '</div>';
+      }
+    }
+
+    var protItemsHTML = finalProtectionItemList.map(function (item) {
+      return '<div class="protection-item ' + (item.freeCDWIndicator || Number(item.netSubtotal) === 0 ? 'included' : '') + '" data-code="' + (item.code || '') + '">'
         + '<div class="protection-item-info">'
         + '<h4 class="protection-item-title">' + item.name + '</h4>'
         + '</div>'
@@ -1276,54 +1341,6 @@
         + '</div>';
     }).join('');
 
-    var staticNoProtectionCard =
-      '<div class="static-no-prot-card ' + (hasFreeCDW ? 'disabled' : '') + '" data-code="No Protection">'
-      + '<div class="protection-item-info">'
-      + '<h4 class="protection-item-title">No Extra Protection</h4>'
-      + '<div class="card-radio"><div class="radio-outer"><div class="radio-inner"></div></div></div>'
-      + '</div>'
-      + '<div class="protection-item-actions">'
-      + '<div class="price-info">' + getPriceWithCurrenty(currencyCode, 0) + ' <p class="per-day-slash">/<span class="per-day">day</span></p></div>'
-      + '</div>'
-      + '</div>';
-
-    var essentialProtBundle =
-      finalProtectionBundleList.find(function (b) {
-        return b.bundleName === "Essential Protection";
-      }) ||
-      finalProtectionBundleList.find(function (b) {
-        return b.bundleName === "Basic Cover";
-      }) ||
-      finalProtectionBundleList.find(function (b) {
-        return b.bundleName === "Essential Package";
-      }) ||
-      finalProtectionBundleList[1] ||
-      null;
-    var staticEssentialProtCard = '';
-    if (essentialProtBundle) {
-      var essProtItems = essentialProtBundle.includedProtections && essentialProtBundle.includedProtections.length ? essentialProtBundle.includedProtections : [];
-      var essProtFeaturesHTML = essProtItems.map(function (item) {
-        return '<div class="feature-item">'
-          + '<div class="feature-icon">' + greenCheckSVG + '</div>'
-          + '<div class="feature-text">' + item.name + '</div>'
-          + '</div>';
-      }).join('');
-      staticEssentialProtCard =
-        '<div class="prot-card" data-code="' + (essentialProtBundle.bundleName || '') + '">'
-        + '<div class="card-body">'
-        + '<div class="card-info">'
-        + '<h3 class="card-title">' + (essentialProtBundle.bundleName || '') + '</h3>'
-        + '<div class="card-radio"><div class="radio-outer"><div class="radio-inner"></div></div></div>'
-        + '</div>'
-        + '<div class="card-features">' + essProtFeaturesHTML + '</div>'
-        + '</div>'
-        + '<div class="card-actions">'
-        + '<div class="view-coverage">View coverage</div>'
-        + '<div class="price-info">' + getPriceWithCurrenty(currencyCode, essentialProtBundle.netSubtotal) + ' <p class="per-day-slash">/<span class="per-day">day</span></p></div>'
-        + '</div>'
-        + '</div>';
-    }
-
     var addOnBundleCardsHTML = finalAddOnBundleList.map(function (item) {
       return '<div class="add-on-bundle-card" data-add-on-bundle-code="' + item.bundleName + '">'
         + '<div>' + item.bundleName + '</div>'
@@ -1332,7 +1349,6 @@
     }).join('');
 
     var addOnItemCardsHTML = finalAddOnItemList.map(function (item) {
-
       var controlHTML = item.isShowQuantityUI
         ? '<div class="quantity-selector" data-code="' + item.code + '" data-max-quantity="' + (item.maxQuantity || 1) + '">'
         + '<button class="quantity-minus">-</button>'
@@ -1346,7 +1362,7 @@
         + '<p class="included-text">Included</p>'
         + '<div class="included-in-bundle-text">Included in bundle</div>'
         + '</label>';
-      return '<div class="add-on-card ' + (item.freeCDWIndicator ? 'included' : '') + '">'
+      return '<div class="add-on-card ' + (item.freeCDWIndicator || Number(item.netSubtotal) === 0 ? 'included' : '') + '">'
         + '<div class="card-header">'
         + '<div class="add-on-icon">' + (addOnItemsSvgObj[item.code] || '') + '</div>'
         + '<div class="add-on-info"><h4 class="add-on-title">' + item.name + '</h4></div>'
@@ -1382,8 +1398,6 @@
       + '<div class="add-ons-footer">' + (finalAddOnItemList.length > 4 ? '<button type="button" class="add-on-btn-all-packages">View all add-ons options</button>' : '') + '</div>'
       + '</div>'
       + '</div>';
-
-
     /* ---------------- main injection ---------------- */
 
     function inject() {
@@ -1419,7 +1433,6 @@
 
             const noProtBundle = document.querySelector('[data-code="No Protection"]');
             if (noProtBundle) {
-
               noProtBundle.click();
             }
             return;
@@ -1591,7 +1604,7 @@
       });
 
       // Protection items toggle listener
-      const protectionToggles = document.querySelectorAll("#" + TEST_ID + " .prot-checkbox-label input");
+      const protectionToggles = [...document.querySelectorAll("#" + TEST_ID + " .prot-checkbox-label input"), ...document.querySelectorAll("#" + TEST_ID + " .intial-prot-cards .protection-item")];
       protectionToggles.forEach(toggle => {
         toggle.addEventListener("click", async (e) => {
           const code = toggle.getAttribute("data-code");
@@ -2548,7 +2561,7 @@
       protDetailsBtn.forEach((detail) => {
         detail.addEventListener("click", (e) => {
           e.preventDefault();
-
+          e.stopPropagation();
           const addOnCard = detail.closest(".protection-item");
           const addOnDetailsContent = addOnCard.querySelector(".prot-details-content");
           addOnDetailsContent.classList.toggle("expend")
@@ -2623,25 +2636,6 @@
           }
         }
       )
-
-      // change summary order on mobile devices
-      if (window.matchMedia("(max-width: 767px)").matches) {
-        poll(
-          () => document.querySelector('[data-testid="ancillaries-action-footer"]'),
-          () => {
-            const selectorEl = document.querySelector('[data-testid="ancillaries-action-footer"]');
-            const targetEl = document.querySelector('[data-testid="booking-summary-wrapper"]')
-            if (targetEl) {
-              const targetParentEl = targetEl.parentElement;
-              if (targetParentEl) {
-                selectorEl.insertAdjacentElement("beforebegin", targetParentEl)
-              }
-            }
-          }
-        )
-      }
-
-
     }
 
     /* ---------------- poll/observer manager ---------------- */

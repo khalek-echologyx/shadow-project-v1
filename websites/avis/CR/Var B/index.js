@@ -803,8 +803,6 @@
     const windowPriceProtectionList = calculateData.protectionItems || [];
     // =============== PROTECTION BUNDLE SELECTION ===============
     if (isEmptyProtectionBundleList) {
-      const protTitle = document.querySelector("." + TEST_ID + " .prot-title");
-      protTitle.style.display = "none";
       const viewAllPkgBtn = document.querySelector("." + TEST_ID + " .prot-all-packages");
       viewAllPkgBtn.style.display = "none";
     }
@@ -1080,7 +1078,7 @@
     }
     //has free cdw
     var hasFreeCDW = finalProtectionItemList.some(function (item) {
-      return item.freeCDWIndicator === true;
+      return item.freeCDWIndicator === true || item.netSubtotal === 0;
     });
 
     // fallback → first item
@@ -1202,8 +1200,7 @@
     }).join('');
 
     var protItemsHTML = remainingList.map(function (item) {
-
-      return '<div class="protection-item ' + (item.freeCDWIndicator ? 'included' : '') + '" data-code="' + (item.code || '') + '">'
+      return '<div class="protection-item ' + (item.freeCDWIndicator || Number(item.netSubtotal) === 0 ? 'included' : '') + '" data-code="' + (item.code || '') + '">'
         + '<div class="protection-item-info">'
         + '<h4 class="protection-item-title">' + item.name + '</h4>'
         + '</div>'
@@ -1238,7 +1235,7 @@
       + '</div>'
       + '</div>';
 
-    var selectedItemForInitalSectionHTML = '<div class="protection-item ' + (selectedItemForInitalSection.freeCDWIndicator ? 'included' : '') + '" data-code="' + (selectedItemForInitalSection.code || '') + '">'
+    var selectedItemForInitalSectionHTML = '<div class="protection-item ' + (selectedItemForInitalSection.freeCDWIndicator || Number(selectedItemForInitalSection.netSubtotal) === 0 ? 'included' : '') + '" data-code="' + (selectedItemForInitalSection.code || '') + '">'
       + '<div class="protection-item-info">'
       + '<h4 class="protection-item-title">' + selectedItemForInitalSection.name + '</h4>'
       + '<div class="card-radio"><div class="radio-outer"><div class="radio-inner"></div></div></div>'
@@ -1261,7 +1258,6 @@
     }).join('');
 
     var addOnItemCardsHTML = finalAddOnItemList.map(function (item) {
-
       var controlHTML = item.isShowQuantityUI
         ? '<div class="quantity-selector" data-code="' + item.code + '" data-max-quantity="' + (item.maxQuantity || 1) + '">'
         + '<button class="quantity-minus">-</button>'
@@ -1274,7 +1270,7 @@
         + '<span class="checkbox-mark"></span>'
         + '<p class="included-text">Included</p>'
         + '</label>';
-      return '<div class="add-on-card ' + (item.freeCDWIndicator ? 'included' : '') + '">'
+      return '<div class="add-on-card ' + (item.freeCDWIndicator || Number(item.netSubtotal) === 0 ? 'included' : '') + '">'
         + '<div class="card-header">'
         + '<div class="add-on-icon">' + (addOnItemsSvgObj[item.code] || '') + '</div>'
         + '<div class="add-on-info"><h4 class="add-on-title">' + item.name + '</h4></div>'
@@ -1520,7 +1516,6 @@
 
       // Protection items toggle listener
       const protectionToggles = [...document.querySelectorAll("#" + TEST_ID + " .protection-item .prot-checkbox-label input"), ...document.querySelectorAll("#" + TEST_ID + " .intial-prot-cards .protection-item")];
-
       protectionToggles.forEach(toggle => {
         toggle.addEventListener("click", async (e) => {
           const code = toggle.getAttribute("data-code");
@@ -2552,23 +2547,6 @@
           }
         }
       )
-
-      // change summary order on mobile devices
-      if (window.matchMedia("(max-width: 767px)").matches) {
-        poll(
-          () => document.querySelector('[data-testid="ancillaries-action-footer"]'),
-          () => {
-            const selectorEl = document.querySelector('[data-testid="ancillaries-action-footer"]');
-            const targetEl = document.querySelector('[data-testid="booking-summary-wrapper"]')
-            if (targetEl) {
-              const targetParentEl = targetEl.parentElement;
-              if (targetParentEl) {
-                selectorEl.insertAdjacentElement("beforebegin", targetParentEl)
-              }
-            }
-          }
-        )
-      }
     }
 
     /* ---------------- poll/observer manager ---------------- */

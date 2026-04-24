@@ -1,0 +1,14 @@
+{
+  "id": "1776940402962_1887_MVT_50",
+  "name": "MVT-50",
+  "type": "A/B",
+  "website": "beta avis",
+  "variations": [
+    "control",
+    "Var A",
+    "VAR B"
+  ],
+  "createdAt": "2026-04-23T10:33:22.962Z",
+  "createdAtReadable": "4/23/2026, 4:33:22 PM",
+  "lastUpdated": "2026-04-23T10:33:30.390Z"
+}

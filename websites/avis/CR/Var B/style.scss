@@ -73,14 +73,6 @@
     margin-top: 16px;
   }
 
-  padding: 32px 24px;
-  background: white;
-  color: #000;
-  margin: 0 auto;
-  margin-top: 16px;
-  box-shadow: 0px 2px 8px 0px rgba(124, 80, 80, 0.06);
-  border-radius: 8px;
-
 
   .prot-title {
     font-family: 'AvisHeadline', 'AvisHeadline Fallback', sans-serif;
@@ -176,6 +168,7 @@
           text-decoration: underline;
           text-underline-offset: 3px;
           cursor: pointer;
+          pointer-events: auto !important;
         }
 
         .price-info {
@@ -324,6 +317,7 @@
           text-decoration: underline;
           text-underline-offset: 3px;
           cursor: pointer;
+          pointer-events: auto !important;
         }
 
         .price-info {
@@ -371,7 +365,7 @@
   }
 
   .prot-cards.show-all {
-    max-height: 700px;
+    max-height: 1000px;
     margin-bottom: 24px;
   }
 
@@ -577,6 +571,7 @@
             text-decoration: underline;
             text-underline-offset: 3px;
             cursor: pointer;
+            pointer-events: auto !important;
           }
 
           .prot-checkbox-section {
@@ -684,6 +679,10 @@
       pointer-events: none;
       border-color: #000;
 
+      .prot-details {
+        pointer-events: auto !important;
+      }
+
       .prot-checkbox-label {
         display: none !important;
       }
@@ -701,7 +700,7 @@
   }
 
   .protection-items-section.show-all {
-    max-height: 700px;
+    max-height: 1000px;
     margin-top: 16px;
   }
 

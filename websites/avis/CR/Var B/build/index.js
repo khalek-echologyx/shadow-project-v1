@@ -1063,8 +1063,6 @@
     const windowPriceProtectionList = calculateData.protectionItems || [];
     // =============== PROTECTION BUNDLE SELECTION ===============
     if (isEmptyProtectionBundleList) {
-      const protTitle = document.querySelector("." + TEST_ID + " .prot-title");
-      protTitle.style.display = "none";
       const viewAllPkgBtn = document.querySelector(
         "." + TEST_ID + " .prot-all-packages",
       );
@@ -1392,7 +1390,7 @@
     }
     //has free cdw
     var hasFreeCDW = finalProtectionItemList.some(function (item) {
-      return item.freeCDWIndicator === true;
+      return item.freeCDWIndicator === true || item.netSubtotal === 0;
     });
 
     // fallback → first item
@@ -1573,7 +1571,9 @@
       .map(function (item) {
         return (
           '<div class="protection-item ' +
-          (item.freeCDWIndicator ? "included" : "") +
+          (item.freeCDWIndicator || Number(item.netSubtotal) === 0
+            ? "included"
+            : "") +
           '" data-code="' +
           (item.code || "") +
           '">' +
@@ -1627,7 +1627,10 @@
 
     var selectedItemForInitalSectionHTML =
       '<div class="protection-item ' +
-      (selectedItemForInitalSection.freeCDWIndicator ? "included" : "") +
+      (selectedItemForInitalSection.freeCDWIndicator ||
+      Number(selectedItemForInitalSection.netSubtotal) === 0
+        ? "included"
+        : "") +
       '" data-code="' +
       (selectedItemForInitalSection.code || "") +
       '">' +
@@ -1693,7 +1696,9 @@
             "</label>";
         return (
           '<div class="add-on-card ' +
-          (item.freeCDWIndicator ? "included" : "") +
+          (item.freeCDWIndicator || Number(item.netSubtotal) === 0
+            ? "included"
+            : "") +
           '">' +
           '<div class="card-header">' +
           '<div class="add-on-icon">' +
@@ -2044,7 +2049,6 @@
           "#" + TEST_ID + " .intial-prot-cards .protection-item",
         ),
       ];
-
       protectionToggles.forEach((toggle) => {
         toggle.addEventListener("click", async (e) => {
           const code = toggle.getAttribute("data-code");

@@ -1,0 +1,25 @@
+.ab-test-14 .footer-buttons-bottom {
+  bottom: 59px;
+}
+.ab-test-14 .header-buttons.buttons-mobile {
+  position: fixed;
+  bottom: 0;
+  background-color: #E9E9E9;
+  padding-top: 10px;
+  gap: 7px;
+  padding-bottom: 2px;
+}
+.ab-test-14 .header-buttons.buttons-mobile button,
+.ab-test-14 .header-buttons.buttons-mobile a {
+  margin: 0 !important;
+}
+.ab-test-14 .wrap-div-2 .ab-test-14-link {
+  background-color: #fff;
+}
+.ab-test-14 .wrap-helper-text {
+  font-size: 10px;
+  line-height: 20px;
+  color: #595C5F;
+  text-align: center;
+  margin: 0;
+}

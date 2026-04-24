@@ -1,0 +1,23 @@
+.ab-test-14 {
+  .footer-buttons-bottom{
+    bottom: 55px;
+  }
+  .header-buttons.buttons-mobile {
+    position: fixed;
+    bottom: 0;
+    background-color: #E9E9E9;
+    padding-top: 10px;
+    padding-bottom: 20px;
+    gap: 7px;
+
+    button,
+    a{
+      margin: 0 !important;
+    }
+
+    a{
+      background-color: #fff;
+    }
+  }
+
+}

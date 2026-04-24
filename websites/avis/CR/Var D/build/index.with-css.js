@@ -5,13 +5,6 @@
       clearInterval(interval); // Stop checking once found
       var style = document.createElement("style");
       style.innerHTML = `.MVT-36 {
-  padding: 32px 24px;
-  background: white;
-  color: #000;
-  margin: 0 auto;
-  margin-top: 16px;
-  box-shadow: 0px 2px 8px 0px rgba(124, 80, 80, 0.06);
-  border-radius: 8px;
   /* ---------------- add-ons section ---------------- */
 }
 .MVT-36 .mvt-36-summary-prot-item {
@@ -106,7 +99,6 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  justify-content: space-between;
   border: 2px solid #d7dbe0;
   border-radius: 8px;
   padding: 24px;
@@ -160,8 +152,20 @@
 }
 .MVT-36 .intial-prot-cards .protection-item .protection-item-actions {
   display: flex;
-  justify-content: end;
+  justify-content: space-between;
   align-items: flex-end;
+}
+.MVT-36
+  .intial-prot-cards
+  .protection-item
+  .protection-item-actions
+  .prot-details {
+  font-size: 14px;
+  font-weight: 800;
+  color: #000;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
 }
 .MVT-36
   .intial-prot-cards
@@ -197,7 +201,7 @@
   .intial-prot-cards
   .protection-item
   .protection-item-actions
-  .included-in-bundle-text {
+  .included-text {
   display: none;
   font-size: 14px;
   font-weight: 700;
@@ -207,28 +211,43 @@
   line-height: 20px;
   margin: 0;
 }
-.MVT-36 .intial-prot-cards .protection-item.included-in-bundle {
-  border-color: #000;
-  pointer-events: none;
-}
-.MVT-36 .intial-prot-cards .protection-item.included-in-bundle .price-info {
+.MVT-36 .intial-prot-cards .protection-item .prot-details-content {
+  height: 0;
+  overflow: hidden;
+  transition: height 0.5s ease-in-out;
+  font-size: 14px !important;
   display: none;
 }
 .MVT-36
   .intial-prot-cards
-  .protection-item.included-in-bundle
-  .included-in-bundle-text {
+  .protection-item
+  .prot-details-content
+  .prot-details-content-text {
+  margin: 0;
+}
+.MVT-36 .intial-prot-cards .protection-item .prot-details-content.expend {
+  display: block;
+  height: auto !important;
+  margin-top: 10px;
+}
+.MVT-36 .intial-prot-cards .protection-item.included {
+  border-color: #000;
+  pointer-events: none;
+}
+.MVT-36 .intial-prot-cards .protection-item.included .prot-details {
+  pointer-events: auto !important;
+}
+.MVT-36 .intial-prot-cards .protection-item.included .price-info {
+  display: none;
+}
+.MVT-36 .intial-prot-cards .protection-item.included .included-text {
   display: block !important;
 }
-.MVT-36 .intial-prot-cards .protection-item.included-in-bundle .card-radio {
+.MVT-36 .intial-prot-cards .protection-item.included .card-radio {
   background: #fff;
   border-color: #000;
 }
-.MVT-36
-  .intial-prot-cards
-  .protection-item.included-in-bundle
-  .card-radio
-  .radio-inner {
+.MVT-36 .intial-prot-cards .protection-item.included .card-radio .radio-inner {
   width: 16px;
   height: 16px;
   background: #000;
@@ -238,7 +257,6 @@
   display: flex;
   flex-direction: column;
   gap: 16px;
-  justify-content: space-between;
   border: 2px solid #d7dbe0;
   border-radius: 8px;
   padding: 24px;
@@ -356,7 +374,7 @@
   display: none !important;
 }
 .MVT-36 .prot-cards.show-all {
-  max-height: 700px;
+  max-height: 1000px;
   margin-bottom: 24px;
 }
 .MVT-36 .prot-card {
@@ -833,7 +851,7 @@
   border-radius: 50%;
 }
 .MVT-36 .protection-items-section.show-all {
-  max-height: 700px;
+  max-height: 1000px;
   margin-top: 16px;
 }
 .MVT-36 .add-ons-section {
@@ -1966,12 +1984,16 @@
       );
     }
   };
+
   const updateProtectionCards = (calculateData) => {
     const selectedBundle = calculateData.protectionBundle || {};
     const selectedBundleName = selectedBundle.code || "";
 
     const uiProtectionBundleCards = [
       ...document.querySelectorAll("." + TEST_ID + " .prot-card"),
+      document.querySelector(
+        "#" + TEST_ID + " .intial-prot-cards .static-no-prot-card",
+      ),
     ];
     const uiSelectedProtBundle = uiProtectionBundleCards.find(
       (card) => card.getAttribute("data-code") === selectedBundleName,
@@ -2367,8 +2389,6 @@
     const windowPriceProtectionList = calculateData.protectionItems || [];
     // =============== PROTECTION BUNDLE SELECTION ===============
     if (isEmptyProtectionBundleList) {
-      const protTitle = document.querySelector("." + TEST_ID + " .prot-title");
-      protTitle.style.display = "none";
       const viewAllPkgBtn = document.querySelector(
         "." + TEST_ID + " .prot-all-packages",
       );
@@ -2576,9 +2596,21 @@
       pickupLocation: sessionData.pickupLocationCode,
       dropoffLocation: sessionData.returnLocationCode,
       pickupDate: sessionData.pickupDatetime.split("T")[0],
-      pickupTime: sessionData.pickupHour + ":00",
+      pickupTime: (function () {
+        var h = parseInt(sessionData.pickupHour, 10);
+        var ampm = (sessionData.pickupAmPm || "").toUpperCase();
+        if (ampm === "PM" && h !== 12) h += 12;
+        if (ampm === "AM" && h === 12) h = 0;
+        return (h < 10 ? "0" + h : String(h)) + ":00";
+      })(),
       dropoffDate: sessionData.returnDatetime.split("T")[0],
-      dropoffTime: sessionData.returnHour + ":00",
+      dropoffTime: (function () {
+        var h = parseInt(sessionData.returnHour, 10);
+        var ampm = (sessionData.returnAmPm || "").toUpperCase();
+        if (ampm === "PM" && h !== 12) h += 12;
+        if (ampm === "AM" && h === 12) h = 0;
+        return (h < 10 ? "0" + h : String(h)) + ":00";
+      })(),
       age: Number(sessionData.age) || 25,
       discountCodes: [],
       priceView: sessionData.priceView || "LOWEST_PRICE",
@@ -2685,7 +2717,7 @@
 
     //has free cdw
     var hasFreeCDW = finalProtectionItemList.some(function (item) {
-      return item.freeCDWIndicator === true;
+      return item.freeCDWIndicator === true || item.netSubtotal === 0;
     });
 
     // final protection bundle list
@@ -2866,48 +2898,6 @@
       })
       .join("");
 
-    var protItemsHTML = finalProtectionItemList
-      .map(function (item) {
-        return (
-          '<div class="protection-item ' +
-          (item.freeCDWIndicator ? "included" : "") +
-          '" data-code="' +
-          (item.code || "") +
-          '">' +
-          '<div class="protection-item-info">' +
-          '<h4 class="protection-item-title">' +
-          item.name +
-          "</h4>" +
-          "</div>" +
-          '<div class="protection-item-actions">' +
-          '<div class="price-info">' +
-          getPriceWithCurrenty(currencyCode, item.netSubtotal) +
-          ' <p class="per-day-slash">/<span class="per-day">day</span></p></div>' +
-          '<div class="details-and-check">' +
-          '<div class="prot-details">Details</div>' +
-          '<div class="prot-checkbox-section">' +
-          '<label class="prot-checkbox-label">' +
-          '<input type="checkbox" data-code="' +
-          item.code +
-          '">' +
-          '<span class="toggle-label-text">Add to Trip</span>' +
-          '<span class="checkbox-mark"></span>' +
-          "</label> " +
-          '<div class="included-text">Included</div>' +
-          '<div class="included-in-bundle-text">Included in bundle</div>' +
-          "</div> " +
-          "</div>" +
-          '<div class="prot-details-content">' +
-          '<p class="prot-details-content-text">' +
-          item.description.html +
-          "</p>" +
-          "</div>" +
-          "</div>" +
-          "</div>"
-        );
-      })
-      .join("");
-
     var staticNoProtectionCard =
       '<div class="static-no-prot-card ' +
       (hasFreeCDW ? "disabled" : "") +
@@ -2975,7 +2965,95 @@
         ' <p class="per-day-slash">/<span class="per-day">day</span></p></div>' +
         "</div>" +
         "</div>";
+    } else {
+      // Ultimate is null – pull a fallback protection item from finalProtectionItemList
+      var fallbackItemIndex = finalProtectionItemList.findIndex(
+        function (item) {
+          return item.code === "CDW";
+        },
+      );
+      if (fallbackItemIndex === -1) {
+        fallbackItemIndex = finalProtectionItemList.length > 0 ? 0 : -1;
+      }
+      if (fallbackItemIndex !== -1) {
+        var fallbackProtItem = finalProtectionItemList.splice(
+          fallbackItemIndex,
+          1,
+        )[0];
+        staticUltimateProtCard =
+          '<div class="protection-item ' +
+          (fallbackProtItem.freeCDWIndicator ||
+          Number(fallbackProtItem.netSubtotal) === 0
+            ? "included"
+            : "") +
+          '" data-code="' +
+          (fallbackProtItem.code || "") +
+          '">' +
+          '<div class="protection-item-info">' +
+          '<h4 class="protection-item-title">' +
+          fallbackProtItem.name +
+          "</h4>" +
+          '<div class="card-radio"><div class="radio-outer"><div class="radio-inner"></div></div></div>' +
+          "</div>" +
+          '<div class="protection-item-actions">' +
+          '<div class="prot-details">Details</div>' +
+          '<div class="price-info">' +
+          getPriceWithCurrenty(currencyCode, fallbackProtItem.netSubtotal) +
+          ' <p class="per-day-slash">/<span class="per-day">day</span></p></div>' +
+          '<p class="included-text">Included</p>' +
+          "</div>" +
+          '<div class="prot-details-content">' +
+          '<p class="prot-details-content-text">' +
+          fallbackProtItem.description.html +
+          "</p>" +
+          "</div>" +
+          "</div>";
+      }
     }
+
+    var protItemsHTML = finalProtectionItemList
+      .map(function (item) {
+        return (
+          '<div class="protection-item ' +
+          (item.freeCDWIndicator || Number(item.netSubtotal) === 0
+            ? "included"
+            : "") +
+          '" data-code="' +
+          (item.code || "") +
+          '">' +
+          '<div class="protection-item-info">' +
+          '<h4 class="protection-item-title">' +
+          item.name +
+          "</h4>" +
+          "</div>" +
+          '<div class="protection-item-actions">' +
+          '<div class="price-info">' +
+          getPriceWithCurrenty(currencyCode, item.netSubtotal) +
+          ' <p class="per-day-slash">/<span class="per-day">day</span></p></div>' +
+          '<div class="details-and-check">' +
+          '<div class="prot-details">Details</div>' +
+          '<div class="prot-checkbox-section">' +
+          '<label class="prot-checkbox-label">' +
+          '<input type="checkbox" data-code="' +
+          item.code +
+          '">' +
+          '<span class="toggle-label-text">Add to Trip</span>' +
+          '<span class="checkbox-mark"></span>' +
+          "</label> " +
+          '<div class="included-text">Included</div>' +
+          '<div class="included-in-bundle-text">Included in bundle</div>' +
+          "</div> " +
+          "</div>" +
+          '<div class="prot-details-content">' +
+          '<p class="prot-details-content-text">' +
+          item.description.html +
+          "</p>" +
+          "</div>" +
+          "</div>" +
+          "</div>"
+        );
+      })
+      .join("");
 
     var addOnBundleCardsHTML = finalAddOnBundleList
       .map(function (item) {
@@ -3017,7 +3095,9 @@
             "</label>";
         return (
           '<div class="add-on-card ' +
-          (item.freeCDWIndicator ? "included" : "") +
+          (item.freeCDWIndicator || Number(item.netSubtotal) === 0
+            ? "included"
+            : "") +
           '">' +
           '<div class="card-header">' +
           '<div class="add-on-icon">' +
@@ -3363,9 +3443,14 @@
       });
 
       // Protection items toggle listener
-      const protectionToggles = document.querySelectorAll(
-        "#" + TEST_ID + " .prot-checkbox-label input",
-      );
+      const protectionToggles = [
+        ...document.querySelectorAll(
+          "#" + TEST_ID + " .prot-checkbox-label input",
+        ),
+        ...document.querySelectorAll(
+          "#" + TEST_ID + " .intial-prot-cards .protection-item",
+        ),
+      ];
       protectionToggles.forEach((toggle) => {
         toggle.addEventListener("click", async (e) => {
           const code = toggle.getAttribute("data-code");
@@ -3695,7 +3780,6 @@
       const addOnToggles = document.querySelectorAll(
         "#" + TEST_ID + " .add-on-toggle input",
       );
-
       addOnToggles.forEach((toggle) => {
         toggle.addEventListener("change", async (e) => {
           const code = e.target.getAttribute("data-code");
@@ -3894,7 +3978,6 @@
       const addOnQuantity = document.querySelectorAll(
         "#" + TEST_ID + " .quantity-selector",
       );
-
       addOnQuantity.forEach((selector) => {
         const code = selector.getAttribute("data-code");
         const maxQuantity = Number(selector.getAttribute("data-max-quantity"));
@@ -4332,7 +4415,6 @@
       staticNoProtCard.addEventListener("click", async (e) => {
         e.preventDefault();
         const bundleCode = staticNoProtCard.getAttribute("data-code");
-
         const extrasBundle =
           extrasProtectionBundleList.find((item) => item.code === bundleCode) ||
           {};
@@ -4582,7 +4664,7 @@
       protDetailsBtn.forEach((detail) => {
         detail.addEventListener("click", (e) => {
           e.preventDefault();
-
+          e.stopPropagation();
           const addOnCard = detail.closest(".protection-item");
           const addOnDetailsContent = addOnCard.querySelector(
             ".prot-details-content",

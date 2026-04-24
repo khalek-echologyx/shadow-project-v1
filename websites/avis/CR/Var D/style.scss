@@ -37,7 +37,6 @@
     padding: 4px 24px;
   }
 
-  //test
   .mvt-36-summary-regular-item {
     display: flex;
     justify-content: space-between;
@@ -73,15 +72,6 @@
     margin-top: 16px;
   }
 
-  padding: 32px 24px;
-  background: white;
-  color: #000;
-  margin: 0 auto;
-  margin-top: 16px;
-  box-shadow: 0px 2px 8px 0px rgba(124, 80, 80, 0.06);
-  border-radius: 8px;
-
-
   .prot-title {
     font-family: 'AvisHeadline', 'AvisHeadline Fallback', sans-serif;
     text-transform: uppercase;
@@ -109,7 +99,7 @@
       display: flex;
       flex-direction: column;
       gap: 16px;
-      justify-content: space-between;
+      // justify-content: space-between;
       border: 2px solid #D7DBE0;
       border-radius: 8px;
       padding: 24px;
@@ -163,11 +153,19 @@
         }
       }
 
-
       .protection-item-actions {
         display: flex;
-        justify-content: end;
+        justify-content: space-between;
         align-items: flex-end;
+
+        .prot-details {
+          font-size: 14px;
+          font-weight: 800;
+          color: #000;
+          text-decoration: underline;
+          text-underline-offset: 3px;
+          cursor: pointer;
+        }
 
         .price-info {
           font-size: 28px;
@@ -187,7 +185,7 @@
           }
         }
 
-        .included-in-bundle-text {
+        .included-text {
           display: none;
           font-size: 14px;
           font-weight: 700;
@@ -198,17 +196,40 @@
           margin: 0;
         }
       }
+
+      .prot-details-content {
+        height: 0;
+        overflow: hidden;
+        transition: height 0.5s ease-in-out;
+        font-size: 14px !important;
+        display: none;
+
+        .prot-details-content-text {
+          margin: 0;
+        }
+      }
+
+      .prot-details-content.expend {
+        display: block;
+        height: auto !important;
+        margin-top: 10px;
+      }
     }
 
-    .protection-item.included-in-bundle {
+    .protection-item.included {
       border-color: #000;
       pointer-events: none;
+
+      //enable details click
+      .prot-details{
+        pointer-events: auto !important;
+      }
 
       .price-info {
         display: none;
       }
 
-      .included-in-bundle-text {
+      .included-text {
         display: block !important;
       }
 
@@ -229,7 +250,7 @@
       display: flex;
       flex-direction: column;
       gap: 16px;
-      justify-content: space-between;
+      // justify-content: space-between;
       border: 2px solid #D7DBE0;
       border-radius: 8px;
       padding: 24px;
@@ -335,7 +356,7 @@
   }
 
   .prot-cards.show-all {
-    max-height: 700px;
+    max-height: 1000px;
     margin-bottom: 24px;
   }
 
@@ -729,7 +750,7 @@
   }
 
   .protection-items-section.show-all {
-    max-height: 700px;
+    max-height: 1000px;
     margin-top: 16px;
   }
 
