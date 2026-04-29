@@ -945,3 +945,10 @@
 .MVT-36 [data-testid=action-footer-total-amount] {
   pointer-events: none !important;
 }
+.MVT-36 .preferred-section {
+  box-shadow: rgba(0, 0, 0, 0.06) 0px 2px 8px 0px;
+  border-radius: 8px;
+  background-color: #fff;
+  padding: 32px 24px 24px 24px;
+  margin-top: 16px;
+}

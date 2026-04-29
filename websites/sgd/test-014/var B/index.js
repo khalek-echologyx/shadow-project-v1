@@ -62,10 +62,10 @@ import testInfo from "./info.json" assert { type: "json" };
         wrapperDivTwoEl.insertAdjacentElement("afterbegin", stickyNavLink);
         // replace text
         stickyNavBtn.textContent = "Infopaket bestellen"
-        stickyNavLink.textContent = "Kursplatz sichernt"
+        stickyNavLink.textContent = "Kursplatz sichern"
         //inject new helper elements
-        const wrapOneHelper = `<p class="wrap-helper-text">Kostenlos. Alles Wissenswerte</p>`;
-        const wrapTwoHelper = `<p class="wrap-helper-text">4 Wochen unverbindlich testen</p>`;
+        const wrapOneHelper = `<p class="wrap-helper-text">Kostenlos. Alles Wissenswerte.</p>`;
+        const wrapTwoHelper = `<p class="wrap-helper-text">4 Wochen unverbindlich testen.</p>`;
         wrapperDivOneEl.insertAdjacentHTML("beforeend", wrapOneHelper);
         wrapperDivTwoEl.insertAdjacentHTML("beforeend", wrapTwoHelper);
       }

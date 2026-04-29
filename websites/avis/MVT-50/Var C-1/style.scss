@@ -1,22 +1,38 @@
-.MVT-50{
+.MVT-50 {
     #countdown div {
-        display: inline !important;
-
         @media (min-width: 769px) {
-            svg{
-                margin-bottom: -4px !important;
+            [data-testid="rc-timer-countdown"] {
+                margin-right: 0px;
             }
+
+            // svg{
+            //     margin-bottom: -4px !important;
+            // }
         }
+
         @media (max-width: 768px) {
-            svg{
+            display: inline !important;
+
+            svg,
+            span {
+                display: inline;
+            }
+
+            [data-testid="rc-timer-countdown"] {
+                display: inline-block;
+                width: 55px;
+            }
+
+            svg {
                 margin-bottom: -1px !important;
             }
         }
     }
-    span[data-testid="rc-timer-label"] {
-        margin-right: 12px;
-        order: 1;
-    }
+
+    // span[data-testid="rc-timer-label"] {
+    //     margin-right: 12px;
+    //     order: 1;
+    // }
 
     .new-text {
         margin: 0px;

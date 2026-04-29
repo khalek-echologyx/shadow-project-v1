@@ -4,22 +4,26 @@
       // Check if <head> exists
       clearInterval(interval); // Stop checking once found
       var style = document.createElement("style");
-      style.innerHTML = `.MVT-50 #countdown div {
-  display: inline !important;
-}
-@media (min-width: 769px) {
-  .MVT-50 #countdown div svg {
-    margin-bottom: -4px !important;
+      style.innerHTML = `@media (min-width: 769px) {
+  .MVT-50 #countdown div [data-testid="rc-timer-countdown"] {
+    margin-right: 0px;
   }
 }
 @media (max-width: 768px) {
+  .MVT-50 #countdown div {
+    display: inline !important;
+  }
+  .MVT-50 #countdown div svg,
+  .MVT-50 #countdown div span {
+    display: inline;
+  }
+  .MVT-50 #countdown div [data-testid="rc-timer-countdown"] {
+    display: inline-block;
+    width: 55px;
+  }
   .MVT-50 #countdown div svg {
     margin-bottom: -1px !important;
   }
-}
-.MVT-50 span[data-testid="rc-timer-label"] {
-  margin-right: 12px;
-  order: 1;
 }
 .MVT-50 .new-text {
   margin: 0px;

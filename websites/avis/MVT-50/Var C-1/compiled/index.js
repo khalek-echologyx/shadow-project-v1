@@ -24,7 +24,6 @@
         return !!document.querySelector('[data-testid="rc-timer-label"]');
       },
       function () {
-        console.log( "Test start =====================" );
         const timerText = document.querySelector('[data-testid="rc-timer-label"]');
         timerText.innerText = "to lock in your discount — prices may change if your session expires.";
         // new text span

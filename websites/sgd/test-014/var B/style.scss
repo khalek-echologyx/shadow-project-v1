@@ -2,6 +2,9 @@
   .footer-buttons-bottom{
     bottom: 59px;
   }
+  .page-footer{
+    margin-bottom: 61px;
+  }
   .header-buttons.buttons-mobile {
     position: fixed;
     bottom: 0;
@@ -9,15 +12,31 @@
     padding-top: 10px;
     gap: 7px;
     padding-bottom: 2px;
+    z-index: -1;
+    padding-left: 10.5px !important;
+    padding-right: 10.5px !important;
+    flex-wrap: wrap;
+
+    .wrap-div-1,
+    .wrap-div-2{
+      width: calc(50% - 4px) !important;
+    }
+    button{
+      padding: 3px 21px !important;
+    }
 
     button,
     a{
       margin: 0 !important;
+      width: 100% !important;
+      color: #1A2B49 !important;
     }
   }
 
   .wrap-div-2 .ab-test-14-link {
     background-color: #fff;
+    border-color: #66CC00 !important;
+    
   }
 
   .wrap-helper-text{

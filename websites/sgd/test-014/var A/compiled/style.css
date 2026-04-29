@@ -1,6 +1,9 @@
 .ab-test-14 .footer-buttons-bottom {
   bottom: 55px;
 }
+.ab-test-14 .page-footer {
+  margin-bottom: 58px;
+}
 .ab-test-14 .header-buttons.buttons-mobile {
   position: fixed;
   bottom: 0;
@@ -8,11 +11,20 @@
   padding-top: 10px;
   padding-bottom: 20px;
   gap: 7px;
+  padding-left: 10.5px !important;
+  padding-right: 10.5px !important;
+  z-index: -1;
 }
 .ab-test-14 .header-buttons.buttons-mobile button,
 .ab-test-14 .header-buttons.buttons-mobile a {
   margin: 0 !important;
+  width: calc(50% - 4px) !important;
+  font-size: 16px !important;
+  color: #1A2B49 !important;
+  font-weight: 700 !important;
+  line-height: 20px !important;
 }
 .ab-test-14 .header-buttons.buttons-mobile a {
   background-color: #fff;
+  border-color: #66CC00 !important;
 }

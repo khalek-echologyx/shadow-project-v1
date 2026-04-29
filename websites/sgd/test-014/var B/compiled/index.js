@@ -45,7 +45,6 @@
       () => document.querySelector(".header-buttons.buttons-mobile"),
       () => {
         const navBarStickyEl = document.querySelector(".header-buttons.buttons-mobile");
-        console.log(navBarStickyEl, "navBarStickyEl");
         const wrapperDivOneHtml = `<div class="wrap-div-1"></div>`;
         const wrapperDivTwoHtml = `<div class="wrap-div-2"></div>`;
         // target old element
@@ -61,10 +60,10 @@
         wrapperDivTwoEl.insertAdjacentElement("afterbegin", stickyNavLink);
         // replace text
         stickyNavBtn.textContent = "Infopaket bestellen";
-        stickyNavLink.textContent = "Kursplatz sichernt";
+        stickyNavLink.textContent = "Kursplatz sichern";
         //inject new helper elements
-        const wrapOneHelper = `<p class="wrap-helper-text">Kostenlos. Alles Wissenswerte</p>`;
-        const wrapTwoHelper = `<p class="wrap-helper-text">4 Wochen unverbindlich testen</p>`;
+        const wrapOneHelper = `<p class="wrap-helper-text">Kostenlos. Alles Wissenswerte.</p>`;
+        const wrapTwoHelper = `<p class="wrap-helper-text">4 Wochen unverbindlich testen.</p>`;
         wrapperDivOneEl.insertAdjacentHTML("beforeend", wrapOneHelper);
         wrapperDivTwoEl.insertAdjacentHTML("beforeend", wrapTwoHelper);
       }
