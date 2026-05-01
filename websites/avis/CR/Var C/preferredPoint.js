@@ -822,7 +822,6 @@ export function preferredPoint() {
         // protectionTotal, NOT rentalOptionsTotal (gross — includes points-paid
         // items at full pre-discount price, which is wrong to display).
         var paCash = (Number(totals.addOnTotal) || 0) + (Number(totals.protectionTotal) || 0);
-        console.log(paCash, "paCash");
         if (totals.addOnTotal != null || totals.protectionTotal != null) {
             setText('[data-testid="rental-summary-protection-addons-recent-cost"]',
                 formatPrice(cc, paCash.toFixed(2)));
@@ -1398,9 +1397,6 @@ export function preferredPoint() {
         // then layer our payWithPoints flags on top.
         var pwpCodes = __pwpState.payWithPointsCodes || [];
         body.addOnItems = buildAddOnItemsForCalc(pwpCodes);
-
-        console.log('[pwp] POST', url, body);
-
         return fetch(url, {
             method: 'POST',
             credentials: 'include',

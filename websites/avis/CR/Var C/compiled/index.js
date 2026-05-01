@@ -883,7 +883,6 @@ function preferredPoint() {
         // protectionTotal, NOT rentalOptionsTotal (gross — includes points-paid
         // items at full pre-discount price, which is wrong to display).
         var paCash = (Number(totals.addOnTotal) || 0) + (Number(totals.protectionTotal) || 0);
-        console.log(paCash, "paCash");
         if (totals.addOnTotal != null || totals.protectionTotal != null) {
             setText('[data-testid="rental-summary-protection-addons-recent-cost"]',
                 formatPrice(cc, paCash.toFixed(2)));
@@ -1459,9 +1458,6 @@ function preferredPoint() {
         // then layer our payWithPoints flags on top.
         var pwpCodes = __pwpState.payWithPointsCodes || [];
         body.addOnItems = buildAddOnItemsForCalc(pwpCodes);
-
-        console.log('[pwp] POST', url, body);
-
         return fetch(url, {
             method: 'POST',
             credentials: 'include',
@@ -2330,7 +2326,7 @@ function preferredPoint() {
       if (!state) return {};
       var out = {};
 
-      // 1. Protection bundle — only items where included === true
+      // 1. Protection bundle — only items where included === true (unchanged)
       var pb = state.protectionBundleSelected;
       if (pb && pb.code && pb.code !== "No Protection") {
         var includedItems = (pb.items || []).filter(function (i) {
@@ -2346,22 +2342,46 @@ function preferredPoint() {
         }
       }
 
-      // 2. Individual protection items
+      // 2. Individual protection items (unchanged)
       var piCodes = splitCsv(state.protectionItems);
-
       if (piCodes.length) {
-        out.protectionItems = piCodes.map(function (c) {
-          return { code: c };
-        });
+        out.protectionItems = piCodes.map(function (c) { return { code: c }; });
       }
 
-      // 3. Add-on items
+      // 3. Add-on items — merge host CSV state with PWP state.
+      //    - Items in host CSV: keep with their host-set quantity.
+      //    - Items in payWithPointsCodes that match a host CSV entry: stamp
+      //      payWithPoints: true onto that entry.
+      //    - Items in payWithPointsCodes NOT in host CSV (PWP-only path —
+      //      e.g. mutex removed from host's "Add to Trip" CSV): push fresh
+      //      with payWithPoints: true.
+      var pwpState = window.__avisPwpState || {};
+      var pwpCodes = (pwpState.payWithPointsCodes || []).slice();
+
       var aoCodes = splitCsv(state.addOnItems);
       var aoQtys = splitCsv(state.addOnItemsQuantity);
-      if (aoCodes.length) {
-        out.addOnItems = aoCodes.map(function (code, idx) {
-          return { code: code, quantity: parseQuantity(aoQtys[idx], code) };
-        });
+      var addOnMap = {};
+      aoCodes.forEach(function (code, idx) {
+        addOnMap[code] = { code: code, quantity: parseQuantity(aoQtys[idx], code) };
+      });
+      pwpCodes.forEach(function (code) {
+        if (addOnMap[code]) {
+          addOnMap[code].payWithPoints = true;
+        } else {
+          // PWP-paid item that the host's CSV doesn't know about.
+          // Default qty to 1 — multi-qty items normally route through the
+          // host's quantity-selector and remain in the CSV, so this branch
+          // covers single-qty toggle items like GPS / RSN / WFI / XMR / SKR
+          // where qty=1 is correct.
+          addOnMap[code] = { code: code, quantity: 1, payWithPoints: true };
+        }
+      });
+      var addOnList = Object.keys(addOnMap).map(function (k) { return addOnMap[k]; });
+      if (addOnList.length) out.addOnItems = addOnList;
+
+      // 4. Free-day redemption — top-level field, only when PWP picked > 0 days
+      if ((pwpState.quantity || 0) > 0) {
+        out.freedayItem = { quantity: pwpState.quantity };
       }
 
       return out;
@@ -2396,6 +2416,7 @@ function preferredPoint() {
             payload.protectionBundle = inj.protectionBundle;
           if (inj.protectionItems) payload.protectionItems = inj.protectionItems;
           if (inj.addOnItems) payload.addOnItems = inj.addOnItems;
+          if (inj.freedayItem) payload.freedayItem = inj.freedayItem;
           init.body = JSON.stringify(payload);
 
         }
@@ -3609,20 +3630,20 @@ function preferredPoint() {
       }
       if (fallbackItemIndex !== -1) {
         var fallbackProtItem = finalProtectionItemList.splice(fallbackItemIndex, 1)[0];
-        staticEssentialProtCard ='<div class="protection-item ' + (fallbackProtItem.freeCDWIndicator || Number(fallbackProtItem.netSubtotal) === 0 ? 'included' : '') + '" data-code="' + (fallbackProtItem.code || '') + '">'
-      + '<div class="protection-item-info">'
-      + '<h4 class="protection-item-title">' + fallbackProtItem.name + '</h4>'
-      + '<div class="card-radio"><div class="radio-outer"><div class="radio-inner"></div></div></div>'
-      + '</div>'
-      + '<div class="protection-item-actions">'
-      + '<div class="prot-details">Details</div>'
-      + '<div class="price-info">' + getPriceWithCurrenty(currencyCode, fallbackProtItem.netSubtotal) + ' <p class="per-day-slash">/<span class="per-day">day</span></p></div>'
-      + '<p class="included-text">Included</p>'
-      + '</div>'
-      + '<div class="prot-details-content">'
-      + '<p class="prot-details-content-text">' + fallbackProtItem.description.html + '</p>'
-      + '</div>'
-      + '</div>';
+        staticEssentialProtCard = '<div class="protection-item ' + (fallbackProtItem.freeCDWIndicator || Number(fallbackProtItem.netSubtotal) === 0 ? 'included' : '') + '" data-code="' + (fallbackProtItem.code || '') + '">'
+          + '<div class="protection-item-info">'
+          + '<h4 class="protection-item-title">' + fallbackProtItem.name + '</h4>'
+          + '<div class="card-radio"><div class="radio-outer"><div class="radio-inner"></div></div></div>'
+          + '</div>'
+          + '<div class="protection-item-actions">'
+          + '<div class="prot-details">Details</div>'
+          + '<div class="price-info">' + getPriceWithCurrenty(currencyCode, fallbackProtItem.netSubtotal) + ' <p class="per-day-slash">/<span class="per-day">day</span></p></div>'
+          + '<p class="included-text">Included</p>'
+          + '</div>'
+          + '<div class="prot-details-content">'
+          + '<p class="prot-details-content-text">' + fallbackProtItem.description.html + '</p>'
+          + '</div>'
+          + '</div>';
       }
     }
 
@@ -4954,7 +4975,7 @@ function preferredPoint() {
             if (parentEl) {
               const mvtEl = document.getElementById(TEST_ID);
               if (mvtEl) {
-               mvtEl.insertAdjacentElement("afterend", parentEl); 
+                mvtEl.insertAdjacentElement("afterend", parentEl);
               }
             }
           }

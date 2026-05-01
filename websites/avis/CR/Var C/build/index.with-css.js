@@ -2309,7 +2309,6 @@ function preferredPoint() {
     // items at full pre-discount price, which is wrong to display).
     var paCash =
       (Number(totals.addOnTotal) || 0) + (Number(totals.protectionTotal) || 0);
-    console.log(paCash, "paCash");
     if (totals.addOnTotal != null || totals.protectionTotal != null) {
       setText(
         '[data-testid="rental-summary-protection-addons-recent-cost"]',
@@ -3030,9 +3029,6 @@ function preferredPoint() {
     // then layer our payWithPoints flags on top.
     var pwpCodes = __pwpState.payWithPointsCodes || [];
     body.addOnItems = buildAddOnItemsForCalc(pwpCodes);
-
-    console.log("[pwp] POST", url, body);
-
     return fetch(url, {
       method: "POST",
       credentials: "include",
@@ -4094,7 +4090,7 @@ function preferredPoint() {
       if (!state) return {};
       var out = {};
 
-      // 1. Protection bundle — only items where included === true
+      // 1. Protection bundle — only items where included === true (unchanged)
       var pb = state.protectionBundleSelected;
       if (pb && pb.code && pb.code !== "No Protection") {
         var includedItems = (pb.items || []).filter(function (i) {
@@ -4110,22 +4106,53 @@ function preferredPoint() {
         }
       }
 
-      // 2. Individual protection items
+      // 2. Individual protection items (unchanged)
       var piCodes = splitCsv(state.protectionItems);
-
       if (piCodes.length) {
         out.protectionItems = piCodes.map(function (c) {
           return { code: c };
         });
       }
 
-      // 3. Add-on items
+      // 3. Add-on items — merge host CSV state with PWP state.
+      //    - Items in host CSV: keep with their host-set quantity.
+      //    - Items in payWithPointsCodes that match a host CSV entry: stamp
+      //      payWithPoints: true onto that entry.
+      //    - Items in payWithPointsCodes NOT in host CSV (PWP-only path —
+      //      e.g. mutex removed from host's "Add to Trip" CSV): push fresh
+      //      with payWithPoints: true.
+      var pwpState = window.__avisPwpState || {};
+      var pwpCodes = (pwpState.payWithPointsCodes || []).slice();
+
       var aoCodes = splitCsv(state.addOnItems);
       var aoQtys = splitCsv(state.addOnItemsQuantity);
-      if (aoCodes.length) {
-        out.addOnItems = aoCodes.map(function (code, idx) {
-          return { code: code, quantity: parseQuantity(aoQtys[idx], code) };
-        });
+      var addOnMap = {};
+      aoCodes.forEach(function (code, idx) {
+        addOnMap[code] = {
+          code: code,
+          quantity: parseQuantity(aoQtys[idx], code),
+        };
+      });
+      pwpCodes.forEach(function (code) {
+        if (addOnMap[code]) {
+          addOnMap[code].payWithPoints = true;
+        } else {
+          // PWP-paid item that the host's CSV doesn't know about.
+          // Default qty to 1 — multi-qty items normally route through the
+          // host's quantity-selector and remain in the CSV, so this branch
+          // covers single-qty toggle items like GPS / RSN / WFI / XMR / SKR
+          // where qty=1 is correct.
+          addOnMap[code] = { code: code, quantity: 1, payWithPoints: true };
+        }
+      });
+      var addOnList = Object.keys(addOnMap).map(function (k) {
+        return addOnMap[k];
+      });
+      if (addOnList.length) out.addOnItems = addOnList;
+
+      // 4. Free-day redemption — top-level field, only when PWP picked > 0 days
+      if ((pwpState.quantity || 0) > 0) {
+        out.freedayItem = { quantity: pwpState.quantity };
       }
 
       return out;
@@ -4161,6 +4188,7 @@ function preferredPoint() {
           if (inj.protectionItems)
             payload.protectionItems = inj.protectionItems;
           if (inj.addOnItems) payload.addOnItems = inj.addOnItems;
+          if (inj.freedayItem) payload.freedayItem = inj.freedayItem;
           init.body = JSON.stringify(payload);
         }
       } catch (e) {
@@ -4228,6 +4256,22 @@ function preferredPoint() {
   function getSessionData() {
     const sessionData = sessionStorage.getItem("reservation.store");
     return sessionData ? JSON.parse(sessionData).state : {};
+  }
+  //format time
+  function pad2(n) {
+    n = String(n);
+    return n.length === 1 ? "0" + n : n;
+  }
+  function fmtTime(h, m, ampm) {
+    if (h == null || m == null) return null;
+    var hh = parseInt(h, 10);
+    if (isNaN(hh)) return null;
+    if (ampm) {
+      var a = String(ampm).toUpperCase();
+      if (a === "PM" && hh !== 12) hh += 12;
+      if (a === "AM" && hh === 12) hh = 0;
+    }
+    return pad2(hh) + ":" + pad2(m);
   }
   //get corelational identifier
   function getCorelationalIdentifier() {
@@ -5036,22 +5080,18 @@ function preferredPoint() {
       currencyCode: sessionData.userSelectedCurrency,
       discountCodes: [],
       dropoffDate: sessionData.returnDatetime.split("T")[0],
-      dropoffTime: (function () {
-        var h = parseInt(sessionData.returnHour, 10);
-        var ampm = (sessionData.returnAmPm || "").toUpperCase();
-        if (ampm === "PM" && h !== 12) h += 12;
-        if (ampm === "AM" && h === 12) h = 0;
-        return (h < 10 ? "0" + h : String(h)) + ":00";
-      })(),
+      dropoffTime: fmtTime(
+        sessionData.returnHour,
+        sessionData.returnMinute,
+        sessionData.returnAmPm,
+      ),
       dropoffLocation: sessionData.returnLocationCode,
       pickupDate: sessionData.pickupDatetime.split("T")[0],
-      pickupTime: (function () {
-        var h = parseInt(sessionData.pickupHour, 10);
-        var ampm = (sessionData.pickupAmPm || "").toUpperCase();
-        if (ampm === "PM" && h !== 12) h += 12;
-        if (ampm === "AM" && h === 12) h = 0;
-        return (h < 10 ? "0" + h : String(h)) + ":00";
-      })(),
+      pickupTime: fmtTime(
+        sessionData.pickupHour,
+        sessionData.pickupMinute,
+        sessionData.pickupAmPm,
+      ),
       pickupLocation: sessionData.pickupLocationCode,
       priceRateCode: sessionData.priceRateCode,
       priceType: sessionData.priceType || "",
@@ -5317,7 +5357,7 @@ function preferredPoint() {
       };
     });
 
-    //Get session data
+    //Get session data =
     let sessionData = getSessionData();
     const pickupUSA = sessionData.pickupCountryCode === "US";
 
@@ -5325,21 +5365,17 @@ function preferredPoint() {
       pickupLocation: sessionData.pickupLocationCode,
       dropoffLocation: sessionData.returnLocationCode,
       pickupDate: sessionData.pickupDatetime.split("T")[0],
-      pickupTime: (function () {
-        var h = parseInt(sessionData.pickupHour, 10);
-        var ampm = (sessionData.pickupAmPm || "").toUpperCase();
-        if (ampm === "PM" && h !== 12) h += 12;
-        if (ampm === "AM" && h === 12) h = 0;
-        return (h < 10 ? "0" + h : String(h)) + ":00";
-      })(),
+      pickupTime: fmtTime(
+        sessionData.pickupHour,
+        sessionData.pickupMinute,
+        sessionData.pickupAmPm,
+      ),
       dropoffDate: sessionData.returnDatetime.split("T")[0],
-      dropoffTime: (function () {
-        var h = parseInt(sessionData.returnHour, 10);
-        var ampm = (sessionData.returnAmPm || "").toUpperCase();
-        if (ampm === "PM" && h !== 12) h += 12;
-        if (ampm === "AM" && h === 12) h = 0;
-        return (h < 10 ? "0" + h : String(h)) + ":00";
-      })(),
+      dropoffTime: fmtTime(
+        sessionData.returnHour,
+        sessionData.returnMinute,
+        sessionData.returnAmPm,
+      ),
       age: Number(sessionData.age) || 25,
       discountCodes: [],
       priceView: sessionData.priceView || "LOWEST_PRICE",
@@ -5401,6 +5437,72 @@ function preferredPoint() {
 
     //Get avis config data
     const avisConfigData = await getAvisConfigData();
+
+    // STORE THE PREFERRED POINTS DETAILS INTO SESSION STORAGE
+    const extrasFreedayItems = extrasData.freedayItem || null;
+    const extrasRedemptionStatus = extrasData.redemptionStatus || null;
+
+    if (extrasFreedayItems || extrasRedemptionStatus) {
+      console.log("extrasFreedayItems", extrasFreedayItems);
+      console.log("extrasRedemptionStatus", extrasRedemptionStatus);
+      const _originalSetItem = sessionStorage.setItem.bind(sessionStorage);
+
+      sessionStorage.setItem = function (key, value) {
+        if (key === "reservation.store") {
+          try {
+            const parsed = JSON.parse(value);
+            if (parsed?.state) {
+              // Always update with the latest extras data, but preserve other existing properties
+              parsed.state.protectionsData = {
+                ...(parsed.state.protectionsData || {}),
+                freedayItem: extrasFreedayItems,
+                redemptionStatus: extrasRedemptionStatus,
+              };
+              parsed.state.addOnsData = {
+                ...(parsed.state.addOnsData || {}),
+                freedayItem: extrasFreedayItems,
+                redemptionStatus: extrasRedemptionStatus,
+              };
+              parsed.state.freeDayItemObject = extrasFreedayItems;
+              value = JSON.stringify(parsed);
+            }
+          } catch (e) {
+            console.warn(
+              "VWA: Failed to inject protectionsData into session",
+              e,
+            );
+          }
+        }
+        _originalSetItem(key, value);
+      };
+
+      // Also do an immediate write for the current snapshot =
+      const rawSession = sessionStorage.getItem("reservation.store");
+      if (rawSession) {
+        try {
+          const parsedSession = JSON.parse(rawSession);
+          if (parsedSession?.state) {
+            parsedSession.state.protectionsData = {
+              ...(parsedSession.state.protectionsData || {}),
+              freedayItem: extrasFreedayItems,
+              redemptionStatus: extrasRedemptionStatus,
+            };
+            parsedSession.state.addOnsData = {
+              ...(parsedSession.state.addOnsData || {}),
+              freedayItem: extrasFreedayItems,
+              redemptionStatus: extrasRedemptionStatus,
+            };
+            parsedSession.state.freeDayItemObject = extrasFreedayItems;
+            sessionStorage.setItem(
+              "reservation.store",
+              JSON.stringify(parsedSession),
+            );
+          }
+        } catch (e) {
+          console.warn("VWA: Failed to update current session snapshot", e);
+        }
+      }
+    }
 
     // PROTECTION SANITIZATION
     const extrasProtectionItemList = extrasData?.protectionItems || [];
