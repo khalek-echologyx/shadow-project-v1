@@ -113,7 +113,7 @@ function preferredPoint() {
         // Patterns used by the fetch interceptor to capture/mutate outbound calls
         interceptPatterns: {
             calculate: /\/price\/calculate(\?|$)/i,
-            create: /\/reservation\/create(\?|$)/i
+            create: /\/reservation\/booking(\?|$)/i
         },
 
         ss: {
@@ -202,7 +202,7 @@ function preferredPoint() {
                         capturedCalculate = true;
                     } catch (e) { }
                 }
-                // Inject points-related fields into /reservation/create on book-now.
+                // Inject points-related fields into /reservation/booking on book-now.
                 // Verified live shape: addOnItems get a per-item payWithPoints:true.
                 var pwpHasFreeday = __pwpState.quantity > 0;
                 var pwpHasAddOnCodes = (__pwpState.payWithPointsCodes || []).length > 0;
@@ -590,12 +590,67 @@ function preferredPoint() {
     }
 
     function isRedeemableNow(loyalty, protections) {
+        console.log("in isRedeemableNow");
         var canRedeem = !!(protections.redemptionStatus && protections.redemptionStatus.isRedeemable);
+        console.log("canRedeem => ", canRedeem);
         var fd = protections.freedayItem;
+        console.log("fd => ", fd);
         if (!canRedeem || !fd) return false;
         var have = parseInt(loyalty.points, 10) || 0;
+        console.log("have => ", have);
         var perDay = Number(fd.perDayPoints) || 0;
+        console.log("perDay => ", perDay);
         return perDay > 0 && have >= perDay;
+    }
+
+    // Re-render the day picker in place. Called after add-on points toggles
+    // change so the picker's max-days reflects the user's remaining budget.
+    // Preserves the current selection when it's still affordable; falls back
+    // to "Select" if it isn't (which also clears state via onQuantityChange).
+    function refreshDayPicker() {
+        console.log("refreshDayPicker");
+        var existing = document.getElementById('avis-pwp-row');
+        console.log("existing => ", existing);
+        if (!existing) return;
+
+        var loyalty = readLoyaltyFromOverride() || readLoyaltyFromStore()
+            || readLoyaltyFromDom() || readLoyaltyFromFiber();
+        console.log("loyalty => ", loyalty);
+        var protections = readProtectionsFromOverride()
+            || (readStore().state || {}).protectionsData;
+        console.log("protections22 => ", protections);
+        console.log("isRedeemableNow => ", isRedeemableNow(loyalty, protections));
+
+        if (!loyalty || !protections || !isRedeemableNow(loyalty, protections)) return;
+
+        console.log("loyalty2 => ", loyalty);
+        console.log("protections33 => ", protections);
+        var html = renderRedeemable(loyalty, protections);
+        var temp = document.createElement('div');
+        temp.innerHTML = html;
+        var newRow = temp.firstElementChild;
+
+        var oldSelect = existing.querySelector('select');
+        var currentVal = oldSelect ? oldSelect.value : '0';
+        existing.replaceWith(newRow);
+
+        var newSelect = newRow.querySelector('select');
+        if (newSelect) {
+            var hasOption = Array.prototype.some.call(newSelect.options, function (o) {
+                return o.value === currentVal;
+            });
+            if (hasOption) {
+                newSelect.value = currentVal;
+            } else {
+                // Previous selection no longer affordable — clear state too.
+                newSelect.value = '0';
+                if (parseInt(currentVal, 10) > 0) onQuantityChange(0);
+            }
+            newSelect.addEventListener('change', function (e) {
+                var qty = parseInt(e.target.value, 10) || 0;
+                onQuantityChange(qty);
+            });
+        }
     }
 
     // ---------- UI -----------------------------------------------------------
@@ -672,34 +727,51 @@ function preferredPoint() {
     }
 
     function renderRedeemable(loyalty, protections) {
+        console.log("InRenderRedemable");
         var fd = protections.freedayItem;
         var perDayPoints = Number(fd.perDayPoints) || 0;
         var have = parseInt(loyalty.points, 10) || 0;
+        console.log("have", have);
+        console.log("loyalty", loyalty);
+        console.log("ProtectionFromRenderRedemable", protections);
+        console.log("fd", fd);
 
-        // Cap the picker by the strictest of the three constraints:
-        //   - freedayItem.rentalPeriod (what the backend says is allowed)
-        //   - actual rental length in days (so we never offer more days than the
-        //     booking covers — handles QA mode where rentalPeriod might be off)
-        //   - what the user can actually afford (points ÷ perDayPoints)
+        // Subtract points already committed to add-ons paid with points. Without
+        // this, a user with 4,500 pts who toggles 3× seats at 500 pts each
+        // (1,500 committed) could still pick "1 day" at 3,500 pts and overspend.
+        var addOnsCommitted = 0;
+        console.log("__pwpState", __pwpState);
+        (__pwpState.payWithPointsCodes || []).forEach(function (code) {
+            addOnsCommitted += getAddOnPointsCost(code);
+        });
+        console.log("addOnsCommitted", addOnsCommitted);
+        var available = Math.max(0, have - addOnsCommitted);
+        console.log("available", available);
+        console.log("perDayPoints", perDayPoints);
+
         var bookingDays = getRentalDays();
+        console.log("bookingDays", bookingDays);
         var backendAllowed = Math.max(1, Number(fd.rentalPeriod) || 1);
         var rentalPeriod = bookingDays > 0
             ? Math.min(backendAllowed, bookingDays)
             : backendAllowed;
-        var maxAffordable = Math.floor(have / Math.max(perDayPoints, 1));
+        var maxAffordable = Math.floor(available / Math.max(perDayPoints, 1));
         var maxDays = Math.min(rentalPeriod, maxAffordable);
+        console.log("maxDays", maxDays);
 
-        // Only render options up to the actual rental length. Options the user
-        // can't afford are still rendered but disabled so they can see why.
+        // Only render options the user can actually afford. Don't show disabled
+        // options for unaffordable days — they're confusing UX.
         var options = '<option value="0">' + escapeHtml(CFG.copy.selectLabel) + '</option>';
-        for (var n = 1; n <= rentalPeriod; n++) {
-            var disabled = n > maxDays ? ' disabled' : '';
-            var label = (n === 1 ? CFG.copy.freeRentalDayOne : tpl(CFG.copy.freeRentalDayMany, { n: n }));
+        for (var n = 1; n <= maxDays; n++) {
+            var label = n === 1
+                ? CFG.copy.freeRentalDayOne
+                : tpl(CFG.copy.freeRentalDayMany, { n: n });
             var pts = perDayPoints * n;
-            options += '<option value="' + n + '"' + disabled + '>'
+            options += '<option value="' + n + '">'
                 + escapeHtml(label) + ' — ' + fmtNum(pts) + ' Pts'
                 + '</option>';
         }
+        console.log(options, "options");
 
         return ''
             + '<div class="pwp-row" id="avis-pwp-row">'
@@ -836,6 +908,7 @@ function preferredPoint() {
         // protectionTotal, NOT rentalOptionsTotal (gross — includes points-paid
         // items at full pre-discount price, which is wrong to display).
         var paCash = (Number(totals.addOnTotal) || 0) + (Number(totals.protectionTotal) || 0);
+        console.log(paCash, "paCash");
         if (totals.addOnTotal != null || totals.protectionTotal != null) {
             setText('[data-testid="rental-summary-protection-addons-recent-cost"]',
                 formatPrice(cc, paCash.toFixed(2)));
@@ -911,6 +984,7 @@ function preferredPoint() {
         var l = readLoyaltyFromOverride() || readLoyaltyFromStore() || readLoyaltyFromDom() || readLoyaltyFromFiber();
         var p = readProtectionsFromOverride() || (readStore().state || {}).protectionsData;
         if (l && p) enhanceAddOnCards(l, p);
+        refreshDayPicker();
     }
 
     // Backwards-compatible alias for older call sites
@@ -978,7 +1052,25 @@ function preferredPoint() {
                     }
                 }
             } else if (item.payWithPoints) {
+                var items = document.querySelectorAll('.mvt-36-summary-prot-item');
+                for (var i = 0; i < items.length; i++) {
+                    if (items[i].getAttribute('data-item-code') === item.code) {
+                        try { items[i].remove(); } catch (e) { }
+                    }
+                }
                 injectProtectionsAddOnRow(item, price, cc);
+            } else {
+                var qty = getCodeQuantity(item.code);
+                var codesList = ["CBS", "CSS", "CIS", "CFS", "CSB"];
+                if (qty > 1 && codesList.indexOf(item.code) > -1) {
+                    var items = document.querySelectorAll('.mvt-36-summary-prot-item');
+                    for (var i = 0; i < items.length; i++) {
+                        if (items[i].getAttribute('data-item-code') === item.code) {
+                            try { items[i].remove(); } catch (e) { }
+                        }
+                    }
+                    injectProtectionsAddOnRow(item, price, cc, false, qty);
+                }
             }
         });
     }
@@ -1048,7 +1140,7 @@ function preferredPoint() {
     // their cart. Matches the host variant's row format (.mvt-36-summary-prot-
     // item with .sum-prot-item-desc) so visuals and downstream lookups treat
     // it like any other add-on row.
-    function injectProtectionsAddOnRow(item, price, cc) {
+    function injectProtectionsAddOnRow(item, price, cc, isStandard, qty) {
         var found = findProtectionsAddOnsContainer();
         if (!found) {
             console.warn('[pwp] Protections & Add-ons container not found — cannot inject row for', item.code);
@@ -1068,13 +1160,18 @@ function preferredPoint() {
             + 'font-family:AvisSans,\'AvisSans Fallback\',-apple-system,Helvetica,Arial,sans-serif;'
             + 'font-size:14px;line-height:20px;padding:0 0 4px 0;';
 
+        var descText = escapeHtml(getAddOnDescription(item.code));
+        if (qty && qty > 0) {
+            descText = qty + ' ' + descText;
+        }
+
         var descSpan = document.createElement('span');
         descSpan.className = 'checkout-redesign MuiTypography-root MuiTypography-bodySmallRegular sum-prot-item-desc';
-        descSpan.style.cssText = 'color:#1ea238 !important;';
+        descSpan.style.cssText = isStandard ? 'color:#524d4d !important;' : 'color:#1ea238 !important;';
         descSpan.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="10" viewBox="0 0 14 10" fill="none" style="margin-right:4px;vertical-align:middle;">'
             + '<path d="M13.2604 0.59375L4.55208 9.30208L0.59375 5.34375" stroke="#1EA238" stroke-width="1.1875" stroke-linecap="round" stroke-linejoin="round"/>'
             + '</svg> '
-            + escapeHtml(getAddOnDescription(item.code));
+            + descText;
 
         var amountWrapper = document.createElement('div');
         amountWrapper.className = 'MuiBox-root';
@@ -1272,15 +1369,22 @@ function preferredPoint() {
         if (!selector) return;
         var code = selector.getAttribute('data-code');
         if (!code) return;
-        if ((payWithPointsCodes || []).indexOf(code) === -1) return; // not points-paid
+        // Read payWithPointsCodes from __pwpState — this listener is at module
+        // scope where the local `payWithPointsCodes` variable is not available.
+        if ((__pwpState.payWithPointsCodes || []).indexOf(code) === -1) return; // not points-paid
 
         // Defer to next tick so the host's own click handler has updated
         // state.addOnItemsQuantity first. Then re-render label, applied-points,
         // and the footer indicator from the fresh quantity.
         setTimeout(function () {
-            enhanceAddOnCards(loyalty, protections);   // re-renders the toggle label
-            renderAppliedPointsSection();              // re-renders the row label + total
-            updatePointsAppliedIndicator();            // re-renders the footer indicator
+            // Read loyalty & protections fresh — same pattern as tryEnhance() in
+            // startCardEnhancer. The local `loyalty`/`protections` variables from
+            // boot() are not in scope here, so we always pull from the live sources.
+            var loy = readLoyaltyFromOverride() || readLoyaltyFromStore() || readLoyaltyFromDom() || readLoyaltyFromFiber();
+            var prot = readProtectionsFromOverride() || (readStore().state || {}).protectionsData || readProtectionsFromFiber();
+            if (loy && prot) enhanceAddOnCards(loy, prot); // re-renders the toggle label
+            renderAppliedPointsSection();                   // re-renders the row label + total
+            updatePointsAppliedIndicator();                 // re-renders the footer indicator
         }, 0);
     }, false);
 
@@ -1504,6 +1608,7 @@ function preferredPoint() {
         // Default rentalPeriod to the actual booking length so the picker can't
         // offer more days than the user is renting for.
         var actualDays = getRentalDays() || 2;
+        console.log("actualDays", actualDays);
         var perDay = 1400;
         window.__pwpForcePoints = opts.points != null ? opts.points : 99999;
         window.__pwpForceProtections = opts.protections || {
@@ -1569,6 +1674,31 @@ function preferredPoint() {
         console.log('[pwp] diagnose:', report);
         return report;
     };
+
+    // ---------- Reload-restore -----------------------------------------------
+    // On a hard page reload __pwpState resets to its initial empty values. This
+    // function reads payWithPointsCodes from reservation.store.state (where we
+    // persisted it via writeStore every time the user toggled an item) and
+    // re-hydrates __pwpState so the rest of boot() treats the session as if the
+    // user had just toggled those items.
+    // Called at the top of the waitFor callback — before renderBlock or any
+    // enhance pass — so every downstream function sees the restored codes.
+    function restorePayWithPointsState() {
+        // Only restore when __pwpState is still at its boot-time empty value.
+        // If the user has already interacted this session we skip the restore so
+        // we don't overwrite live state with a potentially stale snapshot.
+        if (__pwpState.payWithPointsCodes && __pwpState.payWithPointsCodes.length > 0) return;
+
+        var stored = (readStore().state || {}).payWithPointsCodes;
+        if (!Array.isArray(stored) || !stored.length) return;
+
+        // Filter to only valid non-empty strings to avoid persisted garbage
+        var valid = stored.filter(function (c) { return c && typeof c === 'string'; });
+        if (!valid.length) return;
+
+        __pwpState.payWithPointsCodes = valid.slice();
+        console.log('[pwp] restored payWithPointsCodes from session:', valid);
+    }
 
     // ---------- Boot ---------------------------------------------------------
     function boot() {
@@ -1655,6 +1785,11 @@ function preferredPoint() {
             waitFor(CFG.selectors.paymentSectionAnchor + ', ' + CFG.selectors.flightDetailsAnchor, 20000)
                 .catch(function () { return null; })
                 .then(function () {
+                    // Restore any payWithPointsCodes saved in the previous session
+                    // before touching the UI — this ensures renderBlock, enhanceAddOnCards,
+                    // and renderAppliedPointsSection all see the correct codes on first run.
+                    restorePayWithPointsState();
+
                     // Only render the PWP card (with day picker / not-redeemable text)
                     // when the rate actually supports day redemption. If only add-on
                     // redemption is available, skip the card and just enhance add-on
@@ -1673,6 +1808,28 @@ function preferredPoint() {
                             enhanceAddOnCards(loyalty, protections);
                         }
                     });
+
+                    // If we restored any codes, fire a calculate to rebuild the
+                    // booking summary (Applied Preferred Points section + footer
+                    // indicator) with accurate server-side totals — same round-trip
+                    // as a live toggle. We skip the global setBusy spinner because
+                    // the user hasn't interacted yet.
+                    if (__pwpState.payWithPointsCodes && __pwpState.payWithPointsCodes.length > 0) {
+                        console.log('[pwp] firing calculate to restore booking summary for', __pwpState.payWithPointsCodes);
+                        callCalculate(__pwpState.quantity)
+                            .then(function (resp) {
+                                if (resp && resp.price) writeStore({ price: resp.price });
+                                syncSummary(resp);
+                            })
+                            .catch(function (err) {
+                                // Calc failed — still render Applied Points section
+                                // from local state so the user sees their selections,
+                                // even without server-confirmed totals.
+                                console.warn('[pwp] restore calculate failed, falling back to local state render', err);
+                                renderAppliedPointsSection();
+                                updatePointsAppliedIndicator(null);
+                            });
+                    }
                 });
         });
     }
@@ -1912,7 +2069,6 @@ function preferredPoint() {
         findAddOnCards().forEach(function (card) {
             // Already enhanced? Update affordability state, don't re-inject.
             var existing = card.querySelector('.pwp-addon-pts-toggle');
-
             var code = extractCardCode(card);
             if (!code || !elig[code]) {
                 if (existing) existing.remove();
@@ -1958,18 +2114,33 @@ function preferredPoint() {
                 return;
             }
 
-            if (existing) {
-                var inp = existing.querySelector('input');
-                if (inp) inp.checked = isOn;
-                return;
-            }
-
             var perItem = Number(info.pointValuePoints) || 0;
             var qty = getCodeQuantity(code);
 
             var labelText = (qty > 1)
                 ? 'Add Using Points (' + qty + ' × ' + fmtNum(perItem) + ' = ' + fmtNum(thisCost) + ' Pts)'
                 : 'Add Using Points (' + fmtNum(thisCost) + ' Pts)';
+
+            if (existing) {
+                var inp = existing.querySelector('input');
+                if (inp) inp.checked = isOn;
+                // Update the label text via the text node's nodeValue — NOT via
+                // lbl.textContent, which removes+reinserts the child text node
+                // (a childList mutation) and re-fires the MutationObserver in
+                // startCardEnhancer, causing an infinite loop.
+                // nodeValue changes emit characterData mutations only, which the
+                // observer ignores (it watches childList:true, not characterData).
+                var lbl = existing.querySelector('.pwp-addon-pts-label');
+                if (lbl) {
+                    var tn = lbl.firstChild;
+                    if (tn && tn.nodeType === 3 /* TEXT_NODE */) {
+                        tn.nodeValue = labelText;
+                    } else {
+                        lbl.textContent = labelText; // first-render fallback only
+                    }
+                }
+                return;
+            }
 
             var toggle = document.createElement('label');
             toggle.className = 'pwp-addon-pts-toggle';
@@ -1994,6 +2165,7 @@ function preferredPoint() {
 
             var input = toggle.querySelector('input');
             input.addEventListener('change', function (e) {
+                console.log("Input on change");
                 onAddOnPointsToggle(code, e.target.checked);
             });
         });
@@ -2051,6 +2223,7 @@ function preferredPoint() {
             .then(function (resp) {
                 if (thisToggle) thisToggle.disabled = false;
                 if (resp && resp.price) writeStore({ price: resp.price });
+                console.log("response => ", resp);
                 updateBookingSummary(resp);
                 var loy = readLoyaltyFromOverride() || readLoyaltyFromStore() || readLoyaltyFromDom() || readLoyaltyFromFiber();
                 var prot = readProtectionsFromOverride() || (readStore().state || {}).protectionsData || readProtectionsFromFiber();
@@ -2307,6 +2480,19 @@ function preferredPoint() {
     const sessionData = sessionStorage.getItem("reservation.store");
     return sessionData ? JSON.parse(sessionData).state : {};
   }
+  //format time
+  function pad2(n) { n = String(n); return n.length === 1 ? '0' + n : n; }
+  function fmtTime(h, m, ampm) {
+    if (h == null || m == null) return null;
+    var hh = parseInt(h, 10);
+    if (isNaN(hh)) return null;
+    if (ampm) {
+      var a = String(ampm).toUpperCase();
+      if (a === 'PM' && hh !== 12) hh += 12;
+      if (a === 'AM' && hh === 12) hh = 0;
+    }
+    return pad2(hh) + ':' + pad2(m);
+  }
   //get corelational identifier
   function getCorelationalIdentifier() {
     const corelationalIdentifier = sessionStorage.getItem("correlationIdentifier");
@@ -2380,7 +2566,7 @@ function preferredPoint() {
     var gsoSpan = isGSO
       ? '<span class="est-price" style="display: block; color: rgb(82, 77, 77); font-size: 12px;">Est. USD ' + item.netSubtotalPerUnit + ' ' + (item.chargeType === "PER_GALLON" ? "/gal" : "/L") + '</span>'
       : '';
-    return '<div class="MuiBox-root mui-q27lzn mvt-36-summary-prot-item">'
+    return '<div data-item-code="' + item.code + '" class="MuiBox-root mui-q27lzn mvt-36-summary-prot-item">'
       + '<span class="checkout-redesign MuiTypography-root MuiTypography-bodySmallRegular mui-1xb6ox sum-prot-item-desc">'
       + greenCheckForSum + ' ' + (quantity > 0 ? quantity : '') + ' ' + desc
       + gsoSpan
@@ -2434,6 +2620,7 @@ function preferredPoint() {
 
     const protectionAndAddOnsHeaderPrice = document.querySelector('[data-testid="rental-summary-protection-addons-recent-cost"]');
     protectionAndAddOnsHeaderPrice.textContent = protTotal || 0;
+    console.log(protTotal, "protTotal");
     const protAndAddOnItemListEl = document.querySelector('[aria-label="Protections & Add-ons"]');
     if (protAndAddOnItemListEl) {
       const existingEl = protAndAddOnItemListEl.querySelector(
@@ -2829,22 +3016,10 @@ function preferredPoint() {
       currencyCode: sessionData.userSelectedCurrency,
       discountCodes: [],
       dropoffDate: sessionData.returnDatetime.split("T")[0],
-      dropoffTime: (function () {
-        var h = parseInt(sessionData.returnHour, 10);
-        var ampm = (sessionData.returnAmPm || "").toUpperCase();
-        if (ampm === "PM" && h !== 12) h += 12;
-        if (ampm === "AM" && h === 12) h = 0;
-        return (h < 10 ? "0" + h : String(h)) + ":00";
-      })(),
+      dropoffTime: fmtTime(sessionData.returnHour, sessionData.returnMinute, sessionData.returnAmPm),
       dropoffLocation: sessionData.returnLocationCode,
       pickupDate: sessionData.pickupDatetime.split("T")[0],
-      pickupTime: (function () {
-        var h = parseInt(sessionData.pickupHour, 10);
-        var ampm = (sessionData.pickupAmPm || "").toUpperCase();
-        if (ampm === "PM" && h !== 12) h += 12;
-        if (ampm === "AM" && h === 12) h = 0;
-        return (h < 10 ? "0" + h : String(h)) + ":00";
-      })(),
+      pickupTime: fmtTime(sessionData.pickupHour, sessionData.pickupMinute, sessionData.pickupAmPm),
       pickupLocation: sessionData.pickupLocationCode,
       priceRateCode: sessionData.priceRateCode,
       priceType: sessionData.priceType || "",
@@ -3062,21 +3237,9 @@ function preferredPoint() {
       pickupLocation: sessionData.pickupLocationCode,
       dropoffLocation: sessionData.returnLocationCode,
       pickupDate: sessionData.pickupDatetime.split("T")[0],
-      pickupTime: (function () {
-        var h = parseInt(sessionData.pickupHour, 10);
-        var ampm = (sessionData.pickupAmPm || "").toUpperCase();
-        if (ampm === "PM" && h !== 12) h += 12;
-        if (ampm === "AM" && h === 12) h = 0;
-        return (h < 10 ? "0" + h : String(h)) + ":00";
-      })(),
+      pickupTime: fmtTime(sessionData.pickupHour, sessionData.pickupMinute, sessionData.pickupAmPm),
       dropoffDate: sessionData.returnDatetime.split("T")[0],
-      dropoffTime: (function () {
-        var h = parseInt(sessionData.returnHour, 10);
-        var ampm = (sessionData.returnAmPm || "").toUpperCase();
-        if (ampm === "PM" && h !== 12) h += 12;
-        if (ampm === "AM" && h === 12) h = 0;
-        return (h < 10 ? "0" + h : String(h)) + ":00";
-      })(),
+      dropoffTime: fmtTime(sessionData.returnHour, sessionData.returnMinute, sessionData.returnAmPm),
       age: Number(sessionData.age) || 25,
       discountCodes: [],
       priceView: sessionData.priceView || "LOWEST_PRICE",
@@ -3129,66 +3292,65 @@ function preferredPoint() {
     //Get avis config data
     const avisConfigData = await getAvisConfigData();
 
-    // STORE THE PREFERRED POINTS DETAILS INTO SESSION STORAGE ======
     // STORE THE PREFERRED POINTS DETAILS INTO SESSION STORAGE
-    // const extrasFreedayItems = extrasData.freedayItem || null;
-    // const extrasRedemptionStatus = extrasData.redemptionStatus || null;
+    const extrasFreedayItems = extrasData.freedayItem || null;
+    const extrasRedemptionStatus = extrasData.redemptionStatus || null;
 
-    // if (extrasFreedayItems) {
-    //   const _originalSetItem = sessionStorage.setItem.bind(sessionStorage);
+    if (extrasFreedayItems || extrasRedemptionStatus) {
+      console.log('extrasFreedayItems', extrasFreedayItems);
+      console.log('extrasRedemptionStatus', extrasRedemptionStatus);
+      const _originalSetItem = sessionStorage.setItem.bind(sessionStorage);
 
-    //   sessionStorage.setItem = function (key, value) {
-    //     if (key === "reservation.store") {
-    //       try {
-    //         const parsed = JSON.parse(value);
-    //         if (parsed?.state) {
-    //           if (!parsed.state.protectionsData) {
-    //             parsed.state.protectionsData = {
-    //               freedayItem: extrasFreedayItems,
-    //               redemptionStatus: extrasRedemptionStatus
-    //             };
-    //           }
-    //           if (!parsed.state.addOnsData) {
-    //             parsed.state.addOnsData = {
-    //               freedayItem: extrasFreedayItems,
-    //               redemptionStatus: extrasRedemptionStatus
-    //             };
-    //           }
-    //           if (!parsed.state.freeDayItemObject) {
-    //             parsed.state.freeDayItemObject = extrasFreedayItems;
-    //           }
-    //           value = JSON.stringify(parsed);
-    //         }
-    //       } catch (e) {
-    //         console.warn("VWA: Failed to inject protectionsData into session", e);
-    //       }
-    //     }
-    //     _originalSetItem(key, value);
-    //   };
+      sessionStorage.setItem = function (key, value) {
+        if (key === "reservation.store") {
+          try {
+            const parsed = JSON.parse(value);
+            if (parsed?.state) {
+              // Always update with the latest extras data, but preserve other existing properties
+              parsed.state.protectionsData = {
+                ...(parsed.state.protectionsData || {}),
+                freedayItem: extrasFreedayItems,
+                redemptionStatus: extrasRedemptionStatus
+              };
+              parsed.state.addOnsData = {
+                ...(parsed.state.addOnsData || {}),
+                freedayItem: extrasFreedayItems,
+                redemptionStatus: extrasRedemptionStatus
+              };
+              parsed.state.freeDayItemObject = extrasFreedayItems;
+              value = JSON.stringify(parsed);
+            }
+          } catch (e) {
+            console.warn("VWA: Failed to inject protectionsData into session", e);
+          }
+        }
+        _originalSetItem(key, value);
+      };
 
-    //   // Also do an immediate write for the current snapshot
-    //   const rawSession = sessionStorage.getItem("reservation.store");
-    //   const parsedSession = JSON.parse(rawSession);
-    //   if (parsedSession?.state) {
-    //     if (!parsedSession.state.protectionsData) {
-    //       parsedSession.state.protectionsData = {
-    //         freedayItem: extrasFreedayItems,
-    //         redemptionStatus: extrasRedemptionStatus
-    //       };
-    //     }
-    //     if (!parsedSession.state.addOnsData) {
-    //       parsedSession.state.addOnsData = {
-    //         freedayItem: extrasFreedayItems,
-    //         redemptionStatus: extrasRedemptionStatus
-    //       };
-    //     }
-    //     if (!parsedSession.state.freeDayItemObject) {
-    //       parsedSession.state.freeDayItemObject = extrasFreedayItems;
-    //     }
-    //     sessionStorage.setItem("reservation.store", JSON.stringify(parsedSession));
-    //   }
-    // }
-
+      // Also do an immediate write for the current snapshot
+      const rawSession = sessionStorage.getItem("reservation.store");
+      if (rawSession) {
+        try {
+          const parsedSession = JSON.parse(rawSession);
+          if (parsedSession?.state) {
+            parsedSession.state.protectionsData = {
+              ...(parsedSession.state.protectionsData || {}),
+              freedayItem: extrasFreedayItems,
+              redemptionStatus: extrasRedemptionStatus
+            };
+            parsedSession.state.addOnsData = {
+              ...(parsedSession.state.addOnsData || {}),
+              freedayItem: extrasFreedayItems,
+              redemptionStatus: extrasRedemptionStatus
+            };
+            parsedSession.state.freeDayItemObject = extrasFreedayItems;
+            sessionStorage.setItem("reservation.store", JSON.stringify(parsedSession));
+          }
+        } catch (e) {
+          console.warn("VWA: Failed to update current session snapshot", e);
+        }
+      }
+    }
 
     // PROTECTION SANITIZATION
     const extrasProtectionItemList = extrasData?.protectionItems || [];
@@ -3338,7 +3500,7 @@ function preferredPoint() {
         // Case 4: neither in list → keep original order
         return 0;
       });
-    console.log(finalAddOnItemList, "finalAddOnItemList");
+
     // Add-ons bundle list
     const extrasAddonBundleList = extrasData?.addOnBundles || [];
     // final add-ons bundle list
@@ -3971,6 +4133,7 @@ function preferredPoint() {
           const code = e.target.getAttribute("data-code");
           //remove the PwP toggle if it exists
           removePwpToggle(code);
+          await new Promise(resolve => setTimeout(resolve, 1000));
           extrasAddOnsItemList.find(item => item.code === code);
           concattedAddOnsList?.find(item => item.code === code);
 
@@ -4125,7 +4288,7 @@ function preferredPoint() {
             latestStore.state.pricesProtectionItems = newProtectionItems.length > 0 ? newProtectionItems : [];
             sessionStorage.setItem("reservation.store", JSON.stringify(latestStore));
           }
-          
+
           updateCarSummaryAndFooterPrice(calculateData, extrasAddOnsItemList, extrasProtectionItemList);
         });
       });
@@ -4737,7 +4900,7 @@ function preferredPoint() {
             if (parentEl) {
               const mvtEl = document.getElementById(TEST_ID);
               if (mvtEl) {
-               mvtEl.insertAdjacentElement("afterend", parentEl); 
+                mvtEl.insertAdjacentElement("afterend", parentEl);
               }
             }
           }

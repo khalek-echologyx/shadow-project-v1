@@ -1,4 +1,5 @@
 import addOnItemsSvgObj from "./addOnItemsSvgObj";
+import { preferredPoint } from "./preferredPoint";
 
 (() => {
   const TEST_ID = "MVT-36";
@@ -165,6 +166,19 @@ import addOnItemsSvgObj from "./addOnItemsSvgObj";
   function getSessionData() {
     const sessionData = sessionStorage.getItem("reservation.store");
     return sessionData ? JSON.parse(sessionData).state : {};
+  }
+  //format time
+  function pad2(n) { n = String(n); return n.length === 1 ? '0' + n : n; }
+  function fmtTime(h, m, ampm) {
+    if (h == null || m == null) return null;
+    var hh = parseInt(h, 10);
+    if (isNaN(hh)) return null;
+    if (ampm) {
+      var a = String(ampm).toUpperCase();
+      if (a === 'PM' && hh !== 12) hh += 12;
+      if (a === 'AM' && hh === 12) hh = 0;
+    }
+    return pad2(hh) + ':' + pad2(m);
   }
   //get corelational identifier
   function getCorelationalIdentifier() {
@@ -637,6 +651,18 @@ import addOnItemsSvgObj from "./addOnItemsSvgObj";
       staticNoProtCard.classList.remove("selected")
     }
   }
+  const removePwpToggle = (code) => {
+    const addOnItemsWithPwpToggle = document.querySelectorAll("#" + TEST_ID + ' .pwp-addon-pts-toggle');
+    addOnItemsWithPwpToggle.forEach(item => {
+      const itemToggleInput = item.querySelector("input");
+      if (itemToggleInput && itemToggleInput.getAttribute('data-pwp-code') === code) {
+        const toggleLabelEl = itemToggleInput.parentElement;
+        if (toggleLabelEl && itemToggleInput.checked) {
+          toggleLabelEl.click();
+        }
+      }
+    });
+  }
 
   // =========== UPDATE UI: Car summary and Footer Price
   const updateCarSummaryAndFooterPrice = (calculateData, extrasAddOnsItemList, extrasProtectionItemList) => {
@@ -700,22 +726,10 @@ import addOnItemsSvgObj from "./addOnItemsSvgObj";
       currencyCode: sessionData.userSelectedCurrency,
       discountCodes: [],
       dropoffDate: sessionData.returnDatetime.split("T")[0],
-      dropoffTime: (function () {
-        var h = parseInt(sessionData.returnHour, 10);
-        var ampm = (sessionData.returnAmPm || "").toUpperCase();
-        if (ampm === "PM" && h !== 12) h += 12;
-        if (ampm === "AM" && h === 12) h = 0;
-        return (h < 10 ? "0" + h : String(h)) + ":00";
-      })(),
+      dropoffTime: fmtTime(sessionData.returnHour, sessionData.returnMinute, sessionData.returnAmPm),
       dropoffLocation: sessionData.returnLocationCode,
       pickupDate: sessionData.pickupDatetime.split("T")[0],
-      pickupTime: (function () {
-        var h = parseInt(sessionData.pickupHour, 10);
-        var ampm = (sessionData.pickupAmPm || "").toUpperCase();
-        if (ampm === "PM" && h !== 12) h += 12;
-        if (ampm === "AM" && h === 12) h = 0;
-        return (h < 10 ? "0" + h : String(h)) + ":00";
-      })(),
+      pickupTime: fmtTime(sessionData.pickupHour, sessionData.pickupMinute, sessionData.pickupAmPm),
       pickupLocation: sessionData.pickupLocationCode,
       priceRateCode: sessionData.priceRateCode,
       priceType: sessionData.priceType || "",
@@ -960,21 +974,9 @@ import addOnItemsSvgObj from "./addOnItemsSvgObj";
       pickupLocation: sessionData.pickupLocationCode,
       dropoffLocation: sessionData.returnLocationCode,
       pickupDate: sessionData.pickupDatetime.split("T")[0],
-      pickupTime: (function () {
-        var h = parseInt(sessionData.pickupHour, 10);
-        var ampm = (sessionData.pickupAmPm || "").toUpperCase();
-        if (ampm === "PM" && h !== 12) h += 12;
-        if (ampm === "AM" && h === 12) h = 0;
-        return (h < 10 ? "0" + h : String(h)) + ":00";
-      })(),
+      pickupTime: fmtTime(sessionData.pickupHour, sessionData.pickupMinute, sessionData.pickupAmPm),
       dropoffDate: sessionData.returnDatetime.split("T")[0],
-      dropoffTime: (function () {
-        var h = parseInt(sessionData.returnHour, 10);
-        var ampm = (sessionData.returnAmPm || "").toUpperCase();
-        if (ampm === "PM" && h !== 12) h += 12;
-        if (ampm === "AM" && h === 12) h = 0;
-        return (h < 10 ? "0" + h : String(h)) + ":00";
-      })(),
+      dropoffTime: fmtTime(sessionData.returnHour, sessionData.returnMinute, sessionData.returnAmPm),
       age: Number(sessionData.age) || 25,
       discountCodes: [],
       priceView: sessionData.priceView || "LOWEST_PRICE",
@@ -1372,6 +1374,7 @@ import addOnItemsSvgObj from "./addOnItemsSvgObj";
 
       // =================== Intial selection handle ===============
       initalSelectUI(extrasProtectionItemList, extrasAddOnsItemList, protectionItems, finalAddOnItemList, finalProtectionBundleList, corelationalIdentifier)
+      preferredPoint();
 
       // =============================== PROTECTION BUNDLE SELECTION==============================
       const protectionBundleCards = document.querySelectorAll("." + TEST_ID + " .prot-card");
@@ -1837,6 +1840,9 @@ import addOnItemsSvgObj from "./addOnItemsSvgObj";
       addOnToggles.forEach(toggle => {
         toggle.addEventListener("change", async (e) => {
           const code = e.target.getAttribute("data-code");
+          //remove the PwP toggle if it exists
+          removePwpToggle(code);
+          await new Promise(resolve => setTimeout(resolve, 1000));
           const addOnItemPrice = extrasAddOnsItemList.find(item => item.code === code)
           const jsonAddonItem = concattedAddOnsList?.find(item => item.code === code)
 
@@ -2592,6 +2598,23 @@ import addOnItemsSvgObj from "./addOnItemsSvgObj";
           }
         }
       }
+
+      // CHANGE THE ORDER OR PREFERRED POINT SECTION
+      poll(
+        () => document.querySelector('[data-testid="pay-with-points-container"]'),
+        () => {
+          const existingPwpCard = document.querySelector('[data-testid="pay-with-points-container"]');
+          if (existingPwpCard) {
+            const parentEl = existingPwpCard.parentElement;
+            if (parentEl) {
+              const mvtEl = document.getElementById(TEST_ID);
+              if (mvtEl) {
+               mvtEl.insertAdjacentElement("afterend", parentEl) 
+              }
+            }
+          }
+        }
+      )
 
       //progress bar number change to 3
       poll(

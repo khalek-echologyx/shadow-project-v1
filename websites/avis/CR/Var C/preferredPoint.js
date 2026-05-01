@@ -529,16 +529,11 @@ export function preferredPoint() {
     }
 
     function isRedeemableNow(loyalty, protections) {
-        console.log("in isRedeemableNow")
         var canRedeem = !!(protections.redemptionStatus && protections.redemptionStatus.isRedeemable);
-        console.log("canRedeem => ", canRedeem);
         var fd = protections.freedayItem;
-        console.log("fd => ", fd);
         if (!canRedeem || !fd) return false;
         var have = parseInt(loyalty.points, 10) || 0;
-        console.log("have => ", have);
         var perDay = Number(fd.perDayPoints) || 0;
-        console.log("perDay => ", perDay);
         return perDay > 0 && have >= perDay;
     }
 
@@ -547,23 +542,15 @@ export function preferredPoint() {
     // Preserves the current selection when it's still affordable; falls back
     // to "Select" if it isn't (which also clears state via onQuantityChange).
     function refreshDayPicker() {
-        console.log("refreshDayPicker")
         var existing = document.getElementById('avis-pwp-row');
-        console.log("existing => ", existing);
         if (!existing) return;
 
         var loyalty = readLoyaltyFromOverride() || readLoyaltyFromStore()
             || readLoyaltyFromDom() || readLoyaltyFromFiber();
-        console.log("loyalty => ", loyalty);
         var protections = readProtectionsFromOverride()
             || (readStore().state || {}).protectionsData;
-        console.log("protections22 => ", protections);
-        console.log("isRedeemableNow => ", isRedeemableNow(loyalty, protections));
-
         if (!loyalty || !protections || !isRedeemableNow(loyalty, protections)) return;
 
-        console.log("loyalty2 => ", loyalty);
-        console.log("protections33 => ", protections);
         var html = renderRedeemable(loyalty, protections);
         var temp = document.createElement('div');
         temp.innerHTML = html;
@@ -666,37 +653,26 @@ export function preferredPoint() {
     }
 
     function renderRedeemable(loyalty, protections) {
-        console.log("InRenderRedemable");
         var fd = protections.freedayItem;
         var perDayPoints = Number(fd.perDayPoints) || 0;
         var have = parseInt(loyalty.points, 10) || 0;
-        console.log("have", have);
-        console.log("loyalty", loyalty);
-        console.log("ProtectionFromRenderRedemable", protections);
-        console.log("fd", fd);
 
         // Subtract points already committed to add-ons paid with points. Without
         // this, a user with 4,500 pts who toggles 3× seats at 500 pts each
         // (1,500 committed) could still pick "1 day" at 3,500 pts and overspend.
         var addOnsCommitted = 0;
-        console.log("__pwpState", __pwpState);
         (__pwpState.payWithPointsCodes || []).forEach(function (code) {
             addOnsCommitted += getAddOnPointsCost(code);
         });
-        console.log("addOnsCommitted", addOnsCommitted);
         var available = Math.max(0, have - addOnsCommitted);
-        console.log("available", available);
-        console.log("perDayPoints", perDayPoints);
 
         var bookingDays = getRentalDays();
-        console.log("bookingDays", bookingDays);
         var backendAllowed = Math.max(1, Number(fd.rentalPeriod) || 1);
         var rentalPeriod = bookingDays > 0
             ? Math.min(backendAllowed, bookingDays)
             : backendAllowed;
         var maxAffordable = Math.floor(available / Math.max(perDayPoints, 1));
         var maxDays = Math.min(rentalPeriod, maxAffordable);
-        console.log("maxDays", maxDays);
 
         // Only render options the user can actually afford. Don't show disabled
         // options for unaffordable days — they're confusing UX.
@@ -710,7 +686,6 @@ export function preferredPoint() {
                 + escapeHtml(label) + ' — ' + fmtNum(pts) + ' Pts'
                 + '</option>';
         }
-        console.log(options, "options")
 
         return ''
             + '<div class="pwp-row" id="avis-pwp-row">'
@@ -1547,7 +1522,6 @@ export function preferredPoint() {
         // Default rentalPeriod to the actual booking length so the picker can't
         // offer more days than the user is renting for.
         var actualDays = getRentalDays() || 2;
-        console.log("actualDays", actualDays);
         var perDay = 1400;
         window.__pwpForcePoints = opts.points != null ? opts.points : 99999;
         window.__pwpForceProtections = opts.protections || {
@@ -2104,7 +2078,6 @@ export function preferredPoint() {
 
             var input = toggle.querySelector('input');
             input.addEventListener('change', function (e) {
-                console.log("Input on change")
                 onAddOnPointsToggle(code, e.target.checked);
             });
         });
@@ -2162,7 +2135,6 @@ export function preferredPoint() {
             .then(function (resp) {
                 if (thisToggle) thisToggle.disabled = false;
                 if (resp && resp.price) writeStore({ price: resp.price });
-                console.log("response => ", resp)
                 updateBookingSummary(resp);
                 var loy = readLoyaltyFromOverride() || readLoyaltyFromStore() || readLoyaltyFromDom() || readLoyaltyFromFiber();
                 var prot = readProtectionsFromOverride() || (readStore().state || {}).protectionsData || readProtectionsFromFiber();
