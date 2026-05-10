@@ -699,6 +699,9 @@
   line-height: 21px;
   letter-spacing: 0px;
 }
+.MVT-36 .add-on-card .card-footer .price-info .est-text {
+  font-size: 16px;
+}
 .MVT-36 .add-on-card .card-footer .price-info .per-day-slash {
   display: inline;
   font-size: 16px;

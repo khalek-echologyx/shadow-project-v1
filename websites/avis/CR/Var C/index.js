@@ -1,4 +1,5 @@
 import addOnItemsSvgObj from "./addOnItemsSvgObj";
+import { identifyModal } from "./identifyModal";
 import { preferredPoint } from "./preferredPoint";
 
 (() => {
@@ -145,6 +146,178 @@ import { preferredPoint } from "./preferredPoint";
     };
   })();
 
+  window.__avisReservationState = null;
+  window.__mvtRateSelectModalOpen = false;
+  function isCalcRequest(url) {
+      try {
+        return new URL(url, location.origin).pathname === "/web/reservation/price/calculate";
+      } catch (e) {
+        return /\/web\/reservation\/price\/calculate($|\?)/.test(url);
+      }
+    }
+  /* ---------------- Calculate API interceptor ---------------- */
+  (function () {
+    var QUANTITY_CODES = { CSS: 1, CBS: 1, CFS: 1, CIS: 1, CSB: 1 };
+    function getState() {
+      if (window.__avisReservationState) return window.__avisReservationState;
+    }
+
+
+    function splitCsv(s) {
+      if (!s || typeof s !== "string") return [];
+      return s
+        .split(",")
+        .map(function (v) { return v.trim(); })
+        .filter(Boolean);
+    }
+
+    function parseQuantity(raw, code) {
+      if (raw === "false" || raw == null || raw === "") {
+        return QUANTITY_CODES[code] ? 1 : null;
+      }
+      var n = parseInt(raw, 10);
+      if (!isNaN(n)) return n;
+      return QUANTITY_CODES[code] ? 1 : null;
+    }
+
+    function buildInjection() {
+      var state = getState();
+      if (!state) return {};
+      var out = {};
+
+      // 1. Protection bundle — only items where included === true
+      var pb = state.protectionBundleSelected;
+      if (pb && pb.code && pb.code !== "No Protection") {
+        var includedItems = (pb.items || []).filter(function (i) {
+          return i && i.included === true;
+        });
+        if (includedItems.length) {
+          out.protectionBundle = {
+            code: pb.code,
+            items: includedItems.map(function (i) {
+              return { code: i.code, policy: i.policy || "MANDATORY" };
+            }),
+          };
+        }
+      }
+
+      // 2. Individual protection items
+      var piCodes = splitCsv(state.protectionItems);
+      if (piCodes.length) {
+        out.protectionItems = piCodes.map(function (c) { return { code: c }; });
+      }
+
+      // 3. Add-on items — merge host CSV state with PWP state
+      var pwpState = window.__avisPwpState || {};
+      var pwpCodes = (pwpState.payWithPointsCodes || []).slice();
+
+      var aoCodes = splitCsv(state.addOnItems);
+      var aoQtys = splitCsv(state.addOnItemsQuantity);
+      var addOnMap = {};
+      aoCodes.forEach(function (code, idx) {
+        addOnMap[code] = { code: code, quantity: parseQuantity(aoQtys[idx], code) };
+      });
+      pwpCodes.forEach(function (code) {
+        if (addOnMap[code]) {
+          addOnMap[code].payWithPoints = true;
+        } else {
+          addOnMap[code] = { code: code, quantity: 1, payWithPoints: true };
+        }
+      });
+      var addOnList = Object.keys(addOnMap).map(function (k) { return addOnMap[k]; });
+      if (addOnList.length) out.addOnItems = addOnList;
+
+      // 4. Free-day redemption
+      if ((pwpState.quantity || 0) > 0) {
+        out.freedayItem = { quantity: pwpState.quantity };
+      }
+
+      return out;
+    }
+
+    // Extract the raw body string regardless of whether the caller used
+    // fetch(url, { body }) or fetch(new Request(url, { body })).
+    function extractBody(input, init) {
+      if (init && typeof init.body === "string") return init.body;
+      // Request object pattern: fetch(new Request(url, opts)) — no separate init
+      if (input && typeof input === "object" && typeof input.body === "string") {
+        return input.body;
+      }
+      return null;
+    }
+
+    var originalFetch = window.fetch;
+    window.fetch = function (input, init) {
+      try {
+        var url = typeof input === "string" ? input
+          : (input instanceof URL) ? input.href
+            : (input && input.url) || null;
+
+        var method = (init && init.method) || (input && input.method) || "GET";
+
+        if (url && isCalcRequest(url) && method.toUpperCase() === "POST" && window.__mvtRateSelectModalOpen) {
+          console.log("interceptor running", window.__mvtRateSelectModalOpen)
+          var rawBody = extractBody(input, init);
+          if (rawBody) {
+            var payload = JSON.parse(rawBody);
+            var inj = buildInjection();
+
+            if (inj.protectionBundle) payload.protectionBundle = inj.protectionBundle;
+            if (inj.protectionItems) payload.protectionItems = inj.protectionItems;
+            if (inj.addOnItems) payload.addOnItems = inj.addOnItems;
+            if (inj.freedayItem) payload.freedayItem = inj.freedayItem;
+
+            var newBody = JSON.stringify(payload);
+            // Create a fresh init so the modified body is always forwarded.
+            // Using call(this, input, init) below ensures this new reference
+            // is what actually reaches the real fetch, unlike apply(this, arguments).
+            if (init) {
+              init = Object.assign({}, init, { body: newBody });
+            } else {
+              // Body was on the Request object — rebuild init from it
+              init = { method: method, body: newBody };
+            }
+            // window.__mvtRateSelectModalOpen = false;
+          }
+        }
+      } catch (e) {
+        console.warn("[AvisTest] calc-hook error", e);
+      }
+      // Use call() not apply(arguments) — init may be a newly created object
+      return originalFetch.call(this, input, init);
+    };
+    console.log("Is patched fetch?", window.fetch === originalFetch);
+  })();
+
+  // INTERCEPT CALCULATE REPONSE
+  (function observeCalculateApi() {
+        const _patchedFetch = window.fetch;
+        window.fetch = async function (input, init) {
+            const response = await _patchedFetch.call(this, input, init);
+            try {
+                const url = typeof input === 'string' ? input
+                    : (input instanceof URL) ? input.href
+                    : (input && input.url) || '';
+                const method = (init && init.method) || (input && input.method) || 'GET';
+              const isCalc = isCalcRequest(url);
+              console.log("abc" , window.__mvtRateSelectModalOpen, isCalc, method.toUpperCase() === 'POST', response.ok)
+              if (isCalc && method.toUpperCase() === 'POST' && response.ok && window.__mvtRateSelectModalOpen) {
+                  console.log("rederInsideResponse")
+                    if (window.__avisReservationState) {
+                        sessionStorage.setItem(
+                            'reservation.store',
+                            JSON.stringify({ state: window.__avisReservationState, version: 0 })
+                        );
+                        console.log('[AvisTest] /calculate resolved → sessionStorage updated from __avisReservationState', window.__avisReservationState);
+                    }
+                }
+            } catch (e) {
+                console.warn('[AvisTest] calculate observer error', e);
+            }
+            return response;
+        };
+    })();
+
   /* ---------------- poll utility ---------------- */
   function poll(condition, callback, timeout = 10000, interval = 50) {
     const start = Date.now();
@@ -216,7 +389,7 @@ import { preferredPoint } from "./preferredPoint";
   //get extras api data
   async function getExtrasData(payload, corelationalIdentifier) {
     try {
-      let res = await fetch("https://www.avis.com/web/reservation/extras?context.locale=en-US&context.domainCountry=US&context.correlationIdentifier=" + corelationalIdentifier + "&device=WEB", {
+      let res = await fetch("https://www.avis.com/web/reservation/extras?context.locale=en-US&context.domainCountry=US&context.correlationIdentifier=" + corelationalIdentifier, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -236,7 +409,7 @@ import { preferredPoint } from "./preferredPoint";
 
   // calculate price api
   async function calculatePrice(payload, corelationalIdentifier) {
-    let res = await fetch("https://www.avis.com/web/reservation/price/calculate?context.locale=en-US&context.domainCountry=US&context.correlationIdentifier=" + corelationalIdentifier + "&device=WEB", {
+    let res = await fetch("https://www.avis.com/web/reservation/price/calculate?context.locale=en-US&context.domainCountry=US&context.correlationIdentifier=" + corelationalIdentifier, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -421,7 +594,9 @@ import { preferredPoint } from "./preferredPoint";
         + (discountCodeSavings ? savingAndDisItemUI("Discount Code Savings", formatDiscountCodeSavings) : "")
         + (memberCreditAmt ? savingAndDisItemUI("Member Credit", formatMemberCreditAmt) : "")
         + '</div>';
-      savingAndDisItemContainer.insertAdjacentHTML("beforeend", savingAndDiscountUIWrapper);
+      if (!savingAndDisItemContainer.querySelector('#pwp-summary-savings')) {
+        savingAndDisItemContainer.insertAdjacentHTML("beforeend", savingAndDiscountUIWrapper);
+      }
     }
   }
   // tax and fees UI and logic
@@ -724,6 +899,9 @@ import { preferredPoint } from "./preferredPoint";
     updateProtectionItemsCards(extrasProtectionItemList)
     // =============== STATIC PROTECTION SELECTED =============
     updateStaticProtectionCard()
+    // iject last session into window
+    const sessionData = getSessionData();
+    window.__avisReservationState = sessionData;
   }
   // =============== INTIAL SELECTION UI ===============
   const initalSelectUI = async (extrasProtectionItemList, extrasAddOnsItemList, protectionItems, finalAddOnItemList, finalProtectionBundleList, corelationalIdentifier) => {
@@ -1463,6 +1641,7 @@ import { preferredPoint } from "./preferredPoint";
       // =================== Intial selection handle ===============
       initalSelectUI(extrasProtectionItemList, extrasAddOnsItemList, protectionItems, finalAddOnItemList, finalProtectionBundleList, corelationalIdentifier)
       preferredPoint();
+      identifyModal(getSessionData, updateCarSummaryAndFooterPrice, fmtTime, calculatePrice, corelationalIdentifier, extrasAddOnsItemList, extrasProtectionItemList)
 
       // =============================== PROTECTION BUNDLE SELECTION==============================
       const protectionBundleCards = document.querySelectorAll("." + TEST_ID + " .prot-card");
@@ -1483,7 +1662,6 @@ import { preferredPoint } from "./preferredPoint";
           const selectedBundleName = store.state.protectionBundleCode;
 
           if (selectedBundleName === bundleCode) {
-
             const noProtBundle = document.querySelector('[data-code="No Protection"]');
             if (noProtBundle) {
               noProtBundle.click();
@@ -2036,6 +2214,7 @@ import { preferredPoint } from "./preferredPoint";
               }))
             };
           }
+          console.log("calculatePayload", calculatePayload)
           // //Call calculatePrice API
           const calculateData = await calculatePrice(calculatePayload, corelationalIdentifier);
           const calculateAddOnItems = calculateData.addOnItems || [];

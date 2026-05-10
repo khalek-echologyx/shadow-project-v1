@@ -3,7 +3,7 @@ import { preferredPoint } from "./preferredPoint";
 
 (() => {
   const TEST_ID = "MVT-36";
-  /* -------------------- BOOKING API INTERCEPTOR -------------------*/
+  /* --------------------BOOKING API INTERCEPTOR -------------------*/
   (function () {
     var STORE_KEY = "reservation.store";
     var QUANTITY_CODES = { CSS: 1, CBS: 1, CFS: 1, CIS: 1, CSB: 1 };
@@ -44,7 +44,7 @@ import { preferredPoint } from "./preferredPoint";
       if (!state) return {};
       var out = {};
 
-      // 1. Protection bundle — only items where included === true
+      // 1. Protection bundle — only items where included === true (unchanged)
       var pb = state.protectionBundleSelected;
       if (pb && pb.code && pb.code !== "No Protection") {
         var includedItems = (pb.items || []).filter(function (i) {
@@ -60,21 +60,33 @@ import { preferredPoint } from "./preferredPoint";
         }
       }
 
-      // 2. Individual protection items
+      // 2. Individual protection items (unchanged)
       var piCodes = splitCsv(state.protectionItems);
       if (piCodes.length) {
-        out.protectionItems = piCodes.map(function (c) {
-          return { code: c };
-        });
+        out.protectionItems = piCodes.map(function (c) { return { code: c }; });
       }
+      var pwpState = window.__avisPwpState || {};
+      var pwpCodes = (pwpState.payWithPointsCodes || []).slice();
 
-      // 3. Add-on items
       var aoCodes = splitCsv(state.addOnItems);
       var aoQtys = splitCsv(state.addOnItemsQuantity);
-      if (aoCodes.length) {
-        out.addOnItems = aoCodes.map(function (code, idx) {
-          return { code: code, quantity: parseQuantity(aoQtys[idx], code) };
-        });
+      var addOnMap = {};
+      aoCodes.forEach(function (code, idx) {
+        addOnMap[code] = { code: code, quantity: parseQuantity(aoQtys[idx], code) };
+      });
+      pwpCodes.forEach(function (code) {
+        if (addOnMap[code]) {
+          addOnMap[code].payWithPoints = true;
+        } else {
+          addOnMap[code] = { code: code, quantity: 1, payWithPoints: true };
+        }
+      });
+      var addOnList = Object.keys(addOnMap).map(function (k) { return addOnMap[k]; });
+      if (addOnList.length) out.addOnItems = addOnList;
+
+      // 4. Free-day redemption — top-level field, only when PWP picked > 0 days
+      if ((pwpState.quantity || 0) > 0) {
+        out.freedayItem = { quantity: pwpState.quantity };
       }
 
       return out;
@@ -104,10 +116,12 @@ import { preferredPoint } from "./preferredPoint";
         ) {
           var payload = JSON.parse(init.body);
           var inj = buildInjection();
+
           if (inj.protectionBundle)
             payload.protectionBundle = inj.protectionBundle;
           if (inj.protectionItems) payload.protectionItems = inj.protectionItems;
           if (inj.addOnItems) payload.addOnItems = inj.addOnItems;
+          if (inj.freedayItem) payload.freedayItem = inj.freedayItem;
           init.body = JSON.stringify(payload);
 
         }
@@ -115,155 +129,6 @@ import { preferredPoint } from "./preferredPoint";
         console.warn("[AvisTest] hook error", e);
       }
       return originalFetch.apply(this, arguments);
-    };
-  })();
-
-  /* ---------------- Calculate API interceptor ---------------- */
-  (function () {
-    var STORE_KEY = "reservation.store";
-    var QUANTITY_CODES = { CSS: 1, CBS: 1, CFS: 1, CIS: 1, CSB: 1 };
-
-    function getState() {
-      try {
-        var raw = window.sessionStorage.getItem(STORE_KEY);
-        if (!raw) return null;
-        var parsed = JSON.parse(raw);
-        return (parsed && parsed.state) || null;
-      } catch (e) {
-        console.warn("[AvisTest] could not read store", e);
-        return null;
-      }
-    }
-
-    function splitCsv(s) {
-      if (!s || typeof s !== "string") return [];
-      return s
-        .split(",")
-        .map(function (v) { return v.trim(); })
-        .filter(Boolean);
-    }
-
-    function parseQuantity(raw, code) {
-      if (raw === "false" || raw == null || raw === "") {
-        return QUANTITY_CODES[code] ? 1 : null;
-      }
-      var n = parseInt(raw, 10);
-      if (!isNaN(n)) return n;
-      return QUANTITY_CODES[code] ? 1 : null;
-    }
-
-    function buildInjection() {
-      var state = getState();
-      if (!state) return {};
-      var out = {};
-
-      // 1. Protection bundle — only items where included === true
-      var pb = state.protectionBundleSelected;
-      if (pb && pb.code && pb.code !== "No Protection") {
-        var includedItems = (pb.items || []).filter(function (i) {
-          return i && i.included === true;
-        });
-        if (includedItems.length) {
-          out.protectionBundle = {
-            code: pb.code,
-            items: includedItems.map(function (i) {
-              return { code: i.code, policy: i.policy || "MANDATORY" };
-            }),
-          };
-        }
-      }
-
-      // 2. Individual protection items
-      var piCodes = splitCsv(state.protectionItems);
-      if (piCodes.length) {
-        out.protectionItems = piCodes.map(function (c) { return { code: c }; });
-      }
-
-      // 3. Add-on items — merge host CSV state with PWP state
-      var pwpState = window.__avisPwpState || {};
-      var pwpCodes = (pwpState.payWithPointsCodes || []).slice();
-
-      var aoCodes = splitCsv(state.addOnItems);
-      var aoQtys = splitCsv(state.addOnItemsQuantity);
-      var addOnMap = {};
-      aoCodes.forEach(function (code, idx) {
-        addOnMap[code] = { code: code, quantity: parseQuantity(aoQtys[idx], code) };
-      });
-      pwpCodes.forEach(function (code) {
-        if (addOnMap[code]) {
-          addOnMap[code].payWithPoints = true;
-        } else {
-          addOnMap[code] = { code: code, quantity: 1, payWithPoints: true };
-        }
-      });
-      var addOnList = Object.keys(addOnMap).map(function (k) { return addOnMap[k]; });
-      if (addOnList.length) out.addOnItems = addOnList;
-
-      // 4. Free-day redemption
-      if ((pwpState.quantity || 0) > 0) {
-        out.freedayItem = { quantity: pwpState.quantity };
-      }
-
-      return out;
-    }
-
-    function isCalcRequest(url) {
-      try {
-        return new URL(url, location.origin).pathname === "/web/reservation/price/calculate";
-      } catch (e) {
-        return /\/web\/reservation\/price\/calculate($|\?)/.test(url);
-      }
-    }
-
-    // Extract the raw body string regardless of whether the caller used
-    // fetch(url, { body }) or fetch(new Request(url, { body })).
-    function extractBody(input, init) {
-      if (init && typeof init.body === "string") return init.body;
-      // Request object pattern: fetch(new Request(url, opts)) — no separate init
-      if (input && typeof input === "object" && typeof input.body === "string") {
-        return input.body;
-      }
-      return null;
-    }
-
-    var originalFetch = window.fetch;
-    window.fetch = function (input, init) {
-      try {
-        var url = typeof input === "string" ? input
-          : (input instanceof URL) ? input.href
-          : (input && input.url) || null;
-
-        var method = (init && init.method) || (input && input.method) || "GET";
-
-        if (url && isCalcRequest(url) && method.toUpperCase() === "POST") {
-          var rawBody = extractBody(input, init);
-          if (rawBody) {
-            var payload = JSON.parse(rawBody);
-            var inj = buildInjection();
-
-            if (inj.protectionBundle) payload.protectionBundle = inj.protectionBundle;
-            if (inj.protectionItems)  payload.protectionItems  = inj.protectionItems;
-            if (inj.addOnItems)       payload.addOnItems       = inj.addOnItems;
-            if (inj.freedayItem)      payload.freedayItem      = inj.freedayItem;
-
-            var newBody = JSON.stringify(payload);
-
-            // Create a fresh init so the modified body is always forwarded.
-            // Using call(this, input, init) below ensures this new reference
-            // is what actually reaches the real fetch, unlike apply(this, arguments).
-            if (init) {
-              init = Object.assign({}, init, { body: newBody });
-            } else {
-              // Body was on the Request object — rebuild init from it
-              init = { method: method, body: newBody };
-            }
-          }
-        }
-      } catch (e) {
-        console.warn("[AvisTest] calc-hook error", e);
-      }
-      // Use call() not apply(arguments) — init may be a newly created object
-      return originalFetch.call(this, input, init);
     };
   })();
 
@@ -295,9 +160,42 @@ import { preferredPoint } from "./preferredPoint";
   }
   //redirect to review and book page
   function runProtectionCoverage() {
-    const queryParams = window.location.search;
-    window.location.replace("https://www.avis.com/en/reservation/review-and-book" + queryParams);
+    console.log("runProtectionCoverage");
+    var hasRedirected = false;
+    function showRedirectingOverlay() {
+      if (document.getElementById("mvt-36-redirect-overlay")) return;
+      var overlay =
+        '<div id="mvt-36-redirect-overlay" class="MuiStack-root mui-16vybak">' +
+        '<div class="MuiStack-root mui-1qq5oic">' +
+        '<div class="MuiBox-root mui-8atqhb">' +
+        '<span class="MuiLinearProgress-root MuiLinearProgress-colorPrimary MuiLinearProgress-indeterminate mui-9ze8oj" role="progressbar">' +
+        '<span class="MuiLinearProgress-bar MuiLinearProgress-bar1 MuiLinearProgress-barColorPrimary MuiLinearProgress-bar1Indeterminate mui-880do1"></span>' +
+        '<span class="MuiLinearProgress-bar MuiLinearProgress-bar2 MuiLinearProgress-barColorPrimary MuiLinearProgress-bar2Indeterminate mui-146dcev"></span>' +
+        '</span>' +
+        '</div>' +
+        '</div>' +
+        '</div>';
+      document.body.insertAdjacentHTML("beforeend", overlay);
+    }
 
+    function doRedirect() {
+      console.log("doRedirectFirst");
+      if (hasRedirected) return;
+      hasRedirected = true;
+      const queryParams = window.location.search;
+      window.location.replace("/en/reservation/review-and-book" + queryParams);
+      console.log("doRedirectLast");
+    }
+    setTimeout(() => {
+      console.log("fallback redirect");
+      doRedirect();
+    }, 5000);
+
+    showRedirectingOverlay();
+    poll(
+      () => document.querySelector('[data-testid="action-footer-total-amount"]'),
+      doRedirect
+    );
   }
 
   //reusable params function
@@ -376,7 +274,7 @@ import { preferredPoint } from "./preferredPoint";
     return data || {};
   }
 
-  //get price with currenty fn
+  //get price with currenty fun
   const getPriceWithCurrenty = function (code, amount) {
     const formateAmount = Number(amount).toLocaleString("en", {
       minimumFractionDigits: 2,
@@ -403,9 +301,9 @@ import { preferredPoint } from "./preferredPoint";
     var gsoSpan = isGSO
       ? '<span class="est-price" style="display: block; color: rgb(82, 77, 77); font-size: 12px;">Est. USD ' + item.netSubtotalPerUnit + ' ' + (item.chargeType === "PER_GALLON" ? "/gal" : "/L") + '</span>'
       : '';
-    return '<div class="MuiBox-root mui-q27lzn mvt-36-summary-prot-item">'
+    return '<div data-item-code="' + item.code + '" class="MuiBox-root mui-q27lzn mvt-36-summary-prot-item">'
       + '<span class="checkout-redesign MuiTypography-root MuiTypography-bodySmallRegular mui-1xb6ox sum-prot-item-desc">'
-      + greenCheckForSum + (quantity > 0 ? quantity : '') + ' ' + desc
+      + greenCheckForSum + ' ' + (quantity > 0 ? quantity : '') + ' ' + desc
       + gsoSpan
       + '</span>'
       + '<div class="MuiBox-root mui-u2acjg">'
@@ -488,8 +386,9 @@ import { preferredPoint } from "./preferredPoint";
   //saving and discount UI logic
   const savingAndDiscountUI = (currencyCode, calculateData) => {
     // calculation
+    //total price
     const savingTotal = calculateData.savings.totalSavings ? Number(calculateData.savings.totalSavings) : 0;
-    const savingAndDiscountTotal = getPriceWithCurrenty(currencyCode, savingTotal)
+    const savingAndDiscountTotal = getPriceWithCurrenty(currencyCode, calculateData.savings.totalSavings)
     const payNowSavings = Number(calculateData.savings.payNowSavings);
     const formatPayNowSavings = getPriceWithCurrenty(currencyCode, payNowSavings);
     const extrasSavings = Number(calculateData.savings.extrasSavings);
@@ -542,7 +441,9 @@ import { preferredPoint } from "./preferredPoint";
         + (discountCodeSavings ? savingAndDisItemUI("Discount Code Savings", formatDiscountCodeSavings) : "")
         + (memberCreditAmt ? savingAndDisItemUI("Member Credit", formatMemberCreditAmt) : "")
         + '</div>';
-      savingAndDisItemContainer.insertAdjacentHTML("beforeend", savingAndDiscountUIWrapper);
+      if (!savingAndDisItemContainer.querySelector('#pwp-summary-savings')) {
+        savingAndDisItemContainer.insertAdjacentHTML("beforeend", savingAndDiscountUIWrapper);
+      }
     }
   }
   // tax and fees UI and logic
@@ -569,6 +470,7 @@ import { preferredPoint } from "./preferredPoint";
         }
       }
     }
+
     const taxAndFeesHeaderPrice = document.querySelector('[data-testid="rental-summary-taxes-fees-recent-cost"]');
     if (taxAndFeesHeaderPrice) {
       taxAndFeesHeaderPrice.textContent = taxesAndFeesTotal || 0;
@@ -645,14 +547,13 @@ import { preferredPoint } from "./preferredPoint";
       footerPriceEl.textContent = getPriceWithCurrenty(currencyCode, calculateData.totals.total.toFixed(2));
     }
   }
-
   const updateProtectionCards = (calculateData) => {
     const selectedBundle = calculateData.protectionBundle || {};
     const selectedBundleName = selectedBundle.code || "";
-
-    const uiProtectionBundleCards = [...document.querySelectorAll("." + TEST_ID + " .prot-card"), document.querySelector("#" + TEST_ID + " .intial-prot-cards .static-no-prot-card")];
-    const uiSelectedProtBundle = uiProtectionBundleCards.find(card => card.getAttribute("data-code") === selectedBundleName);
-
+    const uiProtectionBundleCards = [...document.querySelectorAll("#" + TEST_ID + " .prot-card"), document.querySelector("#" + TEST_ID + " .intial-prot-cards .static-no-prot-card")];
+    const uiSelectedProtBundle = uiProtectionBundleCards.find(card => {
+      return card.getAttribute("data-code") === selectedBundleName
+    });
     if (uiSelectedProtBundle && selectedBundleName !== "") {
       uiProtectionBundleCards.forEach(card => {
         card.classList.remove("selected");
@@ -665,14 +566,10 @@ import { preferredPoint } from "./preferredPoint";
     const sessionData = getSessionData();
     const selectedProtBundle = sessionData.protectionBundleSelected || {};
     const selectedBundleItems = Object.keys(selectedProtBundle).length > 0 ? selectedProtBundle.items.filter(item => item.included) : [];
-
     const pricesAddOnItems = sessionData.pricesAddOnItems || [];
-
     const isAvistFirst = sessionData.isAvisFirst || false;
-
     addOnCardsCheckbox.forEach(checkbox => {
       const dataCode = checkbox.querySelector("input").getAttribute("data-code");
-
       const isGSO = dataCode === "GSO";
       const isIncluded = selectedBundleItems.some(item => item.code === dataCode);
       const targetAddOnCard = checkbox.closest(".add-on-card");
@@ -781,7 +678,9 @@ import { preferredPoint } from "./preferredPoint";
       }
     })
     if (protItemsBackupArray.length > 0) {
+
       const staticNoProtCard = document.querySelector("#" + TEST_ID + " .static-no-prot-card");
+
       staticNoProtCard.classList.remove("selected")
     }
   }
@@ -813,10 +712,8 @@ import { preferredPoint } from "./preferredPoint";
       }
     });
   }
-
   // =========== UPDATE UI: Car summary and Footer Price
   const updateCarSummaryAndFooterPrice = (calculateData, extrasAddOnsItemList, extrasProtectionItemList) => {
-
     const currencyCode = calculateData.currencyCode;
     // ================= PROTECTION & ADD-ONS =================
     updateProtAndAddOnSection(calculateData)
@@ -850,7 +747,13 @@ import { preferredPoint } from "./preferredPoint";
     // =============== STATIC PROTECTION SELECTED =============
     updateStaticProtectionCard()
   }
-  const getPayloadForCalculate = (sessionData) => {
+  // =============== INTIAL SELECTION UI ===============
+  const initalSelectUI = async (extrasProtectionItemList, extrasAddOnsItemList, protectionItems, finalAddOnItemList, finalProtectionBundleList, corelationalIdentifier) => {
+    const isEmptyProtectionBundleList = finalProtectionBundleList.length === 0;
+
+    const sessionData = getSessionData();
+
+
     //Create calculate api payload
     const protectionItemsForCalc = sessionData.protectionItemsBackup ? sessionData.protectionItemsBackup.split(",").map(item => {
       return {
@@ -935,15 +838,6 @@ import { preferredPoint } from "./preferredPoint";
         }))
       };
     }
-
-    return calculatePayload;
-  }
-  // =============== INTIAL SELECTION UI ===============
-  const initalSelectUI = async (extrasProtectionItemList, extrasAddOnsItemList, protectionItems, finalAddOnItemList, finalProtectionBundleList, corelationalIdentifier) => {
-    const isEmptyProtectionBundleList = finalProtectionBundleList.length === 0;
-    //get calculate payload
-    const sessionData = getSessionData();
-    const calculatePayload = getPayloadForCalculate(sessionData);
 
     // //Call calculatePrice API
     const calculateData = await calculatePrice(calculatePayload, corelationalIdentifier);
@@ -1055,7 +949,7 @@ import { preferredPoint } from "./preferredPoint";
       updateProtAndAddOnSection(calculateData)
       updateAddOnsCards(extrasAddOnsItemList);
       updateProtectionItemsCards(extrasProtectionItemList);
-      updateStaticProtectionCard();
+      updateStaticProtectionCard()
     }
   }
 
@@ -1063,6 +957,7 @@ import { preferredPoint } from "./preferredPoint";
   let isInjectionInProgress = false;
 
   async function runReviewAndBook() {
+    console.log("runReviewAndBook");
     const SELECTORS = {
       target: '[data-testid="rc-title"]'
     };
@@ -1071,6 +966,7 @@ import { preferredPoint } from "./preferredPoint";
     // Get Residency value
     const residClean = getParams("residency_value") || "";
     const residNotUSA = residClean !== 'US' && residClean !== '';
+
 
 
     //Get protection data 
@@ -1116,7 +1012,7 @@ import { preferredPoint } from "./preferredPoint";
       };
     });
 
-    //Get session data
+    //Get session data =
     let sessionData = getSessionData();
     const pickupUSA = sessionData.pickupCountryCode === "US";
 
@@ -1166,7 +1062,6 @@ import { preferredPoint } from "./preferredPoint";
     }
     const corelationalIdentifier = getCorelationalIdentifier();
     // ====================== GET EXTRAS DATA
-
     const extrasData = await getExtrasData(extrasAPIPayload, corelationalIdentifier);
 
 
@@ -1182,6 +1077,63 @@ import { preferredPoint } from "./preferredPoint";
     //Get avis config data
     const avisConfigData = await getAvisConfigData();
 
+    // STORE THE PREFERRED POINTS DETAILS INTO SESSION STORAGE
+    const extrasFreedayItems = extrasData.freedayItem || null;
+    const extrasRedemptionStatus = extrasData.redemptionStatus || null;
+
+    if (extrasFreedayItems || extrasRedemptionStatus) {
+      const _originalSetItem = sessionStorage.setItem.bind(sessionStorage);
+
+      sessionStorage.setItem = function (key, value) {
+        if (key === "reservation.store") {
+          try {
+            const parsed = JSON.parse(value);
+            if (parsed?.state) {
+              // Always update with the latest extras data, but preserve other existing properties
+              parsed.state.protectionsData = {
+                ...(parsed.state.protectionsData || {}),
+                freedayItem: extrasFreedayItems,
+                redemptionStatus: extrasRedemptionStatus
+              };
+              parsed.state.addOnsData = {
+                ...(parsed.state.addOnsData || {}),
+                freedayItem: extrasFreedayItems,
+                redemptionStatus: extrasRedemptionStatus
+              };
+              parsed.state.freeDayItemObject = extrasFreedayItems;
+              value = JSON.stringify(parsed);
+            }
+          } catch (e) {
+            console.warn("VWA: Failed to inject protectionsData into session", e);
+          }
+        }
+        _originalSetItem(key, value);
+      };
+
+      // Also do an immediate write for the current snapshot =
+      const rawSession = sessionStorage.getItem("reservation.store");
+      if (rawSession) {
+        try {
+          const parsedSession = JSON.parse(rawSession);
+          if (parsedSession?.state) {
+            parsedSession.state.protectionsData = {
+              ...(parsedSession.state.protectionsData || {}),
+              freedayItem: extrasFreedayItems,
+              redemptionStatus: extrasRedemptionStatus
+            };
+            parsedSession.state.addOnsData = {
+              ...(parsedSession.state.addOnsData || {}),
+              freedayItem: extrasFreedayItems,
+              redemptionStatus: extrasRedemptionStatus
+            };
+            parsedSession.state.freeDayItemObject = extrasFreedayItems;
+            sessionStorage.setItem("reservation.store", JSON.stringify(parsedSession));
+          }
+        } catch (e) {
+          console.warn("VWA: Failed to update current session snapshot", e);
+        }
+      }
+    }
 
     // PROTECTION SANITIZATION
     const extrasProtectionItemList = extrasData?.protectionItems || [];
@@ -1203,6 +1155,7 @@ import { preferredPoint } from "./preferredPoint";
         };
       })
       .filter(Boolean);
+
     //final protection item list
     const hideItems = ['ALI', 'CDW'];
     const protectionOrderList = ["CDW", "ALI", "PAI", "PEP"]
@@ -1301,7 +1254,7 @@ import { preferredPoint } from "./preferredPoint";
         const aInList = indexA !== -1;
         const bInList = indexB !== -1;
 
-        // Case 1: both are in order list → sort normally.
+        // Case 1: both are in order list → sort normally
         if (aInList && bInList) {
           return indexA - indexB;
         }
@@ -1355,7 +1308,7 @@ import { preferredPoint } from "./preferredPoint";
         + '</div>'
         + '<div class="card-actions">'
         + '<div class="view-coverage">View coverage</div>'
-        + '<div class="price-info">' + getPriceWithCurrenty(currencyCode, prot.netSubtotal) + ' <p class="per-day-slash">/<span class="per-day">day</span></p></div>'
+        + '<div class="price-info">' + getPriceWithCurrenty(currencyCode, prot.grossSubtotal) + ' <p class="per-day-slash">/<span class="per-day">day</span></p></div>'
         + '</div>'
         + '</div>';
     }).join('');
@@ -1370,58 +1323,54 @@ import { preferredPoint } from "./preferredPoint";
       + '<div class="price-info">' + getPriceWithCurrenty(currencyCode, 0) + ' <p class="per-day-slash">/<span class="per-day">day</span></p></div>'
       + '</div>'
       + '</div>';
-    var lastItem = finalProtectionBundleList[finalProtectionBundleList.length - 1];
-    var ultimateProtBundle =
+
+    var essentialProtBundle =
       finalProtectionBundleList.find(function (b) {
-        return b.bundleName === "Ultimate Protection";
+        return b.bundleName === "Essential Protection";
       }) ||
       finalProtectionBundleList.find(function (b) {
-        return b.bundleName === "Premium Cover";
+        return b.bundleName === "Basic Cover";
       }) ||
-      (lastItem && lastItem.bundleName !== "No Protection" ? lastItem : null);
-    
-    console.log("ultimateProtBundle", ultimateProtBundle)
-    const singleUltimateBundleItemList = ultimateProtBundle && ultimateProtBundle.includedProtections.length ? ultimateProtBundle.includedProtections : [];
-    console.log("singleUltimateBundleItemList", singleUltimateBundleItemList)
-    console.log("finalProtItemList", finalProtectionItemList)
-    const includedUltimateProtItemList = finalProtectionItemList.filter(item => item.freeCDWIndicator === true || item.netSubtotal === 0);
-    console.log("includedUltimateProtItemList", includedUltimateProtItemList)
+      finalProtectionBundleList.find(function (b) {
+        return b.bundleName === "Essential Package";
+      }) ||
+      finalProtectionBundleList[1] ||
+      null;
+
+    const singleEssentialBundleItemList = essentialProtBundle && essentialProtBundle.includedProtections.length ? essentialProtBundle.includedProtections : [];
+    const includedEssentialProtItemList = finalProtectionItemList.filter(item => item.freeCDWIndicator === true || item.netSubtotal === 0);
     const includedAddOnItemList = finalAddOnItemList.filter(item => item.freeCDWIndicator === true || item.netSubtotal === 0);
-    console.log("includedAddOnItemList", includedAddOnItemList)
-    const margedIncludedItemList = [...includedUltimateProtItemList, ...includedAddOnItemList]
-    console.log("margedIncludedItemList", margedIncludedItemList)
+    const margedIncludedItemList = [...includedEssentialProtItemList, ...includedAddOnItemList]
     const isIncludeInBundle = margedIncludedItemList.some(item => {
-      return singleUltimateBundleItemList.some(i => i.code === item.code)
+      return singleEssentialBundleItemList.some(i => i.code === item.code)
     })
-    console.log("isIncludeInBundle", isIncludeInBundle)
-    const showBundle = ultimateProtBundle && !isIncludeInBundle
-    console.log("showBundle", showBundle)
-    
-    var staticUltimateProtCard = '';
+    const showBundle = essentialProtBundle && !isIncludeInBundle
+
+    var staticEssentialProtCard = '';
     if (showBundle) {
-      var ultimateProtItems = ultimateProtBundle.includedProtections && ultimateProtBundle.includedProtections.length ? ultimateProtBundle.includedProtections : [];
-      var ultimateProtFeaturesHTML = ultimateProtItems.map(function (item) {
+      var essProtItems = essentialProtBundle.includedProtections && essentialProtBundle.includedProtections.length ? essentialProtBundle.includedProtections : [];
+      var essProtFeaturesHTML = essProtItems.map(function (item) {
         return '<div class="feature-item">'
           + '<div class="feature-icon">' + greenCheckSVG + '</div>'
           + '<div class="feature-text">' + item.name + '</div>'
           + '</div>';
       }).join('');
-      staticUltimateProtCard =
-        '<div class="prot-card" data-code="' + (ultimateProtBundle.bundleName || '') + '">'
+      staticEssentialProtCard =
+        '<div class="prot-card" data-code="' + (essentialProtBundle.bundleName || '') + '">'
         + '<div class="card-body">'
         + '<div class="card-info">'
-        + '<h3 class="card-title">' + (ultimateProtBundle.bundleName || '') + '</h3>'
+        + '<h3 class="card-title">' + (essentialProtBundle.bundleName || '') + '</h3>'
         + '<div class="card-radio"><div class="radio-outer"><div class="radio-inner"></div></div></div>'
         + '</div>'
-        + '<div class="card-features">' + ultimateProtFeaturesHTML + '</div>'
+        + '<div class="card-features">' + essProtFeaturesHTML + '</div>'
         + '</div>'
         + '<div class="card-actions">'
         + '<div class="view-coverage">View coverage</div>'
-        + '<div class="price-info">' + getPriceWithCurrenty(currencyCode, ultimateProtBundle.netSubtotal) + ' <p class="per-day-slash">/<span class="per-day">day</span></p></div>'
+        + '<div class="price-info">' + getPriceWithCurrenty(currencyCode, essentialProtBundle.netSubtotal) + ' <p class="per-day-slash">/<span class="per-day">day</span></p></div>'
         + '</div>'
         + '</div>';
     } else {
-      // Ultimate is null – pull a fallback protection item from finalProtectionItemList
+      // essentialProtBundle is null – pull a fallback protection item from finalProtectionItemList
       var fallbackItemIndex = finalProtectionItemList.findIndex(function (item) {
         return item.code === 'CDW';
       });
@@ -1430,7 +1379,7 @@ import { preferredPoint } from "./preferredPoint";
       }
       if (fallbackItemIndex !== -1) {
         var fallbackProtItem = finalProtectionItemList.splice(fallbackItemIndex, 1)[0];
-        staticUltimateProtCard = '<div class="protection-item ' + (fallbackProtItem.freeCDWIndicator || Number(fallbackProtItem.netSubtotal) === 0 ? 'included' : '') + '" data-code="' + (fallbackProtItem.code || '') + '">'
+        staticEssentialProtCard = '<div class="protection-item ' + (fallbackProtItem.freeCDWIndicator || Number(fallbackProtItem.netSubtotal) === 0 ? 'included' : '') + '" data-code="' + (fallbackProtItem.code || '') + '">'
           + '<div class="protection-item-info">'
           + '<h4 class="protection-item-title">' + fallbackProtItem.name + '</h4>'
           + '<div class="card-radio"><div class="radio-outer"><div class="radio-inner"></div></div></div>'
@@ -1481,6 +1430,7 @@ import { preferredPoint } from "./preferredPoint";
     }).join('');
 
     var addOnItemCardsHTML = finalAddOnItemList.map(function (item) {
+      const isGSO = item.code === "GSO";
       var controlHTML = item.isShowQuantityUI
         ? '<div class="quantity-selector" data-code="' + item.code + '" data-max-quantity="' + (item.maxQuantity || 1) + '">'
         + '<button class="quantity-minus">-</button>'
@@ -1500,7 +1450,7 @@ import { preferredPoint } from "./preferredPoint";
         + '<div class="add-on-info"><h4 class="add-on-title">' + item.name + '</h4></div>'
         + '</div>'
         + '<div class="card-footer">'
-        + '<div class="price-info">' + getPriceWithCurrenty(currencyCode, item.netSubtotal) + ' <p class="per-day-slash">/<span class="per-day">day</span></p></div>'
+        + '<div class="price-info">' + (isGSO ? '<span class="est-text">Est. </span>' : '') + getPriceWithCurrenty(currencyCode, item.netSubtotal) + ' <p class="per-day-slash">/<span class="per-day">' + (isGSO ? 'gal' : 'day') + '</span></p></div>'
         + '<div class="add-on-actions">'
         + '<a href="#" class="add-on-details" data-code="' + item.code + '">Details</a>'
         + controlHTML
@@ -1514,7 +1464,7 @@ import { preferredPoint } from "./preferredPoint";
 
     var protSection = '<div class="new-prot-bundle" id="' + TEST_ID + '">'
       + '<h2 class="prot-title">WHICH PROTECTION DO YOU NEED?</h2>'
-      + '<div class="intial-prot-cards">' + staticNoProtectionCard + staticUltimateProtCard + '</div>'
+      + '<div class="intial-prot-cards">' + staticNoProtectionCard + staticEssentialProtCard + '</div>'
       + '<div class="prot-cards">' + protBundleCardsHTML + '</div>'
       + '<div class="prot-all-packages">' + (finalProtectionBundleList.length > 2 ? '<button type="button" class="btn-all-packages">View all protection packages</button>' : '') + '</div>'
       + '<div class="protection-items-section">' + protItemsHTML + '</div>'
@@ -1530,8 +1480,8 @@ import { preferredPoint } from "./preferredPoint";
       + '<div class="add-ons-footer">' + (finalAddOnItemList.length > 4 ? '<button type="button" class="add-on-btn-all-packages">View all add-ons options</button>' : '') + '</div>'
       + '</div>'
       + '</div>';
-
     /* ---------------- main injection ---------------- */
+
     function inject() {
       const rawTarget = document.querySelector(SELECTORS.target);
       const target = rawTarget.parentElement;
@@ -1563,10 +1513,8 @@ import { preferredPoint } from "./preferredPoint";
           const selectedBundleName = store.state.protectionBundleCode;
 
           if (selectedBundleName === bundleCode) {
-
             const noProtBundle = document.querySelector('[data-code="No Protection"]');
             if (noProtBundle) {
-
               noProtBundle.click();
             }
             return;
@@ -2005,6 +1953,7 @@ import { preferredPoint } from "./preferredPoint";
 
       // ================= Add-ons items toggle listener =================
       const addOnToggles = document.querySelectorAll("#" + TEST_ID + " .add-on-toggle input");
+
       addOnToggles.forEach(toggle => {
         toggle.addEventListener("change", async (e) => {
           const code = e.target.getAttribute("data-code");
@@ -2125,7 +2074,7 @@ import { preferredPoint } from "./preferredPoint";
             const extraItem = extrasAddOnsItemList?.find(
               i => i.code === addOnItem.code
             );
-            const matchedItem = finalAddOnItemList.find(i => i.code === addOnItem.code)
+            const matchedItem = finalAddOnItemList.find(i => i.code === addOnItem.code);
             return {
               amount: addOnItem.amount || 0,
               chargeType: addOnItem.chargeType || "",
@@ -2171,6 +2120,7 @@ import { preferredPoint } from "./preferredPoint";
 
       // ================= Add-ons quantity listener =================
       const addOnQuantity = document.querySelectorAll("#" + TEST_ID + " .quantity-selector");
+
       addOnQuantity.forEach(selector => {
         const code = selector.getAttribute("data-code");
         const maxQuantity = Number(selector.getAttribute("data-max-quantity"));
@@ -2348,7 +2298,6 @@ import { preferredPoint } from "./preferredPoint";
             plusBtn.closest('.add-on-card')?.classList.remove("ab-min-qty")
           }
           updateCarSummaryAndFooterPrice(calculateData, extrasAddOnsItemList, extrasProtectionItemList)
-
         })
 
         plusBtn.addEventListener("click", async (e) => {
@@ -2477,7 +2426,7 @@ import { preferredPoint } from "./preferredPoint";
             const extraItem = extrasAddOnsItemList?.find(
               i => i.code === addOnItem.code
             );
-            const matchedItem = finalAddOnItemList.find(i => i.code === addOnItem.code)
+            const matchedItem = finalAddOnItemList.find(i => i.code === addOnItem.code);
             return {
               amount: addOnItem.amount || 0,
               chargeType: addOnItem.chargeType || "",
@@ -2518,11 +2467,12 @@ import { preferredPoint } from "./preferredPoint";
       staticNoProtCard.addEventListener("click", async (e) => {
         e.preventDefault();
         const bundleCode = staticNoProtCard.getAttribute("data-code");
+
         const extrasBundle = extrasProtectionBundleList.find(item => item.code === bundleCode) || {};
         const jsonBundle = finalProtectionBundleList.find(item => item.bundleName === bundleCode) || {};
         const hasJsonBundle = Object.keys(jsonBundle).length > 0;
-        const jsonBundleIncludeItems = hasJsonBundle ? jsonBundle.includedProtections : [];
-        const jsonBundleExcludeItems = hasJsonBundle ? jsonBundle.excludedProtections : [];
+        const jsonBundleIncludeItems = hasJsonBundle ? jsonBundle.includedProtections || [] : [];
+        const jsonBundleExcludeItems = hasJsonBundle ? jsonBundle.excludedProtections || [] : [];
         const jsonBundleItems = [...jsonBundleIncludeItems, ...jsonBundleExcludeItems];
         const sessionOne = getSessionData();
         sessionOne.protectionBundleCode = bundleCode;
@@ -2558,8 +2508,8 @@ import { preferredPoint } from "./preferredPoint";
           selectedBundlePayload = {
             code: extrasBundle.code || "",
             title: extrasBundle?.code || "",
-            defaultBundle: hasJsonBundle ? jsonBundle.defaultBundle || null : null,
-            coverageRating: hasJsonBundle ? coverageRatings[jsonBundle.coverageRating] || 0 : 0,
+            defaultBundle: jsonBundle.defaultBundle || null,
+            coverageRating: coverageRatings[jsonBundle.coverageRating] || 0,
             description: hasJsonBundle ? jsonBundle.bundleDescription.html : "",
             items: jsonBundleItems.map(item => {
               return {
@@ -2574,8 +2524,8 @@ import { preferredPoint } from "./preferredPoint";
             }),
             oldPrice: avisConfigData.pricingDisplay === "dailyRate" ? extrasBundle.grossSubtotal : extrasBundle.grossTotal,
             price: avisConfigData.pricingDisplay === "dailyRate" ? extrasBundle.netSubtotal : extrasBundle.netTotal,
-            recommended: hasJsonBundle ? jsonBundle.recommendedBundle : false,
-            warning: hasJsonBundle ? jsonBundle.alertMessageIfSelected : "",
+            recommended: jsonBundle.recommendedBundle,
+            warning: jsonBundle.alertMessageIfSelected || "",
             bookAgain: extrasBundle.bookAgain || false,
             currencyCode: extrasBundle.currencyCode || "",
           }
@@ -2631,7 +2581,7 @@ import { preferredPoint } from "./preferredPoint";
           const extraItem = extrasAddOnsItemList?.find(
             i => i.code === addOnItem.code
           );
-          const matchedItem = finalAddOnItemList.find(i => i.code === addOnItem.code)
+          const matchedItem = finalAddOnItemList.find(i => i.code === addOnItem.code);
           return {
             amount: addOnItem.amount || 0,
             chargeType: addOnItem.chargeType || "",
@@ -2742,7 +2692,6 @@ import { preferredPoint } from "./preferredPoint";
         });
       }
 
-
       // Protection items toggle
       const btnItems = document.querySelector("#" + TEST_ID + " .btn-all-packages-items");
       const containerItems = document.querySelector("#" + TEST_ID + " .protection-items-section");
@@ -2753,14 +2702,13 @@ import { preferredPoint } from "./preferredPoint";
           btnItems.textContent = containerItems.classList.contains("show-all") ? "Hide protection options" : "View all protection options";
         });
       }
-
       // ============ MEMBER PAY NOW SECTION =============
-      const el = document.querySelector('[data-testid="rate-terms-accordion"]');
+      const el = document.querySelector('[data-testid="rate-terms-accordion"]') || document.querySelector('[data-testid="category-expand-button-taxes-fees"]');
       if (el) {
         const nextEl = el.nextElementSibling;
         if (nextEl) {
-          const hasSavings = nextEl?.textContent?.toLowerCase().includes("savings");
-          const hasMaxDiscount = nextEl.textContent.includes("MAX DISCOUNT");
+          const hasSavings = nextEl ? nextEl.textContent ? nextEl?.textContent?.toLowerCase().includes("savings") : false : false;
+          const hasMaxDiscount = nextEl ? nextEl.textContent ? nextEl.textContent.includes("MAX DISCOUNT") : false : false;
           if (hasSavings || hasMaxDiscount) {
             nextEl.style.display = "none";
           }
@@ -2849,6 +2797,7 @@ import { preferredPoint } from "./preferredPoint";
   ];
   // route handler
   function handleRoute(path) {
+    console.log("handleRoute", path);
     ROUTE_HANDLERS.forEach((route) => {
       if (path.includes(route.path)) {
         Promise.resolve(route.handler()).catch(err => {
@@ -2859,9 +2808,11 @@ import { preferredPoint } from "./preferredPoint";
   }
   // URL detector
   function onUrlChange(callback) {
+    console.log("onUrlChange");
     let lastPath = location.pathname;
 
     const check = () => {
+      console.log("onUrlChange check");
       const currentPath = location.pathname;
 
       if (currentPath !== lastPath) {
@@ -2887,10 +2838,14 @@ import { preferredPoint } from "./preferredPoint";
 
   // reset function
   function resetState() {
+    console.log("resetState");
     isInjectionInProgress = false;
-    const el = document.getElementById("POC");
-    if (el) el.remove();
-    document.body.classList.remove("POC-VAR_A");
+    const redirectOverlay = document.getElementById("mvt-36-redirect-overlay");
+    const protectionPage = location.pathname.includes("/reservation/protectioncoverage");
+    console.log("protectionPage", protectionPage);
+    if (redirectOverlay && !protectionPage) {
+      redirectOverlay.remove();
+    };
   }
 
   // current route
@@ -2898,12 +2853,17 @@ import { preferredPoint } from "./preferredPoint";
 
   // safe route hander Fn
   function safeRouteHander(path) {
+    console.log("safeRouteHander", path, CURRENT_ROUTE);
+    console.log(CURRENT_ROUTE, "current route")
     if (path === CURRENT_ROUTE) return;
     CURRENT_ROUTE = path;
+    console.log("currentPath", CURRENT_ROUTE)
 
     // optional: reset previous stuff
     resetState();
+    console.log("safeRouteHander before handleRoute");
     handleRoute(path)
+    console.log("safeRouteHander after handleRoute");
   }
 
   // on first load
@@ -2911,6 +2871,7 @@ import { preferredPoint } from "./preferredPoint";
 
   // SPA navigation
   onUrlChange(path => {
+    console.log("onUrlChange callback", path);
     safeRouteHander(path)
   })
 

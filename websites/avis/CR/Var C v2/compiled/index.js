@@ -62,100 +62,6 @@ var addOnItemsSvgObj$1 = addOnItemsSvgObj = {
     </svg>'
   };
 
-function identifyModal(getSessionData, updateCarSummaryAndFooterPrice, fmtTime, calculatePrice, corelationalIdentifier, extrasAddOnsItemList, extrasProtectionItemList) {
-    const TARGET_SELECTOR = '[data-testid="expanded-vehicle-card-car-wrapper"]';
-    const INJECT_CLASS = 'mvt-36-modal';
-
-    function applyClass() {
-        const target = document.querySelector(TARGET_SELECTOR);
-        if (target && target.parentElement && !target.parentElement.classList.contains(INJECT_CLASS)) {
-            console.log("applyClass");
-            target.parentElement.classList.add(INJECT_CLASS);
-            window.__mvtRateSelectModalOpen = true;
-            document.querySelector('[data-testid="expanded-card-close-button"]');
-            // if (modalCloseBtn) {
-            //     modalCloseBtn.addEventListener('click', () => {
-            //         window.__mvtRateSelectModalOpen = false;
-            //     })
-            // }
-            // const modalOuter = modalCloseBtn.closest('.MuiDialog-container')
-            // if(modalOuter){
-            //     modalOuter.addEventListener('click', () => {
-            //         window.__mvtRateSelectModalOpen = false;
-            //     })
-            // }   
-            // get session data
-            const sessionData = getSessionData();
-            console.log("sessionData", sessionData);
-            sessionData.priceType;
-            const memberPayNowBtn = document.querySelector('#memberRate-content [data-testid="payNow-button"]');
-            const memberPayLater = document.querySelector('#memberRate-content [data-testid="payLater-button"]');
-            const vehiclePayNow = document.querySelector('#standardRate-content [data-testid="payNow-button"]');
-            // const buttonList = [memberPayNowBtn, memberPayLater]
-            // console.log("buttonList", buttonList)
-            // const prevDisabledBtn = buttonList.find(btn => btn.hasAttribute("disabled"))
-            // console.log("prevDisabledBtn", prevDisabledBtn)
-            // if (prevDisabledBtn) {
-            //     prevDisabledBtn.textContent = 'Select Rate'
-            //     prevDisabledBtn.removeAttribute("disabled")
-            //     prevDisabledBtn.classList.remove("mvt-36-disabled")
-            //     prevDisabledBtn.classList.remove("Mui-disabled")
-            //     prevDisabledBtn.classList.remove("tertiary")
-            //     prevDisabledBtn.classList.add("primary")
-            // }
-            // if (priceType === "MEMBER_PAY_NOW") {
-            //     memberPayNowBtn.textContent = 'Current Rate'
-            //     memberPayNowBtn.setAttribute("disabled", "")
-            //     memberPayNowBtn.classList.add("mvt-36-disabled")
-            // } else if (priceType === "MEMBER_PAY_LATER") {
-            //     memberPayLater.textContent = 'Current Rate'
-            //     memberPayLater.setAttribute("disabled", "")
-            //     memberPayLater.classList.add("mvt-36-disabled")
-            // } else if (priceType === "VEHICLE_LEISURE_PAY_NOW") {
-            //     vehiclePayNow.textContent = 'Current Rate'
-            //     vehiclePayNow.setAttribute("disabled", "")
-            //     vehiclePayNow.classList.add("mvt-36-disabled")
-            // }
-            // console.log("priceType", priceType)
-            // console.log('memberPayNowBtn', memberPayNowBtn)
-            if (memberPayNowBtn) {
-                memberPayNowBtn.addEventListener('click', () => {
-                    if (window.__avisReservationState) {
-                        window.__avisReservationState.priceType = "MEMBER_PAY_NOW";
-                    }
-                });
-            }
-            if (memberPayLater) {
-                memberPayLater.addEventListener('click', () => {
-                    if (window.__avisReservationState) {
-                        window.__avisReservationState.priceType = "MEMBER_PAY_LATER";
-                    }
-                });
-            }
-            if (vehiclePayNow) {
-                vehiclePayNow.addEventListener('click', () => {
-                    if (window.__avisReservationState) {
-                        window.__avisReservationState.priceType = "VEHICLE_LEISURE_PAY_NOW";
-                    }
-                });
-            }
-        }
-    }
-
-    // Run once immediately in case element is already in the DOM
-    applyClass();
-
-    // Observe any future DOM mutations
-    const observer = new MutationObserver(() => {
-        applyClass();
-    });
-
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true,
-    });
-}
-
 /* ============================================================================
  * Avis "Pay with Points" — variant code for the condensed checkout test
  * ----------------------------------------------------------------------------
@@ -1112,11 +1018,12 @@ function preferredPoint() {
                 //     <div class="MuiBox-root"><span>$X</span></div> ← last child
                 //   </div>
                 if (existing.classList.contains('mvt-36-summary-prot-item')) {
+                    var isGSO = item.code === "GSO";
                     var amountWrapper = existing.lastElementChild;
                     var firstChild = existing.firstElementChild;
                     if (amountWrapper && amountWrapper !== firstChild) {
                         var amountSpan = amountWrapper.querySelector('span') || amountWrapper;
-                        amountSpan.textContent = formatPrice(cc, price.toFixed(2));
+                        amountSpan.textContent = isGSO ? "Market Price" : formatPrice(cc, price.toFixed(2));
                     }
                 }
             } else if (item.payWithPoints) {
@@ -2441,14 +2348,6 @@ function preferredPoint() {
       if (piCodes.length) {
         out.protectionItems = piCodes.map(function (c) { return { code: c }; });
       }
-
-      // 3. Add-on items — merge host CSV state with PWP state.
-      //    - Items in host CSV: keep with their host-set quantity.
-      //    - Items in payWithPointsCodes that match a host CSV entry: stamp
-      //      payWithPoints: true onto that entry.
-      //    - Items in payWithPointsCodes NOT in host CSV (PWP-only path —
-      //      e.g. mutex removed from host's "Add to Trip" CSV): push fresh
-      //      with payWithPoints: true.
       var pwpState = window.__avisPwpState || {};
       var pwpCodes = (pwpState.payWithPointsCodes || []).slice();
 
@@ -2462,11 +2361,6 @@ function preferredPoint() {
         if (addOnMap[code]) {
           addOnMap[code].payWithPoints = true;
         } else {
-          // PWP-paid item that the host's CSV doesn't know about.
-          // Default qty to 1 — multi-qty items normally route through the
-          // host's quantity-selector and remain in the CSV, so this branch
-          // covers single-qty toggle items like GPS / RSN / WFI / XMR / SKR
-          // where qty=1 is correct.
           addOnMap[code] = { code: code, quantity: 1, payWithPoints: true };
         }
       });
@@ -2521,178 +2415,6 @@ function preferredPoint() {
     };
   })();
 
-  window.__avisReservationState = null;
-  window.__mvtRateSelectModalOpen = false;
-  function isCalcRequest(url) {
-      try {
-        return new URL(url, location.origin).pathname === "/web/reservation/price/calculate";
-      } catch (e) {
-        return /\/web\/reservation\/price\/calculate($|\?)/.test(url);
-      }
-    }
-  /* ---------------- Calculate API interceptor ---------------- */
-  (function () {
-    var QUANTITY_CODES = { CSS: 1, CBS: 1, CFS: 1, CIS: 1, CSB: 1 };
-    function getState() {
-      if (window.__avisReservationState) return window.__avisReservationState;
-    }
-
-
-    function splitCsv(s) {
-      if (!s || typeof s !== "string") return [];
-      return s
-        .split(",")
-        .map(function (v) { return v.trim(); })
-        .filter(Boolean);
-    }
-
-    function parseQuantity(raw, code) {
-      if (raw === "false" || raw == null || raw === "") {
-        return QUANTITY_CODES[code] ? 1 : null;
-      }
-      var n = parseInt(raw, 10);
-      if (!isNaN(n)) return n;
-      return QUANTITY_CODES[code] ? 1 : null;
-    }
-
-    function buildInjection() {
-      var state = getState();
-      if (!state) return {};
-      var out = {};
-
-      // 1. Protection bundle — only items where included === true
-      var pb = state.protectionBundleSelected;
-      if (pb && pb.code && pb.code !== "No Protection") {
-        var includedItems = (pb.items || []).filter(function (i) {
-          return i && i.included === true;
-        });
-        if (includedItems.length) {
-          out.protectionBundle = {
-            code: pb.code,
-            items: includedItems.map(function (i) {
-              return { code: i.code, policy: i.policy || "MANDATORY" };
-            }),
-          };
-        }
-      }
-
-      // 2. Individual protection items
-      var piCodes = splitCsv(state.protectionItems);
-      if (piCodes.length) {
-        out.protectionItems = piCodes.map(function (c) { return { code: c }; });
-      }
-
-      // 3. Add-on items — merge host CSV state with PWP state
-      var pwpState = window.__avisPwpState || {};
-      var pwpCodes = (pwpState.payWithPointsCodes || []).slice();
-
-      var aoCodes = splitCsv(state.addOnItems);
-      var aoQtys = splitCsv(state.addOnItemsQuantity);
-      var addOnMap = {};
-      aoCodes.forEach(function (code, idx) {
-        addOnMap[code] = { code: code, quantity: parseQuantity(aoQtys[idx], code) };
-      });
-      pwpCodes.forEach(function (code) {
-        if (addOnMap[code]) {
-          addOnMap[code].payWithPoints = true;
-        } else {
-          addOnMap[code] = { code: code, quantity: 1, payWithPoints: true };
-        }
-      });
-      var addOnList = Object.keys(addOnMap).map(function (k) { return addOnMap[k]; });
-      if (addOnList.length) out.addOnItems = addOnList;
-
-      // 4. Free-day redemption
-      if ((pwpState.quantity || 0) > 0) {
-        out.freedayItem = { quantity: pwpState.quantity };
-      }
-
-      return out;
-    }
-
-    // Extract the raw body string regardless of whether the caller used
-    // fetch(url, { body }) or fetch(new Request(url, { body })).
-    function extractBody(input, init) {
-      if (init && typeof init.body === "string") return init.body;
-      // Request object pattern: fetch(new Request(url, opts)) — no separate init
-      if (input && typeof input === "object" && typeof input.body === "string") {
-        return input.body;
-      }
-      return null;
-    }
-
-    var originalFetch = window.fetch;
-    window.fetch = function (input, init) {
-      try {
-        var url = typeof input === "string" ? input
-          : (input instanceof URL) ? input.href
-            : (input && input.url) || null;
-
-        var method = (init && init.method) || (input && input.method) || "GET";
-
-        if (url && isCalcRequest(url) && method.toUpperCase() === "POST" && window.__mvtRateSelectModalOpen) {
-          console.log("interceptor running", window.__mvtRateSelectModalOpen);
-          var rawBody = extractBody(input, init);
-          if (rawBody) {
-            var payload = JSON.parse(rawBody);
-            var inj = buildInjection();
-
-            if (inj.protectionBundle) payload.protectionBundle = inj.protectionBundle;
-            if (inj.protectionItems) payload.protectionItems = inj.protectionItems;
-            if (inj.addOnItems) payload.addOnItems = inj.addOnItems;
-            if (inj.freedayItem) payload.freedayItem = inj.freedayItem;
-
-            var newBody = JSON.stringify(payload);
-            // Create a fresh init so the modified body is always forwarded.
-            // Using call(this, input, init) below ensures this new reference
-            // is what actually reaches the real fetch, unlike apply(this, arguments).
-            if (init) {
-              init = Object.assign({}, init, { body: newBody });
-            } else {
-              // Body was on the Request object — rebuild init from it
-              init = { method: method, body: newBody };
-            }
-            // window.__mvtRateSelectModalOpen = false;
-          }
-        }
-      } catch (e) {
-        console.warn("[AvisTest] calc-hook error", e);
-      }
-      // Use call() not apply(arguments) — init may be a newly created object
-      return originalFetch.call(this, input, init);
-    };
-    console.log("Is patched fetch?", window.fetch === originalFetch);
-  })();
-
-  // INTERCEPT CALCULATE REPONSE
-  (function observeCalculateApi() {
-        const _patchedFetch = window.fetch;
-        window.fetch = async function (input, init) {
-            const response = await _patchedFetch.call(this, input, init);
-            try {
-                const url = typeof input === 'string' ? input
-                    : (input instanceof URL) ? input.href
-                    : (input && input.url) || '';
-                const method = (init && init.method) || (input && input.method) || 'GET';
-              const isCalc = isCalcRequest(url);
-              console.log("abc" , window.__mvtRateSelectModalOpen, isCalc, method.toUpperCase() === 'POST', response.ok);
-              if (isCalc && method.toUpperCase() === 'POST' && response.ok && window.__mvtRateSelectModalOpen) {
-                  console.log("rederInsideResponse");
-                    if (window.__avisReservationState) {
-                        sessionStorage.setItem(
-                            'reservation.store',
-                            JSON.stringify({ state: window.__avisReservationState, version: 0 })
-                        );
-                        console.log('[AvisTest] /calculate resolved → sessionStorage updated from __avisReservationState', window.__avisReservationState);
-                    }
-                }
-            } catch (e) {
-                console.warn('[AvisTest] calculate observer error', e);
-            }
-            return response;
-        };
-    })();
-
   /* ---------------- poll utility ---------------- */
   function poll(condition, callback, timeout = 10000, interval = 50) {
     const start = Date.now();
@@ -2721,9 +2443,48 @@ function preferredPoint() {
   };
   //redirect to review and book page
   function runProtectionCoverage() {
-    const queryParams = window.location.search;
-    window.location.replace("https://www.avis.com/en/reservation/review-and-book" + queryParams);
+    console.log("runProtectionCoverage");
 
+    function showRedirectingOverlay() {
+      if (document.getElementById("mvt-36-redirect-overlay")) return;
+
+      var overlay =
+        '<div id="mvt-36-redirect-overlay" class="MuiStack-root mui-16vybak">' +
+        '<div class="MuiStack-root mui-1qq5oic">' +
+        '<div class="MuiBox-root mui-8atqhb">' +
+        '<span class="MuiLinearProgress-root MuiLinearProgress-colorPrimary MuiLinearProgress-indeterminate mui-9ze8oj" role="progressbar">' +
+        '<span class="MuiLinearProgress-bar MuiLinearProgress-bar1 MuiLinearProgress-barColorPrimary MuiLinearProgress-bar1Indeterminate mui-880do1"></span>' +
+        '<span class="MuiLinearProgress-bar MuiLinearProgress-bar2 MuiLinearProgress-barColorPrimary MuiLinearProgress-bar2Indeterminate mui-146dcev"></span>' +
+        '</span>' +
+        '</div>' +
+        '</div>' +
+        '</div>';
+
+      document.body.insertAdjacentHTML("beforeend", overlay);
+    }
+
+    function doRedirect() {
+      console.log("doRedirect");
+
+      var queryParams = window.location.search;
+
+      var redirectUrl =
+        "/en/reservation/review-and-book" + queryParams;
+
+      var anchor = document.createElement("a");
+
+      anchor.href = redirectUrl;
+      anchor.style.display = "none";
+
+      document.body.appendChild(anchor);
+
+      anchor.click();
+    }
+
+    showRedirectingOverlay();
+    setTimeout(() => {
+      doRedirect();
+    }, 1000);
   }
 
   //reusable params function
@@ -2764,7 +2525,7 @@ function preferredPoint() {
   //get extras api data
   async function getExtrasData(payload, corelationalIdentifier) {
     try {
-      let res = await fetch("https://www.avis.com/web/reservation/extras?context.locale=en-US&context.domainCountry=US&context.correlationIdentifier=" + corelationalIdentifier, {
+      let res = await fetch("https://www.avis.com/web/reservation/extras?context.locale=en-US&context.domainCountry=US&context.correlationIdentifier=" + corelationalIdentifier + "&device=WEB", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -2784,7 +2545,7 @@ function preferredPoint() {
 
   // calculate price api
   async function calculatePrice(payload, corelationalIdentifier) {
-    let res = await fetch("https://www.avis.com/web/reservation/price/calculate?context.locale=en-US&context.domainCountry=US&context.correlationIdentifier=" + corelationalIdentifier, {
+    let res = await fetch("https://www.avis.com/web/reservation/price/calculate?context.locale=en-US&context.domainCountry=US&context.correlationIdentifier=" + corelationalIdentifier + "&device=WEB", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -3272,9 +3033,6 @@ function preferredPoint() {
     updateProtectionItemsCards(extrasProtectionItemList);
     // =============== STATIC PROTECTION SELECTED =============
     updateStaticProtectionCard();
-    // iject last session into window
-    const sessionData = getSessionData();
-    window.__avisReservationState = sessionData;
   };
   // =============== INTIAL SELECTION UI ===============
   const initalSelectUI = async (extrasProtectionItemList, extrasAddOnsItemList, protectionItems, finalAddOnItemList, finalProtectionBundleList, corelationalIdentifier) => {
@@ -3486,6 +3244,7 @@ function preferredPoint() {
   let isInjectionInProgress = false;
 
   async function runReviewAndBook() {
+    console.log("runReviewAndBook");
     const SELECTORS = {
       target: '[data-testid="rc-title"]'
     };
@@ -3590,7 +3349,6 @@ function preferredPoint() {
     }
     const corelationalIdentifier = getCorelationalIdentifier();
     // ====================== GET EXTRAS DATA
-
     const extrasData = await getExtrasData(extrasAPIPayload, corelationalIdentifier);
 
 
@@ -3611,8 +3369,6 @@ function preferredPoint() {
     const extrasRedemptionStatus = extrasData.redemptionStatus || null;
 
     if (extrasFreedayItems || extrasRedemptionStatus) {
-      console.log('extrasFreedayItems', extrasFreedayItems);
-      console.log('extrasRedemptionStatus', extrasRedemptionStatus);
       const _originalSetItem = sessionStorage.setItem.bind(sessionStorage);
 
       sessionStorage.setItem = function (key, value) {
@@ -3867,16 +3623,18 @@ function preferredPoint() {
       }) ||
       finalProtectionBundleList[1] ||
       null;
-    
-    console.log("essentialPro", essentialProtBundle);
-    const singleBundleItemList = essentialProtBundle && essentialProtBundle.includedProtections.length ? essentialProtBundle.includedProtections : [];
-    console.log("singleBundleItemList", singleBundleItemList);
-    console.log("finalProtItemList", finalProtectionItemList);
-    const includedProtItemList = finalProtectionItemList.filter(item => item.freeCDWIndicator === true || item.netSubtotal === 0);
-    console.log("includedProtItemList", includedProtItemList);
+
+    const singleEssentialBundleItemList = essentialProtBundle && essentialProtBundle.includedProtections.length ? essentialProtBundle.includedProtections : [];
+    const includedEssentialProtItemList = finalProtectionItemList.filter(item => item.freeCDWIndicator === true || item.netSubtotal === 0);
+    const includedAddOnItemList = finalAddOnItemList.filter(item => item.freeCDWIndicator === true || item.netSubtotal === 0);
+    const margedIncludedItemList = [...includedEssentialProtItemList, ...includedAddOnItemList];
+    const isIncludeInBundle = margedIncludedItemList.some(item => {
+      return singleEssentialBundleItemList.some(i => i.code === item.code)
+    });
+    const showBundle = essentialProtBundle && !isIncludeInBundle;
 
     var staticEssentialProtCard = '';
-    if (essentialProtBundle) {
+    if (showBundle) {
       var essProtItems = essentialProtBundle.includedProtections && essentialProtBundle.includedProtections.length ? essentialProtBundle.includedProtections : [];
       var essProtFeaturesHTML = essProtItems.map(function (item) {
         return '<div class="feature-item">'
@@ -3959,6 +3717,7 @@ function preferredPoint() {
     }).join('');
 
     var addOnItemCardsHTML = finalAddOnItemList.map(function (item) {
+      const isGSO = item.code === "GSO";
       var controlHTML = item.isShowQuantityUI
         ? '<div class="quantity-selector" data-code="' + item.code + '" data-max-quantity="' + (item.maxQuantity || 1) + '">'
         + '<button class="quantity-minus">-</button>'
@@ -3978,7 +3737,7 @@ function preferredPoint() {
         + '<div class="add-on-info"><h4 class="add-on-title">' + item.name + '</h4></div>'
         + '</div>'
         + '<div class="card-footer">'
-        + '<div class="price-info">' + getPriceWithCurrenty(currencyCode, item.netSubtotal) + ' <p class="per-day-slash">/<span class="per-day">day</span></p></div>'
+        + '<div class="price-info">' + (isGSO ? '<span class="est-text">Est. </span>' : '') + getPriceWithCurrenty(currencyCode, item.netSubtotal) + ' <p class="per-day-slash">/<span class="per-day">' + (isGSO ? 'gal' : 'day') + '</span></p></div>'
         + '<div class="add-on-actions">'
         + '<a href="#" class="add-on-details" data-code="' + item.code + '">Details</a>'
         + controlHTML
@@ -4021,7 +3780,6 @@ function preferredPoint() {
       // =================== Intial selection handle ===============
       initalSelectUI(extrasProtectionItemList, extrasAddOnsItemList, protectionItems, finalAddOnItemList, finalProtectionBundleList, corelationalIdentifier);
       preferredPoint();
-      identifyModal(getSessionData);
 
       // =============================== PROTECTION BUNDLE SELECTION==============================
       const protectionBundleCards = document.querySelectorAll("." + TEST_ID + " .prot-card");
@@ -4594,7 +4352,6 @@ function preferredPoint() {
               }))
             };
           }
-          console.log("calculatePayload", calculatePayload);
           // //Call calculatePrice API
           const calculateData = await calculatePrice(calculatePayload, corelationalIdentifier);
           const calculateAddOnItems = calculateData.addOnItems || [];
@@ -5232,12 +4989,12 @@ function preferredPoint() {
         });
       }
       // ============ MEMBER PAY NOW SECTION =============
-      const el = document.querySelector('[data-testid="rate-terms-accordion"]');
+      const el = document.querySelector('[data-testid="rate-terms-accordion"]') || document.querySelector('[data-testid="category-expand-button-taxes-fees"]');
       if (el) {
         const nextEl = el.nextElementSibling;
         if (nextEl) {
-          const hasSavings = nextEl?.textContent?.toLowerCase().includes("savings");
-          const hasMaxDiscount = nextEl.textContent.includes("MAX DISCOUNT");
+          const hasSavings = nextEl ? nextEl.textContent ? nextEl?.textContent?.toLowerCase().includes("savings") : false : false;
+          const hasMaxDiscount = nextEl ? nextEl.textContent ? nextEl.textContent.includes("MAX DISCOUNT") : false : false;
           if (hasSavings || hasMaxDiscount) {
             nextEl.style.display = "none";
           }
@@ -5326,6 +5083,7 @@ function preferredPoint() {
   ];
   // route handler
   function handleRoute(path) {
+    console.log("handleRoute", path);
     ROUTE_HANDLERS.forEach((route) => {
       if (path.includes(route.path)) {
         Promise.resolve(route.handler()).catch(err => {
@@ -5336,9 +5094,11 @@ function preferredPoint() {
   }
   // URL detector
   function onUrlChange(callback) {
+    console.log("onUrlChange");
     let lastPath = location.pathname;
 
     const check = () => {
+      console.log("onUrlChange check");
       const currentPath = location.pathname;
 
       if (currentPath !== lastPath) {
@@ -5364,23 +5124,31 @@ function preferredPoint() {
 
   // reset function
   function resetState() {
+    console.log("resetState");
     isInjectionInProgress = false;
-    const el = document.getElementById("POC");
-    if (el) el.remove();
-    document.body.classList.remove("POC-VAR_A");
-  }
+    const redirectOverlay = document.getElementById("mvt-36-redirect-overlay");
+    const protectionPage = location.pathname.includes("/reservation/protectioncoverage");
+    console.log("protectionPage", protectionPage);
+    if (redirectOverlay && !protectionPage) {
+      redirectOverlay.remove();
+    }  }
 
   // current route
   let CURRENT_ROUTE = "";
 
   // safe route hander Fn
   function safeRouteHander(path) {
+    console.log("safeRouteHander", path, CURRENT_ROUTE);
+    console.log(CURRENT_ROUTE, "current route");
     if (path === CURRENT_ROUTE) return;
     CURRENT_ROUTE = path;
+    console.log("currentPath", CURRENT_ROUTE);
 
     // optional: reset previous stuff
     resetState();
+    console.log("safeRouteHander before handleRoute");
     handleRoute(path);
+    console.log("safeRouteHander after handleRoute");
   }
 
   // on first load
@@ -5388,6 +5156,7 @@ function preferredPoint() {
 
   // SPA navigation
   onUrlChange(path => {
+    console.log("onUrlChange callback", path);
     safeRouteHander(path);
   });
 
