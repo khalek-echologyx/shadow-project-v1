@@ -2444,10 +2444,9 @@ function preferredPoint() {
   //redirect to review and book page
   function runProtectionCoverage() {
     console.log("runProtectionCoverage");
-
+    var hasRedirected = false;
     function showRedirectingOverlay() {
       if (document.getElementById("mvt-36-redirect-overlay")) return;
-
       var overlay =
         '<div id="mvt-36-redirect-overlay" class="MuiStack-root mui-16vybak">' +
         '<div class="MuiStack-root mui-1qq5oic">' +
@@ -2459,32 +2458,27 @@ function preferredPoint() {
         '</div>' +
         '</div>' +
         '</div>';
-
       document.body.insertAdjacentHTML("beforeend", overlay);
     }
 
     function doRedirect() {
-      console.log("doRedirect");
-
-      var queryParams = window.location.search;
-
-      var redirectUrl =
-        "/en/reservation/review-and-book" + queryParams;
-
-      var anchor = document.createElement("a");
-
-      anchor.href = redirectUrl;
-      anchor.style.display = "none";
-
-      document.body.appendChild(anchor);
-
-      anchor.click();
+      console.log("doRedirectFirst");
+      if (hasRedirected) return;
+      hasRedirected = true;
+      const queryParams = window.location.search;
+      window.location.replace("/en/reservation/review-and-book" + queryParams);
+      console.log("doRedirectLast");
     }
+    setTimeout(() => {
+      console.log("fallback redirect");
+      doRedirect();
+    }, 5000);
 
     showRedirectingOverlay();
-    setTimeout(() => {
-      doRedirect();
-    }, 1000);
+    poll(
+      () => document.querySelector('[data-testid="action-footer-total-amount"]'),
+      doRedirect
+    );
   }
 
   //reusable params function
