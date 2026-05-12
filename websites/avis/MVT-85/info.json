@@ -1,0 +1,14 @@
+{
+  "id": "1778578124577_4434_MVT_85",
+  "name": "MVT-85",
+  "type": "A/B",
+  "website": "avis",
+  "variations": [
+    "control",
+    "Var C",
+    "Var D"
+  ],
+  "createdAt": "2026-05-12T09:28:44.577Z",
+  "createdAtReadable": "5/12/2026, 3:28:44 PM",
+  "lastUpdated": "2026-05-12T12:55:09.193Z"
+}

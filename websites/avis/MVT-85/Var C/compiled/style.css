@@ -1,0 +1,26 @@
+.MVT-85-Var_C [data-testid=drivers-age-dropdown] {
+  color: #000;
+  font-weight: 500;
+}
+.MVT-85-Var_C [data-testid=drivers-age-dropdown] svg {
+  width: 12px;
+  height: 12px;
+  top: 3px;
+}
+.MVT-85-Var_C [data-testid=residency-dropdown-button] {
+  color: #000;
+  font-weight: 500;
+}
+.MVT-85-Var_C [data-testid=residency-dropdown-button] span.MuiButton-icon {
+  margin-top: -3px;
+}
+.MVT-85-Var_C [data-testid=residency-dropdown-button] svg {
+  width: 12px;
+  height: 12px;
+}
+.MVT-85-Var_C [data-testid=wizard-number-popup-trigger-button] p,
+.MVT-85-Var_C [data-testid=wizard-number-popup-trigger-button] svg, .MVT-85-Var_C [data-testid=discount-coupon-popup-trigger-button] p,
+.MVT-85-Var_C [data-testid=discount-coupon-popup-trigger-button] svg {
+  color: #000;
+  font-weight: 500;
+}

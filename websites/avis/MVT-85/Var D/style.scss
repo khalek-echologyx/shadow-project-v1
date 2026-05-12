@@ -1,0 +1,112 @@
+.MVT-85-Var_D {
+  [data-testid="drivers-age-dropdown"] {
+    color: #8B8686;
+    font-weight: 500;
+
+    #mui-component-select-ageSelect {
+      margin-right: 16px;
+    }
+
+
+    svg:not(.mvt-85-info-icon) {
+      width: 12px;
+      height: 12px;
+      top: 4px;
+
+      path {
+        stroke: #524D4D;
+        stroke-width: 0.2;
+      }
+    }
+  }
+  .mvt-85-info-icon-wrapper{
+    position: relative;
+  }
+
+  #booking-widget #booking-widget-desktop-form [data-testid="drivers-age-dropdown"] svg.mvt-85-info-icon {
+    position: absolute;
+    right: 12px !important;
+    top: 3px;
+    cursor: pointer;
+
+    &:hover {
+      path {
+        fill: #000;
+      }
+    }
+  }
+
+  #booking-widget #booking-widget-desktop-form [data-testid="drivers-age-dropdown"]:hover svg.mvt-85-info-icon {
+    path {
+      fill: #000;
+    }
+  }
+
+  #booking-widget #booking-widget-desktop-form [data-testid="drivers-age-dropdown"] svg.mvt-85-info-icon:hover+
+    .mvt-85-tooltip,
+  #booking-widget #booking-widget-desktop-form [data-testid="drivers-age-dropdown"]:focus-within+.mvt-85-tooltip {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .mvt-85-tooltip {
+    position: absolute;
+    top: 29px;
+    left: 87%;
+    transform: translateX(-50%);
+    width: 275px;
+    max-width: 300px;
+    background-color: rgba(57, 54, 54, 0.92);
+    color: rgb(255, 255, 255);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    line-height: 16px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease;
+    z-index: 9999;
+    pointer-events: none;
+    box-sizing: border-box;
+    overflow-wrap: break-word;
+  }
+
+  .mvt-85-tooltip::before {
+    content: "";
+
+    position: absolute;
+
+    top: -6px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 6px solid #4b4545;
+  }
+
+  // [data-testid="residency-dropdown-button"] {
+  //   color: #000;
+  //   font-weight: 500;
+
+  //   span.MuiButton-icon {
+  //     margin-top: -3px;
+  //   }
+
+  //   svg {
+  //     width: 12px;
+  //     height: 12px;
+  //   }
+  // }
+
+  // [data-testid="wizard-number-popup-trigger-button"], [data-testid="discount-coupon-popup-trigger-button"] {
+  //   p,
+  //   svg {
+  //     color: #000;
+  //     font-weight: 500;
+  //   }
+  // }
+
+}
