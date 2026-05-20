@@ -7,11 +7,10 @@
       margin-right: 16px;
     }
 
-
     svg:not(.mvt-85-info-icon) {
       width: 12px;
       height: 12px;
-      top: 4px;
+      top: 7px;
 
       path {
         stroke: #524D4D;
@@ -19,14 +18,11 @@
       }
     }
   }
-  .mvt-85-info-icon-wrapper{
-    position: relative;
-  }
 
   #booking-widget #booking-widget-desktop-form [data-testid="drivers-age-dropdown"] svg.mvt-85-info-icon {
     position: absolute;
     right: 12px !important;
-    top: 3px;
+    top: 6px;
     cursor: pointer;
 
     &:hover {
@@ -42,11 +38,142 @@
     }
   }
 
-  #booking-widget #booking-widget-desktop-form [data-testid="drivers-age-dropdown"] svg.mvt-85-info-icon:hover+
-    .mvt-85-tooltip,
-  #booking-widget #booking-widget-desktop-form [data-testid="drivers-age-dropdown"]:focus-within+.mvt-85-tooltip {
+  #booking-widget #booking-widget-desktop-form [data-testid="drivers-age-dropdown"] svg.mvt-85-info-icon:hover+.mvt-85-tooltip {
     opacity: 1;
     visibility: visible;
+  }
+
+  [data-testid="residency-dropdown-button"] {
+    color: #8B8686;
+    font-weight: 500;
+
+    span.MuiButton-icon {
+      margin-top: -3px;
+    }
+
+    svg:not(.mvt-85-info-icon) {
+      width: 12px;
+      height: 12px;
+
+      path {
+        stroke: #524D4D;
+        stroke-width: 0.2;
+      }
+    }
+
+    svg.mvt-85-info-icon {
+      margin-left: 4px;
+    }
+
+    svg.mvt-85-info-icon:hover {
+      path {
+        fill: #000;
+      }
+    }
+
+    span.MuiButton-icon {
+      margin-left: 4px;
+      margin-top: 2px;
+    }
+
+    svg.mvt-85-info-icon:hover+.mvt-85-tooltip {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .residency-tooltip{
+      left: 86%;
+    }
+  }
+
+  [data-testid="wizard-number-popup-trigger-button"] {
+    p {
+      color: #8B8686;
+      font-weight: 500;
+    }
+    svg.MuiSvgIcon-root{
+      color: #736D6D;
+      margin-left: 4px;
+    }
+    svg.mvt-85-info-icon{
+      margin-left: 4px;
+    }
+    svg.mvt-85-info-icon:hover{
+      path {
+        fill: #000;
+      }
+      +.mvt-85-tooltip{
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+    .wizard-tooltip{
+      left: 86%;
+    }
+  }
+  [data-testid="wizard-number-popup-trigger-button"]:hover {
+    p{
+      color: #000;
+    }
+    svg.MuiSvgIcon-root{
+      color: #000;
+    }
+  }
+  //discount
+  [data-testid="discount-coupon-popup-trigger-button"]{
+    p{
+      color: #8B8686;
+      font-weight: 500;
+    }
+    svg.MuiSvgIcon-root{
+      color: #736D6D;
+      margin-left: 4px;
+    }
+    svg.mvt-85-info-icon{
+      margin-left: 4px;
+    }
+    svg.mvt-85-info-icon:hover{
+      path {
+        fill: #000;
+      }
+      +.mvt-85-tooltip{
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+
+    &:hover{
+      p{
+        color: #000;
+      }
+      svg.MuiSvgIcon-root{
+        color: #000;
+      }
+      svg.mvt-85-info-icon{
+        path{
+          fill: #000;
+        }
+      }
+    }
+    .discount-tooltip{
+      left: 80%;
+    }
+  }  
+
+  //tooltip
+  .mvt-85-tooltip::before {
+    content: "";
+
+    position: absolute;
+
+    top: -6px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 6px solid #4b4545;
   }
 
   .mvt-85-tooltip {
@@ -70,43 +197,7 @@
     pointer-events: none;
     box-sizing: border-box;
     overflow-wrap: break-word;
+    text-wrap: auto;
   }
-
-  .mvt-85-tooltip::before {
-    content: "";
-
-    position: absolute;
-
-    top: -6px;
-    left: 50%;
-
-    transform: translateX(-50%);
-
-    border-left: 6px solid transparent;
-    border-right: 6px solid transparent;
-    border-bottom: 6px solid #4b4545;
-  }
-
-  // [data-testid="residency-dropdown-button"] {
-  //   color: #000;
-  //   font-weight: 500;
-
-  //   span.MuiButton-icon {
-  //     margin-top: -3px;
-  //   }
-
-  //   svg {
-  //     width: 12px;
-  //     height: 12px;
-  //   }
-  // }
-
-  // [data-testid="wizard-number-popup-trigger-button"], [data-testid="discount-coupon-popup-trigger-button"] {
-  //   p,
-  //   svg {
-  //     color: #000;
-  //     font-weight: 500;
-  //   }
-  // }
-
+  
 }

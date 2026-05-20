@@ -1186,4 +1186,10 @@
     cursor: none !important;
     
   }
+
+  @media (max-width: 767px) {
+    #avis-pwp-block .pwp-row{
+      flex-direction: column;
+    }
+  }
 }

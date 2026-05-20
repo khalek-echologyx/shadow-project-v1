@@ -132,6 +132,48 @@ import { preferredPoint } from "./preferredPoint";
     };
   })();
 
+
+
+  /* ----------- LOYALTY SUMMARY API INTERCEPTOR ----------- */
+  (function () {
+    var _originalFetch = window.fetch;
+    window.fetch = function (input, init) {
+      var url = typeof input === "string" ? input : (input && input.url) || "";
+      var promise = _originalFetch.apply(this, arguments);
+
+      if (url && url.includes("/web/customer/loyalty/summary")) {
+        promise = promise.then(function (response) {
+          // Clone so the original stream is not consumed
+          var cloned = response.clone();
+          cloned.json().then(function (data) {
+            try {
+              var loyaltySummary = data && data.loyaltySummary;
+              if (!loyaltySummary) return;
+
+              var newLoyaltySummary = {
+                status: loyaltySummary.status || null,
+                points: loyaltySummary.points || null,
+                profileNumber: loyaltySummary.profileNumber || null,
+              };
+
+              var raw = sessionStorage.getItem("reservation.store");
+              if (!raw) return;
+              var store = JSON.parse(raw) || {};
+              if (!store.state) store.state = {};
+              store.state.loyaltySummary = newLoyaltySummary;
+              sessionStorage.setItem("reservation.store", JSON.stringify(store));
+            } catch (e) {
+              console.warn("[AvisTest] loyalty summary intercept error", e);
+            }
+          }).catch(function () { /* non-JSON or stream already consumed */ });
+          return response;
+        });
+      }
+
+      return promise;
+    };
+  })();
+
   /* ---------------- poll utility ---------------- */
   function poll(condition, callback, timeout = 10000, interval = 50) {
     const start = Date.now();
@@ -158,10 +200,70 @@ import { preferredPoint } from "./preferredPoint";
     medium: 2,
     high: 3
   }
+
   //redirect to review and book page
   function runProtectionCoverage() {
     console.log("runProtectionCoverage");
     var hasRedirected = false;
+    var activeRequests = 0;
+    var idleTimer = null;
+    var originalFetchForRedirect = window.fetch;
+    var originalXhrOpen = XMLHttpRequest.prototype.open;
+    var originalXhrSend = XMLHttpRequest.prototype.send;
+
+
+    function scheduleRedirect() {
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(function () {
+        if (activeRequests === 0) {
+          doRedirect();
+        }
+      }, 300);
+    }
+
+    function onRequestStart() {
+      activeRequests++;
+      clearTimeout(idleTimer); // cancel any pending redirect
+    }
+
+    function onRequestEnd() {
+      activeRequests = Math.max(0, activeRequests - 1);
+      if (activeRequests === 0) {
+        scheduleRedirect();
+      }
+    }
+
+    function doRedirect() {
+      if (hasRedirected) return;
+      hasRedirected = true;
+      // Restore originals before navigating
+      window.fetch = originalFetchForRedirect;
+      XMLHttpRequest.prototype.open = originalXhrOpen;
+      XMLHttpRequest.prototype.send = originalXhrSend;
+      clearTimeout(idleTimer);
+      const queryParams = window.location.search;
+      console.log("doRedirect — network idle, navigating");
+      window.location.replace("/en/reservation/review-and-book" + queryParams);
+    }
+
+    // Intercept fetch
+    window.fetch = function () {
+      onRequestStart();
+      var promise = originalFetchForRedirect.apply(this, arguments);
+      promise.finally(onRequestEnd);
+      return promise;
+    };
+
+    // Intercept XHR — the app may use XHR in addition to fetch
+    XMLHttpRequest.prototype.open = function () {
+      this.addEventListener("loadend", onRequestEnd);
+      return originalXhrOpen.apply(this, arguments);
+    };
+    XMLHttpRequest.prototype.send = function () {
+      onRequestStart();
+      return originalXhrSend.apply(this, arguments);
+    };
+
     function showRedirectingOverlay() {
       if (document.getElementById("mvt-36-redirect-overlay")) return;
       var overlay =
@@ -178,24 +280,7 @@ import { preferredPoint } from "./preferredPoint";
       document.body.insertAdjacentHTML("beforeend", overlay);
     }
 
-    function doRedirect() {
-      console.log("doRedirectFirst");
-      if (hasRedirected) return;
-      hasRedirected = true;
-      const queryParams = window.location.search;
-      window.location.replace("/en/reservation/review-and-book" + queryParams);
-      console.log("doRedirectLast");
-    }
-    setTimeout(() => {
-      console.log("fallback redirect");
-      doRedirect();
-    }, 5000);
-
     showRedirectingOverlay();
-    poll(
-      () => document.querySelector('[data-testid="action-footer-total-amount"]'),
-      doRedirect
-    );
   }
 
   //reusable params function
@@ -227,6 +312,10 @@ import { preferredPoint } from "./preferredPoint";
       if (a === 'AM' && hh === 12) hh = 0;
     }
     return pad2(hh) + ':' + pad2(m);
+  }
+  //formate Date
+  function fmtDate(d, m, y) {
+    return y + '-' + m + '-' + d;
   }
   //get corelational identifier
   function getCorelationalIdentifier() {
@@ -778,10 +867,10 @@ import { preferredPoint } from "./preferredPoint";
       countryOfResidence: sessionData.residencyValue,
       currencyCode: sessionData.userSelectedCurrency,
       discountCodes: [],
-      dropoffDate: sessionData.returnDatetime.split("T")[0],
+      dropoffDate: fmtDate(sessionData.returnDay, sessionData.returnMonth, sessionData.returnYear),
       dropoffTime: fmtTime(sessionData.returnHour, sessionData.returnMinute, sessionData.returnAmPm),
       dropoffLocation: sessionData.returnLocationCode,
-      pickupDate: sessionData.pickupDatetime.split("T")[0],
+      pickupDate: fmtDate(sessionData.pickupDay, sessionData.pickupMonth, sessionData.pickupYear),
       pickupTime: fmtTime(sessionData.pickupHour, sessionData.pickupMinute, sessionData.pickupAmPm),
       pickupLocation: sessionData.pickupLocationCode,
       priceRateCode: sessionData.priceRateCode,
@@ -1015,13 +1104,12 @@ import { preferredPoint } from "./preferredPoint";
     //Get session data =
     let sessionData = getSessionData();
     const pickupUSA = sessionData.pickupCountryCode === "US";
-
     const extrasAPIPayload = {
       pickupLocation: sessionData.pickupLocationCode,
       dropoffLocation: sessionData.returnLocationCode,
-      pickupDate: sessionData.pickupDatetime.split("T")[0],
+      pickupDate: fmtDate(sessionData.pickupDay, sessionData.pickupMonth, sessionData.pickupYear),
       pickupTime: fmtTime(sessionData.pickupHour, sessionData.pickupMinute, sessionData.pickupAmPm),
-      dropoffDate: sessionData.returnDatetime.split("T")[0],
+      dropoffDate: fmtDate(sessionData.returnDay, sessionData.returnMonth, sessionData.returnYear),
       dropoffTime: fmtTime(sessionData.returnHour, sessionData.returnMinute, sessionData.returnAmPm),
       age: Number(sessionData.age) || 25,
       discountCodes: [],
@@ -2797,7 +2885,6 @@ import { preferredPoint } from "./preferredPoint";
   ];
   // route handler
   function handleRoute(path) {
-    console.log("handleRoute", path);
     ROUTE_HANDLERS.forEach((route) => {
       if (path.includes(route.path)) {
         Promise.resolve(route.handler()).catch(err => {
@@ -2808,11 +2895,9 @@ import { preferredPoint } from "./preferredPoint";
   }
   // URL detector
   function onUrlChange(callback) {
-    console.log("onUrlChange");
     let lastPath = location.pathname;
 
     const check = () => {
-      console.log("onUrlChange check");
       const currentPath = location.pathname;
 
       if (currentPath !== lastPath) {
@@ -2838,11 +2923,9 @@ import { preferredPoint } from "./preferredPoint";
 
   // reset function
   function resetState() {
-    console.log("resetState");
     isInjectionInProgress = false;
     const redirectOverlay = document.getElementById("mvt-36-redirect-overlay");
     const protectionPage = location.pathname.includes("/reservation/protectioncoverage");
-    console.log("protectionPage", protectionPage);
     if (redirectOverlay && !protectionPage) {
       redirectOverlay.remove();
     };
@@ -2853,17 +2936,12 @@ import { preferredPoint } from "./preferredPoint";
 
   // safe route hander Fn
   function safeRouteHander(path) {
-    console.log("safeRouteHander", path, CURRENT_ROUTE);
-    console.log(CURRENT_ROUTE, "current route")
     if (path === CURRENT_ROUTE) return;
     CURRENT_ROUTE = path;
-    console.log("currentPath", CURRENT_ROUTE)
 
     // optional: reset previous stuff
     resetState();
-    console.log("safeRouteHander before handleRoute");
     handleRoute(path)
-    console.log("safeRouteHander after handleRoute");
   }
 
   // on first load
@@ -2871,7 +2949,6 @@ import { preferredPoint } from "./preferredPoint";
 
   // SPA navigation
   onUrlChange(path => {
-    console.log("onUrlChange callback", path);
     safeRouteHander(path)
   })
 

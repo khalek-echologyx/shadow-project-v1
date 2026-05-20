@@ -1,35 +1,29 @@
 .MVT-85-Var_C {
-  [data-testid="drivers-age-dropdown"] {
-    color: #000;
-    font-weight: 500;
+    .mvt-85-age-wrapper {
+        margin-bottom: 0 !important;
 
-    svg {
-      width: 12px;
-      height: 12px;
-      top: 3px;
+        // Checkbox + dropdown side by side
+        .mvt-85-top-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        input.mvt-85-checkbox {
+            margin: 0 !important;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        // Age label below — display only, no interaction
+        .mvt-85-age-label {
+            display: block;
+            margin-top: 4px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #000;
+            pointer-events: none;
+            user-select: none;
+        }
     }
-  }
-
-  [data-testid="residency-dropdown-button"] {
-    color: #000;
-    font-weight: 500;
-
-    span.MuiButton-icon {
-      margin-top: -3px;
-    }
-
-    svg {
-      width: 12px;
-      height: 12px;
-    }
-  }
-
-  [data-testid="wizard-number-popup-trigger-button"], [data-testid="discount-coupon-popup-trigger-button"] {
-    p,
-    svg {
-      color: #000;
-      font-weight: 500;
-    }
-  }
-
 }

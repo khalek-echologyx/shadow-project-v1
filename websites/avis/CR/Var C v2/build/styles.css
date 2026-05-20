@@ -1233,3 +1233,8 @@
   pointer-events: none !important;
   cursor: none !important;
 }
+@media (max-width: 767px) {
+  .MVT-36 #avis-pwp-block .pwp-row {
+    flex-direction: column;
+  }
+}

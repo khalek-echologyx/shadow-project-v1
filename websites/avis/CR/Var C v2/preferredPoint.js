@@ -409,6 +409,18 @@ export function preferredPoint() {
     //                                          ("CHAIRMANS (274 pts) My profile")
     // Read loyalty from reservation.store.state.loyaltySummary (where Avis or
     // our own persistLoyalty() writes it). Cheapest source — just a JSON parse.
+    // function readLoyaltyFromStore() {
+    //     var s = (readStore().state || {});
+    //     var ls = s.loyaltySummary;
+    //     // if (!ls || ls.points == null) return null;
+    //     var totalPoints = (s.freeDayItemObject && s.freeDayItemObject.totalPoints) ? s.freeDayItemObject.totalPoints : 0;
+    //     return {
+    //         points: String(totalPoints),
+    //         status: 'ACTIVE',
+    //         profileNumber: ls ? (ls.profileNumber || null) : null
+    //     };
+    // }
+
     function readLoyaltyFromStore() {
         var s = (readStore().state || {});
         var ls = s.loyaltySummary;
@@ -716,8 +728,14 @@ export function preferredPoint() {
     }
 
     function renderBlock(loyalty, protections) {
+        console.log("renderBlock called")
         if (document.getElementById('avis-pwp-block')) return;
-        if ($(CFG.selectors.existingPwpCard)) { log('control PWP already on page — skipping render'); return; }
+        if ($(CFG.selectors.existingPwpCard)) {
+            const controlPwpSection = document.querySelector(CFG.selectors.existingPwpCard);
+            if (controlPwpSection) {
+                controlPwpSection.parentElement.style.display = "none";
+            }
+        }
         styleOnce();
 
         var canRedeem = isRedeemableNow(loyalty, protections);
@@ -1614,18 +1632,24 @@ export function preferredPoint() {
     function boot() {
         window.__avisPayWithPointsMounted = true;
 
-        // Loyalty: override → DOM (waits for points-value, 4s) → fiber walk
+        // Loyalty: override → store (fast, sync) → DOM wait → fiber walk
         var override = readLoyaltyFromOverride();
         var pLoyalty;
+        var storeResult;
+        try { storeResult = readLoyaltyFromStore(); } catch (e) { storeResult = null; }
+
         if (override) {
             pLoyalty = Promise.resolve(override);
+        } else if (storeResult && parseInt(storeResult.points, 10) > 0) {
+            pLoyalty = Promise.resolve(storeResult);
         } else {
             pLoyalty = waitFor(CFG.selectors.domPointsValue, 4000)
-                .then(function () { return readLoyaltyFromDom(); })
-                .catch(function () { return readLoyaltyFromFiber(); });
+                .then(function () { return readLoyaltyFromDom() || readLoyaltyFromStore() || readLoyaltyFromFiber(); })
+                .catch(function () { return readLoyaltyFromDom() || readLoyaltyFromStore() || readLoyaltyFromFiber(); });
         }
-        pLoyalty = pLoyalty.then(function (s) { if (s) persistLoyalty(s); return s; });
-
+        pLoyalty = pLoyalty.then(function (s) {
+            if (s) persistLoyalty(s); return s;
+        });
         // Protections acquisition order:
         //   1. QA override (if set)
         //   2. Existing reservation.store.state.protectionsData (server-rendered)
@@ -1725,7 +1749,6 @@ export function preferredPoint() {
                     // as a live toggle. We skip the global setBusy spinner because
                     // the user hasn't interacted yet.
                     if (__pwpState.payWithPointsCodes && __pwpState.payWithPointsCodes.length > 0) {
-                        console.log('[pwp] firing calculate to restore booking summary for', __pwpState.payWithPointsCodes);
                         callCalculate(__pwpState.quantity)
                             .then(function (resp) {
                                 if (resp && resp.price) writeStore({ price: resp.price });

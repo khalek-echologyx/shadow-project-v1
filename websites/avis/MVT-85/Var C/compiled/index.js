@@ -1,114 +1,284 @@
 (() => {
   var TEST_ID = "MVT-85";
   const VAR_ID = "Var_C";
-  var TARGET_PATH = "/en/home";
 
-  function poll(condition, callback, timeout, interval) {
-    timeout = timeout || 10000;
-    interval = interval || 50;
-    var start = Date.now();
-    function check() {
-      if (condition()) {
-        callback();
-      } else if (Date.now() - start < timeout) {
-        setTimeout(check, interval);
-      }
-    }
-    check();
-  }
+  const TARGET_PATHS = [
+    "/en/home",
+    "/en/reservation/make-reservation",
+    "/en/reservation/vehicle-availability",
+    "/en/reservation/protectioncoverage",
+    "/en/reservation/addons"
+  ];
 
-  function applyCode() {
-    if (document.body.classList.contains(TEST_ID + "-" + VAR_ID)) return;
+  // Module-level refs so ageOptionsFn can access them
+  var _ageDropdownEl = null;
+  var _ageCheckboxEl = null;
 
-    // age section
-    poll(
-      function () {
-        return !!document.querySelector('[data-testid="drivers-age-dropdown"]');
-      },
-      function () {
-        const targetElement = document.querySelector('[data-testid="drivers-age-dropdown"]');
-        if (!targetElement) return;
-        const svgEl = targetElement.querySelector('svg');
-        if (!svgEl) return;
-        svgEl.setAttribute('viewBox', '0 0 13 12');
-        const path = svgEl.querySelector('path');
-        if (!path) return;
-        path.setAttribute('stroke', '#000');
-        path.setAttribute('stroke-width', '.9');
-        path.setAttribute('d', 'M0.581951 3.12198C0.757625 2.95934 1.04245 2.95934 1.21812 3.12198L6.4502 7.96589L11.6823 3.12198C11.8579 2.95934 12.1428 2.95934 12.3184 3.12198C12.4941 3.28462 12.4941 3.54831 12.3184 3.71095L6.71541 8.89831C6.56895 9.0339 6.33144 9.0339 6.18498 8.89831L0.581951 3.71095C0.406278 3.54831 0.406278 3.28462 0.581951 3.12198Z');
-
-        // residency section
-        poll(
-          function () {
-            return !!document.querySelector('[data-testid="residency-dropdown-button"]');
-          },
-          function () {
-            const targetElement = document.querySelector('[data-testid="residency-dropdown-button"]');
-            if (!targetElement) return;
-            const svgEl = targetElement.querySelector('svg');
-            if (!svgEl) return;
-            svgEl.setAttribute('viewBox', '0 0 13 12');
-            const path = svgEl.querySelector('path');
-            if (!path) return;
-            path.setAttribute('stroke', '#000');
-            path.setAttribute('stroke-width', '.9');
-            path.setAttribute('d', 'M0.581951 3.12198C0.757625 2.95934 1.04245 2.95934 1.21812 3.12198L6.4502 7.96589L11.6823 3.12198C11.8579 2.95934 12.1428 2.95934 12.3184 3.12198C12.4941 3.28462 12.4941 3.54831 12.3184 3.71095L6.71541 8.89831C6.56895 9.0339 6.33144 9.0339 6.18498 8.89831L0.581951 3.71095C0.406278 3.54831 0.406278 3.28462 0.581951 3.12198Z');
-
-            document.body.classList.add(TEST_ID+"-"+VAR_ID);
-          }
-        );
-
-        poll(
-          ()=> !!document.querySelector('[data-testid="wizard-number-popup-trigger-button"] p'),
-          ()=>{
-            const targetElement = document.querySelector('[data-testid="wizard-number-popup-trigger-button"] svg');
-            if(!targetElement) return;
-          }
-        );
-      }
-    );
-  }
-
+  // -----------------------------
+  // Helpers
+  // -----------------------------
 
   function isTargetPage() {
-    return window.location.pathname.indexOf(TARGET_PATH) !== -1;
+    var path = window.location.pathname;
+
+    for (var i = 0; i < TARGET_PATHS.length; i++) {
+      if (path.indexOf(TARGET_PATHS[i]) !== -1) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
-  function onRouteChange() {
-    if (isTargetPage()) {
-      document.body.classList.remove(TEST_ID+"-"+VAR_ID);
-      applyCode();
+  function waitForStableElement(selector, callback) {
+    let lastEl = null;
+    let stableCount = 0;
+
+    const interval = setInterval(() => {
+      try {
+        const el = document.querySelector(selector);
+
+        if (!el) {
+          stableCount = 0;
+          lastEl = null;
+          return;
+        }
+
+        if (el === lastEl) {
+          stableCount++;
+        } else {
+          stableCount = 0;
+          lastEl = el;
+        }
+
+        // element stable for 5 checks
+        if (stableCount >= 5) {
+          clearInterval(interval);
+          callback(el);
+        }
+      } catch (err) {
+        console.error("[MVT-85] stable check error:", err);
+      }
+    }, 200);
+  }
+
+  function updateAgeUI(targetElement, checkboxEl, selectedAge) {
+    // Delay so React finishes re-rendering before we query fresh nodes
+    setTimeout(function () {
+      const freshWrapper = document.querySelector(".mvt-85-age-wrapper");
+      const ageLabelEl = freshWrapper ? freshWrapper.querySelector(".mvt-85-age-label") : null;
+
+      if (selectedAge === "25+") {
+        // Checkbox checked, age label hidden
+        if (checkboxEl) checkboxEl.checked = true;
+        if (ageLabelEl) ageLabelEl.style.display = "none";
+      } else {
+        // Checkbox unchecked, age label visible with selected age
+        if (checkboxEl) checkboxEl.checked = false;
+        if (ageLabelEl) {
+          ageLabelEl.textContent = "Driver's Age: " + selectedAge;
+          ageLabelEl.style.display = "";
+        }
+      }
+    }, 100);
+  }
+  function applyCode() {
+    console.log("[MVT-85] applyCode");
+
+    try {
+
+      // Already injected
+      if (document.querySelector(".mvt-85-age-wrapper")) {
+        return;
+      }
+
+      waitForStableElement(
+        '[data-testid="drivers-age-dropdown"]',
+        function (targetElement) {
+          try {
+            // Re-check after the stable wait — another call may have injected already
+            if (document.querySelector(".mvt-85-age-wrapper")) return;
+            if (!targetElement) return;
+
+            const selectEl = targetElement.querySelector(
+              "#mui-component-select-ageSelect"
+            );
+
+            if (!selectEl) {
+              console.log("[MVT-85] select element not found");
+              return;
+            }
+            const ageWrapperEl = document.createElement("div");
+            ageWrapperEl.className = "mvt-85-age-wrapper";
+
+            // Top row: checkbox (left) + dropdown (right) side by side
+            const topRowEl = document.createElement("div");
+            topRowEl.className = "mvt-85-top-row";
+            ageWrapperEl.appendChild(topRowEl);
+
+            // Bare checkbox — no label text, no interaction on the text
+            topRowEl.insertAdjacentHTML(
+              "beforeend",
+              `<input type="checkbox" id="ageCheckbox" class="mvt-85-checkbox" />`
+            );
+
+            // Move dropdown into the top row (right of checkbox)
+            targetElement.parentNode.insertBefore(ageWrapperEl, targetElement);
+            topRowEl.appendChild(targetElement);
+
+            // Age label — below the top row, no click listener, hidden by default
+            ageWrapperEl.insertAdjacentHTML(
+              "beforeend",
+              `<div class="mvt-85-age-label" style="display:none;"></div>`
+            );
+
+            const checkboxEl = topRowEl.querySelector(".mvt-85-checkbox");
+            _ageDropdownEl = targetElement;
+            _ageCheckboxEl = checkboxEl;
+
+            // Set initial state (default age is 25+)
+            updateAgeUI(targetElement, checkboxEl, "25+");
+
+            // Checkbox opens the MUI dropdown
+            checkboxEl.addEventListener("change", function () {
+              selectEl.dispatchEvent(
+                new MouseEvent("mousedown", { bubbles: true, cancelable: true, view: window })
+              );
+              selectEl.dispatchEvent(
+                new MouseEvent("click", { bubbles: true, cancelable: true, view: window })
+              );
+            });
+
+            document.body.classList.add(TEST_ID + "-" + VAR_ID);
+
+          } catch (err) {
+            console.error("[MVT-85] injection error:", err);
+          }
+        }
+      );
+
+    } catch (err) {
+      console.error("[MVT-85] applyCode error:", err);
     }
   }
+
+  // -----------------------------
+  // Route Change
+  // -----------------------------
+
+  function onRouteChange() {
+    if (!isTargetPage()) return;
+    setTimeout(() => {
+      applyCode();
+    }, 800);
+  }
+
+  // -----------------------------
+  // History Patch
+  // -----------------------------
 
   function patchHistoryMethod(method) {
     var original = history[method];
     history[method] = function () {
       var result = original.apply(this, arguments);
-      window.dispatchEvent(new Event("avis:routechange"));
+      window.dispatchEvent(
+        new Event("avis:routechange")
+      );
       return result;
     };
   }
+
   patchHistoryMethod("pushState");
   patchHistoryMethod("replaceState");
 
-  // Listen to back/forward navigation
-  window.addEventListener("popstate", onRouteChange);
+  // -----------------------------
+  // Event Listeners
+  // -----------------------------
 
-  // Listen to our custom route change event
-  window.addEventListener("avis:routechange", onRouteChange);
+  window.addEventListener(
+    "avis:routechange",
+    onRouteChange
+  );
 
-  var lastPath = window.location.pathname;
-  var pathObserver = new MutationObserver(function () {
-    var currentPath = window.location.pathname;
-    if (currentPath !== lastPath) {
-      lastPath = currentPath;
-      if (isTargetPage()) {
-        pathObserver.disconnect();
-        onRouteChange();
+  window.addEventListener(
+    "popstate",
+    onRouteChange
+  );
+
+  // -----------------------------
+  // Age Options Menu
+  // -----------------------------
+
+  function ageOptionsFn() {
+    const ageMenuEl = document.querySelector('[data-testid="drivers-age-menu"]');
+    if (!ageMenuEl) return;
+
+    const options = ageMenuEl.querySelectorAll('li');
+    options.forEach((option) => {
+      // Use mousedown — MUI closes & removes the menu before 'click' fires
+      option.addEventListener("mousedown", () => {
+        const optionValue = option.getAttribute("data-value");
+        if (_ageDropdownEl && _ageCheckboxEl) {
+          updateAgeUI(_ageDropdownEl, _ageCheckboxEl, optionValue);
+        }
+      });
+    });
+  }
+
+  // -----------------------------
+  // Mutation Observer
+  // -----------------------------
+
+  function startObserver() {
+    var _ageMenuHandled = false;
+
+    const observer = new MutationObserver(function () {
+      if (!isTargetPage()) return;
+
+      const wrapperExists = document.querySelector(
+        ".mvt-85-age-wrapper"
+      );
+      const targetExists = document.querySelector(
+        '[data-testid="drivers-age-dropdown"]'
+      );
+      // React rerender removed experiment
+      if (targetExists && !wrapperExists) {
+        console.log(
+          "[MVT-85] wrapper removed by rerender, reinjecting"
+        );
+        applyCode();
       }
+
+      // Age options menu observer
+      const ageMenuExists = document.querySelector(
+        '[data-testid="drivers-age-menu"]'
+      );
+      if (ageMenuExists && !_ageMenuHandled) {
+        _ageMenuHandled = true;
+        ageOptionsFn();
+      } else if (!ageMenuExists) {
+        _ageMenuHandled = false;
+      }
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+  }
+
+  // -----------------------------
+  // Init
+  // -----------------------------
+
+  function init() {
+    if (!document.body) {
+      setTimeout(init, 100);
+      return;
     }
-  });
-  pathObserver.observe(document.body, { childList: true, subtree: false });
-  onRouteChange();
+    startObserver();
+    onRouteChange();
+  }
+  init();
+
 })();

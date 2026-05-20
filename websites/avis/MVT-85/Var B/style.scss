@@ -1,0 +1,35 @@
+.MVT-85-Var_C {
+  [data-testid="drivers-age-dropdown"] {
+    color: #000;
+    font-weight: 500;
+
+    svg {
+      width: 12px;
+      height: 12px;
+      top: 3px;
+    }
+  }
+
+  [data-testid="residency-dropdown-button"] {
+    color: #000;
+    font-weight: 500;
+
+    span.MuiButton-icon {
+      margin-top: -3px;
+    }
+
+    svg {
+      width: 12px;
+      height: 12px;
+    }
+  }
+
+  [data-testid="wizard-number-popup-trigger-button"], [data-testid="discount-coupon-popup-trigger-button"] {
+    p,
+    svg {
+      color: #000;
+      font-weight: 500;
+    }
+  }
+
+}

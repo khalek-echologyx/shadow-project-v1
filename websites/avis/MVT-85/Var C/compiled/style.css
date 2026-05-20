@@ -1,26 +1,22 @@
-.MVT-85-Var_C [data-testid=drivers-age-dropdown] {
-  color: #000;
+.MVT-85-Var_C .mvt-85-age-wrapper {
+  margin-bottom: 0 !important;
+}
+.MVT-85-Var_C .mvt-85-age-wrapper .mvt-85-top-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.MVT-85-Var_C .mvt-85-age-wrapper input.mvt-85-checkbox {
+  margin: 0 !important;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+.MVT-85-Var_C .mvt-85-age-wrapper .mvt-85-age-label {
+  display: block;
+  margin-top: 4px;
+  font-size: 13px;
   font-weight: 500;
-}
-.MVT-85-Var_C [data-testid=drivers-age-dropdown] svg {
-  width: 12px;
-  height: 12px;
-  top: 3px;
-}
-.MVT-85-Var_C [data-testid=residency-dropdown-button] {
   color: #000;
-  font-weight: 500;
-}
-.MVT-85-Var_C [data-testid=residency-dropdown-button] span.MuiButton-icon {
-  margin-top: -3px;
-}
-.MVT-85-Var_C [data-testid=residency-dropdown-button] svg {
-  width: 12px;
-  height: 12px;
-}
-.MVT-85-Var_C [data-testid=wizard-number-popup-trigger-button] p,
-.MVT-85-Var_C [data-testid=wizard-number-popup-trigger-button] svg, .MVT-85-Var_C [data-testid=discount-coupon-popup-trigger-button] p,
-.MVT-85-Var_C [data-testid=discount-coupon-popup-trigger-button] svg {
-  color: #000;
-  font-weight: 500;
+  pointer-events: none;
+  user-select: none;
 }
