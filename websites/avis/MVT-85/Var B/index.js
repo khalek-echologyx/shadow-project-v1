@@ -1,7 +1,13 @@
 (() => {
   var TEST_ID = "MVT-85";
   const VAR_ID = "Var_C";
-  var TARGET_PATH = "/en/home";
+  const TARGET_PATHS = [
+    "/en/home",
+    "/en/reservation/make-reservation",
+    "/en/reservation/vehicle-availability",
+    "/en/reservation/protectioncoverage",
+    "/en/reservation/addons"
+  ];
     const downArrowSvg = '<svg class="custom_down_arrow-age" xmlns="http://www.w3.org/2000/svg" width="13" height="12" viewBox="0 0 13 12" fill="none">\
       <path fill-rule="evenodd" clip-rule="evenodd" d="M0.581951 3.12198C0.757625 2.95934 1.04245 2.95934 1.21812 3.12198L6.4502 7.96589L11.6823 3.12198C11.8579 2.95934 12.1428 2.95934 12.3184 3.12198C12.4941 3.28462 12.4941 3.54831 12.3184 3.71095L6.71541 8.89831C6.56895 9.0339 6.33144 9.0339 6.18498 8.89831L0.581951 3.71095C0.406278 3.54831 0.406278 3.28462 0.581951 3.12198Z" fill="#524D4D" stroke="black" stroke-width="0.9" stroke-linecap="round"/>\
       </svg>';
@@ -33,6 +39,9 @@
         if (!targetElement) return;
         const svgEl = targetElement.querySelector('svg');
         if (!svgEl) return;
+        if (window.location.pathname.indexOf('/en/home') === -1) {
+          svgEl.classList.add('not-home');
+        }
         svgEl.setAttribute('viewBox', '0 0 13 12')
         const path = svgEl.querySelector('path');
         if (!path) return;
@@ -50,6 +59,9 @@
             if (!targetElement) return;
             const svgEl = targetElement.querySelector('svg');
             if (!svgEl) return;
+            if (window.location.pathname.indexOf('/en/home') === -1) {
+              svgEl.classList.add('not-home');
+            }
             svgEl.setAttribute('viewBox', '0 0 13 12')
             const path = svgEl.querySelector('path');
             if (!path) return;
@@ -74,7 +86,13 @@
 
 
   function isTargetPage() {
-    return window.location.pathname.indexOf(TARGET_PATH) !== -1;
+    var path = window.location.pathname;
+    for (var i = 0; i < TARGET_PATHS.length; i++) {
+      if (path.indexOf(TARGET_PATHS[i]) !== -1) {
+        return true;
+      }
+    }
+    return false;
   }
 
   function onRouteChange() {

@@ -1,3 +1,87 @@
+(function () {
+  var interval = setInterval(function () {
+    if (document.head) {
+      // Check if <head> exists
+      clearInterval(interval); // Stop checking once found
+      var style = document.createElement("style");
+      style.innerHTML = `.MVT-85-Var_C
+  #booking-widget
+  #booking-widget-desktop-form
+  [data-testid="drivers-age-dropdown"]
+  #mui-component-select-ageSelect {
+  font-weight: 500;
+  color: #000;
+  font-size: 14px !important;
+}
+.MVT-85-Var_C .mvt-85-age-wrapper {
+  margin-bottom: 0 !important;
+}
+.MVT-85-Var_C .mvt-85-age-wrapper .mvt-85-top-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.MVT-85-Var_C .mvt-85-age-wrapper input.mvt-85-checkbox {
+  margin: 0 !important;
+  cursor: pointer;
+  flex-shrink: 0;
+  appearance: none;
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 1px solid #000;
+  border-radius: 2px;
+  background-color: #fff;
+  position: relative;
+}
+.MVT-85-Var_C .mvt-85-age-wrapper input.mvt-85-checkbox:checked {
+  background-color: #000;
+}
+.MVT-85-Var_C .mvt-85-age-wrapper input.mvt-85-checkbox:checked::after {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 2px;
+  width: 4px;
+  height: 8px;
+  border: solid #fff;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+.MVT-85-Var_C .mvt-85-age-wrapper svg.MuiSvgIcon-root {
+  display: none;
+}
+.MVT-85-Var_C
+  .mvt-85-residency-wrapper
+  [data-testid="residency-dropdown-button"]
+  span {
+  color: #000;
+  font-weight: 500;
+}
+.MVT-85-Var_C .mvt-85-extra-labels-container {
+  display: flex;
+  gap: 48px;
+}
+.MVT-85-Var_C .mvt-85-extra-labels-container .mvt-85-age-label {
+  margin-bottom: 0 !important;
+  font-size: 12px;
+  pointer-events: none;
+  user-select: none;
+  letter-spacing: 0.036px;
+  margin-left: 25px;
+  min-width: 80px;
+}
+.MVT-85-Var_C .mvt-85-extra-labels-container .mvt-85-residency-label {
+  margin-left: 27px;
+}
+`;
+      document.head.appendChild(style);
+      setTimeout(() => {
+        clearInterval(interval); // Clear the interval after 5 seconds
+      }, 5000);
+    }
+  }, 100); // Check every 100ms for <head>
+})();
 (() => {
   var TEST_ID = "MVT-85";
   const VAR_ID = "Var_C";
@@ -7,7 +91,7 @@
     "/en/reservation/make-reservation",
     "/en/reservation/vehicle-availability",
     "/en/reservation/protectioncoverage",
-    "/en/reservation/addons"
+    "/en/reservation/addons",
   ];
 
   // Module-level refs so ageOptionsFn can access them
@@ -92,7 +176,8 @@
   function updateResidencyUI(targetElement, checkboxEl) {
     setTimeout(function () {
       const spans = targetElement.querySelectorAll("span");
-      const selectedResidency = spans.length >= 3 ? spans[2].textContent.trim() : "US";
+      const selectedResidency =
+        spans.length >= 3 ? spans[2].textContent.trim() : "US";
       const isUS = selectedResidency === "US";
 
       if (checkboxEl) {
@@ -100,21 +185,30 @@
       }
 
       // Check if .mvt-85-extra-labels-container exists
-      let containerEl = document.querySelector(".mvt-85-extra-labels-container");
+      let containerEl = document.querySelector(
+        ".mvt-85-extra-labels-container",
+      );
 
       // If it doesn't exist, create it below the age/residency row
       if (!containerEl) {
-        const residencyWrapper = document.querySelector(".mvt-85-residency-wrapper");
+        const residencyWrapper = document.querySelector(
+          ".mvt-85-residency-wrapper",
+        );
         if (residencyWrapper) {
           containerEl = document.createElement("div");
           containerEl.className = "mvt-85-extra-labels-container";
-          residencyWrapper.parentNode.insertAdjacentElement("afterend", containerEl);
+          residencyWrapper.parentNode.insertAdjacentElement(
+            "afterend",
+            containerEl,
+          );
         }
       }
 
       if (containerEl) {
         // Ensure the age label placeholder exists so residency takes the second place
-        let ageLabelEl = containerEl.querySelector(".mvt-85-age-label:not(.mvt-85-residency-label)");
+        let ageLabelEl = containerEl.querySelector(
+          ".mvt-85-age-label:not(.mvt-85-residency-label)",
+        );
         if (!ageLabelEl) {
           ageLabelEl = document.createElement("div");
           ageLabelEl.className = "mvt-85-age-label";
@@ -123,13 +217,16 @@
           containerEl.insertBefore(ageLabelEl, containerEl.firstChild);
         }
 
-        let residencyLabelEl = containerEl.querySelector(".mvt-85-residency-label");
+        let residencyLabelEl = containerEl.querySelector(
+          ".mvt-85-residency-label",
+        );
 
         if (!isUS) {
           if (!residencyLabelEl) {
             residencyLabelEl = document.createElement("div");
             // Reuse age-label class for identical styling
-            residencyLabelEl.className = "mvt-85-residency-label mvt-85-age-label";
+            residencyLabelEl.className =
+              "mvt-85-residency-label mvt-85-age-label";
             containerEl.appendChild(residencyLabelEl);
           }
           residencyLabelEl.textContent = "Residency: " + selectedResidency;
@@ -147,7 +244,6 @@
     console.log("[MVT-85] applyCode");
 
     try {
-
       // Wait for Age Dropdown
       waitForStableElement(
         '[data-testid="drivers-age-dropdown"]',
@@ -158,7 +254,7 @@
             if (!targetElement) return;
 
             const selectEl = targetElement.querySelector(
-              "#mui-component-select-ageSelect"
+              "#mui-component-select-ageSelect",
             );
 
             if (!selectEl) {
@@ -176,7 +272,7 @@
             // Bare checkbox — no label text, no interaction on the text
             topRowEl.insertAdjacentHTML(
               "beforeend",
-              `<input type="checkbox" id="ageCheckbox" class="mvt-85-checkbox" />`
+              `<input type="checkbox" id="ageCheckbox" class="mvt-85-checkbox" />`,
             );
 
             // Move dropdown into the top row (right of checkbox)
@@ -188,10 +284,13 @@
             ageLabelContainerEl.className = "mvt-85-extra-labels-container";
             ageLabelContainerEl.insertAdjacentHTML(
               "beforeend",
-              `<div class="mvt-85-age-label" style="visibility:hidden; width:102px;"></div>`
+              `<div class="mvt-85-age-label" style="visibility:hidden; width:102px;"></div>`,
             );
             const ageWrapperParentEl = ageWrapperEl.parentNode;
-            ageWrapperParentEl.insertAdjacentElement("afterend", ageLabelContainerEl);
+            ageWrapperParentEl.insertAdjacentElement(
+              "afterend",
+              ageLabelContainerEl,
+            );
 
             const checkboxEl = topRowEl.querySelector(".mvt-85-checkbox");
             _ageDropdownEl = targetElement;
@@ -201,7 +300,9 @@
             const currentText = selectEl.textContent.trim();
             let initialSelectedAge = "25+";
             if (!currentText.includes("25+")) {
-              initialSelectedAge = currentText.replace("Driver's Age:", "").trim();
+              initialSelectedAge = currentText
+                .replace("Driver's Age:", "")
+                .trim();
             }
             updateAgeUI(targetElement, checkboxEl, initialSelectedAge);
 
@@ -209,10 +310,18 @@
             checkboxEl.addEventListener("click", function (e) {
               e.preventDefault();
               selectEl.dispatchEvent(
-                new MouseEvent("mousedown", { bubbles: true, cancelable: true, view: window })
+                new MouseEvent("mousedown", {
+                  bubbles: true,
+                  cancelable: true,
+                  view: window,
+                }),
               );
               selectEl.dispatchEvent(
-                new MouseEvent("click", { bubbles: true, cancelable: true, view: window })
+                new MouseEvent("click", {
+                  bubbles: true,
+                  cancelable: true,
+                  view: window,
+                }),
               );
             });
 
@@ -223,18 +332,25 @@
               if (selectEl.textContent !== "Driver's Age: 25+") {
                 selectTextObserver.disconnect();
                 selectEl.textContent = "Driver's Age: 25+";
-                selectTextObserver.observe(selectEl, { childList: true, subtree: true, characterData: true });
+                selectTextObserver.observe(selectEl, {
+                  childList: true,
+                  subtree: true,
+                  characterData: true,
+                });
               }
             });
             selectEl.textContent = "Driver's Age: 25+";
-            selectTextObserver.observe(selectEl, { childList: true, subtree: true, characterData: true });
+            selectTextObserver.observe(selectEl, {
+              childList: true,
+              subtree: true,
+              characterData: true,
+            });
 
             document.body.classList.add(TEST_ID + "-" + VAR_ID);
-
           } catch (err) {
             console.error("[MVT-85] injection error:", err);
           }
-        }
+        },
       );
 
       // Wait for Residency Dropdown
@@ -255,12 +371,13 @@
 
             // Checked conditionally based on 3rd span text
             const spans = targetElement.querySelectorAll("span");
-            const isUS = spans.length >= 3 && spans[2].textContent.trim() === "US";
+            const isUS =
+              spans.length >= 3 && spans[2].textContent.trim() === "US";
             const checkedAttr = isUS ? "checked" : "";
 
             topRowEl.insertAdjacentHTML(
               "beforeend",
-              `<input type="checkbox" id="residencyCheckbox" class="mvt-85-checkbox" ${checkedAttr} />`
+              `<input type="checkbox" id="residencyCheckbox" class="mvt-85-checkbox" ${checkedAttr} />`,
             );
 
             // Wrap it
@@ -273,10 +390,18 @@
             checkboxEl.addEventListener("click", function (e) {
               e.preventDefault();
               targetElement.dispatchEvent(
-                new MouseEvent("mousedown", { bubbles: true, cancelable: true, view: window })
+                new MouseEvent("mousedown", {
+                  bubbles: true,
+                  cancelable: true,
+                  view: window,
+                }),
               );
               targetElement.dispatchEvent(
-                new MouseEvent("click", { bubbles: true, cancelable: true, view: window })
+                new MouseEvent("click", {
+                  bubbles: true,
+                  cancelable: true,
+                  view: window,
+                }),
               );
             });
 
@@ -285,14 +410,16 @@
             const residencyTextObserver = new MutationObserver(function () {
               updateResidencyUI(targetElement, checkboxEl);
             });
-            residencyTextObserver.observe(targetElement, { childList: true, subtree: true, characterData: true });
-
+            residencyTextObserver.observe(targetElement, {
+              childList: true,
+              subtree: true,
+              characterData: true,
+            });
           } catch (err) {
             console.error("[MVT-85] residency injection error:", err);
           }
-        }
+        },
       );
-
     } catch (err) {
       console.error("[MVT-85] applyCode error:", err);
     }
@@ -317,9 +444,7 @@
     var original = history[method];
     history[method] = function () {
       var result = original.apply(this, arguments);
-      window.dispatchEvent(
-        new Event("avis:routechange")
-      );
+      window.dispatchEvent(new Event("avis:routechange"));
       return result;
     };
   }
@@ -331,32 +456,28 @@
   // Event Listeners
   // -----------------------------
 
-  window.addEventListener(
-    "avis:routechange",
-    onRouteChange
-  );
+  window.addEventListener("avis:routechange", onRouteChange);
 
-  window.addEventListener(
-    "popstate",
-    onRouteChange
-  );
+  window.addEventListener("popstate", onRouteChange);
 
   // -----------------------------
   // Age Options Menu
   // -----------------------------
 
   function ageOptionsFn() {
-    const ageMenuEl = document.querySelector('[data-testid="drivers-age-menu"]');
+    const ageMenuEl = document.querySelector(
+      '[data-testid="drivers-age-menu"]',
+    );
     if (!ageMenuEl) return;
 
-    if (!ageMenuEl.querySelector('.mvt-85-menu-title')) {
+    if (!ageMenuEl.querySelector(".mvt-85-menu-title")) {
       ageMenuEl.insertAdjacentHTML(
-        'afterbegin',
-        `<p class="mvt-85-menu-title" style="font-weight: 700; color: #000; font-size: 10px; margin: 8px 16px 4px 16px; margin: 0px; margin-bottom: 8px;">Driver's Age</p>`
+        "afterbegin",
+        `<p class="mvt-85-menu-title" style="font-weight: 700; color: #000; font-size: 10px; margin: 8px 16px 4px 16px; margin: 0px; margin-bottom: 8px;">Driver's Age</p>`,
       );
     }
 
-    const options = ageMenuEl.querySelectorAll('li');
+    const options = ageMenuEl.querySelectorAll("li");
     options.forEach((option) => {
       // Use mousedown — MUI closes & removes the menu before 'click' fires
       option.addEventListener("mousedown", () => {
@@ -373,13 +494,15 @@
   // -----------------------------
 
   function residencyOptionsFn() {
-    const residencyMenuEl = document.querySelector('[data-testid="residency-dropdown-menu-container"]');
+    const residencyMenuEl = document.querySelector(
+      '[data-testid="residency-dropdown-menu-container"]',
+    );
     if (!residencyMenuEl) return;
 
-    if (!residencyMenuEl.querySelector('.mvt-85-menu-title')) {
+    if (!residencyMenuEl.querySelector(".mvt-85-menu-title")) {
       residencyMenuEl.insertAdjacentHTML(
-        'afterbegin',
-        `<p class="mvt-85-menu-title" style="font-weight: 700; color: #000; font-size: 10px; margin: 8px 16px 4px 9px;">Residency:</p>`
+        "afterbegin",
+        `<p class="mvt-85-menu-title" style="font-weight: 700; color: #000; font-size: 10px; margin: 8px 16px 4px 9px;">Residency:</p>`,
       );
     }
   }
@@ -395,30 +518,29 @@
     const observer = new MutationObserver(function () {
       if (!isTargetPage()) return;
 
-      const wrapperExists = document.querySelector(
-        ".mvt-85-age-wrapper"
-      );
+      const wrapperExists = document.querySelector(".mvt-85-age-wrapper");
       const targetExists = document.querySelector(
-        '[data-testid="drivers-age-dropdown"]'
+        '[data-testid="drivers-age-dropdown"]',
       );
       const residencyWrapperExists = document.querySelector(
-        ".mvt-85-residency-wrapper"
+        ".mvt-85-residency-wrapper",
       );
       const residencyTargetExists = document.querySelector(
-        '[data-testid="residency-dropdown-button"]'
+        '[data-testid="residency-dropdown-button"]',
       );
 
       // React rerender removed experiment
-      if ((targetExists && !wrapperExists) || (residencyTargetExists && !residencyWrapperExists)) {
-        console.log(
-          "[MVT-85] wrapper removed by rerender, reinjecting"
-        );
+      if (
+        (targetExists && !wrapperExists) ||
+        (residencyTargetExists && !residencyWrapperExists)
+      ) {
+        console.log("[MVT-85] wrapper removed by rerender, reinjecting");
         applyCode();
       }
 
       // Age options menu observer
       const ageMenuExists = document.querySelector(
-        '[data-testid="drivers-age-menu"]'
+        '[data-testid="drivers-age-menu"]',
       );
       if (ageMenuExists && !_ageMenuHandled) {
         _ageMenuHandled = true;
@@ -429,7 +551,7 @@
 
       // Residency options menu observer
       const residencyMenuExists = document.querySelector(
-        '[data-testid="residency-dropdown-menu-container"]'
+        '[data-testid="residency-dropdown-menu-container"]',
       );
       if (residencyMenuExists && !_residencyMenuHandled) {
         _residencyMenuHandled = true;
@@ -441,7 +563,7 @@
 
     observer.observe(document.body, {
       childList: true,
-      subtree: true
+      subtree: true,
     });
   }
 
@@ -458,5 +580,4 @@
     onRouteChange();
   }
   init();
-
 })();

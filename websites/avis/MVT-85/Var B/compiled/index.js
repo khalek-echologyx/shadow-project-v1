@@ -1,7 +1,13 @@
 (() => {
   var TEST_ID = "MVT-85";
   const VAR_ID = "Var_C";
-  var TARGET_PATH = "/en/home";
+  const TARGET_PATHS = [
+    "/en/home",
+    "/en/reservation/make-reservation",
+    "/en/reservation/vehicle-availability",
+    "/en/reservation/protectioncoverage",
+    "/en/reservation/addons"
+  ];
 
   function poll(condition, callback, timeout, interval) {
     timeout = timeout || 10000;
@@ -71,7 +77,13 @@
 
 
   function isTargetPage() {
-    return window.location.pathname.indexOf(TARGET_PATH) !== -1;
+    var path = window.location.pathname;
+    for (var i = 0; i < TARGET_PATHS.length; i++) {
+      if (path.indexOf(TARGET_PATHS[i]) !== -1) {
+        return true;
+      }
+    }
+    return false;
   }
 
   function onRouteChange() {

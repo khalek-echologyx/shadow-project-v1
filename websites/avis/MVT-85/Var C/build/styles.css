@@ -1,4 +1,8 @@
-.MVT-85-Var_C #booking-widget #booking-widget-desktop-form [data-testid=drivers-age-dropdown] #mui-component-select-ageSelect {
+.MVT-85-Var_C
+  #booking-widget
+  #booking-widget-desktop-form
+  [data-testid="drivers-age-dropdown"]
+  #mui-component-select-ageSelect {
   font-weight: 500;
   color: #000;
   font-size: 14px !important;
@@ -41,7 +45,10 @@
 .MVT-85-Var_C .mvt-85-age-wrapper svg.MuiSvgIcon-root {
   display: none;
 }
-.MVT-85-Var_C .mvt-85-residency-wrapper [data-testid=residency-dropdown-button] span {
+.MVT-85-Var_C
+  .mvt-85-residency-wrapper
+  [data-testid="residency-dropdown-button"]
+  span {
   color: #000;
   font-weight: 500;
 }

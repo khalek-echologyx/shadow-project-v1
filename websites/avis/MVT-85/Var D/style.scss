@@ -17,6 +17,10 @@
         stroke-width: 0.2;
       }
     }
+
+    svg.not-home {
+      top: 3px !important;
+    }
   }
 
   #booking-widget #booking-widget-desktop-form [data-testid="drivers-age-dropdown"] svg.mvt-85-info-icon {
@@ -81,7 +85,11 @@
       visibility: visible;
     }
 
-    .residency-tooltip{
+    svg.not-home {
+      margin-top: -3px !important;
+    }
+
+    .residency-tooltip {
       left: 86%;
     }
   }
@@ -91,74 +99,89 @@
       color: #8B8686;
       font-weight: 500;
     }
-    svg.MuiSvgIcon-root{
+
+    svg.MuiSvgIcon-root {
       color: #736D6D;
       margin-left: 4px;
     }
-    svg.mvt-85-info-icon{
+
+    svg.mvt-85-info-icon {
       margin-left: 4px;
     }
-    svg.mvt-85-info-icon:hover{
+
+    svg.mvt-85-info-icon:hover {
       path {
         fill: #000;
       }
-      +.mvt-85-tooltip{
-        opacity: 1;
-        visibility: visible;
-      }
-    }
-    .wizard-tooltip{
-      left: 86%;
-    }
-  }
-  [data-testid="wizard-number-popup-trigger-button"]:hover {
-    p{
-      color: #000;
-    }
-    svg.MuiSvgIcon-root{
-      color: #000;
-    }
-  }
-  //discount
-  [data-testid="discount-coupon-popup-trigger-button"]{
-    p{
-      color: #8B8686;
-      font-weight: 500;
-    }
-    svg.MuiSvgIcon-root{
-      color: #736D6D;
-      margin-left: 4px;
-    }
-    svg.mvt-85-info-icon{
-      margin-left: 4px;
-    }
-    svg.mvt-85-info-icon:hover{
-      path {
-        fill: #000;
-      }
-      +.mvt-85-tooltip{
+
+      +.mvt-85-tooltip {
         opacity: 1;
         visibility: visible;
       }
     }
 
-    &:hover{
-      p{
+    .wizard-tooltip {
+      left: 86%;
+    }
+  }
+
+  [data-testid="wizard-number-popup-trigger-button"]:hover {
+    p {
+      color: #000;
+    }
+
+    svg.MuiSvgIcon-root {
+      color: #000;
+    }
+  }
+
+  //discount
+  [data-testid="discount-coupon-popup-trigger-button"] {
+    p {
+      color: #8B8686;
+      font-weight: 500;
+    }
+
+    svg.MuiSvgIcon-root {
+      color: #736D6D;
+      margin-left: 4px;
+    }
+
+    svg.mvt-85-info-icon {
+      margin-left: 4px;
+    }
+
+    svg.mvt-85-info-icon:hover {
+      path {
+        fill: #000;
+      }
+
+      +.mvt-85-tooltip {
+        opacity: 1;
+        visibility: visible;
+      }
+    }
+
+    &:hover {
+      p {
         color: #000;
       }
-      svg.MuiSvgIcon-root{
+
+      svg.MuiSvgIcon-root {
         color: #000;
       }
-      svg.mvt-85-info-icon{
-        path{
+
+      svg.mvt-85-info-icon {
+        path {
           fill: #000;
         }
       }
     }
-    .discount-tooltip{
+
+    .discount-tooltip {
       left: 80%;
     }
-  }  
+  }
 
   //tooltip
   .mvt-85-tooltip::before {
@@ -199,5 +222,5 @@
     overflow-wrap: break-word;
     text-wrap: auto;
   }
-  
+
 }
