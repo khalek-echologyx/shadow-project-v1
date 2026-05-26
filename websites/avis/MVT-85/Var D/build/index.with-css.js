@@ -4,29 +4,74 @@
       // Check if <head> exists
       clearInterval(interval); // Stop checking once found
       var style = document.createElement("style");
-      style.innerHTML = `.MVT-85-Var_D [data-testid="drivers-age-dropdown"] {
+      style.innerHTML = `.MVT-85-Var_D svg.mvt-85-info-icon {
+  width: 12px !important;
+  height: 12px !important;
+  min-width: 12px !important;
+  min-height: 12px !important;
+  flex-shrink: 0 !important;
+}
+.MVT-85-Var_D
+  #booking-widget
+  #booking-widget-desktop-form
+  [data-testid="drivers-age-dropdown"] {
   color: #8b8686;
   font-weight: 500;
 }
 .MVT-85-Var_D
+  #booking-widget
+  #booking-widget-desktop-form
   [data-testid="drivers-age-dropdown"]
   #mui-component-select-ageSelect {
-  margin-right: 16px;
+  padding-right: 28px !important;
+  font-size: 14px !important;
 }
-.MVT-85-Var_D [data-testid="drivers-age-dropdown"] svg:not(.mvt-85-info-icon) {
+.MVT-85-Var_D
+  #booking-widget
+  #booking-widget-desktop-form
+  [data-testid="drivers-age-dropdown"]
+  svg:not(.mvt-85-info-icon) {
   width: 12px;
   height: 12px;
   top: 7px;
 }
 .MVT-85-Var_D
+  #booking-widget
+  #booking-widget-desktop-form
   [data-testid="drivers-age-dropdown"]
   svg:not(.mvt-85-info-icon)
   path {
   stroke: #524d4d;
   stroke-width: 0.2;
 }
-.MVT-85-Var_D [data-testid="drivers-age-dropdown"] svg.not-home {
-  top: 3px !important;
+@media only screen and (max-width: 1152px) {
+  .MVT-85-Var_D
+    #booking-widget
+    #booking-widget-desktop-form
+    [data-testid="drivers-age-dropdown"]
+    svg:not(.mvt-85-info-icon) {
+    top: 17px;
+  }
+}
+.MVT-85-Var_D
+  #booking-widget
+  #booking-widget-desktop-form
+  [data-testid="drivers-age-dropdown"]
+  svg.not-home {
+  top: 6px !important;
+}
+.MVT-85-Var_D
+  #booking-widget
+  #booking-widget-desktop-form
+  [data-testid="drivers-age-dropdown"]
+  .age-tooltip {
+  left: 86%;
+}
+.MVT-85-Var_D
+  #booking-widget
+  #booking-widget-desktop-form
+  [data-testid="drivers-age-dropdown"]:hover {
+  color: #000 !important;
 }
 .MVT-85-Var_D
   #booking-widget
@@ -35,7 +80,7 @@
   svg.mvt-85-info-icon {
   position: absolute;
   right: 12px !important;
-  top: 6px;
+  top: 5px;
   cursor: pointer;
 }
 .MVT-85-Var_D
@@ -45,6 +90,15 @@
   svg.mvt-85-info-icon:hover
   path {
   fill: #000;
+}
+@media only screen and (max-width: 1152px) {
+  .MVT-85-Var_D
+    #booking-widget
+    #booking-widget-desktop-form
+    [data-testid="drivers-age-dropdown"]
+    svg.mvt-85-info-icon {
+    top: 16px;
+  }
 }
 .MVT-85-Var_D
   #booking-widget
@@ -63,74 +117,131 @@
   opacity: 1;
   visibility: visible;
 }
-.MVT-85-Var_D [data-testid="residency-dropdown-button"] {
+.MVT-85-Var_D
+  #booking-widget
+  #booking-widget-desktop-form
+  [data-testid="residency-dropdown-button"] {
   color: #8b8686;
   font-weight: 500;
 }
-.MVT-85-Var_D [data-testid="residency-dropdown-button"] span.MuiButton-icon {
+.MVT-85-Var_D
+  #booking-widget
+  #booking-widget-desktop-form
+  [data-testid="residency-dropdown-button"]
+  span {
+  font-size: 14px !important;
+}
+.MVT-85-Var_D
+  #booking-widget
+  #booking-widget-desktop-form
+  [data-testid="residency-dropdown-button"]
+  span.MuiButton-icon {
   margin-top: -3px;
 }
 .MVT-85-Var_D
+  #booking-widget
+  #booking-widget-desktop-form
   [data-testid="residency-dropdown-button"]
   svg:not(.mvt-85-info-icon) {
   width: 12px;
   height: 12px;
 }
 .MVT-85-Var_D
+  #booking-widget
+  #booking-widget-desktop-form
   [data-testid="residency-dropdown-button"]
   svg:not(.mvt-85-info-icon)
   path {
   stroke: #524d4d;
   stroke-width: 0.2;
 }
-.MVT-85-Var_D [data-testid="residency-dropdown-button"] svg.mvt-85-info-icon {
+.MVT-85-Var_D
+  #booking-widget
+  #booking-widget-desktop-form
+  [data-testid="residency-dropdown-button"]
+  svg.mvt-85-info-icon {
   margin-left: 4px;
 }
 .MVT-85-Var_D
+  #booking-widget
+  #booking-widget-desktop-form
   [data-testid="residency-dropdown-button"]
   svg.mvt-85-info-icon:hover
   path {
   fill: #000;
 }
-.MVT-85-Var_D [data-testid="residency-dropdown-button"] span.MuiButton-icon {
+.MVT-85-Var_D
+  #booking-widget
+  #booking-widget-desktop-form
+  [data-testid="residency-dropdown-button"]
+  span.MuiButton-icon {
   margin-left: 4px;
   margin-top: 2px;
 }
 .MVT-85-Var_D
+  #booking-widget
+  #booking-widget-desktop-form
   [data-testid="residency-dropdown-button"]
   svg.mvt-85-info-icon:hover
   + .mvt-85-tooltip {
   opacity: 1;
   visibility: visible;
 }
-.MVT-85-Var_D [data-testid="residency-dropdown-button"] svg.not-home {
-  margin-top: -3px !important;
-}
-.MVT-85-Var_D [data-testid="residency-dropdown-button"] .residency-tooltip {
-  left: 86%;
-}
-.MVT-85-Var_D [data-testid="wizard-number-popup-trigger-button"] p {
-  color: #8b8686;
-  font-weight: 500;
+.MVT-85-Var_D
+  #booking-widget
+  #booking-widget-desktop-form
+  [data-testid="residency-dropdown-button"]
+  svg.not-home {
+  margin-top: 0px !important;
 }
 .MVT-85-Var_D
+  #booking-widget
+  #booking-widget-desktop-form
+  [data-testid="residency-dropdown-button"]
+  .residency-tooltip {
+  left: 86%;
+}
+.MVT-85-Var_D
+  #booking-widget
+  #booking-widget-desktop-form
+  [data-testid="residency-dropdown-button"]:hover {
+  color: #000 !important;
+}
+.MVT-85-Var_D
+  #booking-widget
+  #booking-widget-desktop-form
+  [data-testid="wizard-number-popup-trigger-button"]
+  p {
+  color: #8b8686;
+  font-weight: 500;
+  font-size: 14px !important;
+}
+.MVT-85-Var_D
+  #booking-widget
+  #booking-widget-desktop-form
   [data-testid="wizard-number-popup-trigger-button"]
   svg.MuiSvgIcon-root {
   color: #736d6d;
   margin-left: 4px;
 }
 .MVT-85-Var_D
+  #booking-widget
+  #booking-widget-desktop-form
   [data-testid="wizard-number-popup-trigger-button"]
   svg.mvt-85-info-icon {
   margin-left: 4px;
 }
 .MVT-85-Var_D
+  #booking-widget
+  #booking-widget-desktop-form
   [data-testid="wizard-number-popup-trigger-button"]
   svg.mvt-85-info-icon:hover
   path {
   fill: #000;
 }
 .MVT-85-Var_D
+  #booking-widget
+  #booking-widget-desktop-form
   [data-testid="wizard-number-popup-trigger-button"]
   svg.mvt-85-info-icon:hover
   + .mvt-85-tooltip {
@@ -138,9 +249,25 @@
   visibility: visible;
 }
 .MVT-85-Var_D
+  #booking-widget
+  #booking-widget-desktop-form
   [data-testid="wizard-number-popup-trigger-button"]
   .wizard-tooltip {
   left: 86%;
+}
+.MVT-85-Var_D
+  #booking-widget
+  #booking-widget-desktop-form
+  [data-testid="wizard-number-popup-trigger-button"]:hover
+  p {
+  color: #000 !important;
+}
+.MVT-85-Var_D
+  #booking-widget
+  #booking-widget-desktop-form
+  [data-testid="wizard-number-popup-trigger-button"]:hover
+  svg.MuiSvgIcon-root {
+  color: #000 !important;
 }
 .MVT-85-Var_D [data-testid="wizard-number-popup-trigger-button"]:hover p {
   color: #000;
@@ -150,52 +277,85 @@
   svg.MuiSvgIcon-root {
   color: #000;
 }
-.MVT-85-Var_D [data-testid="discount-coupon-popup-trigger-button"] p {
+.MVT-85-Var_D
+  #booking-widget
+  #booking-widget-desktop-form
+  [data-testid="discount-coupon-popup-trigger-button"]
+  p:not(.mui-1i5m7g4) {
   color: #8b8686;
   font-weight: 500;
+  font-size: 14px !important;
 }
 .MVT-85-Var_D
+  #booking-widget
+  #booking-widget-desktop-form
+  [data-testid="discount-coupon-popup-trigger-button"]
+  p.mui-1i5m7g4 {
+  font-size: 14px !important;
+}
+.MVT-85-Var_D
+  #booking-widget
+  #booking-widget-desktop-form
   [data-testid="discount-coupon-popup-trigger-button"]
   svg.MuiSvgIcon-root {
   color: #736d6d;
   margin-left: 4px;
 }
 .MVT-85-Var_D
+  #booking-widget
+  #booking-widget-desktop-form
   [data-testid="discount-coupon-popup-trigger-button"]
   svg.mvt-85-info-icon {
   margin-left: 4px;
 }
 .MVT-85-Var_D
+  #booking-widget
+  #booking-widget-desktop-form
   [data-testid="discount-coupon-popup-trigger-button"]
   svg.mvt-85-info-icon:hover
   path {
   fill: #000;
 }
 .MVT-85-Var_D
+  #booking-widget
+  #booking-widget-desktop-form
   [data-testid="discount-coupon-popup-trigger-button"]
   svg.mvt-85-info-icon:hover
   + .mvt-85-tooltip {
   opacity: 1;
   visibility: visible;
 }
-.MVT-85-Var_D [data-testid="discount-coupon-popup-trigger-button"]:hover p {
+.MVT-85-Var_D
+  #booking-widget
+  #booking-widget-desktop-form
+  [data-testid="discount-coupon-popup-trigger-button"]:hover
+  p:not(.mui-1i5m7g4) {
   color: #000;
 }
 .MVT-85-Var_D
+  #booking-widget
+  #booking-widget-desktop-form
   [data-testid="discount-coupon-popup-trigger-button"]:hover
   svg.MuiSvgIcon-root {
   color: #000;
 }
 .MVT-85-Var_D
+  #booking-widget
+  #booking-widget-desktop-form
   [data-testid="discount-coupon-popup-trigger-button"]:hover
   svg.mvt-85-info-icon
   path {
   fill: #000;
 }
 .MVT-85-Var_D
+  #booking-widget
+  #booking-widget-desktop-form
   [data-testid="discount-coupon-popup-trigger-button"]
   .discount-tooltip {
   left: 80%;
+}
+.MVT-85-Var_D [data-testid="recognized-state-logout"] {
+  margin-left: 1px !important;
 }
 .MVT-85-Var_D .mvt-85-tooltip::before {
   content: "";
@@ -229,6 +389,22 @@
   box-sizing: border-box;
   overflow-wrap: break-word;
   text-wrap: auto;
+}
+@media only screen and (max-width: 1152px) {
+  .MVT-85-Var_D .mvt-85-tooltip {
+    left: 88% !important;
+    top: 39px;
+  }
+}
+.MVT-85-Var_D
+  [data-testid="residency-dropdown-menu-container"]:last-child
+  > div {
+  background-color: #fff !important;
+  border-radius: 0 0 4px 4px !important;
+}
+.MVT-85-Var_D [data-testid="residency-dropdown-button"],
+.MVT-85-Var_D [data-testid="drivers-age-dropdown"] {
+  margin-right: 10px;
 }
 `;
       document.head.appendChild(style);
@@ -281,7 +457,8 @@
 
   function applyCode() {
     try {
-      if (document.body.classList.contains(TEST_ID + "-" + VAR_ID)) return;
+      if (document.body.classList.contains(TEST_ID + "-init")) return;
+      document.body.classList.add(TEST_ID + "-init");
 
       // age section
       poll(
@@ -320,8 +497,6 @@
               "afterend",
               getToolTipHtml(toolTipText.age, "age-tooltip"),
             );
-
-            document.body.classList.add(TEST_ID + "-" + VAR_ID);
           } catch (err) {
             console.error("Error in Age section:", err);
           }
@@ -442,10 +617,18 @@
   }
 
   function onRouteChange() {
-    if (isTargetPage()) {
+    if (!isTargetPage()) {
       document.body.classList.remove(TEST_ID + "-" + VAR_ID);
-      applyCode();
+      document.body.classList.remove(TEST_ID + "-init");
+      return;
     }
+
+    if (!document.body.classList.contains(TEST_ID + "-" + VAR_ID)) {
+      document.body.classList.add(TEST_ID + "-" + VAR_ID);
+    }
+
+    document.body.classList.remove(TEST_ID + "-init");
+    applyCode();
   }
 
   function patchHistoryMethod(method) {
@@ -472,23 +655,57 @@
       lastPath = currentPath;
       if (isTargetPage()) {
         onRouteChange();
+      } else {
+        document.body.classList.remove(TEST_ID + "-" + VAR_ID);
+        document.body.classList.remove(TEST_ID + "-init");
       }
     }
 
-    if (!isTargetPage()) return;
+    if (!isTargetPage()) {
+      document.body.classList.remove(TEST_ID + "-" + VAR_ID);
+      document.body.classList.remove(TEST_ID + "-init");
+      return;
+    }
+
+    if (!document.body.classList.contains(TEST_ID + "-" + VAR_ID)) {
+      document.body.classList.add(TEST_ID + "-" + VAR_ID);
+    }
 
     const targetExists = document.querySelector(
       '[data-testid="drivers-age-dropdown"]',
     );
     if (targetExists) {
       const iconExists = targetExists.querySelector(".mvt-85-info-icon");
-      if (
-        !iconExists &&
-        document.body.classList.contains(TEST_ID + "-" + VAR_ID)
-      ) {
+      if (!iconExists && document.body.classList.contains(TEST_ID + "-init")) {
         console.log("[MVT-85] React rerendered the form, reinjecting...");
-        document.body.classList.remove(TEST_ID + "-" + VAR_ID);
+        document.body.classList.remove(TEST_ID + "-init");
         applyCode();
+      }
+    }
+
+    const logoutBtn = document.querySelector(
+      '[data-testid="recognized-state-logout"]',
+    );
+    const wizardTooltips = document.querySelectorAll(
+      ".mvt-85-tooltip.wizard-tooltip",
+    );
+    wizardTooltips.forEach((wizardTooltip) => {
+      if (logoutBtn) {
+        wizardTooltip.style.left = "73%";
+      } else {
+        wizardTooltip.style.left = "";
+      }
+    });
+
+    const residencyBtn = document.querySelector(
+      '[data-testid="residency-dropdown-button"]',
+    );
+    if (residencyBtn) {
+      const spans = residencyBtn.querySelectorAll("span");
+      if (spans.length >= 3) {
+        if (spans[2].textContent.trim() === "US") {
+          spans[2].textContent = "USA";
+        }
       }
     }
   });

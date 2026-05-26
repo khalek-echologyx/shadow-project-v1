@@ -1224,3 +1224,9 @@
 .MVT-36 [data-testid="action-footer-total-amount"] {
   pointer-events: none !important;
 }
+.MVT-36 .mvt-36-disabled {
+  color: #000 !important;
+  background-color: rgb(244, 244, 244) !important;
+  pointer-events: none !important;
+  cursor: none !important;
+}

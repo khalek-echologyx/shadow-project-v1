@@ -20,6 +20,7 @@
   .mvt-36-summary-wrapper [data-testid="category-expand-button-taxes-fees"] {
     pointer-events: all !important;
   }
+
   //saving and discount
   .mvt-36-summary-wrapper [data-testid="category-expand-button-savings-discounts"] {
     pointer-events: all !important;
@@ -58,7 +59,7 @@
     margin: 4px 0;
     text-decoration: none;
 
-    .item-desc{
+    .item-desc {
       text-decoration: underline;
     }
   }
@@ -74,9 +75,9 @@
     padding: 32px 24px 24px 24px;
     margin-top: 16px;
   }
-  
+
   .prot-title {
-    font-family: 'AvisHeadline', 'AvisHeadline Fallback', sans-serif;
+    font-family: var(--abg-font-headline), sans-serif;
     text-transform: uppercase;
     font-size: 24px;
     line-height: 24px;
@@ -224,7 +225,7 @@
       border-color: #000;
       pointer-events: none;
 
-      .prot-details{
+      .prot-details {
         pointer-events: auto !important;
       }
 
@@ -674,7 +675,7 @@
       border-color: #000;
       cursor: default;
 
-      .price-info{
+      .price-info {
         visibility: hidden;
       }
 
@@ -726,7 +727,7 @@
     margin-top: 40px;
 
     .add-on-title {
-      font-family: 'AvisHeadline', 'AvisHeadline Fallback', sans-serif;
+      font-family: var(--abg-font-headline), sans-serif;
       text-transform: uppercase;
       font-size: 24px;
       line-height: 24px;
@@ -842,7 +843,7 @@
         line-height: 21px;
         letter-spacing: 0px;
 
-        .est-text{
+        .est-text {
           font-size: 16px;
         }
 
@@ -1018,7 +1019,7 @@
   .add-on-card.included {
     border-color: #000;
 
-    .price-info{
+    .price-info {
       visibility: hidden;
     }
 
@@ -1184,11 +1185,11 @@
     background-color: rgb(244, 244, 244) !important;
     pointer-events: none !important;
     cursor: none !important;
-    
+
   }
 
   @media (max-width: 767px) {
-    #avis-pwp-block .pwp-row{
+    #avis-pwp-block .pwp-row {
       flex-direction: column;
     }
   }

@@ -41,7 +41,8 @@
 
   function applyCode() {
     try {
-      if (document.body.classList.contains(TEST_ID + "-" + VAR_ID)) return;
+      if (document.body.classList.contains(TEST_ID + "-init")) return;
+      document.body.classList.add(TEST_ID + "-init");
 
       // age section
       poll(
@@ -80,8 +81,6 @@
               "afterend",
               getToolTipHtml(toolTipText.age, "age-tooltip"),
             );
-
-            document.body.classList.add(TEST_ID + "-" + VAR_ID);
           } catch (err) {
             console.error("Error in Age section:", err);
           }
@@ -202,10 +201,18 @@
   }
 
   function onRouteChange() {
-    if (isTargetPage()) {
+    if (!isTargetPage()) {
       document.body.classList.remove(TEST_ID + "-" + VAR_ID);
-      applyCode();
+      document.body.classList.remove(TEST_ID + "-init");
+      return;
     }
+
+    if (!document.body.classList.contains(TEST_ID + "-" + VAR_ID)) {
+      document.body.classList.add(TEST_ID + "-" + VAR_ID);
+    }
+
+    document.body.classList.remove(TEST_ID + "-init");
+    applyCode();
   }
 
   function patchHistoryMethod(method) {
@@ -232,23 +239,57 @@
       lastPath = currentPath;
       if (isTargetPage()) {
         onRouteChange();
+      } else {
+        document.body.classList.remove(TEST_ID + "-" + VAR_ID);
+        document.body.classList.remove(TEST_ID + "-init");
       }
     }
 
-    if (!isTargetPage()) return;
+    if (!isTargetPage()) {
+      document.body.classList.remove(TEST_ID + "-" + VAR_ID);
+      document.body.classList.remove(TEST_ID + "-init");
+      return;
+    }
+
+    if (!document.body.classList.contains(TEST_ID + "-" + VAR_ID)) {
+      document.body.classList.add(TEST_ID + "-" + VAR_ID);
+    }
 
     const targetExists = document.querySelector(
       '[data-testid="drivers-age-dropdown"]',
     );
     if (targetExists) {
       const iconExists = targetExists.querySelector(".mvt-85-info-icon");
-      if (
-        !iconExists &&
-        document.body.classList.contains(TEST_ID + "-" + VAR_ID)
-      ) {
+      if (!iconExists && document.body.classList.contains(TEST_ID + "-init")) {
         console.log("[MVT-85] React rerendered the form, reinjecting...");
-        document.body.classList.remove(TEST_ID + "-" + VAR_ID);
+        document.body.classList.remove(TEST_ID + "-init");
         applyCode();
+      }
+    }
+
+    const logoutBtn = document.querySelector(
+      '[data-testid="recognized-state-logout"]',
+    );
+    const wizardTooltips = document.querySelectorAll(
+      ".mvt-85-tooltip.wizard-tooltip",
+    );
+    wizardTooltips.forEach((wizardTooltip) => {
+      if (logoutBtn) {
+        wizardTooltip.style.left = "73%";
+      } else {
+        wizardTooltip.style.left = "";
+      }
+    });
+
+    const residencyBtn = document.querySelector(
+      '[data-testid="residency-dropdown-button"]',
+    );
+    if (residencyBtn) {
+      const spans = residencyBtn.querySelectorAll("span");
+      if (spans.length >= 3) {
+        if (spans[2].textContent.trim() === "US") {
+          spans[2].textContent = "USA";
+        }
       }
     }
   });

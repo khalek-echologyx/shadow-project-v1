@@ -30,6 +30,7 @@
 
             &:checked {
                 background-color: #000;
+                padding: 4px;
 
                 &::after {
                     content: '';
@@ -39,7 +40,7 @@
                     width: 4px;
                     height: 8px;
                     border: solid #fff;
-                    border-width: 0 2px 2px 0;
+                    border-width: 0 1.5px 1.5px 0;
                     transform: rotate(45deg);
                 }
             }
@@ -55,6 +56,10 @@
             color: #000;
             font-weight: 500;
         }
+    }
+
+    #booking-widget #booking-widget-desktop-form [data-testid="residency-dropdown-button"] span {
+        font-size: 14px !important;
     }
 
     .mvt-85-extra-labels-container {
@@ -74,5 +79,23 @@
         .mvt-85-residency-label {
             margin-left: 27px;
         }
+    }
+
+    #booking-widget #booking-widget-desktop-form {
+        [data-testid="wizard-number-popup-trigger-button"] p {
+            color: #000;
+            font-weight: 500;
+        }
+
+        [data-testid="discount-coupon-popup-trigger-button"] p:not(.mui-1i5m7g4) {
+            font-size: 14px !important;
+            font-weight: 500;
+            color: #000;
+        }
+    }
+
+    [data-testid="residency-dropdown-menu-container"]:last-child > div {
+        background-color: #fff !important;
+        border-radius: 0 0 4px 4px !important;
     }
 }

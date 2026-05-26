@@ -600,8 +600,8 @@ export function preferredPoint() {
         //   Sub-title: AvisSans 18px / 28px / 500
         //   Body / description: AvisSans 14px / 21px, black
         //   Avis red: rgb(212, 0, 42)
-        var FONT_HEADLINE = 'AvisHeadline,"AvisHeadline Fallback",Georgia,serif';
-        var FONT_BODY = 'AvisSans,"AvisSans Fallback",-apple-system,Helvetica,Arial,sans-serif';
+        var FONT_HEADLINE = 'var(--abg-font-headline), sans-serif;';
+        var FONT_BODY = 'var(--abg-font-primary),sans-serif';
         var AVIS_RED = 'rgb(212, 0, 42)';
 
         var css = ''

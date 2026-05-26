@@ -204,6 +204,37 @@ import { preferredPoint } from "./preferredPoint";
   //redirect to review and book page
   function runProtectionCoverage() {
     console.log("runProtectionCoverage");
+
+    function showRedirectingOverlay() {
+      if (document.getElementById("mvt-36-redirect-overlay")) return;
+      var overlay =
+        '<div id="mvt-36-redirect-overlay" class="MuiStack-root mui-16vybak">' +
+        '<div class="MuiStack-root mui-1qq5oic">' +
+        '<div class="MuiBox-root mui-8atqhb">' +
+        '<span class="MuiLinearProgress-root MuiLinearProgress-colorPrimary MuiLinearProgress-indeterminate mui-9ze8oj" role="progressbar">' +
+        '<span class="MuiLinearProgress-bar MuiLinearProgress-bar1 MuiLinearProgress-barColorPrimary MuiLinearProgress-bar1Indeterminate mui-880do1"></span>' +
+        '<span class="MuiLinearProgress-bar MuiLinearProgress-bar2 MuiLinearProgress-barColorPrimary MuiLinearProgress-bar2Indeterminate mui-146dcev"></span>' +
+        '</span>' +
+        '</div>' +
+        '</div>' +
+        '</div>';
+      document.body.insertAdjacentHTML("beforeend", overlay);
+    }
+
+    showRedirectingOverlay();
+
+    var isIOS = (
+      /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)
+    );
+
+    if (!isIOS) {
+      const queryParams = window.location.search;
+      console.log("direct redirect, navigating");
+      window.location.replace("/en/reservation/review-and-book" + queryParams);
+      return;
+    }
+
     var hasRedirected = false;
     var activeRequests = 0;
     var idleTimer = null;
@@ -263,24 +294,6 @@ import { preferredPoint } from "./preferredPoint";
       onRequestStart();
       return originalXhrSend.apply(this, arguments);
     };
-
-    function showRedirectingOverlay() {
-      if (document.getElementById("mvt-36-redirect-overlay")) return;
-      var overlay =
-        '<div id="mvt-36-redirect-overlay" class="MuiStack-root mui-16vybak">' +
-        '<div class="MuiStack-root mui-1qq5oic">' +
-        '<div class="MuiBox-root mui-8atqhb">' +
-        '<span class="MuiLinearProgress-root MuiLinearProgress-colorPrimary MuiLinearProgress-indeterminate mui-9ze8oj" role="progressbar">' +
-        '<span class="MuiLinearProgress-bar MuiLinearProgress-bar1 MuiLinearProgress-barColorPrimary MuiLinearProgress-bar1Indeterminate mui-880do1"></span>' +
-        '<span class="MuiLinearProgress-bar MuiLinearProgress-bar2 MuiLinearProgress-barColorPrimary MuiLinearProgress-bar2Indeterminate mui-146dcev"></span>' +
-        '</span>' +
-        '</div>' +
-        '</div>' +
-        '</div>';
-      document.body.insertAdjacentHTML("beforeend", overlay);
-    }
-
-    showRedirectingOverlay();
   }
 
   //reusable params function
@@ -1060,11 +1073,9 @@ import { preferredPoint } from "./preferredPoint";
 
     //Get protection data 
     let rowProtectionData = await getProtectionAndAddOnsData("protections", pickupLocation);
-
     const protectionItems = rowProtectionData?.protectionReferencesList?.items[0]?.protectionList || [];
-
+    console.log("protectionItems", protectionItems);
     const protectionBundleList = rowProtectionData?.protectionBundleList?.items || [];
-
     const sanitizedProtectionBundleList = protectionBundleList.map((item) => {
       const includeItems = item?.includedProtections?.map(el => {
         return {
@@ -1225,6 +1236,7 @@ import { preferredPoint } from "./preferredPoint";
 
     // PROTECTION SANITIZATION
     const extrasProtectionItemList = extrasData?.protectionItems || [];
+    console.log("extrasProtectionItemList", extrasProtectionItemList);
     const extrasProtectionBundleList = extrasData && extrasData?.protectionBundles || [];
 
     const filteredProtectionItemList = protectionItems
@@ -1243,10 +1255,11 @@ import { preferredPoint } from "./preferredPoint";
         };
       })
       .filter(Boolean);
+    console.log("filteredProtectionItemList", filteredProtectionItemList);
 
     //final protection item list
     const hideItems = ['ALI', 'CDW'];
-    const protectionOrderList = ["CDW", "ALI", "PAI", "PEP"]
+    const protectionOrderList = ["CDW", "ALI", "PAI", "PEP", "TPL"]
     const finalProtectionItemList = filteredProtectionItemList.filter(item => {
       // keep only enabled items first
       if (!item.enabled) return false;
@@ -1258,6 +1271,7 @@ import { preferredPoint } from "./preferredPoint";
 
       return true;
     }).sort((a, b) => protectionOrderList.indexOf(a.code) - protectionOrderList.indexOf(b.code));
+    console.log("finalProtectionItemList", finalProtectionItemList);
 
     //has free cdw
     var hasFreeCDW = finalProtectionItemList.some(function (item) {

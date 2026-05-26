@@ -94,7 +94,6 @@ var addOnItemsSvgObj$1 = addOnItemsSvgObj = {
  * ========================================================================== */
 
 function preferredPoint() {
-    console.log("[pwp] preferredPoint");
 
     // ---------- Config -------------------------------------------------------
     var CFG = {
@@ -662,8 +661,8 @@ function preferredPoint() {
         //   Sub-title: AvisSans 18px / 28px / 500
         //   Body / description: AvisSans 14px / 21px, black
         //   Avis red: rgb(212, 0, 42)
-        var FONT_HEADLINE = 'AvisHeadline,"AvisHeadline Fallback",Georgia,serif';
-        var FONT_BODY = 'AvisSans,"AvisSans Fallback",-apple-system,Helvetica,Arial,sans-serif';
+        var FONT_HEADLINE = 'var(--abg-font-headline), sans-serif;';
+        var FONT_BODY = 'var(--abg-font-primary),sans-serif';
         var AVIS_RED = 'rgb(212, 0, 42)';
 
         var css = ''
@@ -793,7 +792,6 @@ function preferredPoint() {
         console.log("renderBlock called");
         if (document.getElementById('avis-pwp-block')) return;
         if ($(CFG.selectors.existingPwpCard)) {
-            console.log("hiding old pwp card");
             const controlPwpSection = document.querySelector(CFG.selectors.existingPwpCard);
             if (controlPwpSection) {
                 controlPwpSection.parentElement.style.display = "none";
@@ -1703,21 +1701,16 @@ function preferredPoint() {
 
         if (override) {
             pLoyalty = Promise.resolve(override);
-            console.log('From loyalty override: ', override);
         } else if (storeResult && parseInt(storeResult.points, 10) > 0) {
             pLoyalty = Promise.resolve(storeResult);
-            console.log('From store: ', storeResult);
         } else {
             pLoyalty = waitFor(CFG.selectors.domPointsValue, 4000)
                 .then(function () { return readLoyaltyFromDom() || readLoyaltyFromStore() || readLoyaltyFromFiber(); })
                 .catch(function () { return readLoyaltyFromDom() || readLoyaltyFromStore() || readLoyaltyFromFiber(); });
         }
         pLoyalty = pLoyalty.then(function (s) {
-            console.log(s, "from pLoyalty");
             if (s) persistLoyalty(s); return s;
         });
-        console.log("[pwp] pLoyalty", pLoyalty);
-
         // Protections acquisition order:
         //   1. QA override (if set)
         //   2. Existing reservation.store.state.protectionsData (server-rendered)
@@ -1761,8 +1754,6 @@ function preferredPoint() {
         Promise.all([pLoyalty, pExtras]).then(function (parts) {
             var loyalty = parts[0];
             var protections = parts[1];
-            console.log("[pwp] loyalty ", loyalty);
-            console.log("[pwp] protections", protections);
 
             var pts = parseInt(loyalty && loyalty.points, 10) || 0;
             var fd = protections && protections.freedayItem;
@@ -1800,7 +1791,6 @@ function preferredPoint() {
                     // toggles — showing "Points cannot be redeemed" on the card would
                     // be misleading because they CAN be redeemed (just on add-ons).
                     if (isDayEligible(protections)) {
-                        console.log("[pwp] day redemption available");
                         renderBlock(loyalty, protections);
                     } else {
                         console.log('[pwp] day redemption not available for this rate — skipping PWP card, enhancing add-on toggles only');
@@ -1820,7 +1810,6 @@ function preferredPoint() {
                     // as a live toggle. We skip the global setBusy spinner because
                     // the user hasn't interacted yet.
                     if (__pwpState.payWithPointsCodes && __pwpState.payWithPointsCodes.length > 0) {
-                        console.log('[pwp] firing calculate to restore booking summary for', __pwpState.payWithPointsCodes);
                         callCalculate(__pwpState.quantity)
                             .then(function (resp) {
                                 if (resp && resp.price) writeStore({ price: resp.price });
@@ -2521,6 +2510,37 @@ function preferredPoint() {
   //redirect to review and book page
   function runProtectionCoverage() {
     console.log("runProtectionCoverage");
+
+    function showRedirectingOverlay() {
+      if (document.getElementById("mvt-36-redirect-overlay")) return;
+      var overlay =
+        '<div id="mvt-36-redirect-overlay" class="MuiStack-root mui-16vybak">' +
+        '<div class="MuiStack-root mui-1qq5oic">' +
+        '<div class="MuiBox-root mui-8atqhb">' +
+        '<span class="MuiLinearProgress-root MuiLinearProgress-colorPrimary MuiLinearProgress-indeterminate mui-9ze8oj" role="progressbar">' +
+        '<span class="MuiLinearProgress-bar MuiLinearProgress-bar1 MuiLinearProgress-barColorPrimary MuiLinearProgress-bar1Indeterminate mui-880do1"></span>' +
+        '<span class="MuiLinearProgress-bar MuiLinearProgress-bar2 MuiLinearProgress-barColorPrimary MuiLinearProgress-bar2Indeterminate mui-146dcev"></span>' +
+        '</span>' +
+        '</div>' +
+        '</div>' +
+        '</div>';
+      document.body.insertAdjacentHTML("beforeend", overlay);
+    }
+
+    showRedirectingOverlay();
+
+    var isIOS = (
+      /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+      (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)
+    );
+
+    if (!isIOS) {
+      const queryParams = window.location.search;
+      console.log("direct redirect, navigating");
+      window.location.replace("/en/reservation/review-and-book" + queryParams);
+      return;
+    }
+
     var hasRedirected = false;
     var activeRequests = 0;
     var idleTimer = null;
@@ -2580,24 +2600,6 @@ function preferredPoint() {
       onRequestStart();
       return originalXhrSend.apply(this, arguments);
     };
-
-    function showRedirectingOverlay() {
-      if (document.getElementById("mvt-36-redirect-overlay")) return;
-      var overlay =
-        '<div id="mvt-36-redirect-overlay" class="MuiStack-root mui-16vybak">' +
-        '<div class="MuiStack-root mui-1qq5oic">' +
-        '<div class="MuiBox-root mui-8atqhb">' +
-        '<span class="MuiLinearProgress-root MuiLinearProgress-colorPrimary MuiLinearProgress-indeterminate mui-9ze8oj" role="progressbar">' +
-        '<span class="MuiLinearProgress-bar MuiLinearProgress-bar1 MuiLinearProgress-barColorPrimary MuiLinearProgress-bar1Indeterminate mui-880do1"></span>' +
-        '<span class="MuiLinearProgress-bar MuiLinearProgress-bar2 MuiLinearProgress-barColorPrimary MuiLinearProgress-bar2Indeterminate mui-146dcev"></span>' +
-        '</span>' +
-        '</div>' +
-        '</div>' +
-        '</div>';
-      document.body.insertAdjacentHTML("beforeend", overlay);
-    }
-
-    showRedirectingOverlay();
   }
 
   //reusable params function
@@ -3375,11 +3377,9 @@ function preferredPoint() {
 
     //Get protection data 
     let rowProtectionData = await getProtectionAndAddOnsData("protections", pickupLocation);
-
     const protectionItems = rowProtectionData?.protectionReferencesList?.items[0]?.protectionList || [];
-
+    console.log("protectionItems", protectionItems);
     const protectionBundleList = rowProtectionData?.protectionBundleList?.items || [];
-
     const sanitizedProtectionBundleList = protectionBundleList.map((item) => {
       const includeItems = item?.includedProtections?.map(el => {
         return {
@@ -3540,6 +3540,7 @@ function preferredPoint() {
 
     // PROTECTION SANITIZATION
     const extrasProtectionItemList = extrasData?.protectionItems || [];
+    console.log("extrasProtectionItemList", extrasProtectionItemList);
     const extrasProtectionBundleList = extrasData && extrasData?.protectionBundles || [];
 
     const filteredProtectionItemList = protectionItems
@@ -3558,10 +3559,11 @@ function preferredPoint() {
         };
       })
       .filter(Boolean);
+    console.log("filteredProtectionItemList", filteredProtectionItemList);
 
     //final protection item list
     const hideItems = ['ALI', 'CDW'];
-    const protectionOrderList = ["CDW", "ALI", "PAI", "PEP"];
+    const protectionOrderList = ["CDW", "ALI", "PAI", "PEP", "TPL"];
     const finalProtectionItemList = filteredProtectionItemList.filter(item => {
       // keep only enabled items first
       if (!item.enabled) return false;
@@ -3573,6 +3575,7 @@ function preferredPoint() {
 
       return true;
     }).sort((a, b) => protectionOrderList.indexOf(a.code) - protectionOrderList.indexOf(b.code));
+    console.log("finalProtectionItemList", finalProtectionItemList);
 
     //has free cdw
     var hasFreeCDW = finalProtectionItemList.some(function (item) {

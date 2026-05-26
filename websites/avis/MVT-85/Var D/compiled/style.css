@@ -1,30 +1,54 @@
-.MVT-85-Var_D [data-testid=drivers-age-dropdown] {
+.MVT-85-Var_D svg.mvt-85-info-icon {
+  width: 12px !important;
+  height: 12px !important;
+  min-width: 12px !important;
+  min-height: 12px !important;
+  flex-shrink: 0 !important;
+}
+.MVT-85-Var_D #booking-widget #booking-widget-desktop-form [data-testid=drivers-age-dropdown] {
   color: #8B8686;
   font-weight: 500;
 }
-.MVT-85-Var_D [data-testid=drivers-age-dropdown] #mui-component-select-ageSelect {
-  margin-right: 16px;
+.MVT-85-Var_D #booking-widget #booking-widget-desktop-form [data-testid=drivers-age-dropdown] #mui-component-select-ageSelect {
+  padding-right: 28px !important;
+  font-size: 14px !important;
 }
-.MVT-85-Var_D [data-testid=drivers-age-dropdown] svg:not(.mvt-85-info-icon) {
+.MVT-85-Var_D #booking-widget #booking-widget-desktop-form [data-testid=drivers-age-dropdown] svg:not(.mvt-85-info-icon) {
   width: 12px;
   height: 12px;
   top: 7px;
 }
-.MVT-85-Var_D [data-testid=drivers-age-dropdown] svg:not(.mvt-85-info-icon) path {
+.MVT-85-Var_D #booking-widget #booking-widget-desktop-form [data-testid=drivers-age-dropdown] svg:not(.mvt-85-info-icon) path {
   stroke: #524D4D;
   stroke-width: 0.2;
 }
-.MVT-85-Var_D [data-testid=drivers-age-dropdown] svg.not-home {
-  top: 3px !important;
+@media only screen and (max-width: 1152px) {
+  .MVT-85-Var_D #booking-widget #booking-widget-desktop-form [data-testid=drivers-age-dropdown] svg:not(.mvt-85-info-icon) {
+    top: 17px;
+  }
+}
+.MVT-85-Var_D #booking-widget #booking-widget-desktop-form [data-testid=drivers-age-dropdown] svg.not-home {
+  top: 6px !important;
+}
+.MVT-85-Var_D #booking-widget #booking-widget-desktop-form [data-testid=drivers-age-dropdown] .age-tooltip {
+  left: 86%;
+}
+.MVT-85-Var_D #booking-widget #booking-widget-desktop-form [data-testid=drivers-age-dropdown]:hover {
+  color: #000 !important;
 }
 .MVT-85-Var_D #booking-widget #booking-widget-desktop-form [data-testid=drivers-age-dropdown] svg.mvt-85-info-icon {
   position: absolute;
   right: 12px !important;
-  top: 6px;
+  top: 5px;
   cursor: pointer;
 }
 .MVT-85-Var_D #booking-widget #booking-widget-desktop-form [data-testid=drivers-age-dropdown] svg.mvt-85-info-icon:hover path {
   fill: #000;
+}
+@media only screen and (max-width: 1152px) {
+  .MVT-85-Var_D #booking-widget #booking-widget-desktop-form [data-testid=drivers-age-dropdown] svg.mvt-85-info-icon {
+    top: 16px;
+  }
 }
 .MVT-85-Var_D #booking-widget #booking-widget-desktop-form [data-testid=drivers-age-dropdown]:hover svg.mvt-85-info-icon path {
   fill: #000;
@@ -33,61 +57,74 @@
   opacity: 1;
   visibility: visible;
 }
-.MVT-85-Var_D [data-testid=residency-dropdown-button] {
+.MVT-85-Var_D #booking-widget #booking-widget-desktop-form [data-testid=residency-dropdown-button] {
   color: #8B8686;
   font-weight: 500;
 }
-.MVT-85-Var_D [data-testid=residency-dropdown-button] span.MuiButton-icon {
+.MVT-85-Var_D #booking-widget #booking-widget-desktop-form [data-testid=residency-dropdown-button] span {
+  font-size: 14px !important;
+}
+.MVT-85-Var_D #booking-widget #booking-widget-desktop-form [data-testid=residency-dropdown-button] span.MuiButton-icon {
   margin-top: -3px;
 }
-.MVT-85-Var_D [data-testid=residency-dropdown-button] svg:not(.mvt-85-info-icon) {
+.MVT-85-Var_D #booking-widget #booking-widget-desktop-form [data-testid=residency-dropdown-button] svg:not(.mvt-85-info-icon) {
   width: 12px;
   height: 12px;
 }
-.MVT-85-Var_D [data-testid=residency-dropdown-button] svg:not(.mvt-85-info-icon) path {
+.MVT-85-Var_D #booking-widget #booking-widget-desktop-form [data-testid=residency-dropdown-button] svg:not(.mvt-85-info-icon) path {
   stroke: #524D4D;
   stroke-width: 0.2;
 }
-.MVT-85-Var_D [data-testid=residency-dropdown-button] svg.mvt-85-info-icon {
+.MVT-85-Var_D #booking-widget #booking-widget-desktop-form [data-testid=residency-dropdown-button] svg.mvt-85-info-icon {
   margin-left: 4px;
 }
-.MVT-85-Var_D [data-testid=residency-dropdown-button] svg.mvt-85-info-icon:hover path {
+.MVT-85-Var_D #booking-widget #booking-widget-desktop-form [data-testid=residency-dropdown-button] svg.mvt-85-info-icon:hover path {
   fill: #000;
 }
-.MVT-85-Var_D [data-testid=residency-dropdown-button] span.MuiButton-icon {
+.MVT-85-Var_D #booking-widget #booking-widget-desktop-form [data-testid=residency-dropdown-button] span.MuiButton-icon {
   margin-left: 4px;
   margin-top: 2px;
 }
-.MVT-85-Var_D [data-testid=residency-dropdown-button] svg.mvt-85-info-icon:hover + .mvt-85-tooltip {
+.MVT-85-Var_D #booking-widget #booking-widget-desktop-form [data-testid=residency-dropdown-button] svg.mvt-85-info-icon:hover + .mvt-85-tooltip {
   opacity: 1;
   visibility: visible;
 }
-.MVT-85-Var_D [data-testid=residency-dropdown-button] svg.not-home {
-  margin-top: -3px !important;
+.MVT-85-Var_D #booking-widget #booking-widget-desktop-form [data-testid=residency-dropdown-button] svg.not-home {
+  margin-top: 0px !important;
 }
-.MVT-85-Var_D [data-testid=residency-dropdown-button] .residency-tooltip {
+.MVT-85-Var_D #booking-widget #booking-widget-desktop-form [data-testid=residency-dropdown-button] .residency-tooltip {
   left: 86%;
 }
-.MVT-85-Var_D [data-testid=wizard-number-popup-trigger-button] p {
+.MVT-85-Var_D #booking-widget #booking-widget-desktop-form [data-testid=residency-dropdown-button]:hover {
+  color: #000 !important;
+}
+.MVT-85-Var_D #booking-widget #booking-widget-desktop-form [data-testid=wizard-number-popup-trigger-button] p {
   color: #8B8686;
   font-weight: 500;
+  font-size: 14px !important;
 }
-.MVT-85-Var_D [data-testid=wizard-number-popup-trigger-button] svg.MuiSvgIcon-root {
+.MVT-85-Var_D #booking-widget #booking-widget-desktop-form [data-testid=wizard-number-popup-trigger-button] svg.MuiSvgIcon-root {
   color: #736D6D;
   margin-left: 4px;
 }
-.MVT-85-Var_D [data-testid=wizard-number-popup-trigger-button] svg.mvt-85-info-icon {
+.MVT-85-Var_D #booking-widget #booking-widget-desktop-form [data-testid=wizard-number-popup-trigger-button] svg.mvt-85-info-icon {
   margin-left: 4px;
 }
-.MVT-85-Var_D [data-testid=wizard-number-popup-trigger-button] svg.mvt-85-info-icon:hover path {
+.MVT-85-Var_D #booking-widget #booking-widget-desktop-form [data-testid=wizard-number-popup-trigger-button] svg.mvt-85-info-icon:hover path {
   fill: #000;
 }
-.MVT-85-Var_D [data-testid=wizard-number-popup-trigger-button] svg.mvt-85-info-icon:hover + .mvt-85-tooltip {
+.MVT-85-Var_D #booking-widget #booking-widget-desktop-form [data-testid=wizard-number-popup-trigger-button] svg.mvt-85-info-icon:hover + .mvt-85-tooltip {
   opacity: 1;
   visibility: visible;
 }
-.MVT-85-Var_D [data-testid=wizard-number-popup-trigger-button] .wizard-tooltip {
+.MVT-85-Var_D #booking-widget #booking-widget-desktop-form [data-testid=wizard-number-popup-trigger-button] .wizard-tooltip {
   left: 86%;
+}
+.MVT-85-Var_D #booking-widget #booking-widget-desktop-form [data-testid=wizard-number-popup-trigger-button]:hover p {
+  color: #000 !important;
+}
+.MVT-85-Var_D #booking-widget #booking-widget-desktop-form [data-testid=wizard-number-popup-trigger-button]:hover svg.MuiSvgIcon-root {
+  color: #000 !important;
 }
 .MVT-85-Var_D [data-testid=wizard-number-popup-trigger-button]:hover p {
   color: #000;
@@ -95,35 +132,42 @@
 .MVT-85-Var_D [data-testid=wizard-number-popup-trigger-button]:hover svg.MuiSvgIcon-root {
   color: #000;
 }
-.MVT-85-Var_D [data-testid=discount-coupon-popup-trigger-button] p {
+.MVT-85-Var_D #booking-widget #booking-widget-desktop-form [data-testid=discount-coupon-popup-trigger-button] p:not(.mui-1i5m7g4) {
   color: #8B8686;
   font-weight: 500;
+  font-size: 14px !important;
 }
-.MVT-85-Var_D [data-testid=discount-coupon-popup-trigger-button] svg.MuiSvgIcon-root {
+.MVT-85-Var_D #booking-widget #booking-widget-desktop-form [data-testid=discount-coupon-popup-trigger-button] p.mui-1i5m7g4 {
+  font-size: 14px !important;
+}
+.MVT-85-Var_D #booking-widget #booking-widget-desktop-form [data-testid=discount-coupon-popup-trigger-button] svg.MuiSvgIcon-root {
   color: #736D6D;
   margin-left: 4px;
 }
-.MVT-85-Var_D [data-testid=discount-coupon-popup-trigger-button] svg.mvt-85-info-icon {
+.MVT-85-Var_D #booking-widget #booking-widget-desktop-form [data-testid=discount-coupon-popup-trigger-button] svg.mvt-85-info-icon {
   margin-left: 4px;
 }
-.MVT-85-Var_D [data-testid=discount-coupon-popup-trigger-button] svg.mvt-85-info-icon:hover path {
+.MVT-85-Var_D #booking-widget #booking-widget-desktop-form [data-testid=discount-coupon-popup-trigger-button] svg.mvt-85-info-icon:hover path {
   fill: #000;
 }
-.MVT-85-Var_D [data-testid=discount-coupon-popup-trigger-button] svg.mvt-85-info-icon:hover + .mvt-85-tooltip {
+.MVT-85-Var_D #booking-widget #booking-widget-desktop-form [data-testid=discount-coupon-popup-trigger-button] svg.mvt-85-info-icon:hover + .mvt-85-tooltip {
   opacity: 1;
   visibility: visible;
 }
-.MVT-85-Var_D [data-testid=discount-coupon-popup-trigger-button]:hover p {
+.MVT-85-Var_D #booking-widget #booking-widget-desktop-form [data-testid=discount-coupon-popup-trigger-button]:hover p:not(.mui-1i5m7g4) {
   color: #000;
 }
-.MVT-85-Var_D [data-testid=discount-coupon-popup-trigger-button]:hover svg.MuiSvgIcon-root {
+.MVT-85-Var_D #booking-widget #booking-widget-desktop-form [data-testid=discount-coupon-popup-trigger-button]:hover svg.MuiSvgIcon-root {
   color: #000;
 }
-.MVT-85-Var_D [data-testid=discount-coupon-popup-trigger-button]:hover svg.mvt-85-info-icon path {
+.MVT-85-Var_D #booking-widget #booking-widget-desktop-form [data-testid=discount-coupon-popup-trigger-button]:hover svg.mvt-85-info-icon path {
   fill: #000;
 }
-.MVT-85-Var_D [data-testid=discount-coupon-popup-trigger-button] .discount-tooltip {
+.MVT-85-Var_D #booking-widget #booking-widget-desktop-form [data-testid=discount-coupon-popup-trigger-button] .discount-tooltip {
   left: 80%;
+}
+.MVT-85-Var_D [data-testid=recognized-state-logout] {
+  margin-left: 1px !important;
 }
 .MVT-85-Var_D .mvt-85-tooltip::before {
   content: "";
@@ -157,4 +201,17 @@
   box-sizing: border-box;
   overflow-wrap: break-word;
   text-wrap: auto;
+}
+@media only screen and (max-width: 1152px) {
+  .MVT-85-Var_D .mvt-85-tooltip {
+    left: 88% !important;
+    top: 39px;
+  }
+}
+.MVT-85-Var_D [data-testid=residency-dropdown-menu-container]:last-child > div {
+  background-color: #fff !important;
+  border-radius: 0 0 4px 4px !important;
+}
+.MVT-85-Var_D [data-testid=residency-dropdown-button], .MVT-85-Var_D [data-testid=drivers-age-dropdown] {
+  margin-right: 10px;
 }

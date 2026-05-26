@@ -63,30 +63,11 @@
   }
 
   function updateAgeUI(targetElement, checkboxEl, selectedAge) {
-    // Delay so React finishes re-rendering before we query fresh nodes
-    setTimeout(function () {
-      // Age label lives outside ageWrapperEl — query it directly from document
-      const ageLabelEl = document.querySelector(".mvt-85-age-label");
-
-      if (selectedAge === "25+") {
-        // Checkbox checked, age label hidden
-        if (checkboxEl) checkboxEl.checked = true;
-        if (ageLabelEl) {
-          ageLabelEl.style.display = "";
-          ageLabelEl.style.visibility = "hidden";
-          ageLabelEl.style.width = "80px";
-        }
-      } else {
-        // Checkbox unchecked, age label visible with selected age
-        if (checkboxEl) checkboxEl.checked = false;
-        if (ageLabelEl) {
-          ageLabelEl.textContent = "Driver's Age " + selectedAge;
-          ageLabelEl.style.display = "";
-          ageLabelEl.style.visibility = "visible";
-          ageLabelEl.style.width = "auto";
-        }
-      }
-    }, 100);
+    if (selectedAge === "25+") {
+      if (checkboxEl) checkboxEl.checked = true;
+    } else {
+      if (checkboxEl) checkboxEl.checked = false;
+    }
   }
 
   function updateResidencyUI(targetElement, checkboxEl) {
@@ -94,64 +75,14 @@
       const spans = targetElement.querySelectorAll("span");
       const selectedResidency =
         spans.length >= 3 ? spans[2].textContent.trim() : "US";
-      const isUS = selectedResidency === "US";
+      const isUS = selectedResidency === "US" || selectedResidency === "USA";
+
+      if (isUS && spans.length >= 3 && spans[2].textContent !== "USA") {
+        spans[2].textContent = "USA";
+      }
 
       if (checkboxEl) {
         checkboxEl.checked = isUS;
-      }
-
-      // Check if .mvt-85-extra-labels-container exists
-      let containerEl = document.querySelector(
-        ".mvt-85-extra-labels-container",
-      );
-
-      // If it doesn't exist, create it below the age/residency row
-      if (!containerEl) {
-        const residencyWrapper = document.querySelector(
-          ".mvt-85-residency-wrapper",
-        );
-        if (residencyWrapper) {
-          containerEl = document.createElement("div");
-          containerEl.className = "mvt-85-extra-labels-container";
-          residencyWrapper.parentNode.insertAdjacentElement(
-            "afterend",
-            containerEl,
-          );
-        }
-      }
-
-      if (containerEl) {
-        // Ensure the age label placeholder exists so residency takes the second place
-        let ageLabelEl = containerEl.querySelector(
-          ".mvt-85-age-label:not(.mvt-85-residency-label)",
-        );
-        if (!ageLabelEl) {
-          ageLabelEl = document.createElement("div");
-          ageLabelEl.className = "mvt-85-age-label";
-          ageLabelEl.style.visibility = "hidden";
-          ageLabelEl.style.width = "102px";
-          containerEl.insertBefore(ageLabelEl, containerEl.firstChild);
-        }
-
-        let residencyLabelEl = containerEl.querySelector(
-          ".mvt-85-residency-label",
-        );
-
-        if (!isUS) {
-          if (!residencyLabelEl) {
-            residencyLabelEl = document.createElement("div");
-            // Reuse age-label class for identical styling
-            residencyLabelEl.className =
-              "mvt-85-residency-label mvt-85-age-label";
-            containerEl.appendChild(residencyLabelEl);
-          }
-          residencyLabelEl.textContent = "Residency: " + selectedResidency;
-          residencyLabelEl.style.display = "";
-        } else {
-          if (residencyLabelEl) {
-            residencyLabelEl.style.display = "none";
-          }
-        }
       }
     }, 100);
   }
@@ -195,19 +126,6 @@
             targetElement.parentNode.insertBefore(ageWrapperEl, targetElement);
             topRowEl.appendChild(targetElement);
 
-            // Age label — in its own div, placed below the parent of ageWrapperEl
-            const ageLabelContainerEl = document.createElement("div");
-            ageLabelContainerEl.className = "mvt-85-extra-labels-container";
-            ageLabelContainerEl.insertAdjacentHTML(
-              "beforeend",
-              `<div class="mvt-85-age-label" style="visibility:hidden; width:102px;"></div>`,
-            );
-            const ageWrapperParentEl = ageWrapperEl.parentNode;
-            ageWrapperParentEl.insertAdjacentElement(
-              "afterend",
-              ageLabelContainerEl,
-            );
-
             const checkboxEl = topRowEl.querySelector(".mvt-85-checkbox");
             _ageDropdownEl = targetElement;
             _ageCheckboxEl = checkboxEl;
@@ -241,22 +159,16 @@
               );
             });
 
-            // Keep the original MUI dropdown text locked to "25+" — React re-renders
-            // overwrite any one-shot textContent change, so we use a MutationObserver
-            // to immediately reset it whenever React updates the node.
-            const selectTextObserver = new MutationObserver(function () {
-              if (selectEl.textContent !== "Driver's Age: 25+") {
-                selectTextObserver.disconnect();
-                selectEl.textContent = "Driver's Age: 25+";
-                selectTextObserver.observe(selectEl, {
-                  childList: true,
-                  subtree: true,
-                  characterData: true,
-                });
+            // Observe age changes so the checkbox updates if React natively changes the text
+            const ageTextObserver = new MutationObserver(function () {
+              const newText = selectEl.textContent.trim();
+              let newSelectedAge = "25+";
+              if (!newText.includes("25+")) {
+                newSelectedAge = newText.replace("Driver's Age:", "").trim();
               }
+              updateAgeUI(targetElement, checkboxEl, newSelectedAge);
             });
-            selectEl.textContent = "Driver's Age: 25+";
-            selectTextObserver.observe(selectEl, {
+            ageTextObserver.observe(selectEl, {
               childList: true,
               subtree: true,
               characterData: true,
@@ -288,7 +200,12 @@
             // Checked conditionally based on 3rd span text
             const spans = targetElement.querySelectorAll("span");
             const isUS =
-              spans.length >= 3 && spans[2].textContent.trim() === "US";
+              spans.length >= 3 &&
+              (spans[2].textContent.trim() === "US" ||
+                spans[2].textContent.trim() === "USA");
+            if (isUS && spans[2].textContent !== "USA") {
+              spans[2].textContent = "USA";
+            }
             const checkedAttr = isUS ? "checked" : "";
 
             topRowEl.insertAdjacentHTML(

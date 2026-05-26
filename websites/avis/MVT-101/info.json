@@ -1,0 +1,13 @@
+{
+  "id": "1779769766931_2411_MVT_101",
+  "name": "MVT-101",
+  "type": "A/B",
+  "website": "avis",
+  "variations": [
+    "control",
+    "Var B"
+  ],
+  "createdAt": "2026-05-26T04:29:26.931Z",
+  "createdAtReadable": "5/26/2026, 10:29:26 AM",
+  "lastUpdated": "2026-05-26T04:29:27.071Z"
+}

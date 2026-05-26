@@ -61,7 +61,7 @@
   margin-top: 16px;
 }
 .MVT-36 .prot-title {
-  font-family: "AvisHeadline", "AvisHeadline Fallback", sans-serif;
+  font-family: var(--abg-font-headline), sans-serif;
   text-transform: uppercase;
   font-size: 24px;
   line-height: 24px;
@@ -599,7 +599,7 @@
   margin-top: 40px;
 }
 .MVT-36 .add-ons-section .add-on-title {
-  font-family: "AvisHeadline", "AvisHeadline Fallback", sans-serif;
+  font-family: var(--abg-font-headline), sans-serif;
   text-transform: uppercase;
   font-size: 24px;
   line-height: 24px;
@@ -986,4 +986,9 @@
   background-color: rgb(244, 244, 244) !important;
   pointer-events: none !important;
   cursor: none !important;
+}
+@media (max-width: 767px) {
+  .MVT-36 #avis-pwp-block .pwp-row {
+    flex-direction: column;
+  }
 }

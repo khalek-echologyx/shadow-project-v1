@@ -149,12 +149,12 @@ import { preferredPoint } from "./preferredPoint";
   window.__avisReservationState = null;
   window.__mvtRateSelectModalOpen = false;
   function isCalcRequest(url) {
-      try {
-        return new URL(url, location.origin).pathname === "/web/reservation/price/calculate";
-      } catch (e) {
-        return /\/web\/reservation\/price\/calculate($|\?)/.test(url);
-      }
+    try {
+      return new URL(url, location.origin).pathname === "/web/reservation/price/calculate";
+    } catch (e) {
+      return /\/web\/reservation\/price\/calculate($|\?)/.test(url);
     }
+  }
   /* ---------------- Calculate API interceptor ---------------- */
   (function () {
     var QUANTITY_CODES = { CSS: 1, CBS: 1, CFS: 1, CIS: 1, CSB: 1 };
@@ -291,32 +291,32 @@ import { preferredPoint } from "./preferredPoint";
 
   // INTERCEPT CALCULATE REPONSE
   (function observeCalculateApi() {
-        const _patchedFetch = window.fetch;
-        window.fetch = async function (input, init) {
-            const response = await _patchedFetch.call(this, input, init);
-            try {
-                const url = typeof input === 'string' ? input
-                    : (input instanceof URL) ? input.href
-                    : (input && input.url) || '';
-                const method = (init && init.method) || (input && input.method) || 'GET';
-              const isCalc = isCalcRequest(url);
-              console.log("abc" , window.__mvtRateSelectModalOpen, isCalc, method.toUpperCase() === 'POST', response.ok)
-              if (isCalc && method.toUpperCase() === 'POST' && response.ok && window.__mvtRateSelectModalOpen) {
-                  console.log("rederInsideResponse")
-                    if (window.__avisReservationState) {
-                        sessionStorage.setItem(
-                            'reservation.store',
-                            JSON.stringify({ state: window.__avisReservationState, version: 0 })
-                        );
-                        console.log('[AvisTest] /calculate resolved → sessionStorage updated from __avisReservationState', window.__avisReservationState);
-                    }
-                }
-            } catch (e) {
-                console.warn('[AvisTest] calculate observer error', e);
-            }
-            return response;
-        };
-    })();
+    const _patchedFetch = window.fetch;
+    window.fetch = async function (input, init) {
+      const response = await _patchedFetch.call(this, input, init);
+      try {
+        const url = typeof input === 'string' ? input
+          : (input instanceof URL) ? input.href
+            : (input && input.url) || '';
+        const method = (init && init.method) || (input && input.method) || 'GET';
+        const isCalc = isCalcRequest(url);
+        console.log("abc", window.__mvtRateSelectModalOpen, isCalc, method.toUpperCase() === 'POST', response.ok)
+        if (isCalc && method.toUpperCase() === 'POST' && response.ok && window.__mvtRateSelectModalOpen) {
+          console.log("rederInsideResponse")
+          if (window.__avisReservationState) {
+            sessionStorage.setItem(
+              'reservation.store',
+              JSON.stringify({ state: window.__avisReservationState, version: 0 })
+            );
+            console.log('[AvisTest] /calculate resolved → sessionStorage updated from __avisReservationState', window.__avisReservationState);
+          }
+        }
+      } catch (e) {
+        console.warn('[AvisTest] calculate observer error', e);
+      }
+      return response;
+    };
+  })();
 
   /* ---------------- poll utility ---------------- */
   function poll(condition, callback, timeout = 10000, interval = 50) {
