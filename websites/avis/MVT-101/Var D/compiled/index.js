@@ -24,12 +24,13 @@ const starSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" 
   const CONFIG = {
     // The element you want to wait for and modify
     targetSelector: '[data-testid="avis-first-banner-container"]',
+    targetSelector2: '[data-testid="vehicle-cards-container"]',
     // The specific path to run the test on (e.g., '/checkout'). Leave empty '' to run on all pages.
     targetPathname: '/en/reservation/vehicle-availability',
     // Unique class to prevent duplicate injections
-    injectedClass: 'MVT-101-Var_B',
+    injectedClass: 'MVT-101-Var_D',
     testId: 'MVT-101',
-    variationId: 'Var_B',
+    variationId: 'Var_D',
   };
 
   // --- AVIS FIRST CHECK ---
@@ -90,6 +91,46 @@ const starSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" 
     </div>
     `;
     targetElement.insertAdjacentHTML('afterend', bannerHtml);
+
+    // Inject the avis first banner card
+    const vehicleCardsContainer = document.querySelector(CONFIG.targetSelector2);
+    const avisFirstVehicles = vehicleCardsContainer.querySelectorAll('article');
+    const targetVehicleCard = avisFirstVehicles[3];
+    console.log(targetVehicleCard, "targetVehicleCard=================");
+    const avisFirstBannerCardHtml = `
+    <div class="avis-first-banner-card">
+      <div class="card-content">
+        <div class="card-header">
+          <h4>Take Off Faster</h4>
+          <p>
+            <span>with</span>
+            <span>${avisLogo}</span>
+          </p>
+        </div>
+        <div class="card-body">
+          <div class="card-item">
+            ${clockSvg}
+            <div class="card-item-desc">
+              Collect & drop-off seconds from terminal
+            </div>
+          </div>
+          <div class="card-item">
+            ${carSvg}
+            <div class="card-item-desc">
+              No counter. No queues. No paperwork.
+            </div>
+          </div>
+          <div class="card-item">
+            ${starSvg}
+            <div class="card-item-desc">
+              Dedicated concierge service
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    `;
+    targetVehicleCard.insertAdjacentHTML('afterend', avisFirstBannerCardHtml);
     document.body.classList.add(CONFIG.injectedClass);
     
   }

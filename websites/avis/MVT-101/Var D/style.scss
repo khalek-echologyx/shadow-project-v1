@@ -1,0 +1,104 @@
+.MVT-101-Var_D {
+  [data-testid="avis-first-banner-container"] {
+    display: none;
+  }
+
+  .banner-wrapper {
+    width: 100%;
+    background-color: #191C24;
+    display: flex;
+    align-items: center;
+    gap: 43px;
+    border-radius: 8px;
+    overflow: hidden;
+
+    @media (max-width: 999px) {
+      flex-direction: column;
+      gap: 0px;
+      margin: 0 15px;
+    }
+
+    .banner-header {
+      position: relative;
+      padding: 24px 0px 24px 16px;
+      background: #000;
+
+      @media (max-width: 999px) {
+        width: 100%;
+      }
+
+      h4 {
+        color: #fff;
+        font-weight: 700;
+        font-size: 25px;
+        margin: 0;
+        text-wrap: nowrap;
+
+      }
+
+      p {
+        color: #fff;
+        margin: 0;
+        font-weight: 700;
+        font-size: 14px;
+        font-family: Inter;
+        text-wrap: nowrap;
+
+      }
+
+      &::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        right: -43px;
+        width: 43px;
+        height: 100%;
+        background: #000;
+        clip-path: polygon(100% 0, 100% 100%, 0 100%);
+        transform: rotate(180deg);
+      }
+    }
+
+    .banner-body {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      padding: 16px;
+
+      @media (max-width: 999px) {
+        grid-template-columns: repeat(1, 1fr);
+        padding: 20px 34px;
+      }
+
+      .banner-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+
+        .banner-item-desc {
+          color: #fff;
+          font-size: 12px;
+          font-weight: 700;
+          font-family: Inter;
+          line-height: 20px;
+          letter-spacing: 0%;
+        }
+      }
+    }
+  }
+
+  .avis-first-banner-card {
+    position: relative;
+    border-radius: 12px;
+    box-shadow: rgba(0, 0, 0, 0.06) 0px 3px 8px 0px;
+    padding: 24px 18px;
+    display: flex;
+    flex-direction: column;
+    background: radial-gradient(124.57% 33.08% at 3.61% 59.8%, rgb(212, 0, 42) 0%, rgb(0, 0, 0) 100%);
+    backdrop-filter: blur(40px);
+    border-width: 5px;
+    border-top-style: solid;
+    box-sizing: border-box;
+  }
+}

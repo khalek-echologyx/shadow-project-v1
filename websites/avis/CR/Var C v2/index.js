@@ -201,6 +201,10 @@ import { preferredPoint } from "./preferredPoint";
     high: 3
   }
 
+  // check hostname
+  const isBeta = window.location.hostname === "beta.avis.com";
+  console.log("isBeta", isBeta);
+
   //redirect to review and book page
   function runProtectionCoverage() {
     console.log("runProtectionCoverage");
@@ -304,7 +308,8 @@ import { preferredPoint } from "./preferredPoint";
   }
   //get protection & add-ons data
   async function getProtectionAndAddOnsData(dataKey, pickupLocation) {
-    let res = await fetch("https://www.avis.com/content/admin/location.json/avis/en_us/" + dataKey + "/" + pickupLocation + ".json");
+    console.log("getProtectionAndAddOnsData", (isBeta ? "https://beta.avis.com" : "https://www.avis.com") + "/content/admin/location.json/avis/en_us/" + dataKey + "/" + pickupLocation + ".json");
+    let res = await fetch((isBeta ? "https://beta.avis.com" : "https://www.avis.com") + "/content/admin/location.json/avis/en_us/" + dataKey + "/" + pickupLocation + ".json");
     let data = await res.json();
     return data.data || {};
   }
@@ -335,10 +340,68 @@ import { preferredPoint } from "./preferredPoint";
     const corelationalIdentifier = sessionStorage.getItem("correlationIdentifier");
     return corelationalIdentifier;
   }
+  //get member details
+  async function getMemberDetails(corelationalIdentifier) {
+    try {
+      let res = await fetch((isBeta ? "https://beta.avis.com" : "https://www.avis.com") + "/web/customer/session?context.locale=en-US&context.domainCountry=US&context.correlationIdentifier=" + corelationalIdentifier + "&device=WEB", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (!res.ok) {
+        throw new Error("Member details API failed with status " + res.status);
+      }
+      let data = await res.json();
+      return data;
+    } catch (err) {
+      console.error("Error fetching member details:", err);
+      return null;
+    }
+  }
+  // function applyMemberPreferences(products) {
+  //   console.log("Render 1")
+  //   var EXCLUDE_CODES = ['ADR'];
+  //   var insuranceCodes = [];
+  //   var ancillaryCodes = [];
+
+  //   for (var i = 0; i < products.length; i++) {
+  //     var p = products[i];
+  //     if (!p || !p.code) continue;
+  //     if (EXCLUDE_CODES.indexOf(p.code) !== -1) continue;
+  //     if (p.status !== 'SELECTED') continue;
+  //     if (p.type === 'INSURANCE') insuranceCodes.push(p.code);
+  //     else if (p.type === 'ANCILLARY') ancillaryCodes.push(p.code);
+  //   }
+
+  //   try {
+  //     var raw = sessionStorage.getItem('reservation.store');
+  //     var store = raw ? JSON.parse(raw) : { state: {} };
+  //     store.state = store.state || {};
+  //     var piCsv = insuranceCodes.join(',');
+  //     var aoCsv = ancillaryCodes.join(',');
+
+  //     store.state.protectionItems = piCsv;
+  //     store.state.protectionItemsBackup = piCsv;
+  //     store.state.addOnPreselectedItems = aoCsv;
+  //     store.state.addOnItems = aoCsv;
+  //     store.state.addOnItemsBackup = aoCsv;
+  //     store.state.protectionsPreferencesApplied = true;
+  //     store.state.addOnsPreferencesApplied = true;
+  //     sessionStorage.setItem('reservation.store', JSON.stringify(store));
+  //     const lastRawSes = sessionStorage.getItem("reservation.store")
+  //     console.log("Render 3", JSON.parse(lastRawSes))
+  //     return true;
+  //   } catch (e) {
+  //     console.warn('[mvt-36] applyMemberPreferences failed', e);
+  //     return false;
+  //   }
+  // }
+
   //get extras api data
   async function getExtrasData(payload, corelationalIdentifier) {
     try {
-      let res = await fetch("https://www.avis.com/web/reservation/extras?context.locale=en-US&context.domainCountry=US&context.correlationIdentifier=" + corelationalIdentifier + "&device=WEB", {
+      let res = await fetch((isBeta ? "https://beta.avis.com" : "https://www.avis.com") + "/web/reservation/extras?context.locale=en-US&context.domainCountry=US&context.correlationIdentifier=" + corelationalIdentifier + "&device=WEB", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -358,7 +421,7 @@ import { preferredPoint } from "./preferredPoint";
 
   // calculate price api
   async function calculatePrice(payload, corelationalIdentifier) {
-    let res = await fetch("https://www.avis.com/web/reservation/price/calculate?context.locale=en-US&context.domainCountry=US&context.correlationIdentifier=" + corelationalIdentifier + "&device=WEB", {
+    let res = await fetch((isBeta ? "https://beta.avis.com" : "https://www.avis.com") + "/web/reservation/price/calculate?context.locale=en-US&context.domainCountry=US&context.correlationIdentifier=" + corelationalIdentifier + "&device=WEB", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -371,7 +434,7 @@ import { preferredPoint } from "./preferredPoint";
 
   //get avis config data
   async function getAvisConfigData() {
-    let res = await fetch("https://www.avis.com/en/.config.json");
+    let res = await fetch((isBeta ? "https://beta.avis.com" : "https://www.avis.com") + "/en/.config.json");
     let data = await res.json();
     return data || {};
   }
@@ -421,7 +484,7 @@ import { preferredPoint } from "./preferredPoint";
   };
 
   var taxAndFeesItemUI = function (desc, amount, code, currencyCode) {
-    return '<a href="https://www.avis.com/en/customer-service/faqs/usa/fees-taxes#' + code + '" target="_blank" class="mvt-36-summary-regular-item tax-and-fees-item">'
+    return '<a href="' + (isBeta ? "https://beta.avis.com" : "https://www.avis.com") + '/en/customer-service/faqs/usa/fees-taxes#' + code + '" target="_blank" class="mvt-36-summary-regular-item tax-and-fees-item">'
       + '<span class="item-desc">' + desc + '</span>'
       + '<div class="item-amount"><span class="">' + getPriceWithCurrenty(currencyCode, amount) + '</span></div>'
       + '</a>';
@@ -850,11 +913,51 @@ import { preferredPoint } from "./preferredPoint";
     updateStaticProtectionCard()
   }
   // =============== INTIAL SELECTION UI ===============
-  const initalSelectUI = async (extrasProtectionItemList, extrasAddOnsItemList, protectionItems, finalAddOnItemList, finalProtectionBundleList, corelationalIdentifier) => {
+  const initalSelectUI = async (extrasProtectionItemList, extrasAddOnsItemList, protectionItems, finalAddOnItemList, finalProtectionBundleList, corelationalIdentifier, products = []) => {
+    console.log("Render 2", products)
     const isEmptyProtectionBundleList = finalProtectionBundleList.length === 0;
 
-    const sessionData = getSessionData();
+    // const sessionData = getSessionData();
+    const sessionDataRaw = sessionStorage.getItem("reservation.store")
+    const sessionData = sessionDataRaw ? JSON.parse(sessionDataRaw).state : {};
 
+    var EXCLUDE_CODES = ['ADR'];
+    var insuranceCodes = [];
+    var ancillaryCodes = [];
+
+    for (var i = 0; i < products.length; i++) {
+      var p = products[i];
+      if (!p || !p.code) continue;
+      if (EXCLUDE_CODES.indexOf(p.code) !== -1) continue;
+      if (p.status !== 'SELECTED') continue;
+      if (p.type === 'INSURANCE') insuranceCodes.push(p.code);
+      else if (p.type === 'ANCILLARY') ancillaryCodes.push(p.code);
+    }
+
+    try {
+      // var raw = sessionStorage.getItem('reservation.store');
+      // var store = raw ? JSON.parse(raw) : { state: {} };
+      // store.state = store.state || {};
+      var piCsv = insuranceCodes.join(',');
+      var aoCsv = ancillaryCodes.join(',');
+
+      console.log("INSURANCECODES", insuranceCodes)
+      console.log("AncillaryCODES", ancillaryCodes)
+
+      sessionData.protectionItems = piCsv;
+      sessionData.protectionItemsBackup = piCsv;
+      sessionData.addOnPreselectedItems = aoCsv;
+      sessionData.addOnItems = aoCsv;
+      sessionData.addOnItemsBackup = aoCsv;
+      sessionData.protectionsPreferencesApplied = true;
+      sessionData.addOnsPreferencesApplied = true;
+      // sessionStorage.setItem('reservation.store', JSON.stringify(store));
+    } catch (e) {
+      console.warn('[mvt-36] applyMemberPreferences failed', e);
+    }
+
+    
+    console.log("Render 2 session", sessionData)
 
     //Create calculate api payload
     const protectionItemsForCalc = sessionData.protectionItemsBackup ? sessionData.protectionItemsBackup.split(",").map(item => {
@@ -862,13 +965,13 @@ import { preferredPoint } from "./preferredPoint";
         code: item || "",
       }
     }) : [];
-
     const addOnItemsForCalc = sessionData.addOnItemsBackup ? sessionData.addOnItemsBackup.split(",").map((item, index) => {
       return {
         code: item || "",
-        quantity: sessionData.addOnItemsQuantity.split(",")[index] === "false" ? null : Number(sessionData.addOnItemsQuantity.split(",")[index]) || "",
+        quantity: sessionData.addOnItemsQuantity?.split(",")[index] === "false" ? null : Number(sessionData.addOnItemsQuantity?.split(",")[index]) || null,
       }
     }) : [];
+    console.log(addOnItemsForCalc, "Render AddOn")
     //store Protection Bundles
     const storeProtectionBundle = sessionData.protectionBundleSelected || {};
     const hasProtectionCode = storeProtectionBundle?.code;
@@ -943,9 +1046,12 @@ import { preferredPoint } from "./preferredPoint";
 
     // //Call calculatePrice API
     const calculateData = await calculatePrice(calculatePayload, corelationalIdentifier);
+    console.log(calculateData, "Render CalcResponse")
 
     const windowPriceAddOnList = calculateData.addOnItems || [];
+    console.log(windowPriceAddOnList, "Render AddOnList")
     const windowPriceProtectionList = calculateData.protectionItems || [];
+    console.log(windowPriceProtectionList, "Render ProtectionList")
     // =============== PROTECTION BUNDLE SELECTION ===============
     if (isEmptyProtectionBundleList) {
       const viewAllPkgBtn = document.querySelector("." + TEST_ID + " .prot-all-packages");
@@ -999,6 +1105,9 @@ import { preferredPoint } from "./preferredPoint";
           quantity: item.quantity || 0,
         }
       })
+
+      console.log(newAddOnItems, "Render New AddOn")
+      console.log(newProtectionItems, "Render New Protection")
 
       sessionData.pricesAddOnItems = newAddOnItems;
       sessionData.pricesProtectionItems = newProtectionItems;
@@ -1159,7 +1268,39 @@ import { preferredPoint } from "./preferredPoint";
       };
       extrasAPIPayload.discountCodes.push(rateCodeObj);
     }
+    // =============== CO-RELATIONAL IDENTIFIER
     const corelationalIdentifier = getCorelationalIdentifier();
+
+    // =============== GET MEMBER PRE-SELECTED PRODUCTS
+    let memberDetails = null;
+    let memberPreSelectedProducts = [];
+    try {
+      memberDetails = await getMemberDetails(corelationalIdentifier);
+
+      console.log("memberDetails", memberDetails);
+
+      if (
+        memberDetails &&
+        memberDetails.user.preferences &&
+        Array.isArray(memberDetails.user.preferences.products)
+      ) {
+        memberPreSelectedProducts =
+          memberDetails.user.preferences.products;
+      }
+    } catch (error) {
+      console.error(
+        "Failed to fetch member details:",
+        error
+      );
+    }
+
+    console.log(
+      "memberPreSelectedProducts",
+      memberPreSelectedProducts
+    );
+
+    // applyMemberPreferences(memberPreSelectedProducts);
+
     // ====================== GET EXTRAS DATA
     const extrasData = await getExtrasData(extrasAPIPayload, corelationalIdentifier);
 
@@ -1593,7 +1734,7 @@ import { preferredPoint } from "./preferredPoint";
       document.body.classList.add(TEST_ID);
 
       // =================== Intial selection handle ===============
-      initalSelectUI(extrasProtectionItemList, extrasAddOnsItemList, protectionItems, finalAddOnItemList, finalProtectionBundleList, corelationalIdentifier)
+      initalSelectUI(extrasProtectionItemList, extrasAddOnsItemList, protectionItems, finalAddOnItemList, finalProtectionBundleList, corelationalIdentifier, memberPreSelectedProducts)
       preferredPoint();
 
       // =============================== PROTECTION BUNDLE SELECTION==============================

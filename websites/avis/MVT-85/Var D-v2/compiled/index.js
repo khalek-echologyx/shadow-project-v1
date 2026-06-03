@@ -192,7 +192,6 @@
       if (!ptag) return;
 
       const currentText = ptag.textContent;
-      console.log(currentText, "currentText");
 
       if (currentText === 'Discount Applied') {
         console.log("Discount text found");

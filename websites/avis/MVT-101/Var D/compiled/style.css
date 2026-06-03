@@ -1,7 +1,7 @@
-.MVT-101-Var_B [data-testid=avis-first-banner-container] {
+.MVT-101-Var_D [data-testid=avis-first-banner-container] {
   display: none;
 }
-.MVT-101-Var_B .banner-wrapper {
+.MVT-101-Var_D .banner-wrapper {
   width: 100%;
   background-color: #191C24;
   display: flex;
@@ -11,30 +11,30 @@
   overflow: hidden;
 }
 @media (max-width: 999px) {
-  .MVT-101-Var_B .banner-wrapper {
+  .MVT-101-Var_D .banner-wrapper {
     flex-direction: column;
     gap: 0px;
     margin: 0 15px;
   }
 }
-.MVT-101-Var_B .banner-wrapper .banner-header {
+.MVT-101-Var_D .banner-wrapper .banner-header {
   position: relative;
   padding: 24px 0px 24px 16px;
   background: #000;
 }
 @media (max-width: 999px) {
-  .MVT-101-Var_B .banner-wrapper .banner-header {
+  .MVT-101-Var_D .banner-wrapper .banner-header {
     width: 100%;
   }
 }
-.MVT-101-Var_B .banner-wrapper .banner-header h4 {
+.MVT-101-Var_D .banner-wrapper .banner-header h4 {
   color: #fff;
   font-weight: 700;
   font-size: 25px;
   margin: 0;
   text-wrap: nowrap;
 }
-.MVT-101-Var_B .banner-wrapper .banner-header p {
+.MVT-101-Var_D .banner-wrapper .banner-header p {
   color: #fff;
   margin: 0;
   font-weight: 700;
@@ -42,7 +42,7 @@
   font-family: Inter;
   text-wrap: nowrap;
 }
-.MVT-101-Var_B .banner-wrapper .banner-header::after {
+.MVT-101-Var_D .banner-wrapper .banner-header::after {
   content: "";
   position: absolute;
   top: 0;
@@ -53,7 +53,7 @@
   clip-path: polygon(100% 0, 100% 100%, 0 100%);
   transform: rotate(180deg);
 }
-.MVT-101-Var_B .banner-wrapper .banner-body {
+.MVT-101-Var_D .banner-wrapper .banner-body {
   width: 100%;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -61,21 +61,34 @@
   padding: 16px;
 }
 @media (max-width: 999px) {
-  .MVT-101-Var_B .banner-wrapper .banner-body {
+  .MVT-101-Var_D .banner-wrapper .banner-body {
     grid-template-columns: repeat(1, 1fr);
     padding: 20px 34px;
   }
 }
-.MVT-101-Var_B .banner-wrapper .banner-body .banner-item {
+.MVT-101-Var_D .banner-wrapper .banner-body .banner-item {
   display: flex;
   align-items: center;
   gap: 12px;
 }
-.MVT-101-Var_B .banner-wrapper .banner-body .banner-item .banner-item-desc {
+.MVT-101-Var_D .banner-wrapper .banner-body .banner-item .banner-item-desc {
   color: #fff;
   font-size: 12px;
   font-weight: 700;
   font-family: Inter;
   line-height: 20px;
   letter-spacing: 0%;
+}
+.MVT-101-Var_D .avis-first-banner-card {
+  position: relative;
+  border-radius: 12px;
+  box-shadow: rgba(0, 0, 0, 0.06) 0px 3px 8px 0px;
+  padding: 24px 18px;
+  display: flex;
+  flex-direction: column;
+  background: radial-gradient(124.57% 33.08% at 3.61% 59.8%, rgb(212, 0, 42) 0%, rgb(0, 0, 0) 100%);
+  backdrop-filter: blur(40px);
+  border-width: 5px;
+  border-top-style: solid;
+  box-sizing: border-box;
 }

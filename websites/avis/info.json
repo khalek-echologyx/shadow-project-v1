@@ -2,6 +2,7 @@
   "id": "1768817379842_8830_avis",
   "name": "avis",
   "hostnames": [
+    "https://beta.avis.com",
     "https://www.avis.com"
   ],
   "createdAt": "2026-01-19T10:09:39.843Z",

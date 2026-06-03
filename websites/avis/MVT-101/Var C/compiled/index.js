@@ -1,5 +1,3 @@
-import {avisLogo, carSvg, clockSvg, starSvg } from "./avisLogo";
-
 (() => {
   // --- CONFIGURATION ---
   const CONFIG = {
@@ -8,17 +6,13 @@ import {avisLogo, carSvg, clockSvg, starSvg } from "./avisLogo";
     // The specific path to run the test on (e.g., '/checkout'). Leave empty '' to run on all pages.
     targetPathname: '/en/reservation/vehicle-availability',
     // Unique class to prevent duplicate injections
-    injectedClass: 'MVT-101-Var_B',
-    testId: 'MVT-101',
-    variationId: 'Var_B',
-  };
+    injectedClass: 'MVT-101-Var_C'};
 
   // --- AVIS FIRST CHECK ---
   // var avisFirstLocation = $('[data-vehicle-isavisfirst="true"]').length > 0;
 
   // 1. Pathname Validator
   function isTargetPage() {
-    if (!CONFIG.targetPathname) return true;
     const currentPath = window.location.pathname;
     return currentPath.includes(CONFIG.targetPathname);
   }
@@ -35,44 +29,11 @@ import {avisLogo, carSvg, clockSvg, starSvg } from "./avisLogo";
 
     // Step C: Check if the target element exists in the DOM yet
     const targetElement = document.querySelector(CONFIG.targetSelector);
-    console.log(targetElement, "targetElement=================")
+    console.log(targetElement, "targetElement=================");
     if (!targetElement) {
       return; // Element not ready yet, MutationObserver will catch it later
     }
-    // targetElement.style.border = '2px solid red'
-    const bannerHtml = `
-    <div class="banner-wrapper" id="${CONFIG.testId}-${CONFIG.variationId}">
-      <div class="banner-header">
-        <h4>Take Off Faster</h4>
-        <p>
-          <span>with</span>
-          <span>${avisLogo}</span>
-        </p>
-      </div>
-      <div class="banner-body">
-        <div class="banner-item">
-          ${clockSvg}
-          <div class="banner-item-desc">
-            Collect & drop-off seconds from terminal
-          </div>
-        </div>
-        <div class="banner-item">
-          ${carSvg}
-          <div class="banner-item-desc">
-            No counter. No queues. No paperwork.
-          </div>
-        </div>
-        <div class="banner-item">
-          ${starSvg}
-          <div class="banner-item-desc">
-            Dedicated concierge service
-          </div>
-        </div>
-      </div>
-    </div>
-    `
-    targetElement.insertAdjacentHTML('afterend', bannerHtml);
-    document.body.classList.add(CONFIG.injectedClass)
+    document.body.classList.add(CONFIG.injectedClass);
     
   }
 
