@@ -154,7 +154,17 @@
   }
 
   function updateWizardUI(targetElement, checkboxEl, wrapperEl, topRowEl) {
+    console.log("updateWizardUI");
+    const isTargetAvailabel = document.querySelector(
+      '[data-testid="wizard-number-popup-trigger-button"]',
+    );
+    if (!isTargetAvailabel) {
+      wrapperEl.remove();
+      return;
+    }
+    console.log("targetElementWizard", targetElement);
     const pTag = targetElement.querySelector("p");
+    console.log(pTag, "pTag");
     if (!pTag) return;
     const text = pTag.textContent;
     console.log(text, "text");
@@ -198,8 +208,10 @@
   }
 
   function updateDiscountUI(targetElement, checkboxEl, wrapperEl, topRowEl) {
+    console.log("updateDiscountUI");
     try {
-      const ptag = targetElement.querySelector("p");
+      console.log("UpdateDiscountITry");
+      const ptag = targetElement.querySelector("p.MuiTypography-root");
       if (!ptag) return;
 
       const currentText = ptag.textContent;
@@ -208,12 +220,16 @@
       if (currentText === "Discount Applied") {
         console.log("Discount text found");
         checkboxEl.checked = true;
-      } else if (currentText !== "Add Discount") {
+      } else if (currentText === "Add Discount") {
         checkboxEl.checked = false;
       }
 
-      if (ptag.textContent !== "Add Discount") {
-        ptag.textContent = "Add Discount";
+      ptag.style.display = "none";
+      if (!targetElement.querySelector(".mvt-85-add-discount-text")) {
+        ptag.insertAdjacentHTML(
+          "afterend",
+          '<p class="mvt-85-add-discount-text">Add Discount</p>',
+        );
       }
 
       if (checkboxEl.checked) {
@@ -491,7 +507,7 @@
               console.log("wizardObserver");
               updateWizardUI(targetElement, checkboxEl, wrapperEl, topRowEl);
             });
-            wizardObserver.observe(targetElement, {
+            wizardObserver.observe(targetElement.closest(".MuiBox-root"), {
               childList: true,
               subtree: true,
               characterData: true,

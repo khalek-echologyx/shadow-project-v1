@@ -1,4 +1,4 @@
-import {avisLogo, carSvg, clockSvg, starSvg } from "./avisLogo";
+import { avisLogo, carSvg, clockSvg, starSvg } from "./avisLogo";
 
 (() => {
   // --- CONFIGURATION ---
@@ -14,34 +14,9 @@ import {avisLogo, carSvg, clockSvg, starSvg } from "./avisLogo";
     variationId: 'Var_D',
   };
 
-  // --- AVIS FIRST CHECK ---
-  // var avisFirstLocation = $('[data-vehicle-isavisfirst="true"]').length > 0;
+  let initialVehicleCountText = null;
 
-  // 1. Pathname Validator
-  function isTargetPage() {
-    if (!CONFIG.targetPathname) return true;
-    const currentPath = window.location.pathname;
-    return currentPath.includes(CONFIG.targetPathname);
-  }
-
-  // 2. Main Injection Logic
-  function inject() {
-    // Step A: Check if we are on the target route
-    if (!isTargetPage()) return;
-
-    // Step B: Check if our code is already injected (prevent duplicate injections)
-    if (document.querySelector(`.${CONFIG.injectedClass}`)) {
-      return;
-    }
-
-    // Step C: Check if the target element exists in the DOM yet
-    const targetElement = document.querySelector(CONFIG.targetSelector);
-    console.log(targetElement, "targetElement=================")
-    if (!targetElement) {
-      return; // Element not ready yet, MutationObserver will catch it later
-    }
-    // targetElement.style.border = '2px solid red'
-    const bannerHtml = `
+  const getHeaderBannerHtml = () => `
     <div class="banner-wrapper" id="${CONFIG.testId}-${CONFIG.variationId}">
       <div class="banner-header">
         <h4>Take Off Faster</h4>
@@ -71,50 +46,168 @@ import {avisLogo, carSvg, clockSvg, starSvg } from "./avisLogo";
         </div>
       </div>
     </div>
-    `
-    targetElement.insertAdjacentHTML('afterend', bannerHtml);
+  `;
+
+
+  // 1. Pathname Validator
+  function isTargetPage() {
+    if (!CONFIG.targetPathname) return true;
+    const currentPath = window.location.pathname;
+    return currentPath.includes(CONFIG.targetPathname);
+  }
+
+  // 2. Main Injection Logic
+  function inject() {
+    // Step A: Check if we are on the target route
+    if (!isTargetPage()) return;
+
+    // --- CAPTURE INITIAL COUNT ---
+    if (document.querySelector('.banner-wrapper')) {
+      const countElement = document.querySelector('[data-aue-prop="availableVehiclesSectionTitle"]')?.parentElement?.querySelector('[aria-label="vehicles-count"]');
+      console.log(countElement, "countElementIntial")
+      if (countElement && initialVehicleCountText === null) {
+        initialVehicleCountText = countElement.textContent.trim();
+      }
+    }
+
+    // Step B: Check if our code is already injected (prevent duplicate injections)
+    if (document.querySelector(`.${CONFIG.injectedClass}`)) {
+      return;
+    }
+
+    // --- AVIS FIRST CHECK ---
+    const avisFirstLocation = document.querySelectorAll('[data-vehicle-isavisfirst="true"]');
+    if (avisFirstLocation.length === 0) {
+      return;
+    }
+
+    // Step C: Check if the target element exists in the DOM yet
+    const targetElement = document.querySelector(CONFIG.targetSelector);
+    console.log(targetElement, "targetElement=================")
+    if (!targetElement) {
+      return; // Element not ready yet, MutationObserver will catch it later
+    }
+    // targetElement.style.border = '2px solid red'
+    if (!document.querySelector(`#${CONFIG.testId}-${CONFIG.variationId}`)) {
+      targetElement.insertAdjacentHTML('afterend', getHeaderBannerHtml());
+    }
 
     // Inject the avis first banner card
     const vehicleCardsContainer = document.querySelector(CONFIG.targetSelector2);
-    const avisFirstVehicles = vehicleCardsContainer.querySelectorAll('article');
-    const targetVehicleCard = avisFirstVehicles[3];
-    console.log(targetVehicleCard, "targetVehicleCard=================");
-    const avisFirstBannerCardHtml = `
-    <div class="avis-first-banner-card">
-      <div class="card-content">
-        <div class="card-header">
-          <h4>Take Off Faster</h4>
-          <p>
-            <span>with</span>
-            <span>${avisLogo}</span>
-          </p>
-        </div>
-        <div class="card-body">
-          <div class="card-item">
-            ${clockSvg}
-            <div class="card-item-desc">
-              Collect & drop-off seconds from terminal
+    if (vehicleCardsContainer) {
+      const avisFirstBannerCardHtml = `
+          <div class="avis-first-banner-card">
+            <div class="card-content">
+              <div class="card-header">
+                <h4>Take Off Faster</h4>
+                <p>
+                  <span>with</span>
+                  <span>${avisLogo}</span>
+                </p>
+              </div>
+              <div class="card-body">
+                <div class="card-item">
+                  ${clockSvg}
+                  <div class="card-item-desc">
+                    Collect & drop-off seconds from terminal
+                  </div>
+                </div>
+                <div class="card-item">
+                  ${carSvg}
+                  <div class="card-item-desc">
+                    No counter. No queues. No paperwork.
+                  </div>
+                </div>
+                <div class="card-item">
+                  ${starSvg}
+                  <div class="card-item-desc">
+                    Dedicated concierge service
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
-          <div class="card-item">
-            ${carSvg}
-            <div class="card-item-desc">
-              No counter. No queues. No paperwork.
-            </div>
-          </div>
-          <div class="card-item">
-            ${starSvg}
-            <div class="card-item-desc">
-              Dedicated concierge service
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    `
-    targetVehicleCard.insertAdjacentHTML('afterend', avisFirstBannerCardHtml);
+          `;
+
+      function insertBannerCard() {
+        const countElement = document.querySelector('[data-aue-prop="availableVehiclesSectionTitle"]')?.parentElement?.querySelector('[aria-label="vehicles-count"]');
+        if (countElement && initialVehicleCountText === null) {
+          initialVehicleCountText = countElement.textContent.trim();
+        }
+
+        let isFilterApplied = false;
+        console.log(initialVehicleCountText, countElement.textContent.trim(), "checkValue")
+        if (initialVehicleCountText !== null && countElement) {
+           if (countElement.textContent.trim() !== initialVehicleCountText) {
+             isFilterApplied = true;
+           }
+        }
+
+        const avisFirstLocation = document.querySelectorAll('[data-vehicle-isavisfirst="true"]');
+        console.log(avisFirstLocation.length, "avisFirstLocation=================")
+        if (avisFirstLocation.length === 0) {
+          const oldBannerCard = document.querySelector('.avis-first-banner-card');
+          if (oldBannerCard) {
+            console.log(oldBannerCard, "oldBannerCard")
+            oldBannerCard.remove();
+          }
+          const oldHeaderBanner = document.querySelector('.banner-wrapper');
+          if (oldHeaderBanner) {
+            console.log(oldHeaderBanner, "oldHeaderBanner")
+            oldHeaderBanner.remove();
+          }
+          return;
+        }
+
+        if (isFilterApplied) {
+          console.log(isFilterApplied, "isFilterApplied")
+          const oldBannerCard = document.querySelector('.avis-first-banner-card');
+          if (oldBannerCard) {
+            console.log(oldBannerCard, "oldBannerCard")
+            oldBannerCard.remove();
+          }
+          return;
+        }
+
+        const currentArticles = vehicleCardsContainer.querySelectorAll('article');
+        if (currentArticles.length > 3) {
+          const currentTargetCard = currentArticles[3];
+          console.log(currentTargetCard, "currentTargetCard")
+          const nextSibling = currentTargetCard.nextElementSibling;
+          
+          if (nextSibling && nextSibling.classList.contains('avis-first-banner-card')) {
+            return; // Already in correct position
+          }
+
+          const oldBannerCard = document.querySelector('.avis-first-banner-card');
+          if (oldBannerCard) {
+            oldBannerCard.remove();
+          }
+
+          currentTargetCard.insertAdjacentHTML('afterend', avisFirstBannerCardHtml);
+        }
+      }
+
+      if (!document.querySelector('.avis-first-banner-card')) {
+        insertBannerCard();
+        
+        const vehcileContainerObserver = new MutationObserver(() => {
+          vehcileContainerObserver.disconnect();
+          insertBannerCard();
+          vehcileContainerObserver.observe(vehicleCardsContainer, {
+            childList: true,
+            subtree: true,
+          });
+        });
+        
+        vehcileContainerObserver.observe(vehicleCardsContainer, {
+          childList: true,
+          subtree: true,
+        });
+      }
+    }
     document.body.classList.add(CONFIG.injectedClass)
-    
+
   }
 
   // 3. SPA DOM Observer

@@ -1,10 +1,24 @@
-.MVT-85-Var_C #booking-widget #booking-widget-desktop-form > div:nth-child(2) > div > div:nth-child(2) {
+.MVT-85-Var_C
+  #booking-widget
+  #booking-widget-desktop-form
+  > div:nth-child(2)
+  > div
+  > div:nth-child(2) {
   align-items: start;
 }
-.MVT-85-Var_C #booking-widget #booking-widget-desktop-form > div:nth-child(2) > div > div:nth-child(1) {
+.MVT-85-Var_C
+  #booking-widget
+  #booking-widget-desktop-form
+  > div:nth-child(2)
+  > div
+  > div:nth-child(1) {
   align-items: start;
 }
-.MVT-85-Var_C #booking-widget #booking-widget-desktop-form [data-testid=drivers-age-dropdown] #mui-component-select-ageSelect {
+.MVT-85-Var_C
+  #booking-widget
+  #booking-widget-desktop-form
+  [data-testid="drivers-age-dropdown"]
+  #mui-component-select-ageSelect {
   font-weight: 500;
   color: #000;
   font-size: 14px !important;
@@ -109,27 +123,56 @@
   border-right: 6px solid transparent;
   border-bottom: 6px solid #4b4545;
 }
-.MVT-85-Var_C #booking-widget #booking-widget-desktop-form .mvt-85-residency-wrapper [data-testid=residency-dropdown-button] span {
+.MVT-85-Var_C
+  #booking-widget
+  #booking-widget-desktop-form
+  .mvt-85-residency-wrapper
+  [data-testid="residency-dropdown-button"]
+  span {
   color: #000;
   font-weight: 500;
 }
-.MVT-85-Var_C #booking-widget #booking-widget-desktop-form .mvt-85-residency-wrapper .mvt-85-tooltip {
+.MVT-85-Var_C
+  #booking-widget
+  #booking-widget-desktop-form
+  .mvt-85-residency-wrapper
+  .mvt-85-tooltip {
   position: relative;
   display: inline-flex;
   margin-left: 5px;
   pointer-events: auto;
 }
-.MVT-85-Var_C #booking-widget #booking-widget-desktop-form .mvt-85-residency-wrapper .mvt-85-tooltip:hover .mvt-85-tooltip-text {
+.MVT-85-Var_C
+  #booking-widget
+  #booking-widget-desktop-form
+  .mvt-85-residency-wrapper
+  .mvt-85-tooltip:hover
+  .mvt-85-tooltip-text {
   visibility: visible;
   opacity: 1;
 }
-.MVT-85-Var_C #booking-widget #booking-widget-desktop-form .mvt-85-residency-wrapper .mvt-85-tooltip .mvt-85-info-icon {
+.MVT-85-Var_C
+  #booking-widget
+  #booking-widget-desktop-form
+  .mvt-85-residency-wrapper
+  .mvt-85-tooltip
+  .mvt-85-info-icon {
   cursor: pointer;
 }
-.MVT-85-Var_C #booking-widget #booking-widget-desktop-form .mvt-85-residency-wrapper .mvt-85-tooltip .mvt-85-info-icon:hover path {
+.MVT-85-Var_C
+  #booking-widget
+  #booking-widget-desktop-form
+  .mvt-85-residency-wrapper
+  .mvt-85-tooltip
+  .mvt-85-info-icon:hover
+  path {
   fill: #000;
 }
-.MVT-85-Var_C #booking-widget #booking-widget-desktop-form .mvt-85-residency-wrapper .mvt-85-tooltip-text {
+.MVT-85-Var_C
+  #booking-widget
+  #booking-widget-desktop-form
+  .mvt-85-residency-wrapper
+  .mvt-85-tooltip-text {
   position: absolute;
   top: 22px;
   left: 6.5px;
@@ -153,7 +196,11 @@
   text-wrap: auto;
   text-align: left !important;
 }
-.MVT-85-Var_C #booking-widget #booking-widget-desktop-form .mvt-85-residency-wrapper .mvt-85-tooltip-text::before {
+.MVT-85-Var_C
+  #booking-widget
+  #booking-widget-desktop-form
+  .mvt-85-residency-wrapper
+  .mvt-85-tooltip-text::before {
   content: "";
   position: absolute;
   top: -5px;
@@ -163,7 +210,11 @@
   border-right: 6px solid transparent;
   border-bottom: 6px solid #4b4545;
 }
-.MVT-85-Var_C #booking-widget #booking-widget-desktop-form [data-testid=residency-dropdown-button] span:not(.mvt-85-tooltip-text) {
+.MVT-85-Var_C
+  #booking-widget
+  #booking-widget-desktop-form
+  [data-testid="residency-dropdown-button"]
+  span:not(.mvt-85-tooltip-text) {
   font-size: 14px !important;
 }
 .MVT-85-Var_C .mvt-85-extra-labels-container {
@@ -182,54 +233,106 @@
 .MVT-85-Var_C .mvt-85-extra-labels-container .mvt-85-residency-label {
   margin-left: 27px;
 }
-.MVT-85-Var_C #booking-widget #booking-widget-desktop-form [data-testid=wizard-number-popup-trigger-button] p {
+.MVT-85-Var_C
+  #booking-widget
+  #booking-widget-desktop-form
+  [data-testid="wizard-number-popup-trigger-button"]
+  p {
   color: #000;
   font-weight: 500;
 }
-.MVT-85-Var_C #booking-widget #booking-widget-desktop-form [data-testid=discount-coupon-popup-trigger-button] p:not(.mui-1i5m7g4) {
+.MVT-85-Var_C
+  #booking-widget
+  #booking-widget-desktop-form
+  [data-testid="discount-coupon-popup-trigger-button"]
+  p:not(.mui-1i5m7g4) {
   font-size: 14px !important;
   font-weight: 500;
   color: #000;
 }
-.MVT-85-Var_C #booking-widget #booking-widget-desktop-form [data-testid=residency-dropdown-menu-container]:last-child > div {
+.MVT-85-Var_C
+  #booking-widget
+  #booking-widget-desktop-form
+  [data-testid="residency-dropdown-menu-container"]:last-child
+  > div {
   background-color: #fff !important;
   border-radius: 0 0 4px 4px !important;
 }
-.MVT-85-Var_C #booking-widget #booking-widget-desktop-form .mvt-85-wizard-wrapper {
+.MVT-85-Var_C
+  #booking-widget
+  #booking-widget-desktop-form
+  .mvt-85-wizard-wrapper {
   margin-left: auto;
 }
-.MVT-85-Var_C #booking-widget #booking-widget-desktop-form .mvt-85-wizard-wrapper .wizard-applied-label {
+.MVT-85-Var_C
+  #booking-widget
+  #booking-widget-desktop-form
+  .mvt-85-wizard-wrapper
+  .wizard-applied-label {
   cursor: pointer;
 }
-.MVT-85-Var_C #booking-widget #booking-widget-desktop-form .mvt-85-wizard-wrapper .mvt-85-wizard-applied-text {
+.MVT-85-Var_C
+  #booking-widget
+  #booking-widget-desktop-form
+  .mvt-85-wizard-wrapper
+  .mvt-85-wizard-applied-text {
   display: flex;
   align-items: center;
   gap: 4px;
 }
-.MVT-85-Var_C #booking-widget #booking-widget-desktop-form .mvt-85-wizard-wrapper .mvt-85-wizard-applied-text p {
+.MVT-85-Var_C
+  #booking-widget
+  #booking-widget-desktop-form
+  .mvt-85-wizard-wrapper
+  .mvt-85-wizard-applied-text
+  p {
   margin: 0;
   font-size: 14px;
   font-weight: 500;
-  color: #46791D;
+  color: #46791d;
   letter-spacing: 0.036px;
   line-height: 28px;
 }
-.MVT-85-Var_C #booking-widget #booking-widget-desktop-form .mvt-85-wizard-wrapper .mvt-85-tooltip {
+.MVT-85-Var_C
+  #booking-widget
+  #booking-widget-desktop-form
+  .mvt-85-wizard-wrapper
+  .mvt-85-tooltip {
   position: relative;
   display: inline-flex;
   margin-left: 5px;
 }
-.MVT-85-Var_C #booking-widget #booking-widget-desktop-form .mvt-85-wizard-wrapper .mvt-85-tooltip:hover .mvt-85-tooltip-text {
+.MVT-85-Var_C
+  #booking-widget
+  #booking-widget-desktop-form
+  .mvt-85-wizard-wrapper
+  .mvt-85-tooltip:hover
+  .mvt-85-tooltip-text {
   visibility: visible;
   opacity: 1;
 }
-.MVT-85-Var_C #booking-widget #booking-widget-desktop-form .mvt-85-wizard-wrapper .mvt-85-tooltip .mvt-85-info-icon {
+.MVT-85-Var_C
+  #booking-widget
+  #booking-widget-desktop-form
+  .mvt-85-wizard-wrapper
+  .mvt-85-tooltip
+  .mvt-85-info-icon {
   cursor: pointer;
 }
-.MVT-85-Var_C #booking-widget #booking-widget-desktop-form .mvt-85-wizard-wrapper .mvt-85-tooltip .mvt-85-info-icon:hover path {
+.MVT-85-Var_C
+  #booking-widget
+  #booking-widget-desktop-form
+  .mvt-85-wizard-wrapper
+  .mvt-85-tooltip
+  .mvt-85-info-icon:hover
+  path {
   fill: #000;
 }
-.MVT-85-Var_C #booking-widget #booking-widget-desktop-form .mvt-85-wizard-wrapper .mvt-85-tooltip-text {
+.MVT-85-Var_C
+  #booking-widget
+  #booking-widget-desktop-form
+  .mvt-85-wizard-wrapper
+  .mvt-85-tooltip-text {
   position: absolute;
   top: 26px;
   left: 6.5px;
@@ -253,7 +356,11 @@
   text-wrap: auto;
   text-align: left !important;
 }
-.MVT-85-Var_C #booking-widget #booking-widget-desktop-form .mvt-85-wizard-wrapper .mvt-85-tooltip-text::before {
+.MVT-85-Var_C
+  #booking-widget
+  #booking-widget-desktop-form
+  .mvt-85-wizard-wrapper
+  .mvt-85-tooltip-text::before {
   content: "";
   position: absolute;
   top: -5px;
@@ -263,42 +370,83 @@
   border-right: 6px solid transparent;
   border-bottom: 6px solid #4b4545;
 }
-.MVT-85-Var_C #booking-widget #booking-widget-desktop-form [data-testid=discount-coupon-popup-trigger-button] svg:not(.mvt-85-info-icon) {
+.MVT-85-Var_C
+  #booking-widget
+  #booking-widget-desktop-form
+  [data-testid="discount-coupon-popup-trigger-button"]
+  svg:not(.mvt-85-info-icon) {
   display: none;
 }
-.MVT-85-Var_C #booking-widget #booking-widget-desktop-form .mvt-85-discount-wrapper .mvt-85-add-discount-text {
+.MVT-85-Var_C
+  #booking-widget
+  #booking-widget-desktop-form
+  .mvt-85-discount-wrapper
+  .mvt-85-add-discount-text {
   margin: 0;
   margin-top: 2px;
 }
-.MVT-85-Var_C #booking-widget #booking-widget-desktop-form .mvt-85-discount-wrapper .mvt-85-discount-applied-text {
+.MVT-85-Var_C
+  #booking-widget
+  #booking-widget-desktop-form
+  .mvt-85-discount-wrapper
+  .mvt-85-discount-applied-text {
   display: flex;
   align-items: center;
   gap: 4px;
 }
-.MVT-85-Var_C #booking-widget #booking-widget-desktop-form .mvt-85-discount-wrapper .mvt-85-discount-applied-text p {
+.MVT-85-Var_C
+  #booking-widget
+  #booking-widget-desktop-form
+  .mvt-85-discount-wrapper
+  .mvt-85-discount-applied-text
+  p {
   margin: 0;
   font-size: 14px;
   font-weight: 500;
-  color: #46791D;
+  color: #46791d;
   letter-spacing: 0.036px;
   line-height: 28px;
 }
-.MVT-85-Var_C #booking-widget #booking-widget-desktop-form .mvt-85-discount-wrapper .mvt-85-tooltip {
+.MVT-85-Var_C
+  #booking-widget
+  #booking-widget-desktop-form
+  .mvt-85-discount-wrapper
+  .mvt-85-tooltip {
   position: relative;
   display: inline-flex;
   margin-left: 5px;
 }
-.MVT-85-Var_C #booking-widget #booking-widget-desktop-form .mvt-85-discount-wrapper .mvt-85-tooltip:hover .mvt-85-tooltip-text {
+.MVT-85-Var_C
+  #booking-widget
+  #booking-widget-desktop-form
+  .mvt-85-discount-wrapper
+  .mvt-85-tooltip:hover
+  .mvt-85-tooltip-text {
   visibility: visible;
   opacity: 1;
 }
-.MVT-85-Var_C #booking-widget #booking-widget-desktop-form .mvt-85-discount-wrapper .mvt-85-tooltip .mvt-85-info-icon {
+.MVT-85-Var_C
+  #booking-widget
+  #booking-widget-desktop-form
+  .mvt-85-discount-wrapper
+  .mvt-85-tooltip
+  .mvt-85-info-icon {
   cursor: pointer;
 }
-.MVT-85-Var_C #booking-widget #booking-widget-desktop-form .mvt-85-discount-wrapper .mvt-85-tooltip .mvt-85-info-icon:hover path {
+.MVT-85-Var_C
+  #booking-widget
+  #booking-widget-desktop-form
+  .mvt-85-discount-wrapper
+  .mvt-85-tooltip
+  .mvt-85-info-icon:hover
+  path {
   fill: #000;
 }
-.MVT-85-Var_C #booking-widget #booking-widget-desktop-form .mvt-85-discount-wrapper .mvt-85-tooltip-text {
+.MVT-85-Var_C
+  #booking-widget
+  #booking-widget-desktop-form
+  .mvt-85-discount-wrapper
+  .mvt-85-tooltip-text {
   position: absolute;
   top: 26px;
   left: 6.5px;
@@ -322,7 +470,11 @@
   text-wrap: auto;
   text-align: left !important;
 }
-.MVT-85-Var_C #booking-widget #booking-widget-desktop-form .mvt-85-discount-wrapper .mvt-85-tooltip-text::before {
+.MVT-85-Var_C
+  #booking-widget
+  #booking-widget-desktop-form
+  .mvt-85-discount-wrapper
+  .mvt-85-tooltip-text::before {
   content: "";
   position: absolute;
   top: -5px;

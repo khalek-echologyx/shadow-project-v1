@@ -110,19 +110,17 @@
 }
 .MVT-85-Var_C #booking-widget #booking-widget-desktop-form .mvt-85-wizard-wrapper .mvt-85-wizard-applied-text p {
   margin: 0;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   color: #46791D;
   letter-spacing: 0.036px;
   line-height: 28px;
 }
-.MVT-85-Var_C #booking-widget #booking-widget-desktop-form [data-testid=discount-coupon-popup-trigger-button] p {
-  color: #000;
-  font-weight: 500;
-  text-decoration: none;
-}
 .MVT-85-Var_C #booking-widget #booking-widget-desktop-form [data-testid=discount-coupon-popup-trigger-button] svg {
   display: none;
+}
+.MVT-85-Var_C #booking-widget #booking-widget-desktop-form .mvt-85-discount-wrapper .mvt-85-add-discount-text {
+  margin: 0;
 }
 .MVT-85-Var_C #booking-widget #booking-widget-desktop-form .mvt-85-discount-wrapper .mvt-85-discount-applied-text {
   display: flex;
@@ -131,7 +129,7 @@
 }
 .MVT-85-Var_C #booking-widget #booking-widget-desktop-form .mvt-85-discount-wrapper .mvt-85-discount-applied-text p {
   margin: 0;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 500;
   color: #46791D;
   letter-spacing: 0.036px;

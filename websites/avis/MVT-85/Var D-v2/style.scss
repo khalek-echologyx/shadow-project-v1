@@ -11,6 +11,7 @@
         font-weight: 500;
         color: #000;
         font-size: 14px !important;
+        padding-right: 4px !important;
     }
 
     .mvt-85-age-wrapper,
@@ -62,14 +63,125 @@
         }
     }
 
-    .mvt-85-residency-wrapper {
+    .mvt-85-age-wrapper {
+        .mvt-85-tooltip {
+            position: relative;
+            display: inline-flex;
+
+            &:hover .mvt-85-tooltip-text {
+                visibility: visible;
+                opacity: 1;
+            }
+
+            .mvt-85-info-icon {
+                cursor: pointer;
+
+                &:hover path {
+                    fill: #000;
+                }
+            }
+        }
+
+        .mvt-85-tooltip-text {
+            position: absolute;
+            top: 22px;
+            left: 6.5px;
+            transform: translateX(-50%);
+            width: 275px;
+            max-width: 300px;
+            background-color: rgba(57, 54, 54, 0.92);
+            color: rgb(255, 255, 255);
+            font-size: 0.6875rem;
+            font-weight: 500;
+            line-height: 16px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease;
+            z-index: 9999;
+            pointer-events: none;
+            box-sizing: border-box;
+            overflow-wrap: break-word;
+            text-wrap: auto;
+
+            &::before {
+                content: "";
+                position: absolute;
+                top: -5px;
+                left: 50%;
+                transform: translateX(-50%);
+                border-left: 6px solid transparent;
+                border-right: 6px solid transparent;
+                border-bottom: 6px solid #4b4545;
+            }
+        }
+    }
+
+    #booking-widget #booking-widget-desktop-form .mvt-85-residency-wrapper {
         [data-testid="residency-dropdown-button"] span {
             color: #000;
             font-weight: 500;
         }
+
+        .mvt-85-tooltip {
+            position: relative;
+            display: inline-flex;
+            margin-left: 5px;
+            pointer-events: auto;
+
+            &:hover .mvt-85-tooltip-text {
+                visibility: visible;
+                opacity: 1;
+            }
+
+            .mvt-85-info-icon {
+                cursor: pointer;
+
+                &:hover path {
+                    fill: #000;
+                }
+            }
+        }
+
+        .mvt-85-tooltip-text {
+            position: absolute;
+            top: 22px;
+            left: 6.5px;
+            transform: translateX(-50%);
+            width: 275px;
+            max-width: 300px;
+            background-color: rgba(57, 54, 54, 0.92);
+            color: rgb(255, 255, 255) !important;
+            font-size: 0.6875rem !important;
+            font-weight: 500;
+            line-height: 16px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease;
+            z-index: 9999;
+            pointer-events: none;
+            box-sizing: border-box;
+            overflow-wrap: break-word;
+            text-wrap: auto;
+            text-align: left !important;
+
+            &::before {
+                content: "";
+                position: absolute;
+                top: -5px;
+                left: 50%;
+                transform: translateX(-50%);
+                border-left: 6px solid transparent;
+                border-right: 6px solid transparent;
+                border-bottom: 6px solid #4b4545;
+            }
+        }
     }
 
-    #booking-widget #booking-widget-desktop-form [data-testid="residency-dropdown-button"] span {
+    #booking-widget #booking-widget-desktop-form [data-testid="residency-dropdown-button"] span:not(.mvt-85-tooltip-text) {
         font-size: 14px !important;
     }
 
@@ -130,21 +242,75 @@
                     line-height: 28px;
                 }
             }
+
+            .mvt-85-tooltip {
+                position: relative;
+                display: inline-flex;
+                margin-left: 5px;
+
+                &:hover .mvt-85-tooltip-text {
+                    visibility: visible;
+                    opacity: 1;
+                }
+
+                .mvt-85-info-icon {
+                    cursor: pointer;
+
+                    &:hover path {
+                        fill: #000;
+                    }
+                }
+            }
+
+            .mvt-85-tooltip-text {
+                position: absolute;
+                top: 26px;
+                left: 6.5px;
+                transform: translateX(-50%);
+                width: 275px;
+                max-width: 300px;
+                background-color: rgba(57, 54, 54, 0.92);
+                color: rgb(255, 255, 255) !important;
+                font-size: 0.6875rem !important;
+                font-weight: 500;
+                line-height: 16px;
+                padding: 4px 8px;
+                border-radius: 4px;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.2s ease;
+                z-index: 9999;
+                pointer-events: none;
+                box-sizing: border-box;
+                overflow-wrap: break-word;
+                text-wrap: auto;
+                text-align: left !important;
+
+                &::before {
+                    content: "";
+                    position: absolute;
+                    top: -5px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    border-left: 6px solid transparent;
+                    border-right: 6px solid transparent;
+                    border-bottom: 6px solid #4b4545;
+                }
+            }
         }
 
         // discount style
         [data-testid="discount-coupon-popup-trigger-button"] {
-            p{
-                color: #000;
-                font-weight: 500;
-                text-decoration: none;
-            }
-            svg {
+            svg:not(.mvt-85-info-icon) {
                 display: none;
             }
         }
 
         .mvt-85-discount-wrapper {
+            .mvt-85-add-discount-text {
+                margin: 0;
+                margin-top: 2px;
+            }
             .mvt-85-discount-applied-text {
                 display: flex;
                 align-items: center;
@@ -157,6 +323,61 @@
                     color: #46791D;
                     letter-spacing: 0.036px;
                     line-height: 28px;
+                }
+            }
+
+            .mvt-85-tooltip {
+                position: relative;
+                display: inline-flex;
+                margin-left: 5px;
+
+                &:hover .mvt-85-tooltip-text {
+                    visibility: visible;
+                    opacity: 1;
+                }
+
+                .mvt-85-info-icon {
+                    cursor: pointer;
+
+                    &:hover path {
+                        fill: #000;
+                    }
+                }
+            }
+
+            .mvt-85-tooltip-text {
+                position: absolute;
+                top: 26px;
+                left: 6.5px;
+                transform: translateX(-50%);
+                width: 275px;
+                max-width: 300px;
+                background-color: rgba(57, 54, 54, 0.92);
+                color: rgb(255, 255, 255) !important;
+                font-size: 0.6875rem !important;
+                font-weight: 500;
+                line-height: 16px;
+                padding: 4px 8px;
+                border-radius: 4px;
+                opacity: 0;
+                visibility: hidden;
+                transition: opacity 0.2s ease;
+                z-index: 9999;
+                pointer-events: none;
+                box-sizing: border-box;
+                overflow-wrap: break-word;
+                text-wrap: auto;
+                text-align: left !important;
+
+                &::before {
+                    content: "";
+                    position: absolute;
+                    top: -5px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    border-left: 6px solid transparent;
+                    border-right: 6px solid transparent;
+                    border-bottom: 6px solid #4b4545;
                 }
             }
         }

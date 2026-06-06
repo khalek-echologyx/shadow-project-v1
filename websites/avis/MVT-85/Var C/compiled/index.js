@@ -146,7 +146,15 @@
   }
 
   function updateWizardUI(targetElement, checkboxEl, wrapperEl, topRowEl) {
+    console.log("updateWizardUI");
+    const isTargetAvailabel = document.querySelector('[data-testid="wizard-number-popup-trigger-button"]');
+    if (!isTargetAvailabel) {
+      wrapperEl.remove();
+      return;
+    }
+    console.log("targetElementWizard", targetElement);
     const pTag = targetElement.querySelector("p");
+    console.log(pTag, "pTag");
     if (!pTag) return;
     const text = pTag.textContent;
     console.log(text, "text");
@@ -168,12 +176,10 @@
         wrapperEl.style.marginTop = "2px";
         console.log("discount text added");
         pTag.classList.add('wizard-applied-label');
-        const wizardAppliedText = `
-        <div class="mvt-85-wizard-applied-text">
-          <p>Wizard Number Applied</p>
-          ${greenCheckSvg}
-        </div>
-        `;
+        const wizardAppliedText = '<div class="mvt-85-wizard-applied-text">' +
+          '<p>Wizard Number Applied</p>' +
+          greenCheckSvg +
+        '</div>';
         topRowEl.insertAdjacentHTML('afterend', wizardAppliedText);
       }
     } else {
@@ -187,8 +193,10 @@
   }
 
   function updateDiscountUI(targetElement, checkboxEl, wrapperEl, topRowEl) {
+    console.log("updateDiscountUI");
     try {
-      const ptag = targetElement.querySelector("p");
+      console.log("UpdateDiscountITry");
+      const ptag = targetElement.querySelector("p.MuiTypography-root");
       if (!ptag) return;
 
       const currentText = ptag.textContent;
@@ -197,24 +205,23 @@
       if (currentText === 'Discount Applied') {
         console.log("Discount text found");
         checkboxEl.checked = true;
-      } else if (currentText !== 'Add Discount') {
+      } else if (currentText === 'Add Discount') {
         checkboxEl.checked = false;
       }
 
-      if (ptag.textContent !== 'Add Discount') {
-        ptag.textContent = 'Add Discount';
+      ptag.style.display = 'none';
+      if (!targetElement.querySelector('.mvt-85-add-discount-text')) {
+        ptag.insertAdjacentHTML('afterend', '<p class="mvt-85-add-discount-text">Add Discount</p>');
       }
 
       if (checkboxEl.checked) {
         if (!wrapperEl.querySelector('.mvt-85-discount-applied-text')) {
           console.log("discount text added");
           wrapperEl.style.marginTop = "2px";
-          const discountAppliedText = `
-          <div class="mvt-85-discount-applied-text">
-            <p>Discount Applied</p>
-            ${greenCheckSvg}
-          </div>
-          `;
+          const discountAppliedText = '<div class="mvt-85-discount-applied-text">' +
+            '<p>Discount Applied</p>' +
+            greenCheckSvg +
+          '</div>';
           topRowEl.insertAdjacentHTML('afterend', discountAppliedText);
         }
       } else {
@@ -261,7 +268,7 @@
             // Bare checkbox — no label text, no interaction on the text
             topRowEl.insertAdjacentHTML(
               "beforeend",
-              `<input type="checkbox" id="ageCheckbox" class="mvt-85-checkbox" />`
+              '<input type="checkbox" id="ageCheckbox" class="mvt-85-checkbox" />'
             );
 
             // Move dropdown into the top row (right of checkbox)
@@ -347,7 +354,7 @@
 
             topRowEl.insertAdjacentHTML(
               "beforeend",
-              `<input type="checkbox" id="residencyCheckbox" class="mvt-85-checkbox" ${checkedAttr} />`
+              '<input type="checkbox" id="residencyCheckbox" class="mvt-85-checkbox" ' + checkedAttr + ' />'
             );
 
             // Wrap it
@@ -398,7 +405,7 @@
           const checkedAttr = "checked";
           topRowEl.insertAdjacentHTML(
             "beforeend",
-            `<input type="checkbox" id="wizardCheckbox" class="mvt-85-checkbox" ${checkedAttr}/>`
+            '<input type="checkbox" id="wizardCheckbox" class="mvt-85-checkbox" ' + checkedAttr + '/>'
           );
 
           // Wrap it
@@ -430,7 +437,7 @@
             console.log("wizardObserver");
             updateWizardUI(targetElement, checkboxEl, wrapperEl, topRowEl);
           });
-          wizardObserver.observe(targetElement, { childList: true, subtree: true, characterData: true });
+          wizardObserver.observe(targetElement.closest(".MuiBox-root"), { childList: true, subtree: true, characterData: true });
         } catch (err) {
           console.error("[MVT-85] wizard number section injection error:", err);
         }
@@ -451,7 +458,7 @@
 
           topRowEl.insertAdjacentHTML(
             "beforeend",
-            `<input type="checkbox" id="discountCheckbox" class="mvt-85-checkbox"/>`
+            '<input type="checkbox" id="discountCheckbox" class="mvt-85-checkbox"/>'
           );
 
           // Wrap it
@@ -541,7 +548,7 @@
     if (!ageMenuEl.querySelector('.mvt-85-menu-title')) {
       ageMenuEl.insertAdjacentHTML(
         'afterbegin',
-        `<p class="mvt-85-menu-title" style="font-weight: 700; color: #000; font-size: 10px; margin: 8px 16px 4px 16px; margin: 0px; margin-bottom: 8px;">Driver's Age</p>`
+        '<p class="mvt-85-menu-title" style="font-weight: 700; color: #000; font-size: 10px; margin: 8px 16px 4px 16px; margin: 0px; margin-bottom: 8px;">Driver&rsquo;s Age</p>'
       );
     }
 
@@ -568,7 +575,7 @@
     if (!residencyMenuEl.querySelector('.mvt-85-menu-title')) {
       residencyMenuEl.insertAdjacentHTML(
         'afterbegin',
-        `<p class="mvt-85-menu-title" style="font-weight: 700; color: #000; font-size: 10px; margin: 8px 16px 4px 9px;">Residency:</p>`
+        '<p class="mvt-85-menu-title" style="font-weight: 700; color: #000; font-size: 10px; margin: 8px 16px 4px 9px;">Residency:</p>'
       );
     }
   }
