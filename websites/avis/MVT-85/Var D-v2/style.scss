@@ -19,11 +19,21 @@
     .mvt-85-discount-wrapper {
         margin-bottom: 0 !important;
 
-        // Checkbox + dropdown side by side
+        // Checkbox + dropdown side by side =
         .mvt-85-top-row {
             display: flex;
             align-items: center;
             gap: 8px;
+        }
+
+        @media (max-width: 1250px) {
+            .mvt-85-top-row{
+                align-items: start;
+
+                #ageCheckbox{
+                    margin-top: 2px !important;
+                }
+            }
         }
 
         input.mvt-85-checkbox {
@@ -42,7 +52,7 @@
             &:checked {
                 background-color: #000;
                 padding: 4px;
-                margin-top: -3px !important;
+                // margin-top: -3px !important;
 
                 &::after {
                     content: '';
@@ -119,6 +129,15 @@
     }
 
     #booking-widget #booking-widget-desktop-form .mvt-85-residency-wrapper {
+        .mvt-85-top-row {
+            @media (max-width: 1250px) {
+                #residencyCheckbox {
+                margin-top: 2px !important;
+            }
+            }
+            
+        }
+
         [data-testid="residency-dropdown-button"] span {
             color: #000;
             font-weight: 500;
@@ -224,6 +243,14 @@
         .mvt-85-wizard-wrapper {
             margin-left: auto;
 
+            .mvt-85-top-row {
+                align-items: start !important;
+
+                #wizardCheckbox {
+                    margin-top: 2px !important;
+                }
+            }
+
             .wizard-applied-label {
                 cursor: pointer;
             }
@@ -235,11 +262,12 @@
 
                 p {
                     margin: 0;
-                    font-size: 14px;
+                    font-size: 13px;
                     font-weight: 500;
                     color: #46791D;
                     letter-spacing: 0.036px;
                     line-height: 28px;
+                    text-decoration: underline;
                 }
             }
 
@@ -307,10 +335,17 @@
         }
 
         .mvt-85-discount-wrapper {
+            .mvt-85-top-row {
+                #discountCheckbox {
+                    margin-top: 2px !important;
+                }
+            }
+
             .mvt-85-add-discount-text {
                 margin: 0;
                 margin-top: 2px;
             }
+
             .mvt-85-discount-applied-text {
                 display: flex;
                 align-items: center;
@@ -318,11 +353,12 @@
 
                 p {
                     margin: 0;
-                    font-size: 14px;
+                    font-size: 13px;
                     font-weight: 500;
                     color: #46791D;
                     letter-spacing: 0.036px;
                     line-height: 28px;
+                    text-decoration: underline;
                 }
             }
 

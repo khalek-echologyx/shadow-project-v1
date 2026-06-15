@@ -11,9 +11,6 @@
     variationId: 'Var_C',
   };
 
-  // --- AVIS FIRST CHECK ---
-  // var avisFirstLocation = $('[data-vehicle-isavisfirst="true"]').length > 0;
-
   // 1. Pathname Validator
   function isTargetPage() {
     if (!CONFIG.targetPathname) return true;
@@ -27,7 +24,7 @@
     if (!isTargetPage()) return;
 
     // Step B: Check if our code is already injected (prevent duplicate injections)
-    if (document.querySelector(`.${CONFIG.injectedClass}`)) {
+    if (document.querySelector('.' + CONFIG.injectedClass)) {
       return;
     }
 
@@ -38,7 +35,6 @@
       return; // Element not ready yet, MutationObserver will catch it later
     }
     document.body.classList.add(CONFIG.injectedClass)
-    
   }
 
   // 3. SPA DOM Observer

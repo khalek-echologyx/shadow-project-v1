@@ -1,3 +1,6 @@
+.MVT-101-Var_B {
+  @import url("https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap");
+}
 .MVT-101-Var_B [data-testid=avis-first-banner-container] {
   display: none;
 }
@@ -21,10 +24,16 @@
   position: relative;
   padding: 24px 0px 24px 16px;
   background: #000;
+  display: flex;
+  flex-direction: column;
 }
 @media (max-width: 999px) {
   .MVT-101-Var_B .banner-wrapper .banner-header {
     width: 100%;
+    flex-direction: row;
+    align-items: center;
+    padding: 20px 16px 9px 16px;
+    gap: 8px;
   }
 }
 .MVT-101-Var_B .banner-wrapper .banner-header h4 {
@@ -39,7 +48,7 @@
   margin: 0;
   font-weight: 700;
   font-size: 14px;
-  font-family: Inter;
+  font-family: "Inter", sans-serif;
   text-wrap: nowrap;
 }
 .MVT-101-Var_B .banner-wrapper .banner-header::after {
@@ -53,6 +62,21 @@
   clip-path: polygon(100% 0, 100% 100%, 0 100%);
   transform: rotate(180deg);
 }
+@media (max-width: 999px) {
+  .MVT-101-Var_B .banner-wrapper .banner-header::after {
+    right: 0px;
+    background: #191C24;
+    transform: rotate(0deg);
+    top: 23px;
+    width: 42px;
+    height: 70%;
+  }
+}
+@media (max-width: 391px) {
+  .MVT-101-Var_B .banner-wrapper .banner-header::after {
+    display: none;
+  }
+}
 .MVT-101-Var_B .banner-wrapper .banner-body {
   width: 100%;
   display: grid;
@@ -63,7 +87,7 @@
 @media (max-width: 999px) {
   .MVT-101-Var_B .banner-wrapper .banner-body {
     grid-template-columns: repeat(1, 1fr);
-    padding: 20px 34px;
+    padding: 8px 16px 16px 16px;
   }
 }
 .MVT-101-Var_B .banner-wrapper .banner-body .banner-item {
@@ -75,7 +99,17 @@
   color: #fff;
   font-size: 12px;
   font-weight: 700;
-  font-family: Inter;
+  font-family: "Inter", sans-serif;
   line-height: 20px;
   letter-spacing: 0%;
+}
+@media (max-width: 999px) {
+  .MVT-101-Var_B .banner-wrapper .banner-body .banner-item svg:not(.mvt-101-sm-svg) {
+    display: none;
+  }
+}
+@media (min-width: 1000px) {
+  .MVT-101-Var_B .banner-wrapper .banner-body .banner-item svg.mvt-101-sm-svg {
+    display: none;
+  }
 }

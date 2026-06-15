@@ -21,8 +21,22 @@
         // Checkbox + dropdown side by side
         .mvt-85-top-row {
             display: flex;
-            align-items: center;
+            align-items: start;
             gap: 8px;
+        }
+
+        @media (max-width: 1250px) {
+            .mvt-85-top-row {
+                align-items: start;
+
+                .mvt-85-checkbox {
+                    margin-top: 4px;
+                }
+
+                #ageCheckbox {
+                    margin-top: 2px !important;
+                }
+            }
         }
 
         input.mvt-85-checkbox {
@@ -41,7 +55,7 @@
             &:checked {
                 background-color: #000;
                 padding: 4px;
-                margin-top: -3px !important;
+                margin-top: 2px !important;
 
                 &::after {
                     content: '';
@@ -112,6 +126,14 @@
         .mvt-85-wizard-wrapper {
             margin-left: auto;
 
+            .mvt-85-top-row {
+                align-items: start !important;
+
+                #wizardCheckbox {
+                    margin-top: 2px !important;
+                }
+            }
+
             .wizard-applied-label {
                 cursor: pointer;
             }
@@ -128,6 +150,7 @@
                     color: #46791D;
                     letter-spacing: 0.036px;
                     line-height: 28px;
+                    text-decoration: underline;
                 }
             }
         }
@@ -156,6 +179,7 @@
                     color: #46791D;
                     letter-spacing: 0.036px;
                     line-height: 28px;
+                    text-decoration: underline;
                 }
             }
         }

@@ -1,0 +1,19 @@
+.MVT-32-Var_D {
+  .mvt-32-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 16px;
+
+    #countdown {
+      margin-bottom: 0;
+      display: flex;
+      align-items: center;
+    }
+
+    [data-testid="best-price-banner"] {
+      margin: 0;
+      border-radius: 8px;
+    }
+  }
+}

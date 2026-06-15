@@ -1,4 +1,4 @@
-import { avisLogo, carSvg, clockSvg, starSvg } from "./avisLogo";
+import { avisLogo, avisLogRed, avisLosoWhite, carSvg, carSvgSm, carSvgV2, clockSvg, clockSvgSm, clockSvgV2, starSvg, starSvgSm, starSvgV2 } from "./avisLogo";
 
 (() => {
   // --- CONFIGURATION ---
@@ -16,37 +16,37 @@ import { avisLogo, carSvg, clockSvg, starSvg } from "./avisLogo";
 
   let initialVehicleCountText = null;
 
-  const getHeaderBannerHtml = () => `
-    <div class="banner-wrapper" id="${CONFIG.testId}-${CONFIG.variationId}">
-      <div class="banner-header">
-        <h4>Take Off Faster</h4>
-        <p>
-          <span>with</span>
-          <span>${avisLogo}</span>
-        </p>
-      </div>
-      <div class="banner-body">
-        <div class="banner-item">
-          ${clockSvg}
-          <div class="banner-item-desc">
-            Collect & drop-off seconds from terminal
-          </div>
-        </div>
-        <div class="banner-item">
-          ${carSvg}
-          <div class="banner-item-desc">
-            No counter. No queues. No paperwork.
-          </div>
-        </div>
-        <div class="banner-item">
-          ${starSvg}
-          <div class="banner-item-desc">
-            Dedicated concierge service
-          </div>
-        </div>
-      </div>
-    </div>
-  `;
+  function getHeaderBannerHtml() {
+    return '<div class="banner-wrapper" id="' + CONFIG.testId + '-' + CONFIG.variationId + '">' +
+      '<div class="banner-header">' +
+        '<h4>Take Off Faster</h4>' +
+        '<p>' +
+          '<span>with</span>' +
+          '<span>' + avisLogo + '</span>' +
+        '</p>' +
+      '</div>' +
+      '<div class="banner-body">' +
+        '<div class="banner-item">' +
+          clockSvg + ' ' + clockSvgSm +
+          '<div class="banner-item-desc">' +
+            'Collect &amp; drop-off seconds from terminal' +
+          '</div>' +
+        '</div>' +
+        '<div class="banner-item">' +
+          carSvg + ' ' + carSvgSm +
+          '<div class="banner-item-desc">' +
+            'No counter. No queues. No paperwork.' +
+          '</div>' +
+        '</div>' +
+        '<div class="banner-item">' +
+          starSvg + ' ' + starSvgSm +
+          '<div class="banner-item-desc">' +
+            'Dedicated concierge service' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }
 
 
   // 1. Pathname Validator
@@ -71,7 +71,7 @@ import { avisLogo, carSvg, clockSvg, starSvg } from "./avisLogo";
     }
 
     // Step B: Check if our code is already injected (prevent duplicate injections)
-    if (document.querySelector(`.${CONFIG.injectedClass}`)) {
+    if (document.querySelector('.' + CONFIG.injectedClass)) {
       return;
     }
 
@@ -88,46 +88,45 @@ import { avisLogo, carSvg, clockSvg, starSvg } from "./avisLogo";
       return; // Element not ready yet, MutationObserver will catch it later
     }
     // targetElement.style.border = '2px solid red'
-    if (!document.querySelector(`#${CONFIG.testId}-${CONFIG.variationId}`)) {
+    if (!document.querySelector('#' + CONFIG.testId + '-' + CONFIG.variationId)) {
       targetElement.insertAdjacentHTML('afterend', getHeaderBannerHtml());
     }
 
     // Inject the avis first banner card
     const vehicleCardsContainer = document.querySelector(CONFIG.targetSelector2);
+    const containerParent = vehicleCardsContainer.closest('.MuiBox-root.mui-12issdx')
+    
+    console.log('===> index.js:99 ~ containerParent', containerParent);
     if (vehicleCardsContainer) {
-      const avisFirstBannerCardHtml = `
-          <div class="avis-first-banner-card">
-            <div class="card-content">
-              <div class="card-header">
-                <h4>Take Off Faster</h4>
-                <p>
-                  <span>with</span>
-                  <span>${avisLogo}</span>
-                </p>
-              </div>
-              <div class="card-body">
-                <div class="card-item">
-                  ${clockSvg}
-                  <div class="card-item-desc">
-                    Collect & drop-off seconds from terminal
-                  </div>
-                </div>
-                <div class="card-item">
-                  ${carSvg}
-                  <div class="card-item-desc">
-                    No counter. No queues. No paperwork.
-                  </div>
-                </div>
-                <div class="card-item">
-                  ${starSvg}
-                  <div class="card-item-desc">
-                    Dedicated concierge service
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          `;
+      var avisFirstBannerCardHtml = '<div class="avis-first-banner-card">' +
+          '<div class="card-header">' +
+            '<h4>Take Off Faster</h4>' +
+            '<p>' +
+              '<span class="with-text">with</span>' +
+              '<span class="logo">' + avisLogRed + ' ' + avisLosoWhite + '</span>' +
+            '</p>' +
+          '</div>' +
+          '<div class="card-body">' +
+            '<div class="card-item">' +
+              clockSvgV2 +
+              '<div class="card-item-desc">' +
+                'Collect &amp; drop-off seconds from terminal' +
+              '</div>' +
+            '</div>' +
+            '<div class="card-item">' +
+              carSvgV2 +
+              '<div class="card-item-desc">' +
+                'No counter. No queues. No paperwork.' +
+              '</div>' +
+            '</div>' +
+            '<div class="card-item">' +
+              starSvgV2 +
+              '<div class="card-item-desc">' +
+                'Dedicated concierge service' +
+              '</div>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
 
       function insertBannerCard() {
         const countElement = document.querySelector('[data-aue-prop="availableVehiclesSectionTitle"]')?.parentElement?.querySelector('[aria-label="vehicles-count"]');
@@ -142,6 +141,8 @@ import { avisLogo, carSvg, clockSvg, starSvg } from "./avisLogo";
              isFilterApplied = true;
            }
         }
+
+        console.log(isFilterApplied, "isFilterApplied=================")
 
         const avisFirstLocation = document.querySelectorAll('[data-vehicle-isavisfirst="true"]');
         console.log(avisFirstLocation.length, "avisFirstLocation=================")
@@ -169,9 +170,15 @@ import { avisLogo, carSvg, clockSvg, starSvg } from "./avisLogo";
           return;
         }
 
-        const currentArticles = vehicleCardsContainer.querySelectorAll('article');
-        if (currentArticles.length > 3) {
-          const currentTargetCard = currentArticles[3];
+        // Re-query fresh — the closure reference becomes stale if the container
+        // is removed from DOM by the "no results" state and then re-added.
+        const freshVehicleCardsContainer = document.querySelector(CONFIG.targetSelector2);
+        if (!freshVehicleCardsContainer) return;
+        const currentArticles = freshVehicleCardsContainer.querySelectorAll('article');
+        const screenWidth = window.screen.width;
+        if (currentArticles.length > 0) {
+          const targetIndex = screenWidth > 999 ? 3 : 0;
+          const currentTargetCard = currentArticles[targetIndex];
           console.log(currentTargetCard, "currentTargetCard")
           const nextSibling = currentTargetCard.nextElementSibling;
           
@@ -185,26 +192,32 @@ import { avisLogo, carSvg, clockSvg, starSvg } from "./avisLogo";
           }
 
           currentTargetCard.insertAdjacentHTML('afterend', avisFirstBannerCardHtml);
+          
+          console.log('===> index.js:189 ~ runInserBannerInject');
         }
       }
 
-      if (!document.querySelector('.avis-first-banner-card')) {
+      // Always run on first inject — insertBannerCard handles its own idempotency.
+      console.log('===> index.js ~ insertBannerCard initial call');
+      insertBannerCard();
+
+      // Always register the observer (not gated on banner-card existence).
+      // When the filter shows "no results" the vehicleCardsContainer is removed
+      // from the DOM; when the filter is cleared it is re-added. Both events
+      // fire this observer so we can re-inject the card.
+      const vehcileContainerObserver = new MutationObserver(() => {
+        vehcileContainerObserver.disconnect();
         insertBannerCard();
-        
-        const vehcileContainerObserver = new MutationObserver(() => {
-          vehcileContainerObserver.disconnect();
-          insertBannerCard();
-          vehcileContainerObserver.observe(vehicleCardsContainer, {
-            childList: true,
-            subtree: true,
-          });
-        });
-        
-        vehcileContainerObserver.observe(vehicleCardsContainer, {
+        vehcileContainerObserver.observe(containerParent, {
           childList: true,
           subtree: true,
         });
-      }
+      });
+
+      vehcileContainerObserver.observe(containerParent, {
+        childList: true,
+        subtree: true,
+      });
     }
     document.body.classList.add(CONFIG.injectedClass)
 

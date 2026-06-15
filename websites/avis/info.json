@@ -3,7 +3,8 @@
   "name": "avis",
   "hostnames": [
     "https://beta.avis.com",
-    "https://www.avis.com"
+    "https://www.avis.com",
+    "https://ci8.avis.com"
   ],
   "createdAt": "2026-01-19T10:09:39.843Z",
   "createdAtReadable": "1/19/2026, 4:09:39 PM",

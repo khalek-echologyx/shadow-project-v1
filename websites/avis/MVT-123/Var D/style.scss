@@ -1,0 +1,9 @@
+.MVT-123-Var_D {
+  [data-mvt-testid="protection-bundle"]{
+    width: 100%;
+    cursor: default;
+  }
+  [data-mvt-testid="protection-bundle"]:not([data-mvt-bundlename="Essential Protection"]):not([data-mvt-bundlename="Basic Cover"]) {
+    display: none;
+  }
+}

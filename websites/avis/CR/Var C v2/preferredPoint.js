@@ -459,7 +459,9 @@ export function preferredPoint() {
         catch (e) { return {}; }
     }
     function writeStore(patch) {
+        console.log('===> preferredPoint.js:462 ~ ', );
         var existing = readStore();
+        console.log('===> preferredPoint.js:464 ~ existing', existing);
         existing.state = Object.assign({}, existing.state || {}, patch);
         existing.version = existing.version != null ? existing.version : 0;
         try { sessionStorage.setItem(CFG.ss.reservationStore, JSON.stringify(existing)); } catch (e) { }
@@ -914,6 +916,7 @@ export function preferredPoint() {
         // the toggle gets re-injected on the next pass.
         var l = readLoyaltyFromOverride() || readLoyaltyFromStore() || readLoyaltyFromDom() || readLoyaltyFromFiber();
         var p = readProtectionsFromOverride() || (readStore().state || {}).protectionsData;
+        console.log('===> preferredPoint.js:919 ~ testMVT 1', );
         if (l && p) enhanceAddOnCards(l, p);
         refreshDayPicker();
     }
@@ -1314,6 +1317,7 @@ export function preferredPoint() {
             // boot() are not in scope here, so we always pull from the live sources.
             var loy = readLoyaltyFromOverride() || readLoyaltyFromStore() || readLoyaltyFromDom() || readLoyaltyFromFiber();
             var prot = readProtectionsFromOverride() || (readStore().state || {}).protectionsData || readProtectionsFromFiber();
+            console.log('===> preferredPoint.js:919 ~ testMVT 2', );
             if (loy && prot) enhanceAddOnCards(loy, prot); // re-renders the toggle label
             renderAppliedPointsSection();                   // re-renders the row label + total
             updatePointsAppliedIndicator();                 // re-renders the footer indicator
@@ -1401,12 +1405,16 @@ export function preferredPoint() {
     }
 
     function callCalculate(qty) {
+        console.log('===> preferredPoint.js:1406 ~ ', );
         var template = __pwpState.lastCalculateBody;
+        console.log('===> preferredPoint.js:1410 ~ template', template);
         // Always rebuild the URL fresh so we pick up the latest correlationIdentifier
         var url = buildCalculateUrl();
         if (!template) template = buildCalculateBodyFromStore();
         if (!template) return Promise.reject(new Error('no calculate template available yet'));
+        console.log('===> preferredPoint.js:1415 ~ template', template);
         var body = Object.assign({}, template);
+        console.log('===> preferredPoint.js:1415 ~ body', body);
         body.freedayItem = qty > 0 ? { quantity: qty } : null;
 
         // Build addOnItems from the host's source of truth — state.addOnItems
@@ -1415,7 +1423,10 @@ export function preferredPoint() {
         // not whatever stale snapshot the captured template happens to have. We
         // then layer our payWithPoints flags on top.
         var pwpCodes = __pwpState.payWithPointsCodes || [];
+        console.log('===> preferredPoint.js:1421 ~ pwpCodes', pwpCodes);
         body.addOnItems = buildAddOnItemsForCalc(pwpCodes);
+        console.log('===> preferredPoint.js:1423 ~ ', buildAddOnItemsForCalc(pwpCodes));
+        console.log('===> preferredPoint.js:1422 ~ body', body);
         return fetch(url, {
             method: 'POST',
             credentials: 'include',
@@ -1444,6 +1455,7 @@ export function preferredPoint() {
     // from pwpCodes that aren't in the host's selection (so e.g. toggling
     // "Add Using Points" on RSN that wasn't yet in the cart still sends RSN).
     function buildAddOnItemsForCalc(pwpCodes) {
+        console.log('===> preferredPoint.js:1452 ~ pwpCodes', pwpCodes);
         pwpCodes = pwpCodes || [];
         var s = (readStore().state || {});
         var hostCodes = String(s.addOnItems || '')
@@ -1477,6 +1489,7 @@ export function preferredPoint() {
 
     function buildCalculateBodyFromStore() {
         var s = (readStore().state || {});
+        console.log('===> preferredPoint.js:1492 ~ s', s);
         if (!s.pickupLocationCode || !s.vehicleCode) return null;
 
         function pad2(n) { n = String(n); return n.length === 1 ? '0' + n : n; }
@@ -1507,6 +1520,15 @@ export function preferredPoint() {
         }
         if (s.couponCode) discountCodes.push({ type: 'COUPON', value: s.couponCode });
 
+        // protection items from store:
+        var protectionItems = [];
+        if (s.protectionItems) {
+            protectionItems = s.protectionItems.split(',').map(function (c) {
+                return { code: c.trim() };
+            });
+        }
+        console.log('===> preferredPoint.js:1530 ~ protectionItems', protectionItems);
+
         return {
             pickupLocation: s.pickupLocationCode,
             dropoffLocation: s.returnLocationCode,
@@ -1524,7 +1546,7 @@ export function preferredPoint() {
             priceRateCode: s.priceRateCode,
             priceType: s.priceType || 'VEHICLE_LEISURE_PAY_NOW',
             addOnItems: [],     // selected add-ons would go here if any
-            protectionItems: [],
+            protectionItems: protectionItems,
             isAvisFirst: !!s.isAvisFirst
         };
     }
@@ -1735,10 +1757,12 @@ export function preferredPoint() {
                         console.log('[pwp] day redemption not available for this rate — skipping PWP card, enhancing add-on toggles only');
                     }
                     startCardEnhancer(loyalty, protections);
+                    console.log('===> preferredPoint.js:919 ~ testMVT 3', );
                     enhanceAddOnCards(loyalty, protections);
                     fetchExtrasIfMissing().then(function (didFetch) {
                         if (didFetch) {
                             console.log('[pwp] re-enhancing cards after extras fetch');
+                            console.log('===> preferredPoint.js:919 ~ testMVT 4', );
                             enhanceAddOnCards(loyalty, protections);
                         }
                     });
@@ -1952,7 +1976,9 @@ export function preferredPoint() {
     // Find every add-on card on the page across known variants. Order of
     // selectors covers the MVT-36 variant cards first (most likely on the
     // production variant page), then beta-style cards as a fallback.
+    console.log('===> preferredPoint.js:1961')
     function findAddOnCards() {
+        console.log('===> preferredPoint.js:1963 ~ ');
         var sel = '.add-on-card[data-code], .add-on-card, [data-testid="single-addons-item-card-container"]';
         return Array.from(document.querySelectorAll(sel));
     }
@@ -1991,6 +2017,7 @@ export function preferredPoint() {
     }
 
     function enhanceAddOnCards(loyalty, protections) {
+        console.log('===> preferredPoint.js:2003')
         if (!loyalty || !protections) return;
         var elig = getAddOnEligibilityMap();
         if (!Object.keys(elig).length) return;
@@ -2000,9 +2027,12 @@ export function preferredPoint() {
         var stateChanged = false;
 
         findAddOnCards().forEach(function (card) {
+            console.log('===> preferredPoint.js:2010 ~ card', card);
             // Already enhanced? Update affordability state, don't re-inject.
             var existing = card.querySelector('.pwp-addon-pts-toggle');
+            console.log('===> preferredPoint.js:2012 ~ existing', existing);
             var code = extractCardCode(card);
+            console.log('===> preferredPoint.js:2014 ~ code', code);
             if (!code || !elig[code]) {
                 if (existing) existing.remove();
                 return;
@@ -2064,8 +2094,10 @@ export function preferredPoint() {
                 // nodeValue changes emit characterData mutations only, which the
                 // observer ignores (it watches childList:true, not characterData).
                 var lbl = existing.querySelector('.pwp-addon-pts-label');
+                console.log('===> preferredPoint.js:2074 ~ lbl', lbl);
                 if (lbl) {
                     var tn = lbl.firstChild;
+                    console.log('===> preferredPoint.js:2077 ~ tn', tn);
                     if (tn && tn.nodeType === 3 /* TEXT_NODE */) {
                         tn.nodeValue = labelText;
                     } else {
@@ -2086,6 +2118,8 @@ export function preferredPoint() {
                 + (isOn ? ' checked' : '')
                 + ' style="accent-color:rgb(212,0,42);width:16px;height:16px;cursor:inherit;">'
                 + '<span class="pwp-addon-pts-label">' + labelText + '</span>';
+            
+            console.log('===> preferredPoint.js:2099 ~ toggle', toggle);
 
             // Place the toggle near the existing "Add to trip" control so it sits
             // alongside it visually. Falls back to appending to the card.
@@ -2098,6 +2132,7 @@ export function preferredPoint() {
 
             var input = toggle.querySelector('input');
             input.addEventListener('change', function (e) {
+                console.log('===> preferredPoint.js:2101 ~ ', e.target.checked);
                 onAddOnPointsToggle(code, e.target.checked);
             });
         });
@@ -2118,6 +2153,7 @@ export function preferredPoint() {
     }
 
     function onAddOnPointsToggle(code, isOn) {
+        console.log('===> preferredPoint.js:2122 ~ ', "runAddOnPointsToggle");
         __pwpState.payWithPointsCodes = __pwpState.payWithPointsCodes || [];
         var idx = __pwpState.payWithPointsCodes.indexOf(code);
         if (isOn && idx === -1) __pwpState.payWithPointsCodes.push(code);
@@ -2158,6 +2194,7 @@ export function preferredPoint() {
                 updateBookingSummary(resp);
                 var loy = readLoyaltyFromOverride() || readLoyaltyFromStore() || readLoyaltyFromDom() || readLoyaltyFromFiber();
                 var prot = readProtectionsFromOverride() || (readStore().state || {}).protectionsData || readProtectionsFromFiber();
+                console.log('===> preferredPoint.js:919 ~ testMVT 6', );
                 enhanceAddOnCards(loy, prot);
                 window.dispatchEvent(new CustomEvent('avis:pwp:changed', {
                     detail: { code: code, payWithPoints: isOn, response: resp }
@@ -2175,6 +2212,7 @@ export function preferredPoint() {
                 }
                 var loy2 = readLoyaltyFromOverride() || readLoyaltyFromStore() || readLoyaltyFromDom() || readLoyaltyFromFiber();
                 var prot2 = readProtectionsFromOverride() || (readStore().state || {}).protectionsData || readProtectionsFromFiber();
+                console.log('===> preferredPoint.js:919 ~ testMVT 7', );
                 enhanceAddOnCards(loy2, prot2);
             });
     }
@@ -2183,6 +2221,7 @@ export function preferredPoint() {
     // after price/AB-flag changes). Re-enhance any new ones.
     var __pwpCardObserver = null;
     function startCardEnhancer(loyalty, protections) {
+        console.log('===> preferredPoint.js:919 ~ testMVT 9', );
         if (__pwpCardObserver) return;
 
         // Resolve loyalty + protections fresh from every available source
@@ -2190,13 +2229,15 @@ export function preferredPoint() {
         // boot time. The fiber walk fallback is critical on first page load
         // where the loyalty header may not be in the DOM yet.
         function tryEnhance() {
+            console.log('===> preferredPoint.js:919 ~ testMVT 10', );
             var l = readLoyaltyFromOverride() || readLoyaltyFromStore() || readLoyaltyFromDom() || readLoyaltyFromFiber() || loyalty;
             var p = readProtectionsFromOverride() || (readStore().state || {}).protectionsData || readProtectionsFromFiber() || protections;
+            console.log('===> preferredPoint.js:919 ~ testMVT 8', );
             if (l && p) enhanceAddOnCards(l, p);
         }
 
-        __pwpCardObserver = new MutationObserver(tryEnhance);
-        __pwpCardObserver.observe(document.body, { childList: true, subtree: true });
+        // __pwpCardObserver = new MutationObserver(tryEnhance);
+        // __pwpCardObserver.observe(document.body, { childList: true, subtree: true });
 
         // First-page-load safety net: poll every second for the first 30s. The
         // host's variant code (MVT-36) doesn't render add-on cards until ~800ms

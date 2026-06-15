@@ -48,7 +48,7 @@
     };
   }
 
-  const greenCheckSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="none">\
+  const greenCheckSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 16 16" fill="none">\
   <path fill-rule="evenodd" clip-rule="evenodd" d="M12.4446 1.34824C11.129 0.469192 9.58225 0 8 0C5.87827 0 3.84344 0.842855 2.34315 2.34315C0.842855 3.84344 0 5.87827 0 8C0 9.58225 0.469192 11.129 1.34824 12.4446C2.22729 13.7602 3.47672 14.7855 4.93853 15.391C6.40034 15.9965 8.00887 16.155 9.56072 15.8463C11.1126 15.5376 12.538 14.7757 13.6569 13.6569C14.7757 12.538 15.5376 11.1126 15.8463 9.56072C16.155 8.00887 15.9965 6.40034 15.391 4.93853C14.7855 3.47672 13.7602 2.22729 12.4446 1.34824ZM3.8934 8.40548L6.40007 11.0676C6.4445 11.1148 6.49826 11.152 6.55795 11.1773C6.61763 11.2025 6.68191 11.2154 6.74671 11.2144C6.86649 11.2146 6.9818 11.1686 7.06873 11.0861C7.08905 11.0672 7.10758 11.0466 7.12407 11.0243L9.5634 8.43511C9.57794 8.42306 9.59171 8.41007 9.6047 8.39637L12.1114 5.73426C12.154 5.68928 12.1873 5.63623 12.2094 5.57834C12.2315 5.52044 12.242 5.45896 12.2402 5.39702C12.2384 5.33508 12.2244 5.27417 12.1989 5.21766C12.1735 5.16115 12.1372 5.11003 12.092 5.06759C12.047 5.02502 11.994 4.99166 11.9361 4.96961C11.8782 4.94757 11.8165 4.93715 11.7546 4.93901C11.6926 4.94087 11.6316 4.9552 11.5752 4.98068C11.5187 5.00616 11.4678 5.04258 11.4254 5.08778L8.94739 7.71896C8.9343 7.73004 8.92182 7.74198 8.91004 7.75444L6.74272 10.0555L4.58004 7.759C4.53794 7.71332 4.48715 7.67639 4.43063 7.6506C4.37411 7.62482 4.31303 7.6108 4.25094 7.60893C4.18885 7.60707 4.12698 7.61751 4.06902 7.63986C4.01105 7.66221 3.95814 7.69575 3.91338 7.73882C3.8677 7.78092 3.83088 7.83171 3.8051 7.88823C3.77932 7.94475 3.76509 8.00583 3.76323 8.06792C3.76137 8.13001 3.77193 8.19192 3.79428 8.24988C3.81663 8.30785 3.85033 8.36072 3.8934 8.40548Z" fill="#46791D"/>\
   </svg>';
 
@@ -146,24 +146,19 @@
   }
 
   function updateWizardUI(targetElement, checkboxEl, wrapperEl, topRowEl) {
-    console.log("updateWizardUI");
     const isTargetAvailabel = document.querySelector('[data-testid="wizard-number-popup-trigger-button"]');
     if (!isTargetAvailabel) {
       wrapperEl.remove();
       return;
     }
-    console.log("targetElementWizard", targetElement);
     const pTag = targetElement.querySelector("p");
-    console.log(pTag, "pTag");
     if (!pTag) return;
     const text = pTag.textContent;
-    console.log(text, "text");
     if (text.includes("*")) {
       checkboxEl.checked = true;
 
       if (!pTag.hasAttribute("data-wizard-click-listener")) {
         pTag.addEventListener("click", function () {
-          console.log("Wizard pTag clicked");
           const removeWizardEl = document.querySelector('[data-testid="recognized-state-logout"]');
           if (removeWizardEl) {
             removeWizardEl.click();
@@ -174,7 +169,6 @@
 
       if (!wrapperEl.querySelector('.mvt-85-wizard-applied-text')) {
         wrapperEl.style.marginTop = "2px";
-        console.log("discount text added");
         pTag.classList.add('wizard-applied-label');
         const wizardAppliedText = '<div class="mvt-85-wizard-applied-text">' +
           '<p>Wizard Number Applied</p>' +
@@ -193,17 +187,11 @@
   }
 
   function updateDiscountUI(targetElement, checkboxEl, wrapperEl, topRowEl) {
-    console.log("updateDiscountUI");
     try {
-      console.log("UpdateDiscountITry");
       const ptag = targetElement.querySelector("p.MuiTypography-root");
       if (!ptag) return;
-
       const currentText = ptag.textContent;
-      console.log(currentText, "currentText");
-
       if (currentText === 'Discount Applied') {
-        console.log("Discount text found");
         checkboxEl.checked = true;
       } else if (currentText === 'Add Discount') {
         checkboxEl.checked = false;
@@ -216,7 +204,6 @@
 
       if (checkboxEl.checked) {
         if (!wrapperEl.querySelector('.mvt-85-discount-applied-text')) {
-          console.log("discount text added");
           wrapperEl.style.marginTop = "2px";
           const discountAppliedText = '<div class="mvt-85-discount-applied-text">' +
             '<p>Discount Applied</p>' +
@@ -237,7 +224,6 @@
 
   function applyCode() {
     console.log("[MVT-85] applyCode");
-
     try {
 
       // Wait for Age Dropdown
@@ -254,7 +240,6 @@
             );
 
             if (!selectEl) {
-              console.log("[MVT-85] select element not found");
               return;
             }
             const ageWrapperEl = document.createElement("div");
@@ -358,7 +343,6 @@
             );
 
             // Wrap it
-            console.log(targetElement, targetElement.parentNode, "resD");
             targetElement.parentNode.insertBefore(wrapperEl, targetElement);
             topRowEl.appendChild(targetElement);
 
@@ -417,7 +401,6 @@
           checkboxEl.addEventListener("click", function (e) {
             e.preventDefault();
             if (checkboxEl.hasAttribute("checked")) {
-              console.log("Wizard checkbox clicked while checked");
               const removeWizardEl = document.querySelector('[data-testid="recognized-state-logout"]');
               if (removeWizardEl) {
                 removeWizardEl.click();
@@ -434,7 +417,6 @@
           updateWizardUI(targetElement, checkboxEl, wrapperEl, topRowEl);
 
           const wizardObserver = new MutationObserver(function () {
-            console.log("wizardObserver");
             updateWizardUI(targetElement, checkboxEl, wrapperEl, topRowEl);
           });
           wizardObserver.observe(targetElement.closest(".MuiBox-root"), { childList: true, subtree: true, characterData: true });
@@ -480,7 +462,6 @@
           updateDiscountUI(targetElement, checkboxEl, wrapperEl, topRowEl);
 
           const discountObserver = new MutationObserver(function () {
-            console.log("discountObserver");
             updateDiscountUI(targetElement, checkboxEl, wrapperEl, topRowEl);
           });
           discountObserver.observe(targetElement, { childList: true, subtree: true, characterData: true });
@@ -548,7 +529,7 @@
     if (!ageMenuEl.querySelector('.mvt-85-menu-title')) {
       ageMenuEl.insertAdjacentHTML(
         'afterbegin',
-        '<p class="mvt-85-menu-title" style="font-weight: 700; color: #000; font-size: 10px; margin: 8px 16px 4px 16px; margin: 0px; margin-bottom: 8px;">Driver&rsquo;s Age</p>'
+        '<p class="mvt-85-menu-title" style="font-weight: 700; color: #000; font-size: 12px; margin: 8px 16px 4px 16px; margin: 0px; margin-bottom: 8px;">Driver&rsquo;s Age</p>'
       );
     }
 
@@ -575,7 +556,7 @@
     if (!residencyMenuEl.querySelector('.mvt-85-menu-title')) {
       residencyMenuEl.insertAdjacentHTML(
         'afterbegin',
-        '<p class="mvt-85-menu-title" style="font-weight: 700; color: #000; font-size: 10px; margin: 8px 16px 4px 9px;">Residency:</p>'
+        '<p class="mvt-85-menu-title" style="font-weight: 700; color: #000; font-size: 12px; margin: 8px 16px 4px 9px;">Residency:</p>'
       );
     }
   }

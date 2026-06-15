@@ -429,6 +429,7 @@ import { preferredPoint } from "./preferredPoint";
       body: JSON.stringify(payload),
     });
     let data = await res.json();
+    console.log('===> index.js:432 ~ data', data);
     return data;
   }
 
@@ -921,40 +922,40 @@ import { preferredPoint } from "./preferredPoint";
     const sessionDataRaw = sessionStorage.getItem("reservation.store")
     const sessionData = sessionDataRaw ? JSON.parse(sessionDataRaw).state : {};
 
-    var EXCLUDE_CODES = ['ADR'];
-    var insuranceCodes = [];
-    var ancillaryCodes = [];
+    // var EXCLUDE_CODES = ['ADR'];
+    // var insuranceCodes = [];
+    // var ancillaryCodes = [];
 
-    for (var i = 0; i < products.length; i++) {
-      var p = products[i];
-      if (!p || !p.code) continue;
-      if (EXCLUDE_CODES.indexOf(p.code) !== -1) continue;
-      if (p.status !== 'SELECTED') continue;
-      if (p.type === 'INSURANCE') insuranceCodes.push(p.code);
-      else if (p.type === 'ANCILLARY') ancillaryCodes.push(p.code);
-    }
+    // for (var i = 0; i < products.length; i++) {
+    //   var p = products[i];
+    //   if (!p || !p.code) continue;
+    //   if (EXCLUDE_CODES.indexOf(p.code) !== -1) continue;
+    //   if (p.status !== 'SELECTED') continue;
+    //   if (p.type === 'INSURANCE') insuranceCodes.push(p.code);
+    //   else if (p.type === 'ANCILLARY') ancillaryCodes.push(p.code);
+    // }
 
-    try {
-      // var raw = sessionStorage.getItem('reservation.store');
-      // var store = raw ? JSON.parse(raw) : { state: {} };
-      // store.state = store.state || {};
-      var piCsv = insuranceCodes.join(',');
-      var aoCsv = ancillaryCodes.join(',');
+    // try {
+    //   // var raw = sessionStorage.getItem('reservation.store');
+    //   // var store = raw ? JSON.parse(raw) : { state: {} };
+    //   // store.state = store.state || {};
+    //   var piCsv = insuranceCodes.join(',');
+    //   var aoCsv = ancillaryCodes.join(',');
 
-      console.log("INSURANCECODES", insuranceCodes)
-      console.log("AncillaryCODES", ancillaryCodes)
+    //   console.log("INSURANCECODES", insuranceCodes)
+    //   console.log("AncillaryCODES", ancillaryCodes)
 
-      sessionData.protectionItems = piCsv;
-      sessionData.protectionItemsBackup = piCsv;
-      sessionData.addOnPreselectedItems = aoCsv;
-      sessionData.addOnItems = aoCsv;
-      sessionData.addOnItemsBackup = aoCsv;
-      sessionData.protectionsPreferencesApplied = true;
-      sessionData.addOnsPreferencesApplied = true;
-      // sessionStorage.setItem('reservation.store', JSON.stringify(store));
-    } catch (e) {
-      console.warn('[mvt-36] applyMemberPreferences failed', e);
-    }
+    //   sessionData.protectionItems = piCsv;
+    //   sessionData.protectionItemsBackup = piCsv;
+    //   sessionData.addOnPreselectedItems = aoCsv;
+    //   sessionData.addOnItems = aoCsv;
+    //   sessionData.addOnItemsBackup = aoCsv;
+    //   sessionData.protectionsPreferencesApplied = true;
+    //   sessionData.addOnsPreferencesApplied = true;
+    //   // sessionStorage.setItem('reservation.store', JSON.stringify(store));
+    // } catch (e) {
+    //   console.warn('[mvt-36] applyMemberPreferences failed', e);
+    // }
 
     
     console.log("Render 2 session", sessionData)
@@ -1272,32 +1273,32 @@ import { preferredPoint } from "./preferredPoint";
     const corelationalIdentifier = getCorelationalIdentifier();
 
     // =============== GET MEMBER PRE-SELECTED PRODUCTS
-    let memberDetails = null;
-    let memberPreSelectedProducts = [];
-    try {
-      memberDetails = await getMemberDetails(corelationalIdentifier);
+    // let memberDetails = null;
+    // let memberPreSelectedProducts = [];
+    // try {
+    //   memberDetails = await getMemberDetails(corelationalIdentifier);
 
-      console.log("memberDetails", memberDetails);
+    //   console.log("memberDetails", memberDetails);
 
-      if (
-        memberDetails &&
-        memberDetails.user.preferences &&
-        Array.isArray(memberDetails.user.preferences.products)
-      ) {
-        memberPreSelectedProducts =
-          memberDetails.user.preferences.products;
-      }
-    } catch (error) {
-      console.error(
-        "Failed to fetch member details:",
-        error
-      );
-    }
+    //   if (
+    //     memberDetails &&
+    //     memberDetails.user.preferences &&
+    //     Array.isArray(memberDetails.user.preferences.products)
+    //   ) {
+    //     memberPreSelectedProducts =
+    //       memberDetails.user.preferences.products;
+    //   }
+    // } catch (error) {
+    //   console.error(
+    //     "Failed to fetch member details:",
+    //     error
+    //   );
+    // }
 
-    console.log(
-      "memberPreSelectedProducts",
-      memberPreSelectedProducts
-    );
+    // console.log(
+    //   "memberPreSelectedProducts",
+    //   memberPreSelectedProducts
+    // );
 
     // applyMemberPreferences(memberPreSelectedProducts);
 
@@ -1734,7 +1735,7 @@ import { preferredPoint } from "./preferredPoint";
       document.body.classList.add(TEST_ID);
 
       // =================== Intial selection handle ===============
-      initalSelectUI(extrasProtectionItemList, extrasAddOnsItemList, protectionItems, finalAddOnItemList, finalProtectionBundleList, corelationalIdentifier, memberPreSelectedProducts)
+      initalSelectUI(extrasProtectionItemList, extrasAddOnsItemList, protectionItems, finalAddOnItemList, finalProtectionBundleList, corelationalIdentifier)
       preferredPoint();
 
       // =============================== PROTECTION BUNDLE SELECTION==============================
@@ -3040,13 +3041,20 @@ import { preferredPoint } from "./preferredPoint";
   ];
   // route handler
   function handleRoute(path) {
-    ROUTE_HANDLERS.forEach((route) => {
+  	const currentSession = getSessionData()
+    const isAvisFirstCar = currentSession.isAvisFirst;
+    
+    console.log('===> index.js:3046 ~ isAvisFirstCar', isAvisFirstCar);
+    if (!isAvisFirstCar) {
+      console.log("handleRoute")
+  		ROUTE_HANDLERS.forEach((route) => {
       if (path.includes(route.path)) {
-        Promise.resolve(route.handler()).catch(err => {
+        Promise.resolve(route.handler()).catch((err) => {
           console.error("Route handler error:", err);
         });
       }
-    })
+    	});	
+  	}
   }
   // URL detector
   function onUrlChange(callback) {

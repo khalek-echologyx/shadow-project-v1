@@ -1,4 +1,4 @@
-import {avisLogo, carSvg, clockSvg, starSvg } from "./avisLogo";
+import {avisLogo, carSvg, carSvgSm, clockSvg, clockSvgSm, starSvg, starSvgSm } from "./avisLogo";
 
 (() => {
   // --- CONFIGURATION ---
@@ -29,7 +29,7 @@ import {avisLogo, carSvg, clockSvg, starSvg } from "./avisLogo";
     if (!isTargetPage()) return;
 
     // Step B: Check if our code is already injected (prevent duplicate injections)
-    if (document.querySelector(`.${CONFIG.injectedClass}`)) {
+    if (document.querySelector('.' + CONFIG.injectedClass)) {
       return;
     }
 
@@ -40,37 +40,35 @@ import {avisLogo, carSvg, clockSvg, starSvg } from "./avisLogo";
       return; // Element not ready yet, MutationObserver will catch it later
     }
     // targetElement.style.border = '2px solid red'
-    const bannerHtml = `
-    <div class="banner-wrapper" id="${CONFIG.testId}-${CONFIG.variationId}">
-      <div class="banner-header">
-        <h4>Take Off Faster</h4>
-        <p>
-          <span>with</span>
-          <span>${avisLogo}</span>
-        </p>
-      </div>
-      <div class="banner-body">
-        <div class="banner-item">
-          ${clockSvg}
-          <div class="banner-item-desc">
-            Collect & drop-off seconds from terminal
-          </div>
-        </div>
-        <div class="banner-item">
-          ${carSvg}
-          <div class="banner-item-desc">
-            No counter. No queues. No paperwork.
-          </div>
-        </div>
-        <div class="banner-item">
-          ${starSvg}
-          <div class="banner-item-desc">
-            Dedicated concierge service
-          </div>
-        </div>
-      </div>
-    </div>
-    `
+    var bannerHtml = '<div class="banner-wrapper" id="' + CONFIG.testId + '-' + CONFIG.variationId + '">' +
+      '<div class="banner-header">' +
+        '<h4>Take Off Faster</h4>' +
+        '<p>' +
+          '<span>with</span>' +
+          '<span>' + avisLogo + '</span>' +
+        '</p>' +
+      '</div>' +
+      '<div class="banner-body">' +
+        '<div class="banner-item">' +
+          clockSvg + ' ' + clockSvgSm +
+          '<div class="banner-item-desc">' +
+            'Collect &amp; drop-off seconds from terminal' +
+          '</div>' +
+        '</div>' +
+        '<div class="banner-item">' +
+          carSvg + ' ' + carSvgSm +
+          '<div class="banner-item-desc">' +
+            'No counter. No queues. No paperwork.' +
+          '</div>' +
+        '</div>' +
+        '<div class="banner-item">' +
+          starSvg + ' ' + starSvgSm +
+          '<div class="banner-item-desc">' +
+            'Dedicated concierge service' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
     targetElement.insertAdjacentHTML('afterend', bannerHtml);
     document.body.classList.add(CONFIG.injectedClass)
     
