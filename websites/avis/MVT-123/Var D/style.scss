@@ -1,9 +1,690 @@
 .MVT-123-Var_D {
-  [data-mvt-testid="protection-bundle"]{
-    width: 100%;
-    cursor: default;
+  [data-mvt-testid="protection-title-heading"] {
+    margin: 0;
   }
+
+  [data-mvt-testid="protection-sub-heading"] {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 19.2px;
+    letter-spacing: 0.048px;
+    margin-bottom: 16px;
+  }
+
+  [data-mvt-testid="protection-bundle-title"] {
+    margin: 0;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 14.4px;
+    letter-spacing: .036px;
+    margin-bottom: 6px;
+  }
+
+  [data-mvt-testid="protection-bundle-section-container"] {
+    gap: 0;
+  }
+
+  //thank msg styles
+  [data-mvt-testid="protection-thanks-message"] {
+    display: flex;
+    align-items: center;
+    border: 1px solid #26480A1A;
+    background-color: #46791D1A;
+    padding: 16px;
+    border-radius: 8px;
+    color: #26480A;
+    margin-top: 16px;
+
+
+    p {
+      margin: 0;
+    }
+
+    p.check-icon {
+      height: 24px;
+    }
+
+    p.bold-text {
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 19.2px;
+      letter-spacing: 0.048px;
+      margin-left: 4px;
+      margin-right: 16px;
+    }
+  }
+
+  .hide-thanks-msg {
+    display: none;
+  }
+
+  .show-thanks-msg {
+    display: flex;
+  }
+
+  [data-mvt-testid="protection-bundle"] {
+    width: 100%;
+    cursor: default !important;
+    pointer-events: none;
+  }
+
   [data-mvt-testid="protection-bundle"]:not([data-mvt-bundlename="Essential Protection"]):not([data-mvt-bundlename="Basic Cover"]) {
     display: none;
   }
+
+  [data-mvt-bundlename="Essential Protection"]>div>div,
+  [data-mvt-bundlename="Basic Cover"]>div>div {
+    border: 1px solid #C7D7E7;
+    border-radius: 8px;
+    background-color: #F0F5FA;
+
+    [data-mvt-testid="bundle-content"] {
+      span.MuiButtonBase-root {
+        display: none;
+      }
+
+      div.mui-ozm0df {
+        margin-bottom: 19px;
+      }
+
+      div.MuiStack-root.mui-3vqca1 {
+        display: none;
+      }
+
+      // BUNDLE CAR ICON STYLE
+      .mvt-bundle-icon-wrapper {
+        height: 46px;
+        width: 44.92px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #2C62931A;
+        border-radius: 50%;
+
+        span {
+          height: 26px;
+          object-fit: cover;
+        }
+      }
+
+      // BUNDLE MOST POPULAR STYLE
+      .mvt-bundle-name-wrapper {
+        flex-direction: column;
+        align-items: start;
+        gap: 4px;
+
+        p {
+          margin: 0;
+        }
+
+        .mvt-most-popular-bundle {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          background-color: #2C6293;
+          color: #fff;
+          font-size: 8.41px;
+          line-height: 9.6px;
+          letter-spacing: 0.168px;
+          padding: 6px 9px;
+          border-radius: 55.38px;
+          width: fit-content;
+
+          .svg-span {
+            height: 9px;
+          }
+        }
+      }
+
+      [data-mvt-testid="protection-bundle-name"] {
+        font-size: 24px;
+        font-weight: 700;
+        line-height: 28.8px;
+        letter-spacing: 0.072px;
+      }
+
+      .features-text {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 19.2px;
+        letter-spacing: 0.048px;
+      }
+
+      div.MuiBox-root.mui-12t1ysd {
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+
+        .checked-item-wrapper {
+          display: flex;
+          flex-direction: column;
+          gap: 8px;
+
+          p {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            line-height: 20px;
+            ;
+
+            span.icon-span {
+              height: 18px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // checkbox and price of bundle
+  [data-testid="checkout-ancillaries-bundle-price"] {
+
+    p.MuiTypography-root {
+      display: none;
+    }
+
+    .new-price-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+
+      p {
+        margin: 0;
+
+        .price-amount {
+          font-size: 18px;
+          font-weight: 700;
+        }
+
+        .price-per-day {
+          font-size: 14px;
+          margin-left: -2px;
+        }
+      }
+    }
+
+    input[type="checkbox"] {
+      pointer-events: auto !important;
+      margin: 0;
+      cursor: pointer;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      -ms-appearance: none;
+      -o-appearance: none;
+      border: 1px solid #656565;
+      border-radius: 4px;
+      width: 24px;
+      height: 24px;
+      position: relative;
+
+      &:checked {
+        background-color: #000;
+        border: 1px solid #000;
+
+        &:after {
+          content: "";
+          position: absolute;
+          left: 8px;
+          top: 1px;
+          width: 7px;
+          height: 15px;
+          border: solid #fff;
+          border-width: 0 1.5px 1.5px 0;
+          transform: rotate(45deg);
+        }
+      }
+
+    }
+
+    .old-price-wrapper {
+      margin-top: 8px;
+
+      p {
+        margin: 0;
+        font-size: 12px;
+
+        span {
+          text-decoration: line-through;
+        }
+
+        span.discount-tag {
+          font-weight: 700;
+          color: #46791D;
+          margin-left: 8px;
+          text-decoration: none;
+        }
+      }
+    }
+  }
+
+  // protection bundle expand and collapse buttons
+  [data-mvt-testid="protection-expand-button"] {
+    display: none;
+  }
+
+  [data-mvt-testid="protection-item-section"] {
+    border: 1px solid #D4D4D4;
+    border-radius: 8px;
+    padding: 16px;
+    margin-top: 16px;
+
+    .mvt-prot-item-header {
+      display: flex;
+      justify-content: space-between;
+      cursor: pointer;
+
+      .mvt-prot-item-header-left {
+        flex: 1;
+
+        p {
+          margin: 0;
+        }
+
+        p.mvt-prot-item-header-title {
+          font-family: var(--abg-font-headline), sans-serif;
+          font-size: 24px;
+          font-weight: 700;
+          line-height: 24px;
+          letter-spacing: 0.072px;
+          margin-bottom: 8px;
+        }
+
+        p.mvt-prot-item-header-subtitle {
+          font-size: 14px;
+          font-weight: 500;
+          line-height: 20px;
+        }
+      }
+
+      .mvt-prot-item-header-right {
+
+        span {
+          height: 10px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          svg {
+            transition: all 0.3s ease-in-out;
+          }
+        }
+      }
+
+      &.collapse {
+        .mvt-prot-item-header-right span svg {
+          transform: rotate(180deg);
+        }
+      }
+    }
+
+    [data-mvt-testid="protection-item-grid-container"] {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      align-items: start;
+      margin-top: 8px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.5s ease-in-out;
+
+      div.MuiGrid2-root {
+        width: 100%;
+
+        .MuiPaper-outlined {
+          border: none;
+          background-color: #F4F4F4;
+          border-radius: 8px;
+
+          .prot-item-header [data-testid="ancillary-card-title"] {
+            flex-direction: column;
+            align-items: flex-start;
+
+            [data-testid="image-component"] {
+              width: 26px;
+              height: 26px;
+            }
+
+            p.MuiTypography-root {
+              font-weight: 500;
+
+              @media(max-width: 1435px) {
+                min-height: 48px;
+              }
+            }
+          }
+
+          [data-mvt-testid="protection-item-description"] {
+            max-height: 0px;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out;
+            font-size: 10px;
+            line-height: 12px;
+
+            &.show-desc {
+              max-height: 500px;
+            }
+          }
+
+          // details button style
+          .details-btn {
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 14px;
+            line-height: 20px;
+            letter-spacing: 0.25px;
+            width: fit-content;
+          }
+
+          .mvt-recommended-tag-wrapper {
+            position: relative;
+
+            .mvt-recommended-tag {
+              position: absolute;
+              top: 0;
+              right: 0;
+              margin: 0;
+              display: flex;
+              align-items: center;
+              gap: 4px;
+              background-color: #2C6293;
+              color: #fff;
+              font-size: 8.41px;
+              line-height: 12.61px;
+              letter-spacing: 0px;
+              padding: 6px 9px;
+              border-radius: 55.38px;
+              width: fit-content;
+              height: 18px;
+
+              .svg-span {
+                height: 9px;
+              }
+            }
+
+
+          }
+        }
+
+        // Included item BG
+        .mvt-included-item-wrapper .MuiPaper-outlined {
+          background-color: #ECF2E8;
+        }
+
+        // Recommended item style
+        .mvt-recommended-item-wrapper .MuiPaper-outlined {
+          background-color: #F0F5FA;
+        }
+
+        [data-testid="checkout-ancillaries-item-recommendation"] {
+          display: none;
+        }
+      }
+
+      &.show-section {
+        max-height: 1000px;
+      }
+    }
+  }
+
+  // item price style
+  [data-mvt-testid="protection-price-wrapper"] {
+    .mui-7l3h09:hover .ancillary-item-card-checkbox .MuiBox-root {
+      border-color: #656565 !important;
+    }
+
+    .ancillary-item-card-checkbox.Mui-checked .MuiBox-root {
+      border-color: #000;
+    }
+
+    [data-testid="checkout-ancillaries-item-price"] {
+
+      p {
+
+        .mvt-price {
+          font-weight: 500;
+        }
+
+        .mvt-period {
+          font-weight: 400;
+          font-size: 14px;
+          margin-left: -2px;
+          line-height: 20px;
+        }
+      }
+    }
+
+    div.ancillary-item-card-toggle {
+      span.ancillary-item-card-add-label {
+        display: none;
+      }
+
+      div {
+        border: 1px solid #656565;
+        border-radius: 4px;
+        height: 24px;
+        width: 24px;
+        margin-top: -2px;
+
+        svg {
+          width: 18px;
+          height: 14px;
+
+          path {
+            stroke-width: 0.7px;
+          }
+        }
+      }
+    }
+  }
+
+  // INCLUDE STYLE
+  .mvt-included-parent {
+    .MuiBox-root.mui-1rr4qq7 {
+      display: none;
+    }
+
+    .mvt-included-style {
+      background-color: #46791D;
+      border-color: #26480A1A;
+      color: #fff;
+      font-size: 9px;
+      gap: 4px;
+    }
+  }
+
+  // ADD-ON SECTION STYLE
+  [data-mvt-testid="add-on-title-heading"]{
+    display: none;
+  }
+  .mvt-add-on-section-wrap {
+    border: 1px solid #D4D4D4;
+    border-radius: 8px;
+    padding: 16px;
+    transition: all 0.4s ease-in-out;
+    overflow: hidden;
+    margin-top: 16px;
+
+    .mvt-add-on-section-header {
+      display: flex;
+      justify-content: space-between;
+      cursor: pointer;
+
+      .mvt-add-on-section-header-left {
+        flex: 1;
+
+        p {
+          margin: 0;
+        }
+
+        p.mvt-add-on-section-header-title {
+          font-family: var(--abg-font-headline), sans-serif;
+          font-size: 24px;
+          font-weight: 700;
+          line-height: 24px;
+          letter-spacing: 0.072px;
+          margin-bottom: 8px;
+        }
+
+        p.mvt-add-on-section-header-subtitle {
+          font-size: 14px;
+          font-weight: 500;
+          line-height: 20px;
+        }
+      }
+
+      .mvt-add-on-section-header-right {
+
+        span {
+          height: 10px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+
+          svg{
+            transition: all 0.3s ease-in-out;
+          }
+        }
+      }
+    }
+
+    .mvt-add-on-section-header.chevron-up{
+      .mvt-add-on-section-header-right span svg{
+        transform: rotate(180deg);
+      }
+    }
+
+    [data-mvt-testid="add-on-section-container"] {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      align-items: start;
+      margin-top: 8px;
+      max-height: 2000px;
+      transition: max-height 0.5s ease-in-out;
+
+      &.collapse{
+        max-height: 0;
+        overflow: hidden;
+      }
+
+      div.MuiGrid2-root {
+        width: 100%;
+
+        [data-testid="ancillary-item-card"] .MuiPaper-outlined,
+        .MuiPaper-outlined {
+          border: 1px solid #46791D1A;
+          border-radius: 8px;
+          background-color: #F4F4F4;
+
+          [data-testid="ancillary-card-title"] {
+            flex-direction: column;
+            align-items: flex-start;
+
+            img {
+              width: 26px;
+              height: 26px;
+            }
+
+            p {
+              font-weight: 500;
+              min-height: 48px;
+            }
+          }
+
+          // description
+          .details-btn {
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 14px;
+            line-height: 20px;
+            letter-spacing: 0.25px;
+            width: fit-content
+          }
+
+          .add-on-desc {
+            max-height: 0px;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out;
+            font-size: 10px;
+            line-height: 12px;
+
+            &.show-desc {
+              max-height: 500px;
+            }
+          }
+
+          [data-testid*="checkout-ancillaries-child-seat-"] {
+            p {
+              font-size: 14px;
+
+              @media (min-width: 1000px) and (max-width: 1423px) {
+                font-size: 12px;
+              }
+            }
+          }
+        }
+
+        [data-testid="single-addons-details-dialog-counter-buttons"]{
+          button{
+            width: 24px;
+            height: 24px;
+            font-size: 14px;
+            border-color: #000;
+            color: #000;
+          }
+          button.Mui-disabled{
+            border-color: #656565;
+            color: #656565
+          }
+
+          div.MuiInputBase-root{
+            width: 24px;
+            height: 24px;
+            font-size: 14px;
+
+            input{
+              color: #000;
+            }
+
+            input.Mui-disabled{
+              color: #656565;
+            }
+          }
+        }
+      }
+
+      div.MuiGrid2-root.mvt-extra-card {
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        transition: max-height 0.4s ease, opacity 0.4s ease;
+      }
+
+      div.MuiGrid2-root.mvt-extra-card.show-extra-card {
+        max-height: 600px;
+        opacity: 1;
+        transition: max-height 0.4s ease, opacity 0.4s ease;
+      }
+    }
+
+    .mvt-view-all-btn {
+      width: fit-content;
+      text-decoration: underline;
+      font-size: 14px;
+      font-weight: 500;
+      line-height: 28px;
+      letter-spacing: 0.25px;
+      cursor: pointer;
+    }
+  }
+
+  .mvt-add-on-section-wrap.collapse{
+    .mvt-view-all-btn{
+      display: none;
+    }
+  }
+
 }

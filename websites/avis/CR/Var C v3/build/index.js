@@ -2840,142 +2840,6 @@ function preferredPoint() {
 
 (() => {
   const TEST_ID = "MVT-36";
-  /* --------------------BOOKING API INTERCEPTOR -------------------*/
-  (function () {
-    var STORE_KEY = "reservation.store";
-    var QUANTITY_CODES = { CSS: 1, CBS: 1, CFS: 1, CIS: 1, CSB: 1 };
-
-    function getState() {
-      try {
-        var raw = window.sessionStorage.getItem(STORE_KEY);
-        if (!raw) return null;
-        var parsed = JSON.parse(raw);
-        return (parsed && parsed.state) || null;
-      } catch (e) {
-        console.warn("[AvisTest] could not read store", e);
-        return null;
-      }
-    }
-
-    function splitCsv(s) {
-      if (!s || typeof s !== "string") return [];
-      return s
-        .split(",")
-        .map(function (v) {
-          return v.trim();
-        })
-        .filter(Boolean);
-    }
-
-    function parseQuantity(raw, code) {
-      if (raw === "false" || raw == null || raw === "") {
-        return QUANTITY_CODES[code] ? 1 : null;
-      }
-      var n = parseInt(raw, 10);
-      if (!isNaN(n)) return n;
-      return QUANTITY_CODES[code] ? 1 : null;
-    }
-
-    function buildInjection() {
-      var state = getState();
-      if (!state) return {};
-      var out = {};
-
-      // 1. Protection bundle — only items where included === true (unchanged)
-      var pb = state.protectionBundleSelected;
-      if (pb && pb.code && pb.code !== "No Protection") {
-        var includedItems = (pb.items || []).filter(function (i) {
-          return i && i.included === true;
-        });
-        if (includedItems.length) {
-          out.protectionBundle = {
-            code: pb.code,
-            items: includedItems.map(function (i) {
-              return { code: i.code, policy: i.policy || "MANDATORY" };
-            }),
-          };
-        }
-      }
-
-      // 2. Individual protection items (unchanged)
-      var piCodes = splitCsv(state.protectionItems);
-      if (piCodes.length) {
-        out.protectionItems = piCodes.map(function (c) {
-          return { code: c };
-        });
-      }
-      var pwpState = window.__avisPwpState || {};
-      var pwpCodes = (pwpState.payWithPointsCodes || []).slice();
-
-      var aoCodes = splitCsv(state.addOnItems);
-      var aoQtys = splitCsv(state.addOnItemsQuantity);
-      var addOnMap = {};
-      aoCodes.forEach(function (code, idx) {
-        addOnMap[code] = {
-          code: code,
-          quantity: parseQuantity(aoQtys[idx], code),
-        };
-      });
-      pwpCodes.forEach(function (code) {
-        if (addOnMap[code]) {
-          addOnMap[code].payWithPoints = true;
-        } else {
-          addOnMap[code] = { code: code, quantity: 1, payWithPoints: true };
-        }
-      });
-      var addOnList = Object.keys(addOnMap).map(function (k) {
-        return addOnMap[k];
-      });
-      if (addOnList.length) out.addOnItems = addOnList;
-
-      // 4. Free-day redemption — top-level field, only when PWP picked > 0 days
-      if ((pwpState.quantity || 0) > 0) {
-        out.freedayItem = { quantity: pwpState.quantity };
-      }
-
-      return out;
-    }
-
-    function isBookingRequest(url) {
-      try {
-        return (
-          new URL(url, location.origin).pathname === "/web/reservation/booking"
-        );
-      } catch (e) {
-        return /\/web\/reservation\/booking($|\?)/.test(url);
-      }
-    }
-
-    var originalFetch = window.fetch;
-    window.fetch = function (input, init) {
-      try {
-        var url = typeof input === "string" ? input : input && input.url;
-        var method = (init && init.method) || (input && input.method) || "GET";
-        if (
-          url &&
-          isBookingRequest(url) &&
-          method.toUpperCase() === "POST" &&
-          init &&
-          init.body
-        ) {
-          var payload = JSON.parse(init.body);
-          var inj = buildInjection();
-
-          if (inj.protectionBundle)
-            payload.protectionBundle = inj.protectionBundle;
-          if (inj.protectionItems)
-            payload.protectionItems = inj.protectionItems;
-          if (inj.addOnItems) payload.addOnItems = inj.addOnItems;
-          if (inj.freedayItem) payload.freedayItem = inj.freedayItem;
-          init.body = JSON.stringify(payload);
-        }
-      } catch (e) {
-        console.warn("[AvisTest] hook error", e);
-      }
-      return originalFetch.apply(this, arguments);
-    };
-  })();
-
   /* ----------- LOYALTY SUMMARY API INTERCEPTOR ----------- */
   (function () {
     var _originalFetch = window.fetch;
@@ -4234,6 +4098,145 @@ function preferredPoint() {
   let isInjectionInProgress = false;
 
   async function runReviewAndBook() {
+    /* --------------------BOOKING API INTERCEPTOR -------------------*/
+    (function () {
+      var STORE_KEY = "reservation.store";
+      var QUANTITY_CODES = { CSS: 1, CBS: 1, CFS: 1, CIS: 1, CSB: 1 };
+
+      function getState() {
+        try {
+          var raw = window.sessionStorage.getItem(STORE_KEY);
+          if (!raw) return null;
+          var parsed = JSON.parse(raw);
+          return (parsed && parsed.state) || null;
+        } catch (e) {
+          console.warn("[AvisTest] could not read store", e);
+          return null;
+        }
+      }
+
+      function splitCsv(s) {
+        if (!s || typeof s !== "string") return [];
+        return s
+          .split(",")
+          .map(function (v) {
+            return v.trim();
+          })
+          .filter(Boolean);
+      }
+
+      function parseQuantity(raw, code) {
+        if (raw === "false" || raw == null || raw === "") {
+          return QUANTITY_CODES[code] ? 1 : null;
+        }
+        var n = parseInt(raw, 10);
+        if (!isNaN(n)) return n;
+        return QUANTITY_CODES[code] ? 1 : null;
+      }
+
+      function buildInjection() {
+        var state = getState();
+        if (!state) return {};
+        var out = {};
+
+        // 1. Protection bundle — only items where included === true (unchanged)
+        var pb = state.protectionBundleSelected;
+        if (pb && pb.code && pb.code !== "No Protection") {
+          var includedItems = (pb.items || []).filter(function (i) {
+            return i && i.included === true;
+          });
+          if (includedItems.length) {
+            out.protectionBundle = {
+              code: pb.code,
+              items: includedItems.map(function (i) {
+                return { code: i.code, policy: i.policy || "MANDATORY" };
+              }),
+            };
+          }
+        }
+
+        // 2. Individual protection items (unchanged)
+        var piCodes = splitCsv(state.protectionItems);
+        if (piCodes.length) {
+          out.protectionItems = piCodes.map(function (c) {
+            return { code: c };
+          });
+        }
+        var pwpState = window.__avisPwpState || {};
+        var pwpCodes = (pwpState.payWithPointsCodes || []).slice();
+
+        var aoCodes = splitCsv(state.addOnItems);
+        var aoQtys = splitCsv(state.addOnItemsQuantity);
+        var addOnMap = {};
+        aoCodes.forEach(function (code, idx) {
+          addOnMap[code] = {
+            code: code,
+            quantity: parseQuantity(aoQtys[idx], code),
+          };
+        });
+        pwpCodes.forEach(function (code) {
+          if (addOnMap[code]) {
+            addOnMap[code].payWithPoints = true;
+          } else {
+            addOnMap[code] = { code: code, quantity: 1, payWithPoints: true };
+          }
+        });
+        var addOnList = Object.keys(addOnMap).map(function (k) {
+          return addOnMap[k];
+        });
+        if (addOnList.length) out.addOnItems = addOnList;
+
+        // 4. Free-day redemption — top-level field, only when PWP picked > 0 days
+        if ((pwpState.quantity || 0) > 0) {
+          out.freedayItem = { quantity: pwpState.quantity };
+        }
+
+        return out;
+      }
+
+      function isBookingRequest(url) {
+        try {
+          return (
+            new URL(url, location.origin).pathname ===
+            "/web/reservation/booking"
+          );
+        } catch (e) {
+          return /\/web\/reservation\/booking($|\?)/.test(url);
+        }
+      }
+
+      console.log("===> index.js:105 ~ attacching");
+
+      var originalFetch = window.fetch;
+      window.fetch = function (input, init) {
+        try {
+          var url = typeof input === "string" ? input : input && input.url;
+          var method =
+            (init && init.method) || (input && input.method) || "GET";
+          if (
+            url &&
+            isBookingRequest(url) &&
+            method.toUpperCase() === "POST" &&
+            init &&
+            init.body
+          ) {
+            var payload = JSON.parse(init.body);
+            var inj = buildInjection();
+
+            if (inj.protectionBundle)
+              payload.protectionBundle = inj.protectionBundle;
+            if (inj.protectionItems)
+              payload.protectionItems = inj.protectionItems;
+            if (inj.addOnItems) payload.addOnItems = inj.addOnItems;
+            if (inj.freedayItem) payload.freedayItem = inj.freedayItem;
+            init.body = JSON.stringify(payload);
+          }
+        } catch (e) {
+          console.warn("[AvisTest] hook error", e);
+        }
+        return originalFetch.apply(this, arguments);
+      };
+    })();
     console.log("runReviewAndBook");
     const SELECTORS = {
       target: '[data-testid="rc-title"]',

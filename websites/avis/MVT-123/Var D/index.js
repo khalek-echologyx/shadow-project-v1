@@ -1,3 +1,6 @@
+import { bundleCarSvg, chevronSvg, greenCheck, mostPopularSvg, thankSvg, whicheCheckSvg } from "./allSvg";
+import poll from "./poll";
+
 (() => {
   // --- CONFIGURATION ---
   const CONFIG = {
@@ -8,15 +11,111 @@
     variationId: 'Var_D',
   };
 
-  // poll function
-  function poll(t, i, o = !1, e = 10000, a = 25) {
-    e < 0 ||
-      (t()
-        ? i()
-        : setTimeout(() => {
-          poll(t, i, o, o ? e : e - a, a);
-        }, a));
+  // 0. API Interceptor for /calculate API
+  if (!window.mvtFetchInterceptorSetup) {
+    window.mvtFetchInterceptorSetup = true;
+    const originalFetch = window.fetch;
+    window.fetch = function (...args) {
+      const url = typeof args[0] === 'string' ? args[0] : (args[0] && args[0].url) || '';
+      const isCalculate = url.includes('/reservation/price/calculate');
+
+      return originalFetch.apply(this, args).then(response => {
+        if (isCalculate) {
+          window.dispatchEvent(new CustomEvent('mvtCalculateResolved'));
+        }
+        return response;
+      }).catch(error => {
+        if (isCalculate) {
+          window.dispatchEvent(new CustomEvent('mvtCalculateResolved'));
+        }
+        throw error;
+      });
+    };
   }
+
+  // Placeholder readDom function
+  const includeItemDesign = () => {
+    poll(
+      () => document.querySelectorAll('[data-mvt-injected="true"] [data-testid="ancillary-item-card"]'),
+      () => {
+        const controlEl = document.querySelector('[data-mvt-injected="true"]');
+        console.log('===> index.js:69 ~ controlEl', controlEl);
+        if (controlEl) {
+          const items = controlEl.querySelectorAll('[data-testid="ancillary-item-card"]');
+          console.log('===> index.js:71 ~ items', items);
+          if (items.length) {
+            items.forEach((item, idx) => {
+              console.log(item, "itemWithIndx")
+              const included = item.querySelector('.MuiChip-outlined.MuiChip-sizeSmall.MuiChip-colorSuccess')
+              console.log(included, "included")
+              if (included) {
+                const mainItemCard = included.closest('[data-testid="ancillary-item-card"]');
+                included.classList.add('mvt-included-style')
+                console.log('===> index.js:53 ~ mainItemCard', mainItemCard);
+                if (mainItemCard) mainItemCard.classList.add('mvt-included-item-wrapper')
+                if (!included.querySelector('.mvt-included-icon')) {
+                  const whiteCheckSvg = `
+              <span class="mvt-included-icon">${whicheCheckSvg}</span>
+              `;
+                  included.insertAdjacentHTML('afterbegin', whiteCheckSvg)
+                }
+                const incudedParent = included.closest('.MuiStack-root');
+                if (incudedParent) {
+                  incudedParent.classList.add('mvt-included-parent')
+                }
+              } else {
+                item.classList.remove('mvt-included-item-wrapper')
+              }
+            })
+          }
+        }
+      }
+    )
+  }
+
+  function readDom() {
+    console.log("readDom() called 1 second after /calculate API resolved");
+    //thanks message showing
+    poll(
+      () => document.querySelector('[data-mvt-injected="true"] [data-mvt-bundlename="Essential Protection"]') || document.querySelector('[data-mvt-injected="true"] [data-mvt-bundlename="Basic Cover"]'),
+      () => {
+        const controlEl = document.querySelector('[data-mvt-injected="true"]');
+        console.log('===> index.js:36 ~ control', controlEl);
+        const protBundle = controlEl.querySelector('[data-mvt-bundlename="Essential Protection"]') || controlEl.querySelector('[data-mvt-bundlename="Basic Cover"]');
+        console.log('===> index.js:37 ~ isSelectedBundle', protBundle);
+        if (protBundle) {
+          const controlRadioChecked = protBundle.querySelector('input[type="radio"]').checked;
+          console.log('===> index.js:42 ~ controlRadioChecked', controlRadioChecked);
+          const thankMsg = controlEl.querySelector('[data-mvt-testid="protection-thanks-message"]');
+          if (thankMsg) {
+            if (controlRadioChecked) {
+              console.log('===> index.js:45 ~ thankMsg', thankMsg);
+              thankMsg.classList.add('show-thanks-msg');
+              thankMsg.classList.remove('hide-thanks-msg');
+            } else {
+              thankMsg.classList.remove('show-thanks-msg');
+              thankMsg.classList.add('hide-thanks-msg');
+            }
+          }
+        }
+      }
+    )
+    // protection item design
+    includeItemDesign()
+  }
+
+  // Global listener to debounce readDom() calls after /calculate API resolves
+  let calculateTimeout = null;
+  window.addEventListener('mvtCalculateResolved', () => {
+    if (calculateTimeout) {
+      clearTimeout(calculateTimeout);
+    }
+    calculateTimeout = setTimeout(() => {
+      if (typeof readDom === 'function') {
+        readDom();
+      }
+    }, 1000);
+  });
   // extract price
   function extractPrice(text) {
     return parseFloat(
@@ -31,54 +130,7 @@
     return currentPath.includes(CONFIG.targetPathname);
   }
 
-  // add class and attribute
-  function addClassAndAttribute() {
-    const mainControl = document.querySelector('[data-mvt-injected="true"]');
-    // heading title
-    const mainHeadingEl = mainControl.querySelectorAll('h6');
-    mainHeadingEl.forEach((el, idx) => {
-      if (idx === 0) {
-        el.setAttribute('data-mvt-testid', 'protection-title-heading')
-        const protectionBundleSectin = el.nextElementSibling;
-        if (protectionBundleSectin) protectionBundleSectin.setAttribute('data-mvt-testid', 'protection-bundle-section-container');
-      } else if (idx === 1) {
-        el.setAttribute('data-mvt-testid', 'add-on-title-heading')
-        const addOnSection = el.nextElementSibling;
-        if (addOnSection) addOnSection.setAttribute('data-mvt-testid', 'add-on-section-container');
-      }
-    })
-    // expand and collapse buttons
-    const expendButtons = document.querySelectorAll('[data-mvt-injected="true"] > button')
-    expendButtons.forEach((btn, idx) => {
-      if (idx === 0) {
-        btn.setAttribute('data-mvt-testid', 'protection-expand-button');
-        btn.click();
-      } else if (idx === 1) {
-        btn.setAttribute('data-mvt-testid', 'add-on-expand-button');
-      }
-    })
-    //protection bundles
-    const protectionBundles = mainControl.querySelectorAll('[data-mvt-testid="protection-bundle-section-container"] > div')
-    if (protectionBundles.length > 0) {
-      protectionBundles.forEach((bundle, idx) => {
-        bundle.setAttribute('data-mvt-testid', 'protection-bundle')
-        const bundleName = bundle.querySelector('div > div > div > div > div > p');
-        if (bundleName) bundle.setAttribute('data-mvt-bundleName', bundleName.textContent.trim());
-      })
-    }
-
-    //hide add-on bundle
-    const addOnBundles = mainControl.querySelectorAll('[data-mvt-testid="add-on-section-container"] input[type="radio"]');
-    if (addOnBundles.length > 0) {
-      const addOnBundleSection = mainControl.querySelector('[data-mvt-testid="add-on-section-container"]');
-      addOnBundleSection.style.display = "none";
-    }
-  }
-
-  // inject design and test id 
-  function injectDesign() {
-    const mainControl = document.querySelector('[data-mvt-injected="true"]');
-    console.log('===> index.js:63 ~ injectDesign ~ mainControl', mainControl);
+  const protectionBundleDesign = (mainControl) => {
     const protectionBundle = mainControl.querySelector('[data-mvt-bundlename="Basic Cover"]') || mainControl.querySelector('[data-mvt-bundlename="Essential Protection"]')
     if (protectionBundle) {
       const priceEl = protectionBundle.querySelector('[data-testid="checkout-ancillaries-bundle-price"]');
@@ -86,13 +138,39 @@
       console.log('===> index.js:80 ~ priceParentEl', priceParentEl);
 
       // inject checkbox
-      const checkboxEl = document.createElement('input');
-      checkboxEl.classList.add('mvt-bundle-checkbox');
-      checkboxEl.type = 'checkbox';
-      priceParentEl.prepend(checkboxEl)
+      if (!mainControl.querySelector('.mvt-bundle-checkbox')) {
+        const checkboxEl = document.createElement('input');
+        checkboxEl.classList.add('mvt-bundle-checkbox');
+        checkboxEl.type = 'checkbox';
+        priceParentEl.prepend(checkboxEl)
+      }
+
+      //is control radio checked or not
+      const controlRadioChecked = protectionBundle.querySelector('input[type="radio"]').checked;
+      console.log('===> index.js:88 ~ controlRadioChecked', controlRadioChecked);
+      const checkboxElFromDom = mainControl.querySelector('.mvt-bundle-checkbox');
+      if (controlRadioChecked) {
+        checkboxElFromDom.checked = true;
+      }
+      const protectionBundleSection = mainControl.querySelector('[data-mvt-testid="protection-bundle-section-container"]')
+      if (!mainControl.querySelector('[data-mvt-testid="protection-thanks-message"]')) {
+        const thankMsgHtml = `
+        <div data-mvt-testid="protection-thanks-message"><p class="check-icon">${thankSvg}</p> <p class="bold-text">Your protection is selected.</p> <p class="light-text">Thank you for protecting your trip.</p></div>
+        `
+        protectionBundleSection.insertAdjacentHTML('afterend', thankMsgHtml);
+      }
+
+      const thankMsg = mainControl.querySelector('[data-mvt-testid="protection-thanks-message"]')
+      if (controlRadioChecked) {
+        thankMsg.classList.remove('hide-thanks-msg');
+        thankMsg.classList.add('show-thanks-msg');
+      } else {
+        thankMsg.classList.remove('show-thanks-msg');
+        thankMsg.classList.add('hide-thanks-msg');
+      }
 
       // event lister to checkbox
-      checkboxEl.addEventListener('change', (e) => {
+      checkboxElFromDom.addEventListener('change', (e) => {
         const isChecked = e.target.checked;
         console.log('===> index.js:91 ~ isChecked', isChecked);
         const radioInput = protectionBundle.querySelector('input[type="radio"]');
@@ -131,9 +209,513 @@
         }
       })
 
+      // change design of the protection bundle card
+      const bundleElTopRow = protectionBundle.querySelector('[data-mvt-testid="bundle-content"] > div');
+      console.log('===> index.js:175 ~ bundleElTopRow', bundleElTopRow);
+      if (bundleElTopRow && !bundleElTopRow.querySelector('.mvt-bundle-icon-wrapper')) {
+        const bundleIconHtml = `
+        <div class='mvt-bundle-icon-wrapper'>
+          <span>${bundleCarSvg}</span>
+        </div>
+        `
+        bundleElTopRow.insertAdjacentHTML('afterbegin', bundleIconHtml)
+      }
+      const bundleNameWrapper = bundleElTopRow ? bundleElTopRow.querySelector('div:not(.mvt-bundle-icon-wrapper)') : null;
+      if (bundleNameWrapper && !bundleNameWrapper.querySelector('.mvt-bundle-name-wrapper')) {
+        bundleNameWrapper.classList.add('mvt-bundle-name-wrapper')
+        if (!bundleNameWrapper.querySelector('.mvt-most-popular-bundle')) {
+          const popularBundleHtml = `
+          <p class='mvt-most-popular-bundle'>
+            <span class="svg-span">${mostPopularSvg}</span>
+            <span>Most Popular Bundle</span>
+          </p>
+          `
+          bundleNameWrapper.insertAdjacentHTML('afterbegin', popularBundleHtml);
+        }
+      }
 
+      const bundleSecondRaw = protectionBundle.querySelector('[data-mvt-testid="bundle-content"] > div:nth-child(2)')
+      console.log('===> index.js:214 ~ bundleSecondRaw', bundleSecondRaw);
+      if (bundleSecondRaw) {
+        const featuresTextEl = bundleSecondRaw.querySelectorAll('[data-testid="CheckIcon"]');
+        console.log('===> index.js:201 ~ featuresText', featuresTextEl);
+        let featuresText = "";
+        if (featuresTextEl.length) {
+          featuresTextEl.forEach((el, idx) => {
+            if (idx === 0) {
+              featuresText = featuresText + el.nextElementSibling.textContent;
+            } else {
+              featuresText = featuresText + ' and ' + el.nextElementSibling.textContent;
+            }
+          })
+        }
+        if (featuresText) {
+          featuresText = featuresText.replace(/\s*\([^)]*\)/g, '');
+        }
+        console.log('===> index.js:215 ~ featuresText', featuresText);
+        bundleElTopRow.insertAdjacentHTML('afterend', '<p class="features-text">' + featuresText + '</p>')
+
+        // body third row
+        const bundleThirdRow = protectionBundle.querySelector('[data-mvt-testid="bundle-content"] > div:nth-child(4)')
+        console.log('===> index.js:220 ~ bundleThirdRow', bundleThirdRow);
+        const checkedItem = `<p><span class="icon-span">${greenCheck}</span><span>Lorem ipsum doller sit amit.</span></p>`;
+        const checkedItemWrapper = `
+        <div class="checked-item-wrapper">${Array.from({ length: 3 }, () => checkedItem).join('')}</div>
+        `
+        if (bundleThirdRow) {
+          bundleThirdRow.insertAdjacentHTML('afterbegin', checkedItemWrapper);
+          const priceSection = bundleThirdRow.querySelector('[data-testid="checkout-ancillaries-bundle-price"]');
+          console.log('===> index.js:228 ~ priceSection', priceSection);
+          if (!priceSection.querySelector(".new-price-wrapper")) {
+            const newPriceWrapHtml = `
+            <div class="new-price-wrapper">
+              <p class="new-price-text">
+                <span class="price-amount">$35.98 /</span> <span class="price-per-day">day</span>
+              </P>
+            </div>
+            <div class="old-price-wrapper">
+              <p class="old-price-text"><span>$36.99 /day</span> <span class="discount-tag">10% Off</span></p>
+            </div>
+            `
+            priceSection.insertAdjacentHTML('afterbegin', newPriceWrapHtml);
+            const newPriceText = priceSection.querySelector('.new-price-text');
+            console.log('===> index.js:239 ~ newPriceText', newPriceText);
+            const bundleCheckbox = priceSection.querySelector('input[type="checkbox"]');
+            console.log('===> index.js:241 ~ bundleCheckbox', bundleCheckbox);
+            if (newPriceText && bundleCheckbox) {
+              newPriceText.insertAdjacentElement('afterend', bundleCheckbox)
+            }
+          }
+        }
+      }
 
     }
+  }
+
+  const protectionItemDesign = () => {
+    const mainControl = document.querySelector('[data-mvt-injected="true"]');
+    console.log('===> index.js:257 ~ mainControl', mainControl);
+    // description
+    poll(
+      () => mainControl.querySelectorAll('[data-mvt-testid="protection-item-description"]') && mainControl.querySelectorAll('[data-mvt-testid="protection-item-description"]').length,
+      () => {
+        const protItemDesc = mainControl.querySelectorAll('[data-mvt-testid="protection-item-description"]')
+        console.log('===> index.js:262 ~ protItemDesc', protItemDesc);
+        if (protItemDesc.length) {
+          const detailsBtnHtml = `
+          <div class="details-btn">Details</div>
+          `
+          protItemDesc.forEach(el => {
+            const descParentEl = el.closest('.MuiBox-root');
+            console.log('===> index.js:269 ~ descParentEl', descParentEl);
+            if (descParentEl && !descParentEl.querySelector('.details-btn')) {
+              el.insertAdjacentHTML('beforebegin', detailsBtnHtml)
+            }
+          })
+          // details btn click functionality
+          const detailsBtn = mainControl.querySelectorAll('.details-btn');
+          if (detailsBtn.length) {
+            detailsBtn.forEach((el, idx) => {
+              el.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                console.log('===> index.js:282 ~ ', idx);
+                const singleProtItemDesc = protItemDesc[idx];
+                if (singleProtItemDesc && !singleProtItemDesc.classList.contains('show-desc')) {
+                  singleProtItemDesc.classList.add('show-desc')
+                  el.textContent = 'Hide Details';
+                } else {
+                  singleProtItemDesc.classList.remove('show-desc')
+                  el.textContent = 'Details';
+                }
+              })
+            })
+          }
+          // price ui adjustment
+          const protectionPriceEls = mainControl.querySelectorAll('[data-testid="checkout-ancillaries-item-price"]')
+          console.log('===> index.js:296 ~ protectionPriceEls', protectionPriceEls);
+          if (protectionPriceEls.length) {
+            protectionPriceEls.forEach((el, idx) => {
+              console.log('===> index.js:300 ~ ',);
+              const priceParenEl = el.closest('.MuiStack-root');
+              priceParenEl.setAttribute('data-mvt-testid', 'protection-price-wrapper');
+              console.log('===> index.js:301 ~ ', priceParenEl);
+              const pTag = el.querySelector('p');
+              console.log('===> index.js:303 ~ pTag', pTag);
+              if (pTag) {
+                const text = pTag.textContent.trim(); // "$7.00 / day"
+
+                const match = text.match(/^(.*?)\s*\/\s*(.*?)$/);
+
+                if (match) {
+                  const [, price, period] = match;
+
+                  pTag.innerHTML = `
+                  <span class="mvt-price">${price}/</span>
+                  <span class="mvt-period">${period}</span>`;
+                }
+              }
+            })
+          }
+
+        }
+      }
+    )
+    // implement 'recommended' tag
+    poll(
+      () => mainControl.querySelectorAll('[data-testid="checkout-ancillaries-item-recommendation"]'),
+      () => {
+        const recommendedItems = mainControl.querySelectorAll('[data-testid="checkout-ancillaries-item-recommendation"]');
+        console.log('===> index.js:363 ~ recommendedItems', recommendedItems);
+        if (recommendedItems.length) {
+          recommendedItems.forEach(item => {
+            const itemParent = item.closest(".MuiStack-root");
+            const itemMainCard = item.closest('[data-testid="ancillary-item-card"]')
+            if (itemMainCard) {
+              itemMainCard.classList.add('mvt-recommended-item-wrapper')
+            }
+            const cardImageSection = itemParent.querySelector('[data-testid="ancillary-card-title"]');
+            cardImageSection.classList.add('mvt-recommended-tag-wrapper')
+            console.log('===> index.js:368 ~ cardImageSection', cardImageSection);
+            const recommendedTagHtml = `
+              <p class='mvt-recommended-tag'>
+                <span class="svg-span">${mostPopularSvg}</span>
+                <span>Recommended</span>
+              </p>
+              `
+            if (cardImageSection && !cardImageSection.querySelector('.mvt-recommended-tag')) {
+              cardImageSection.insertAdjacentHTML('beforeend', recommendedTagHtml)
+            }
+          })
+        }
+      }
+    )
+  }
+
+  function addOnItemsDesign() {
+    poll(
+      () => document.querySelector('[data-mvt-testid="add-on-section-container"]'),
+      () => {
+        //INJECT NEW WRAPPER
+        const addOnSectionContainer = document.querySelector('[data-mvt-testid="add-on-section-container"]');
+        console.log('===> index.js:411 ~ addOnSectionContainer', addOnSectionContainer);
+        const mainControl = document.querySelector('[data-mvt-injected="true"]')
+        const addOnSectionHeading = document.querySelector('[data-mvt-testid="add-on-title-heading"]');
+        console.log('===> index.js:403 ~ addOnSectionHeading', addOnSectionHeading);
+        if (addOnSectionContainer && !mainControl.querySelector('.mvt-add-on-section-header')) {
+          const addOnSectionHeaderHtml = `
+          <div class="mvt-add-on-section-wrap">
+            <div class="mvt-add-on-section-header">
+              <div class="mvt-add-on-section-header-left">
+                <p class="mvt-add-on-section-header-title">Make Travel Easier</p>
+                <p class="mvt-add-on-section-header-subtitle">Save time on the road with convenient rental extras.</p>
+              </div>
+              <div class="mvt-add-on-section-header-right">
+                <span>${chevronSvg}</span>
+              </div>
+            </div>
+          </div>
+          `;
+          addOnSectionHeading.insertAdjacentHTML('afterend', addOnSectionHeaderHtml)
+        }
+        const addOnSectionHeader = mainControl.querySelector('.mvt-add-on-section-header');
+        const addOnSectionWrapEl = mainControl.querySelector('.mvt-add-on-section-wrap');
+        console.log('===> index.js:422 ~ addOnSectionHeader', addOnSectionHeader);
+        if (addOnSectionHeader && addOnSectionContainer) {
+          addOnSectionHeader.insertAdjacentElement('afterend', addOnSectionContainer)
+          addOnSectionHeader.addEventListener('click', () => {
+            console.log('===> index.js:423 ~ ');
+            if (addOnSectionContainer.classList.contains("collapse")) {
+              addOnSectionContainer.classList.remove('collapse')
+              addOnSectionHeader.classList.remove('chevron-up')
+              addOnSectionWrapEl.classList.remove('collapse')
+            } else {
+              addOnSectionContainer.classList.add('collapse')
+              addOnSectionHeader.classList.add('chevron-up')
+              addOnSectionWrapEl.classList.add('collapse')
+            }
+          })
+        }
+        // CHANGE DESIGN
+        const addOnCards = mainControl.querySelectorAll('[data-testid="ancillary-item-card"]');
+        console.log('===> index.js:432 ~ addOnCards', addOnCards);
+        if(addOnCards.length) {
+          addOnCards.forEach((card, idx) => {
+            // HERDER DESIGN
+            let cardTitle = card.querySelector('[data-testid="ancillary-card-title"] p');
+            console.log('===> index.js:436 ~ cardTitle', cardTitle);
+            cardTitle.textContent = cardTitle.textContent.replace(/\s*\([^)]*\)/g, '');
+            // DETAILS DESIGN
+            const cardHeader = card.querySelector('[data-testid="ancillary-card-title"]')
+            console.log('===> index.js:439 ~ cardHeader', cardHeader);
+            const cardHeaderParent = cardHeader.closest('.MuiBox-root');
+            console.log('===> index.js:443 ~ cardHeaderParent', cardHeaderParent);
+            const detailsBtnHtml = `
+            <div class="details-btn">Details</div>
+            `;
+            if(cardHeaderParent && !cardHeaderParent.querySelector('.details-btn')) {
+              cardHeaderParent.insertAdjacentHTML('afterend', detailsBtnHtml);
+              const detailsBtn = card.querySelector('.details-btn');
+              console.log('===> index.js:450 ~ detailsBtn', detailsBtn);
+              const cardDesc = detailsBtn.nextElementSibling;
+              if (cardDesc) {
+                if (detailsBtn.nextElementSibling.tagName === 'P') {
+                  cardDesc.classList.add('add-on-desc')
+                  if(detailsBtn){
+                    detailsBtn.addEventListener('click', (e) => {
+                      e.stopPropagation();
+                      console.log('===> index.js:454 ~ detailsBtn click');
+                      if (!cardDesc.classList.contains('show-desc')) {
+                        cardDesc.classList.add('show-desc');
+                        detailsBtn.textContent = 'Hide Details';
+                      } else {
+                        cardDesc.classList.remove('show-desc');
+                        detailsBtn.textContent = 'Details';
+                      }
+                    })
+                  }
+                }
+              }
+            }
+            // HIDE SEE MORE DETAILS BUTTON
+            const seeMoreDetailsBtn = card.querySelector('[data-testid="checkout-ancillaries-see-more-details"]');
+            if (seeMoreDetailsBtn) {
+              seeMoreDetailsBtn.closest('.MuiBox-root').style.display = 'none'
+            }
+
+            const allCards = addOnSectionContainer.querySelectorAll('.MuiGrid2-root');
+            console.log('===> index.js:478 ~ allCards', allCards);
+            if (allCards.length) {
+              allCards.forEach((card, idx) => {
+                if(idx > 3) {
+                  card.classList.add('mvt-extra-card')
+                }
+              })
+
+              if (allCards.length > 3) {
+                if(!mainControl.querySelector('.mvt-view-all-btn')) {
+                  const viewAllBtnHtml = `
+                  <div class="mvt-view-all-btn hide">View all add-on items</div>
+                  `
+                  addOnSectionContainer.insertAdjacentHTML('afterend', viewAllBtnHtml);
+                  const viewAllBtn = mainControl.querySelector('.mvt-view-all-btn');
+                  console.log('===> index.js:495 ~ viewAllBtn', viewAllBtn);
+                  if (viewAllBtn) {
+                    const allExtraCards = mainControl.querySelectorAll('.mvt-extra-card')
+                    console.log('===> index.js:497 ~ allExtraCards', allExtraCards);
+                    viewAllBtn.addEventListener('click', (e) => {
+                      e.stopPropagation();
+                      if(viewAllBtn.classList.contains('hide')) {
+                        allExtraCards.forEach((card) => {
+                          card.classList.add('show-extra-card')
+                        })
+                        viewAllBtn.textContent = 'Hide additional add-ons';
+                        viewAllBtn.classList.remove('hide')
+                      } else {
+                        allExtraCards.forEach((card) => {
+                          card.classList.remove('show-extra-card')
+                        })
+                        viewAllBtn.textContent = 'View all add-on items';
+                        viewAllBtn.classList.add('hide')
+                      }
+                      console.log('===> index.js:497 ~ viewAllBtn click');
+                    })
+                  }
+                }
+                
+              }
+            }
+          })
+        }
+
+        // Design for quantity UI item
+        const itemWithQuantity = mainControl.querySelectorAll('[data-testid="checkout-ancillaries-child-seats-price"]');
+        console.log('===> index.js:481 ~ itemWithQuantity', itemWithQuantity);
+        if (itemWithQuantity.length) {
+          itemWithQuantity.forEach(item => {
+            const itemParent = item.closest('.MuiPaper-root.MuiPaper-outlined');
+            console.log('===> index.js:485 ~ itemParent', itemParent);
+            if (itemParent) {
+              const quaniitySelector = itemParent.querySelectorAll('[data-testid*="checkout-ancillaries-child-seat-"]');
+              console.log('===> index.js:486 ~ quaniitySelector', quaniitySelector);
+              if(quaniitySelector.length) {
+                quaniitySelector.forEach((selector, idx) => {
+                  console.log('===> index.js:492 ~ selector', selector);
+                })
+              }
+            }
+          })
+        }
+      }
+    )
+  }
+
+  // add class and attribute
+  function addClassAndAttribute() {
+    const mainControl = document.querySelector('[data-mvt-injected="true"]');
+    // heading title
+    const mainHeadingEl = mainControl.querySelectorAll('h6');
+    mainHeadingEl.forEach((el, idx) => {
+      if (idx === 0) {
+        el.setAttribute('data-mvt-testid', 'protection-title-heading')
+        let protectionBundleSectin = el.nextElementSibling;
+        if (
+          protectionBundleSectin &&
+          (protectionBundleSectin.tagName === 'P' ||
+            protectionBundleSectin.getAttribute('data-mvt-testid') === 'protection-sub-heading')
+        ) {
+          protectionBundleSectin = protectionBundleSectin.nextElementSibling;
+        }
+        if (protectionBundleSectin) protectionBundleSectin.setAttribute('data-mvt-testid', 'protection-bundle-section-container');
+      } else if (idx === 1) {
+        el.setAttribute('data-mvt-testid', 'add-on-title-heading')
+        const addOnSection = el.nextElementSibling;
+        if (addOnSection) addOnSection.setAttribute('data-mvt-testid', 'add-on-section-container');
+      }
+    })
+    // expand and collapse buttons
+    const expendButtons = document.querySelectorAll('[data-mvt-injected="true"] > button');
+    console.log('===> index.js:280 ~ expendButtons', expendButtons);
+    expendButtons.forEach((btn, idx) => {
+      if (idx === 0) {
+        if (!btn.hasAttribute('data-mvt-testid')) {
+          btn.click();
+          btn.setAttribute('data-mvt-testid', 'protection-expand-button');
+        }
+      } else if (idx === 1) {
+        btn.setAttribute('data-mvt-testid', 'add-on-expand-button');
+      }
+    })
+    //protection bundles
+    const protectionBundles = mainControl.querySelectorAll('[data-mvt-testid="protection-bundle-section-container"] > div')
+    if (protectionBundles.length > 0) {
+      protectionBundles.forEach((bundle, idx) => {
+        bundle.setAttribute('data-mvt-testid', 'protection-bundle')
+        const bundleName = bundle.querySelector('div > div > div > div > div > p:not(.mvt-most-popular-bundle)');
+        console.log('===> index.js:229 ~ bundleName', bundleName);
+        if (bundleName) {
+          bundleName.setAttribute('data-mvt-testid', 'protection-bundle-name')
+          bundle.setAttribute('data-mvt-bundleName', bundleName.textContent.trim())
+          const bundleContant = bundleName.closest('.MuiStack-root.mui-1k8t7d9');
+          if (bundleContant) {
+            bundleContant.setAttribute('data-mvt-testid', 'bundle-content')
+          }
+        };
+      })
+    }
+
+    //hide add-on bundle
+    const addOnBundles = mainControl.querySelectorAll('[data-mvt-testid="add-on-section-container"] input[type="radio"]');
+    if (addOnBundles.length > 0) {
+      const addOnBundleSection = mainControl.querySelector('[data-mvt-testid="add-on-section-container"]');
+      addOnBundleSection.style.display = "none";
+    }
+
+    const protExpBtn = document.querySelector('[data-mvt-testid="protection-expand-button"]');
+    setTimeout(() => {
+      console.log('===> index.js:315 ~ protExpBtn', protExpBtn);
+      if (protExpBtn) {
+        const protItemSection = protExpBtn.nextElementSibling;
+        console.log('===> index.js:318 ~ protItemSection', protItemSection);
+        if (!protItemSection.hasAttribute('data-mvt-testid')) {
+          protItemSection.setAttribute('data-mvt-testid', 'protection-item-section');
+          //protection item header html
+          const protItemHeaderHtml = `
+          <div class="mvt-prot-item-header">
+            <div class="mvt-prot-item-header-left">
+              <p class="mvt-prot-item-header-title">Customize Your Protection</p>
+              <p class="mvt-prot-item-header-subtitle">Select coverage that is right for you.</p>
+            </div>
+            <div class="mvt-prot-item-header-right">
+              <span>${chevronSvg}</span>
+            </div>
+          </div>
+          `
+          protItemSection.insertAdjacentHTML('afterbegin', protItemHeaderHtml)
+
+          // add click listener
+          const mvtProtItemHeader = protItemSection.querySelector('.mvt-prot-item-header');
+          const protItemGridSec = protItemSection.querySelector('.MuiGrid2-container');
+          console.log('===> index.js:480 ~ ', protItemGridSec);
+          if (protItemGridSec) protItemGridSec.classList.add("show-section")
+          if (mvtProtItemHeader) {
+            mvtProtItemHeader.addEventListener("click", () => {
+              console.log('===> index.js:482 ~ ', protItemGridSec);
+              if (protItemGridSec.classList.contains("show-section")) {
+                protItemGridSec.classList.remove("show-section");
+                mvtProtItemHeader.classList.add('collapse')
+              } else {
+                protItemGridSec.classList.add("show-section");
+                mvtProtItemHeader.classList.remove('collapse')
+              }
+            })
+          }
+
+        }
+
+        const protItemGridContainer = protItemSection.querySelector('[data-mvt-testid="protection-item-section"] .MuiGrid2-container');
+        console.log('===> index.js:340 ~ protItemGridContainer', protItemGridContainer);
+        if (protItemGridContainer) {
+          protItemGridContainer.setAttribute('data-mvt-testid', 'protection-item-grid-container')
+          const itemImgElements = protItemGridContainer.querySelectorAll('[data-testid="image-component"]');
+          console.log('===> index.js:344 ~ itemImgElements', itemImgElements);
+          if (itemImgElements.length) {
+            itemImgElements.forEach(item => {
+              const protItemHeader = item.closest('.MuiBox-root.mui-19idom');
+              console.log('===> index.js:348 ~ protItemHeader', protItemHeader);
+              protItemHeader.classList.add('prot-item-header')
+              item.nextElementSibling.textContent = item.nextElementSibling.textContent.replace(/\s*\([^)]*\)/g, '')
+              protItemHeader.nextElementSibling?.tagName === 'P' &&
+                protItemHeader.nextElementSibling.setAttribute(
+                  'data-mvt-testid',
+                  'protection-item-description'
+                );
+            })
+          }
+        }
+        // hide see more details button
+        const seeMoreDetailsBtns = protItemGridContainer.querySelectorAll('[data-testid="checkout-ancillaries-see-more-details"]');
+        console.log('===> index.js:354 ~ seeMoreDetailsBtns', seeMoreDetailsBtns);
+        if (seeMoreDetailsBtns && seeMoreDetailsBtns.length) {
+          seeMoreDetailsBtns.forEach(el => {
+            console.log('===> index.js:356 ~ el', el);
+            el.closest('.MuiBox-root').style.display = 'none'
+          })
+        }
+        includeItemDesign()
+      }
+    }, 1500)
+  }
+
+  // inject design and interections
+  function injectDesign() {
+    const mainControl = document.querySelector('[data-mvt-injected="true"]');
+    console.log('===> index.js:63 ~ injectDesign ~ mainControl', mainControl);
+    const protSectionTitle = mainControl.querySelector('[data-mvt-testid="protection-title-heading"]');
+    console.log('===> index.js:141 ~ protSectionTitle', protSectionTitle);
+    if (protSectionTitle) {
+      if (!mainControl.querySelector('[data-mvt-testid="protection-sub-heading"]')) {
+        const protSubHeading = document.createElement('p');
+        protSubHeading.setAttribute('data-mvt-testid', 'protection-sub-heading')
+        protSubHeading.textContent = 'Add a protection for peace of mind on your trip.';
+        protSectionTitle.insertAdjacentElement('afterend', protSubHeading)
+      }
+    }
+    const protBundleEl = mainControl.querySelector('[data-mvt-testid="protection-bundle-section-container"]');
+    console.log('===> index.js:149 ~ ', protBundleEl);
+    if (!mainControl.querySelector('[data-mvt-testid="protection-bundle-title"]')) {
+      const bundleTitle = document.createElement('p');
+      bundleTitle.setAttribute('data-mvt-testid', 'protection-bundle-title');
+      bundleTitle.textContent = 'Select a protection option or no protection to continue.';
+      protBundleEl.insertAdjacentElement('afterbegin', bundleTitle);
+    }
+
+    protectionBundleDesign(mainControl)
+    //protection item design
+    protectionItemDesign()
+    // Add-on items design
+    addOnItemsDesign()
   }
 
 
@@ -147,8 +729,10 @@
       return;
     }
 
+    document.body.classList.add(CONFIG.injectedClass);
+
     poll(
-      () => document.querySelector(CONFIG.targetElement),
+      () => document.querySelector(CONFIG.targetElement) && [...document.querySelectorAll('h6')].find(el => el.textContent === 'Choose your protection'),
       () => {
         try {
           const targetElement = document.querySelector(CONFIG.targetElement);
@@ -161,7 +745,6 @@
             //inject classes and data attribute into the dom
             addClassAndAttribute()
             injectDesign()
-            document.body.classList.add(CONFIG.injectedClass);
           } else throw err
         } catch (error) {
           console.error(error, "MVT-123 :: Error occaring during test")
