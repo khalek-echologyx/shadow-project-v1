@@ -54,9 +54,7 @@ import poll from "./poll";
                 console.log('===> index.js:53 ~ mainItemCard', mainItemCard);
                 if (mainItemCard) mainItemCard.classList.add('mvt-included-item-wrapper')
                 if (!included.querySelector('.mvt-included-icon')) {
-                  const whiteCheckSvg = `
-              <span class="mvt-included-icon">${whicheCheckSvg}</span>
-              `;
+                  var whiteCheckSvg = '<span class="mvt-included-icon">' + whicheCheckSvg + '</span>';
                   included.insertAdjacentHTML('afterbegin', whiteCheckSvg)
                 }
                 const incudedParent = included.closest('.MuiStack-root');
@@ -154,9 +152,11 @@ import poll from "./poll";
       }
       const protectionBundleSection = mainControl.querySelector('[data-mvt-testid="protection-bundle-section-container"]')
       if (!mainControl.querySelector('[data-mvt-testid="protection-thanks-message"]')) {
-        const thankMsgHtml = `
-        <div data-mvt-testid="protection-thanks-message"><p class="check-icon">${thankSvg}</p> <p class="bold-text">Your protection is selected.</p> <p class="light-text">Thank you for protecting your trip.</p></div>
-        `
+        var thankMsgHtml = '<div data-mvt-testid="protection-thanks-message">'
+          + '<p class="check-icon">' + thankSvg + '</p> '
+          + '<p class="bold-text">Your protection is selected.</p> '
+          + '<p class="light-text">Thank you for protecting your trip.</p>'
+          + '</div>';
         protectionBundleSection.insertAdjacentHTML('afterend', thankMsgHtml);
       }
 
@@ -213,23 +213,19 @@ import poll from "./poll";
       const bundleElTopRow = protectionBundle.querySelector('[data-mvt-testid="bundle-content"] > div');
       console.log('===> index.js:175 ~ bundleElTopRow', bundleElTopRow);
       if (bundleElTopRow && !bundleElTopRow.querySelector('.mvt-bundle-icon-wrapper')) {
-        const bundleIconHtml = `
-        <div class='mvt-bundle-icon-wrapper'>
-          <span>${bundleCarSvg}</span>
-        </div>
-        `
+        var bundleIconHtml = '<div class="mvt-bundle-icon-wrapper">'
+          + '<span>' + bundleCarSvg + '</span>'
+          + '</div>';
         bundleElTopRow.insertAdjacentHTML('afterbegin', bundleIconHtml)
       }
       const bundleNameWrapper = bundleElTopRow ? bundleElTopRow.querySelector('div:not(.mvt-bundle-icon-wrapper)') : null;
       if (bundleNameWrapper && !bundleNameWrapper.querySelector('.mvt-bundle-name-wrapper')) {
         bundleNameWrapper.classList.add('mvt-bundle-name-wrapper')
         if (!bundleNameWrapper.querySelector('.mvt-most-popular-bundle')) {
-          const popularBundleHtml = `
-          <p class='mvt-most-popular-bundle'>
-            <span class="svg-span">${mostPopularSvg}</span>
-            <span>Most Popular Bundle</span>
-          </p>
-          `
+          var popularBundleHtml = '<p class="mvt-most-popular-bundle">'
+            + '<span class="svg-span">' + mostPopularSvg + '</span>'
+            + '<span>Most Popular Bundle</span>'
+            + '</p>';
           bundleNameWrapper.insertAdjacentHTML('afterbegin', popularBundleHtml);
         }
       }
@@ -258,32 +254,48 @@ import poll from "./poll";
         // body third row
         const bundleThirdRow = protectionBundle.querySelector('[data-mvt-testid="bundle-content"] > div:nth-child(4)')
         console.log('===> index.js:220 ~ bundleThirdRow', bundleThirdRow);
-        const checkedItem = `<p><span class="icon-span">${greenCheck}</span><span>Lorem ipsum doller sit amit.</span></p>`;
-        const checkedItemWrapper = `
-        <div class="checked-item-wrapper">${Array.from({ length: 3 }, () => checkedItem).join('')}</div>
-        `
+        var checkedItem1 = '<p><span class="icon-span">' + greenCheck + '</span><span>Coverage for vehicle damage and theft\u200b</span></p>';
+        var checkedItem2 = '<p><span class="icon-span">' + greenCheck + '</span><span>No deductible, no out of pocket costs, no insurance claims for vehicle damage\u200b</span></p>';
+        var checkedItem3 = '<p><span class="icon-span">' + greenCheck + '</span><span>24/7 towing, fuel and lockout support\u200b</span></p>';
+        var checkedItemWrapper = '<div class="checked-item-wrapper">'
+          + checkedItem1 + checkedItem2 + checkedItem3
+          + '</div>';
         if (bundleThirdRow) {
           bundleThirdRow.insertAdjacentHTML('afterbegin', checkedItemWrapper);
           const priceSection = bundleThirdRow.querySelector('[data-testid="checkout-ancillaries-bundle-price"]');
           console.log('===> index.js:228 ~ priceSection', priceSection);
-          if (!priceSection.querySelector(".new-price-wrapper")) {
-            const newPriceWrapHtml = `
-            <div class="new-price-wrapper">
-              <p class="new-price-text">
-                <span class="price-amount">$35.98 /</span> <span class="price-per-day">day</span>
-              </P>
-            </div>
-            <div class="old-price-wrapper">
-              <p class="old-price-text"><span>$36.99 /day</span> <span class="discount-tag">10% Off</span></p>
-            </div>
-            `
-            priceSection.insertAdjacentHTML('afterbegin', newPriceWrapHtml);
-            const newPriceText = priceSection.querySelector('.new-price-text');
-            console.log('===> index.js:239 ~ newPriceText', newPriceText);
-            const bundleCheckbox = priceSection.querySelector('input[type="checkbox"]');
-            console.log('===> index.js:241 ~ bundleCheckbox', bundleCheckbox);
-            if (newPriceText && bundleCheckbox) {
-              newPriceText.insertAdjacentElement('afterend', bundleCheckbox)
+          if (priceSection) {
+            const controlNewPrice = priceSection.querySelector('.MuiTypography-root.MuiTypography-body1');
+            const contorlOldPrice = priceSection.querySelector('.MuiTypography-root.MuiTypography-bodySmallRegular');
+            console.log('===> index.js:272 ~ controlOldPrice', contorlOldPrice);
+            
+            if (!priceSection.querySelector(".new-price-wrapper")) {
+              var newPriceWrapHtml = '<div class="new-price-wrapper">'
+                + '</div>'
+                + '<div class="old-price-wrapper">'
+                + '<p class="old-price-text"> <span class="discount-tag">10% Off</span></p>'
+                + '</div>';
+              priceSection.insertAdjacentHTML('afterbegin', newPriceWrapHtml);
+              const bundleCheckbox = priceSection.querySelector('input[type="checkbox"]');
+              const priceWrap = priceSection.querySelector('.new-price-wrapper');
+              if (priceWrap) {
+                priceWrap.insertAdjacentElement('afterbegin', bundleCheckbox);
+                if (controlNewPrice) {
+                  const text = controlNewPrice.textContent.trim();
+                  const match = text.match(/^(.*?)\s*\/\s*(.*?)$/);
+                  if (match) {
+                    const [, price, period] = match;
+                    controlNewPrice.innerHTML = '<span class="mvt-price">' + price + '/</span>'
+                      + '<span class="mvt-period">' + period + '</span>';
+                  }
+                  priceWrap.insertAdjacentElement('afterbegin', controlNewPrice)
+                }
+              }
+              if (contorlOldPrice) {
+                const oldPriceBase = priceSection.querySelector('.old-price-text');
+                console.log('===> index.js:301 ~ oldPriceBase', oldPriceBase);
+                oldPriceBase.insertAdjacentElement('afterbegin', contorlOldPrice);
+              }
             }
           }
         }
@@ -302,9 +314,7 @@ import poll from "./poll";
         const protItemDesc = mainControl.querySelectorAll('[data-mvt-testid="protection-item-description"]')
         console.log('===> index.js:262 ~ protItemDesc', protItemDesc);
         if (protItemDesc.length) {
-          const detailsBtnHtml = `
-          <div class="details-btn">Details</div>
-          `
+          var detailsBtnHtml = '<div class="details-btn">Details</div>';
           protItemDesc.forEach(el => {
             const descParentEl = el.closest('.MuiBox-root');
             console.log('===> index.js:269 ~ descParentEl', descParentEl);
@@ -322,6 +332,7 @@ import poll from "./poll";
                 e.stopImmediatePropagation();
                 console.log('===> index.js:282 ~ ', idx);
                 const singleProtItemDesc = protItemDesc[idx];
+                console.log('===> index.js:325 ~ singleProtItemDesc', singleProtItemDesc);
                 if (singleProtItemDesc && !singleProtItemDesc.classList.contains('show-desc')) {
                   singleProtItemDesc.classList.add('show-desc')
                   el.textContent = 'Hide Details';
@@ -338,22 +349,22 @@ import poll from "./poll";
           if (protectionPriceEls.length) {
             protectionPriceEls.forEach((el, idx) => {
               console.log('===> index.js:300 ~ ',);
+              const oldPrice = el.querySelector('span');
+              if (oldPrice && /\d/.test(oldPrice.textContent)) {
+                oldPrice.style.display = 'none';
+              }
               const priceParenEl = el.closest('.MuiStack-root');
               priceParenEl.setAttribute('data-mvt-testid', 'protection-price-wrapper');
               console.log('===> index.js:301 ~ ', priceParenEl);
               const pTag = el.querySelector('p');
               console.log('===> index.js:303 ~ pTag', pTag);
               if (pTag) {
-                const text = pTag.textContent.trim(); // "$7.00 / day"
-
+                const text = pTag.textContent.trim();
                 const match = text.match(/^(.*?)\s*\/\s*(.*?)$/);
-
                 if (match) {
                   const [, price, period] = match;
-
-                  pTag.innerHTML = `
-                  <span class="mvt-price">${price}/</span>
-                  <span class="mvt-period">${period}</span>`;
+                  pTag.innerHTML = '<span class="mvt-price">' + price + '/</span>'
+                    + '<span class="mvt-period">' + period + '</span>';
                 }
               }
             })
@@ -378,12 +389,10 @@ import poll from "./poll";
             const cardImageSection = itemParent.querySelector('[data-testid="ancillary-card-title"]');
             cardImageSection.classList.add('mvt-recommended-tag-wrapper')
             console.log('===> index.js:368 ~ cardImageSection', cardImageSection);
-            const recommendedTagHtml = `
-              <p class='mvt-recommended-tag'>
-                <span class="svg-span">${mostPopularSvg}</span>
-                <span>Recommended</span>
-              </p>
-              `
+            var recommendedTagHtml = '<p class="mvt-recommended-tag">'
+              + '<span class="svg-span">' + mostPopularSvg + '</span>'
+              + '<span>Recommended</span>'
+              + '</p>';
             if (cardImageSection && !cardImageSection.querySelector('.mvt-recommended-tag')) {
               cardImageSection.insertAdjacentHTML('beforeend', recommendedTagHtml)
             }
@@ -392,31 +401,41 @@ import poll from "./poll";
       }
     )
   }
+  function noProtectionDesign() {
+    poll(
+      () => document.querySelector('[data-mvt-testid="protection-item-section"]'),
+      () => {
+        const mainControl = document.querySelector('[data-mvt-injected="true"]');
+        console.log('===> index.js:397 ~ mainControl', mainControl);
+        if (mainControl) {
+
+        }
+      }
+    )
+  }
 
   function addOnItemsDesign() {
     poll(
-      () => document.querySelector('[data-mvt-testid="add-on-section-container"]'),
+      () => document.querySelector('[data-mvt-testid="add-on-item-section"]') || document.querySelector('[data-mvt-testid="add-on-item-section-wrapper"]'),
       () => {
         //INJECT NEW WRAPPER
-        const addOnSectionContainer = document.querySelector('[data-mvt-testid="add-on-section-container"]');
+        const addOnSectionContainer = document.querySelector('[data-mvt-testid="add-on-item-section"]') || document.querySelector('[data-mvt-testid="add-on-item-section-wrapper"] .MuiGrid2-root');
         console.log('===> index.js:411 ~ addOnSectionContainer', addOnSectionContainer);
         const mainControl = document.querySelector('[data-mvt-injected="true"]')
         const addOnSectionHeading = document.querySelector('[data-mvt-testid="add-on-title-heading"]');
         console.log('===> index.js:403 ~ addOnSectionHeading', addOnSectionHeading);
         if (addOnSectionContainer && !mainControl.querySelector('.mvt-add-on-section-header')) {
-          const addOnSectionHeaderHtml = `
-          <div class="mvt-add-on-section-wrap">
-            <div class="mvt-add-on-section-header">
-              <div class="mvt-add-on-section-header-left">
-                <p class="mvt-add-on-section-header-title">Make Travel Easier</p>
-                <p class="mvt-add-on-section-header-subtitle">Save time on the road with convenient rental extras.</p>
-              </div>
-              <div class="mvt-add-on-section-header-right">
-                <span>${chevronSvg}</span>
-              </div>
-            </div>
-          </div>
-          `;
+          var addOnSectionHeaderHtml = '<div class="mvt-add-on-section-wrap">'
+            + '<div class="mvt-add-on-section-header">'
+            + '<div class="mvt-add-on-section-header-left">'
+            + '<p class="mvt-add-on-section-header-title">Make Travel Easier</p>'
+            + '<p class="mvt-add-on-section-header-subtitle">Save time on the road with convenient rental extras.</p>'
+            + '</div>'
+            + '<div class="mvt-add-on-section-header-right">'
+            + '<span>' + chevronSvg + '</span>'
+            + '</div>'
+            + '</div>'
+            + '</div>';
           addOnSectionHeading.insertAdjacentHTML('afterend', addOnSectionHeaderHtml)
         }
         const addOnSectionHeader = mainControl.querySelector('.mvt-add-on-section-header');
@@ -438,9 +457,9 @@ import poll from "./poll";
           })
         }
         // CHANGE DESIGN
-        const addOnCards = mainControl.querySelectorAll('[data-testid="ancillary-item-card"]');
+        const addOnCards = addOnSectionContainer.querySelectorAll('[data-testid="ancillary-item-card"]');
         console.log('===> index.js:432 ~ addOnCards', addOnCards);
-        if(addOnCards.length) {
+        if (addOnCards.length) {
           addOnCards.forEach((card, idx) => {
             // HERDER DESIGN
             let cardTitle = card.querySelector('[data-testid="ancillary-card-title"] p');
@@ -451,10 +470,9 @@ import poll from "./poll";
             console.log('===> index.js:439 ~ cardHeader', cardHeader);
             const cardHeaderParent = cardHeader.closest('.MuiBox-root');
             console.log('===> index.js:443 ~ cardHeaderParent', cardHeaderParent);
-            const detailsBtnHtml = `
-            <div class="details-btn">Details</div>
-            `;
-            if(cardHeaderParent && !cardHeaderParent.querySelector('.details-btn')) {
+            var detailsBtnHtml = '<div class="details-btn">Details</div>';
+            if (cardHeaderParent && !cardHeaderParent.nextElementSibling.classList.contains('details-btn')) {
+              console.log('===> index.js:468 ~ test', cardHeaderParent);
               cardHeaderParent.insertAdjacentHTML('afterend', detailsBtnHtml);
               const detailsBtn = card.querySelector('.details-btn');
               console.log('===> index.js:450 ~ detailsBtn', detailsBtn);
@@ -462,7 +480,7 @@ import poll from "./poll";
               if (cardDesc) {
                 if (detailsBtn.nextElementSibling.tagName === 'P') {
                   cardDesc.classList.add('add-on-desc')
-                  if(detailsBtn){
+                  if (detailsBtn) {
                     detailsBtn.addEventListener('click', (e) => {
                       e.stopPropagation();
                       console.log('===> index.js:454 ~ detailsBtn click');
@@ -488,16 +506,14 @@ import poll from "./poll";
             console.log('===> index.js:478 ~ allCards', allCards);
             if (allCards.length) {
               allCards.forEach((card, idx) => {
-                if(idx > 3) {
+                if (idx > 3) {
                   card.classList.add('mvt-extra-card')
                 }
               })
 
               if (allCards.length > 3) {
-                if(!mainControl.querySelector('.mvt-view-all-btn')) {
-                  const viewAllBtnHtml = `
-                  <div class="mvt-view-all-btn hide">View all add-on items</div>
-                  `
+                if (!mainControl.querySelector('.mvt-view-all-btn')) {
+                  var viewAllBtnHtml = '<div class="mvt-view-all-btn hide">View all add-on items</div>';
                   addOnSectionContainer.insertAdjacentHTML('afterend', viewAllBtnHtml);
                   const viewAllBtn = mainControl.querySelector('.mvt-view-all-btn');
                   console.log('===> index.js:495 ~ viewAllBtn', viewAllBtn);
@@ -506,7 +522,7 @@ import poll from "./poll";
                     console.log('===> index.js:497 ~ allExtraCards', allExtraCards);
                     viewAllBtn.addEventListener('click', (e) => {
                       e.stopPropagation();
-                      if(viewAllBtn.classList.contains('hide')) {
+                      if (viewAllBtn.classList.contains('hide')) {
                         allExtraCards.forEach((card) => {
                           card.classList.add('show-extra-card')
                         })
@@ -519,11 +535,9 @@ import poll from "./poll";
                         viewAllBtn.textContent = 'View all add-on items';
                         viewAllBtn.classList.add('hide')
                       }
-                      console.log('===> index.js:497 ~ viewAllBtn click');
                     })
                   }
                 }
-                
               }
             }
           })
@@ -539,10 +553,21 @@ import poll from "./poll";
             if (itemParent) {
               const quaniitySelector = itemParent.querySelectorAll('[data-testid*="checkout-ancillaries-child-seat-"]');
               console.log('===> index.js:486 ~ quaniitySelector', quaniitySelector);
-              if(quaniitySelector.length) {
+              if (quaniitySelector.length) {
                 quaniitySelector.forEach((selector, idx) => {
                   console.log('===> index.js:492 ~ selector', selector);
                 })
+              }
+            }
+            const pTag = item.querySelector("p");
+            console.log('===> index.js:544 ~ pTag', pTag);
+            if (pTag) {
+              const text = pTag.textContent.trim();
+              const match = text.match(/^(.*?)\s*\/\s*(.*?)$/);
+              if (match) {
+                const [, price, period] = match;
+                pTag.innerHTML = '<span class="mvt-price">' + price + '/</span>'
+                  + '<span class="mvt-period">' + period + '</span>';
               }
             }
           })
@@ -554,6 +579,23 @@ import poll from "./poll";
   // add class and attribute
   function addClassAndAttribute() {
     const mainControl = document.querySelector('[data-mvt-injected="true"]');
+    // expand and collapse buttons
+    const expendButtons = document.querySelectorAll('[data-mvt-injected="true"] > button');
+    console.log('===> index.js:280 ~ expendButtons', expendButtons);
+    expendButtons.forEach((btn, idx) => {
+      if (idx === 0) {
+        if (!btn.hasAttribute('data-mvt-testid')) {
+          btn.click();
+          btn.setAttribute('data-mvt-testid', 'protection-expand-button');
+        }
+      } else if (idx === 1) {
+        if (!btn.hasAttribute('data-mvt-testid')) {
+          btn.setAttribute('data-mvt-testid', 'add-on-expand-button');
+          btn.style.display = 'none'
+          btn.click()
+        }
+      }
+    })
     // heading title
     const mainHeadingEl = mainControl.querySelectorAll('h6');
     mainHeadingEl.forEach((el, idx) => {
@@ -570,21 +612,18 @@ import poll from "./poll";
         if (protectionBundleSectin) protectionBundleSectin.setAttribute('data-mvt-testid', 'protection-bundle-section-container');
       } else if (idx === 1) {
         el.setAttribute('data-mvt-testid', 'add-on-title-heading')
-        const addOnSection = el.nextElementSibling;
-        if (addOnSection) addOnSection.setAttribute('data-mvt-testid', 'add-on-section-container');
-      }
-    })
-    // expand and collapse buttons
-    const expendButtons = document.querySelectorAll('[data-mvt-injected="true"] > button');
-    console.log('===> index.js:280 ~ expendButtons', expendButtons);
-    expendButtons.forEach((btn, idx) => {
-      if (idx === 0) {
-        if (!btn.hasAttribute('data-mvt-testid')) {
-          btn.click();
-          btn.setAttribute('data-mvt-testid', 'protection-expand-button');
+        el.style.display = 'none';
+        if (expendButtons.length > 1) {
+          const addOnSection = el.nextElementSibling;
+          if (addOnSection) {
+            addOnSection.setAttribute('data-mvt-testid', 'add-on-bundle-section')
+            addOnSection.style.display = "none";
+          };
+        } else {
+          const addOnSection = el.nextElementSibling;
+          if (addOnSection) addOnSection.setAttribute('data-mvt-testid', 'add-on-item-section');
         }
-      } else if (idx === 1) {
-        btn.setAttribute('data-mvt-testid', 'add-on-expand-button');
+
       }
     })
     //protection bundles
@@ -605,14 +644,9 @@ import poll from "./poll";
       })
     }
 
-    //hide add-on bundle
-    const addOnBundles = mainControl.querySelectorAll('[data-mvt-testid="add-on-section-container"] input[type="radio"]');
-    if (addOnBundles.length > 0) {
-      const addOnBundleSection = mainControl.querySelector('[data-mvt-testid="add-on-section-container"]');
-      addOnBundleSection.style.display = "none";
-    }
-
     const protExpBtn = document.querySelector('[data-mvt-testid="protection-expand-button"]');
+    const addOnExpBtn = document.querySelector('[data-mvt-testid="add-on-expand-button"]');
+    console.log('===> index.js:645 ~ addOnExpBtn', addOnExpBtn);
     setTimeout(() => {
       console.log('===> index.js:315 ~ protExpBtn', protExpBtn);
       if (protExpBtn) {
@@ -621,17 +655,15 @@ import poll from "./poll";
         if (!protItemSection.hasAttribute('data-mvt-testid')) {
           protItemSection.setAttribute('data-mvt-testid', 'protection-item-section');
           //protection item header html
-          const protItemHeaderHtml = `
-          <div class="mvt-prot-item-header">
-            <div class="mvt-prot-item-header-left">
-              <p class="mvt-prot-item-header-title">Customize Your Protection</p>
-              <p class="mvt-prot-item-header-subtitle">Select coverage that is right for you.</p>
-            </div>
-            <div class="mvt-prot-item-header-right">
-              <span>${chevronSvg}</span>
-            </div>
-          </div>
-          `
+          var protItemHeaderHtml = '<div class="mvt-prot-item-header">'
+            + '<div class="mvt-prot-item-header-left">'
+            + '<p class="mvt-prot-item-header-title">Customize Your Protection</p>'
+            + '<p class="mvt-prot-item-header-subtitle">Select coverage that is right for you.</p>'
+            + '</div>'
+            + '<div class="mvt-prot-item-header-right">'
+            + '<span>' + chevronSvg + '</span>'
+            + '</div>'
+            + '</div>';
           protItemSection.insertAdjacentHTML('afterbegin', protItemHeaderHtml)
 
           // add click listener
@@ -685,6 +717,15 @@ import poll from "./poll";
         }
         includeItemDesign()
       }
+      if (addOnExpBtn) {
+        const addOnItemSection = addOnExpBtn.nextElementSibling;
+        console.log('===> index.js:722 ~ addOnItemSection', addOnItemSection);
+        if (addOnItemSection) {
+          addOnItemSection.setAttribute('data-mvt-testid', 'add-on-item-section-wrapper')
+          addOnItemSection.querySelector('.MuiGrid2-root').setAttribute('data-mvt-testid', 'add-on-item-section');
+          // addOnItemsDesign();
+        }
+      }
     }, 1500)
   }
 
@@ -714,6 +755,8 @@ import poll from "./poll";
     protectionBundleDesign(mainControl)
     //protection item design
     protectionItemDesign()
+    // no protection design
+    noProtectionDesign()
     // Add-on items design
     addOnItemsDesign()
   }
@@ -744,6 +787,7 @@ import poll from "./poll";
             mainContainer.setAttribute('data-mvt-injected', 'true')
             //inject classes and data attribute into the dom
             addClassAndAttribute()
+            //inject design
             injectDesign()
           } else throw err
         } catch (error) {

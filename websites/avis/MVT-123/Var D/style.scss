@@ -66,7 +66,7 @@
   [data-mvt-testid="protection-bundle"] {
     width: 100%;
     cursor: default !important;
-    pointer-events: none;
+    // pointer-events: none;
   }
 
   [data-mvt-testid="protection-bundle"]:not([data-mvt-bundlename="Essential Protection"]):not([data-mvt-bundlename="Basic Cover"]) {
@@ -183,10 +183,6 @@
   // checkbox and price of bundle
   [data-testid="checkout-ancillaries-bundle-price"] {
 
-    p.MuiTypography-root {
-      display: none;
-    }
-
     .new-price-wrapper {
       display: flex;
       align-items: center;
@@ -194,15 +190,16 @@
 
       p {
         margin: 0;
-
-        .price-amount {
-          font-size: 18px;
+        .mvt-price{
           font-weight: 700;
+          font-size: 18px;
+          line-height: 28px;
         }
 
-        .price-per-day {
+        .mvt-period {
           font-size: 14px;
           margin-left: -2px;
+          font-weight: 400;
         }
       }
     }
@@ -250,6 +247,7 @@
 
         span {
           text-decoration: line-through;
+          font-size: 12px;
         }
 
         span.discount-tag {
@@ -337,6 +335,7 @@
         .MuiPaper-outlined {
           border: none;
           background-color: #F4F4F4;
+          border: 1px solid #46791D1A;
           border-radius: 8px;
 
           .prot-item-header [data-testid="ancillary-card-title"] {
@@ -412,11 +411,13 @@
         // Included item BG
         .mvt-included-item-wrapper .MuiPaper-outlined {
           background-color: #ECF2E8;
+          border: 1px solid #2C62931A;
         }
 
         // Recommended item style
         .mvt-recommended-item-wrapper .MuiPaper-outlined {
           background-color: #F0F5FA;
+          border: 1px solid #2C62931A;
         }
 
         [data-testid="checkout-ancillaries-item-recommendation"] {
@@ -441,6 +442,13 @@
     }
 
     [data-testid="checkout-ancillaries-item-price"] {
+      display: flex;
+      gap: 4px;
+
+      &>span:last-child {
+        border: 1px solid red;
+        display: none;
+      }
 
       p {
 
@@ -481,6 +489,22 @@
     }
   }
 
+  [data-testid="checkout-ancillaries-child-seats-price"]{
+    p {
+
+        .mvt-price {
+          font-weight: 500;
+        }
+
+        .mvt-period {
+          font-weight: 400;
+          font-size: 14px;
+          margin-left: -2px;
+          line-height: 20px;
+        }
+      }
+  }
+
   // INCLUDE STYLE
   .mvt-included-parent {
     .MuiBox-root.mui-1rr4qq7 {
@@ -496,10 +520,7 @@
     }
   }
 
-  // ADD-ON SECTION STYLE
-  [data-mvt-testid="add-on-title-heading"]{
-    display: none;
-  }
+  // ADD-ON SECTION STYLE ==================
   .mvt-add-on-section-wrap {
     border: 1px solid #D4D4D4;
     border-radius: 8px;
@@ -557,7 +578,7 @@
       }
     }
 
-    [data-mvt-testid="add-on-section-container"] {
+    [data-mvt-testid="add-on-item-section"] {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
       align-items: start;
@@ -626,8 +647,14 @@
             }
           }
         }
+        [data-testid="ancillary-item-card"].mvt-included-item-wrapper .MuiPaper-outlined{
+          border: 1px solid #2C62931A;
+          background-color: #ECF2E8;
+        }
 
         [data-testid="single-addons-details-dialog-counter-buttons"]{
+          gap: 2px;
+          
           button{
             width: 24px;
             height: 24px;
@@ -644,6 +671,7 @@
             width: 24px;
             height: 24px;
             font-size: 14px;
+            border: 1px solid #000;
 
             input{
               color: #000;
@@ -652,6 +680,10 @@
             input.Mui-disabled{
               color: #656565;
             }
+          }
+
+          div.Mui-disabled{
+            border: 1px solid #656565;
           }
         }
       }

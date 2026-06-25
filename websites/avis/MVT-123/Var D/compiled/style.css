@@ -53,7 +53,6 @@
 .MVT-123-Var_D [data-mvt-testid=protection-bundle] {
   width: 100%;
   cursor: default !important;
-  pointer-events: none;
 }
 .MVT-123-Var_D [data-mvt-testid=protection-bundle]:not([data-mvt-bundlename="Essential Protection"]):not([data-mvt-bundlename="Basic Cover"]) {
   display: none;
@@ -159,9 +158,6 @@
 .MVT-123-Var_D [data-mvt-bundlename="Basic Cover"] > div > div [data-mvt-testid=bundle-content] div.MuiBox-root.mui-12t1ysd .checked-item-wrapper p span.icon-span {
   height: 18px;
 }
-.MVT-123-Var_D [data-testid=checkout-ancillaries-bundle-price] p.MuiTypography-root {
-  display: none;
-}
 .MVT-123-Var_D [data-testid=checkout-ancillaries-bundle-price] .new-price-wrapper {
   display: flex;
   align-items: center;
@@ -170,13 +166,15 @@
 .MVT-123-Var_D [data-testid=checkout-ancillaries-bundle-price] .new-price-wrapper p {
   margin: 0;
 }
-.MVT-123-Var_D [data-testid=checkout-ancillaries-bundle-price] .new-price-wrapper p .price-amount {
-  font-size: 18px;
+.MVT-123-Var_D [data-testid=checkout-ancillaries-bundle-price] .new-price-wrapper p .mvt-price {
   font-weight: 700;
+  font-size: 18px;
+  line-height: 28px;
 }
-.MVT-123-Var_D [data-testid=checkout-ancillaries-bundle-price] .new-price-wrapper p .price-per-day {
+.MVT-123-Var_D [data-testid=checkout-ancillaries-bundle-price] .new-price-wrapper p .mvt-period {
   font-size: 14px;
   margin-left: -2px;
+  font-weight: 400;
 }
 .MVT-123-Var_D [data-testid=checkout-ancillaries-bundle-price] input[type=checkbox] {
   pointer-events: auto !important;
@@ -217,6 +215,7 @@
 }
 .MVT-123-Var_D [data-testid=checkout-ancillaries-bundle-price] .old-price-wrapper p span {
   text-decoration: line-through;
+  font-size: 12px;
 }
 .MVT-123-Var_D [data-testid=checkout-ancillaries-bundle-price] .old-price-wrapper p span.discount-tag {
   font-weight: 700;
@@ -284,6 +283,7 @@
 .MVT-123-Var_D [data-mvt-testid=protection-item-section] [data-mvt-testid=protection-item-grid-container] div.MuiGrid2-root .MuiPaper-outlined {
   border: none;
   background-color: #F4F4F4;
+  border: 1px solid rgba(70, 121, 29, 0.1019607843);
   border-radius: 8px;
 }
 .MVT-123-Var_D [data-mvt-testid=protection-item-section] [data-mvt-testid=protection-item-grid-container] div.MuiGrid2-root .MuiPaper-outlined .prot-item-header [data-testid=ancillary-card-title] {
@@ -346,9 +346,11 @@
 }
 .MVT-123-Var_D [data-mvt-testid=protection-item-section] [data-mvt-testid=protection-item-grid-container] div.MuiGrid2-root .mvt-included-item-wrapper .MuiPaper-outlined {
   background-color: #ECF2E8;
+  border: 1px solid rgba(44, 98, 147, 0.1019607843);
 }
 .MVT-123-Var_D [data-mvt-testid=protection-item-section] [data-mvt-testid=protection-item-grid-container] div.MuiGrid2-root .mvt-recommended-item-wrapper .MuiPaper-outlined {
   background-color: #F0F5FA;
+  border: 1px solid rgba(44, 98, 147, 0.1019607843);
 }
 .MVT-123-Var_D [data-mvt-testid=protection-item-section] [data-mvt-testid=protection-item-grid-container] div.MuiGrid2-root [data-testid=checkout-ancillaries-item-recommendation] {
   display: none;
@@ -361,6 +363,14 @@
 }
 .MVT-123-Var_D [data-mvt-testid=protection-price-wrapper] .ancillary-item-card-checkbox.Mui-checked .MuiBox-root {
   border-color: #000;
+}
+.MVT-123-Var_D [data-mvt-testid=protection-price-wrapper] [data-testid=checkout-ancillaries-item-price] {
+  display: flex;
+  gap: 4px;
+}
+.MVT-123-Var_D [data-mvt-testid=protection-price-wrapper] [data-testid=checkout-ancillaries-item-price] > span:last-child {
+  border: 1px solid red;
+  display: none;
 }
 .MVT-123-Var_D [data-mvt-testid=protection-price-wrapper] [data-testid=checkout-ancillaries-item-price] p .mvt-price {
   font-weight: 500;
@@ -388,6 +398,15 @@
 .MVT-123-Var_D [data-mvt-testid=protection-price-wrapper] div.ancillary-item-card-toggle div svg path {
   stroke-width: 0.7px;
 }
+.MVT-123-Var_D [data-testid=checkout-ancillaries-child-seats-price] p .mvt-price {
+  font-weight: 500;
+}
+.MVT-123-Var_D [data-testid=checkout-ancillaries-child-seats-price] p .mvt-period {
+  font-weight: 400;
+  font-size: 14px;
+  margin-left: -2px;
+  line-height: 20px;
+}
 .MVT-123-Var_D .mvt-included-parent .MuiBox-root.mui-1rr4qq7 {
   display: none;
 }
@@ -397,9 +416,6 @@
   color: #fff;
   font-size: 9px;
   gap: 4px;
-}
-.MVT-123-Var_D [data-mvt-testid=add-on-title-heading] {
-  display: none;
 }
 .MVT-123-Var_D .mvt-add-on-section-wrap {
   border: 1px solid #D4D4D4;
@@ -445,7 +461,7 @@
 .MVT-123-Var_D .mvt-add-on-section-wrap .mvt-add-on-section-header.chevron-up .mvt-add-on-section-header-right span svg {
   transform: rotate(180deg);
 }
-.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-section-container] {
+.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-item-section] {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   align-items: start;
@@ -453,36 +469,36 @@
   max-height: 2000px;
   transition: max-height 0.5s ease-in-out;
 }
-.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-section-container].collapse {
+.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-item-section].collapse {
   max-height: 0;
   overflow: hidden;
 }
-.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-section-container] div.MuiGrid2-root {
+.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-item-section] div.MuiGrid2-root {
   width: 100%;
 }
-.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-section-container] div.MuiGrid2-root [data-testid=ancillary-item-card] .MuiPaper-outlined,
-.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-section-container] div.MuiGrid2-root .MuiPaper-outlined {
+.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-item-section] div.MuiGrid2-root [data-testid=ancillary-item-card] .MuiPaper-outlined,
+.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-item-section] div.MuiGrid2-root .MuiPaper-outlined {
   border: 1px solid rgba(70, 121, 29, 0.1019607843);
   border-radius: 8px;
   background-color: #F4F4F4;
 }
-.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-section-container] div.MuiGrid2-root [data-testid=ancillary-item-card] .MuiPaper-outlined [data-testid=ancillary-card-title],
-.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-section-container] div.MuiGrid2-root .MuiPaper-outlined [data-testid=ancillary-card-title] {
+.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-item-section] div.MuiGrid2-root [data-testid=ancillary-item-card] .MuiPaper-outlined [data-testid=ancillary-card-title],
+.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-item-section] div.MuiGrid2-root .MuiPaper-outlined [data-testid=ancillary-card-title] {
   flex-direction: column;
   align-items: flex-start;
 }
-.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-section-container] div.MuiGrid2-root [data-testid=ancillary-item-card] .MuiPaper-outlined [data-testid=ancillary-card-title] img,
-.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-section-container] div.MuiGrid2-root .MuiPaper-outlined [data-testid=ancillary-card-title] img {
+.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-item-section] div.MuiGrid2-root [data-testid=ancillary-item-card] .MuiPaper-outlined [data-testid=ancillary-card-title] img,
+.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-item-section] div.MuiGrid2-root .MuiPaper-outlined [data-testid=ancillary-card-title] img {
   width: 26px;
   height: 26px;
 }
-.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-section-container] div.MuiGrid2-root [data-testid=ancillary-item-card] .MuiPaper-outlined [data-testid=ancillary-card-title] p,
-.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-section-container] div.MuiGrid2-root .MuiPaper-outlined [data-testid=ancillary-card-title] p {
+.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-item-section] div.MuiGrid2-root [data-testid=ancillary-item-card] .MuiPaper-outlined [data-testid=ancillary-card-title] p,
+.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-item-section] div.MuiGrid2-root .MuiPaper-outlined [data-testid=ancillary-card-title] p {
   font-weight: 500;
   min-height: 48px;
 }
-.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-section-container] div.MuiGrid2-root [data-testid=ancillary-item-card] .MuiPaper-outlined .details-btn,
-.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-section-container] div.MuiGrid2-root .MuiPaper-outlined .details-btn {
+.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-item-section] div.MuiGrid2-root [data-testid=ancillary-item-card] .MuiPaper-outlined .details-btn,
+.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-item-section] div.MuiGrid2-root .MuiPaper-outlined .details-btn {
   text-decoration: underline;
   cursor: pointer;
   font-size: 14px;
@@ -490,57 +506,68 @@
   letter-spacing: 0.25px;
   width: fit-content;
 }
-.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-section-container] div.MuiGrid2-root [data-testid=ancillary-item-card] .MuiPaper-outlined .add-on-desc,
-.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-section-container] div.MuiGrid2-root .MuiPaper-outlined .add-on-desc {
+.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-item-section] div.MuiGrid2-root [data-testid=ancillary-item-card] .MuiPaper-outlined .add-on-desc,
+.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-item-section] div.MuiGrid2-root .MuiPaper-outlined .add-on-desc {
   max-height: 0px;
   overflow: hidden;
   transition: max-height 0.5s ease-in-out;
   font-size: 10px;
   line-height: 12px;
 }
-.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-section-container] div.MuiGrid2-root [data-testid=ancillary-item-card] .MuiPaper-outlined .add-on-desc.show-desc,
-.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-section-container] div.MuiGrid2-root .MuiPaper-outlined .add-on-desc.show-desc {
+.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-item-section] div.MuiGrid2-root [data-testid=ancillary-item-card] .MuiPaper-outlined .add-on-desc.show-desc,
+.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-item-section] div.MuiGrid2-root .MuiPaper-outlined .add-on-desc.show-desc {
   max-height: 500px;
 }
-.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-section-container] div.MuiGrid2-root [data-testid=ancillary-item-card] .MuiPaper-outlined [data-testid*=checkout-ancillaries-child-seat-] p,
-.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-section-container] div.MuiGrid2-root .MuiPaper-outlined [data-testid*=checkout-ancillaries-child-seat-] p {
+.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-item-section] div.MuiGrid2-root [data-testid=ancillary-item-card] .MuiPaper-outlined [data-testid*=checkout-ancillaries-child-seat-] p,
+.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-item-section] div.MuiGrid2-root .MuiPaper-outlined [data-testid*=checkout-ancillaries-child-seat-] p {
   font-size: 14px;
 }
 @media (min-width: 1000px) and (max-width: 1423px) {
-  .MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-section-container] div.MuiGrid2-root [data-testid=ancillary-item-card] .MuiPaper-outlined [data-testid*=checkout-ancillaries-child-seat-] p,
-  .MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-section-container] div.MuiGrid2-root .MuiPaper-outlined [data-testid*=checkout-ancillaries-child-seat-] p {
+  .MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-item-section] div.MuiGrid2-root [data-testid=ancillary-item-card] .MuiPaper-outlined [data-testid*=checkout-ancillaries-child-seat-] p,
+  .MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-item-section] div.MuiGrid2-root .MuiPaper-outlined [data-testid*=checkout-ancillaries-child-seat-] p {
     font-size: 12px;
   }
 }
-.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-section-container] div.MuiGrid2-root [data-testid=single-addons-details-dialog-counter-buttons] button {
+.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-item-section] div.MuiGrid2-root [data-testid=ancillary-item-card].mvt-included-item-wrapper .MuiPaper-outlined {
+  border: 1px solid rgba(44, 98, 147, 0.1019607843);
+  background-color: #ECF2E8;
+}
+.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-item-section] div.MuiGrid2-root [data-testid=single-addons-details-dialog-counter-buttons] {
+  gap: 2px;
+}
+.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-item-section] div.MuiGrid2-root [data-testid=single-addons-details-dialog-counter-buttons] button {
   width: 24px;
   height: 24px;
   font-size: 14px;
   border-color: #000;
   color: #000;
 }
-.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-section-container] div.MuiGrid2-root [data-testid=single-addons-details-dialog-counter-buttons] button.Mui-disabled {
+.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-item-section] div.MuiGrid2-root [data-testid=single-addons-details-dialog-counter-buttons] button.Mui-disabled {
   border-color: #656565;
   color: #656565;
 }
-.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-section-container] div.MuiGrid2-root [data-testid=single-addons-details-dialog-counter-buttons] div.MuiInputBase-root {
+.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-item-section] div.MuiGrid2-root [data-testid=single-addons-details-dialog-counter-buttons] div.MuiInputBase-root {
   width: 24px;
   height: 24px;
   font-size: 14px;
+  border: 1px solid #000;
 }
-.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-section-container] div.MuiGrid2-root [data-testid=single-addons-details-dialog-counter-buttons] div.MuiInputBase-root input {
+.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-item-section] div.MuiGrid2-root [data-testid=single-addons-details-dialog-counter-buttons] div.MuiInputBase-root input {
   color: #000;
 }
-.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-section-container] div.MuiGrid2-root [data-testid=single-addons-details-dialog-counter-buttons] div.MuiInputBase-root input.Mui-disabled {
+.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-item-section] div.MuiGrid2-root [data-testid=single-addons-details-dialog-counter-buttons] div.MuiInputBase-root input.Mui-disabled {
   color: #656565;
 }
-.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-section-container] div.MuiGrid2-root.mvt-extra-card {
+.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-item-section] div.MuiGrid2-root [data-testid=single-addons-details-dialog-counter-buttons] div.Mui-disabled {
+  border: 1px solid #656565;
+}
+.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-item-section] div.MuiGrid2-root.mvt-extra-card {
   max-height: 0;
   overflow: hidden;
   opacity: 0;
   transition: max-height 0.4s ease, opacity 0.4s ease;
 }
-.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-section-container] div.MuiGrid2-root.mvt-extra-card.show-extra-card {
+.MVT-123-Var_D .mvt-add-on-section-wrap [data-mvt-testid=add-on-item-section] div.MuiGrid2-root.mvt-extra-card.show-extra-card {
   max-height: 600px;
   opacity: 1;
   transition: max-height 0.4s ease, opacity 0.4s ease;
