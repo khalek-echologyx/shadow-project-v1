@@ -66,6 +66,7 @@ import poll from "./poll";
 
   // Placeholder readDom function
   const includeItemDesign = () => {
+    console.log('===> index.js:69 ~ test', );
     poll(
       () => document.querySelectorAll('[data-mvt-injected="true"] [data-testid="ancillary-item-card"]'),
       () => {
@@ -77,7 +78,7 @@ import poll from "./poll";
           if (items.length) {
             items.forEach((item, idx) => {
               console.log(item, "itemWithIndx")
-              const included = item.querySelector('.MuiChip-outlined.MuiChip-sizeSmall.MuiChip-colorSuccess')
+              const included = item.querySelector('.MuiChip-outlined.MuiChip-sizeSmall.MuiChip-colorSuccess') || item.querySelector('[data-testid="checkout-ancillaries-item-included"]')
               console.log(included, "included")
               if (included) {
                 const mainItemCard = included.closest('[data-testid="ancillary-item-card"]');
@@ -229,8 +230,10 @@ import poll from "./poll";
       console.log('===> index.js:229 ~ protectionBundleSection', protectionBundleSection);
       if (!mainControl.querySelector('[data-mvt-testid="protection-thanks-message"]')) {
         var thankMsgHtml = '<div data-mvt-testid="protection-thanks-message">'
-          + '<p class="check-icon">' + thankSvg + '</p> '
-          + '<p class="bold-text">Your protection is selected.</p> '
+          + '<div class="message-header">'
+          + '<p class="check-icon">' + thankSvg + '</p>'
+          + '<p class="bold-text">Your protection is selected.</p>'
+          + '</div>'
           + '<p class="light-text">Thank you for protecting your trip.</p>'
           + '</div>';
         protectionBundleSection.insertAdjacentHTML('afterend', thankMsgHtml);
@@ -322,7 +325,7 @@ import poll from "./poll";
           featuresText = featuresText.replace(/\s*\([^)]*\)/g, '');
         }
         console.log('===> index.js:215 ~ featuresText', featuresText);
-        bundleElTopRow.insertAdjacentHTML('afterend', '<p class="features-text">' + featuresText + '</p>')
+        bundleElTopRow.insertAdjacentHTML('afterend', '<p class="features-text"> Includes ' + featuresText + '</p>')
 
         // body third row
         const bundleThirdRow = protectionBundle.querySelector('[data-mvt-testid="bundle-content"] > div:nth-child(4)')
@@ -446,6 +449,7 @@ import poll from "./poll";
             })
           }
         }
+        includeItemDesign()
       }
     )
     // description
@@ -670,10 +674,14 @@ import poll from "./poll";
               const detailsBtn = card.querySelector('.details-btn');
               console.log('===> index.js:450 ~ detailsBtn', detailsBtn);
               const cardDesc = detailsBtn.nextElementSibling;
+              console.log('===> index.js:675 ~ cardDesc', cardDesc);
               if (cardDesc) {
                 if (detailsBtn.nextElementSibling.tagName === 'P') {
                   cardDesc.classList.add('add-on-desc')
                   if (detailsBtn) {
+                    if (cardDesc.textContent.trim() === '') {
+                      detailsBtn.style.visibility = 'hidden'
+                    }
                     detailsBtn.addEventListener('click', (e) => {
                       e.stopPropagation();
                       console.log('===> index.js:454 ~ detailsBtn click');
@@ -705,9 +713,9 @@ import poll from "./poll";
                 }
               })
 
-              if (allCards.length > 3) {
+              if (allCards.length > 4) {
                 if (!mainControl.querySelector('.mvt-view-all-btn')) {
-                  var viewAllBtnHtml = '<div class="mvt-view-all-btn hide">View all add-on items</div>';
+                  var viewAllBtnHtml = '<div class="mvt-view-all-btn hide">View all add-ons</div>';
                   addOnSectionContainer.insertAdjacentHTML('afterend', viewAllBtnHtml);
                   const viewAllBtn = mainControl.querySelector('.mvt-view-all-btn');
                   console.log('===> index.js:495 ~ viewAllBtn', viewAllBtn);
@@ -742,6 +750,9 @@ import poll from "./poll";
         console.log('===> index.js:481 ~ itemWithQuantity', itemWithQuantity);
         if (itemWithQuantity.length) {
           itemWithQuantity.forEach(item => {
+            console.log('===> index.js:747 ~ itemPrice', item);
+            const oldPrice = item.querySelector('span');
+            if(oldPrice) oldPrice.style.display = 'none';
             const itemParent = item.closest('.MuiPaper-root.MuiPaper-outlined');
             console.log('===> index.js:485 ~ itemParent', itemParent);
             if (itemParent) {
@@ -761,6 +772,32 @@ import poll from "./poll";
               if (match) {
                 const [, price, period] = match;
                 pTag.innerHTML = '<span class="mvt-price">' + price + '/</span>'
+                  + '<span class="mvt-period">' + period + '</span>';
+              }
+            }
+          })
+        }
+      }
+    )
+    itemPriceDesign()
+  }
+
+  function itemPointDesign(){
+    poll(
+      () => document.querySelectorAll('[data-testid*="pay-with-points-section-"]'),
+      () => {
+        const pointSections = document.querySelectorAll('[data-testid*="pay-with-points-section-"]');
+        console.log('===> index.js:790 ~ pointSections', pointSections);
+        if (pointSections.length) {
+          pointSections.forEach(item => {
+            const label = item.querySelector('[data-testid*="pay-with-points-points-per-day-"]');
+            console.log('===> index.js:794 ~ label', label);
+            if(label){
+              const text = label.textContent.trim();
+              const match = text.match(/^(.*?)\s*\/\s*(.*?)$/);
+              if (match) {
+                const [, price, period] = match;
+                label.innerHTML = '<span class="mvt-price">' + price + '/</span>'
                   + '<span class="mvt-period">' + period + '</span>';
               }
             }
@@ -853,7 +890,7 @@ import poll from "./poll";
         const protItemSectionParent = protExpBtn.nextElementSibling;
         console.log('===> index.js:318 ~ protItemSection', protItemSectionParent);
         if (protItemSectionParent) {
-          protItemSectionParent.style.display = 'none'
+          protItemSectionParent.setAttribute('data-mvt-testid', 'prot-item-section-outer')
           protItemSectionParent.querySelector('.MuiGrid2-root').setAttribute('data-mvt-testid', 'protection-item-section');
         }
         // hide see more details button
@@ -901,6 +938,8 @@ import poll from "./poll";
     noProtectionDesign()
     // Add-on items design
     addOnItemsDesign()
+    //item point section design
+    itemPointDesign()
   }
 
 
@@ -960,7 +999,7 @@ import poll from "./poll";
     callback,
     minElements = 1,
     isVariable = false,
-    timer = 10000,
+    timer = 15000,
     frequency = 25
   ) {
     let elements = isVariable
