@@ -11,6 +11,12 @@ import poll from "./poll";
     variationId: 'Var_B',
   };
 
+  //getSession data
+  function getSessionData() {
+    const sessionData = sessionStorage.getItem("reservation.store");
+    return sessionData ? JSON.parse(sessionData).state : {};
+  }
+
   // 0. API Interceptor for /calculate API
   if (!window.mvtFetchInterceptorSetup) {
     window.mvtFetchInterceptorSetup = true;
@@ -32,9 +38,35 @@ import poll from "./poll";
       });
     };
   }
+  //  item price design
+  const itemPriceDesign = () => {
+    const mainControl = document.querySelector('[data-mvt-injected="true"]');
+    const protectionPriceEls = mainControl.querySelectorAll('[data-testid="checkout-ancillaries-item-price"]')
+    if (protectionPriceEls.length) {
+      protectionPriceEls.forEach((el, idx) => {
+        const oldPrice = el.querySelector('span');
+        if (oldPrice && /\d/.test(oldPrice.textContent)) {
+          oldPrice.style.display = 'none';
+        }
+        const priceParenEl = el.closest('.MuiStack-root');
+        priceParenEl.setAttribute('data-mvt-testid', 'protection-price-wrapper');
+        const pTag = el.querySelector('p');
+        if (pTag) {
+          const text = pTag.textContent.trim();
+          const match = text.match(/^(.*?)\s*\/\s*(.*?)$/);
+          if (match) {
+            const [, price, period] = match;
+            pTag.innerHTML = '<span class="mvt-price">' + price + '/</span>'
+              + '<span class="mvt-period">' + period + '</span>';
+          }
+        }
+      })
+    }
+  }
 
   // Placeholder readDom function
   const includeItemDesign = () => {
+    console.log('===> index.js:69 ~ test', );
     poll(
       () => document.querySelectorAll('[data-mvt-injected="true"] [data-testid="ancillary-item-card"]'),
       () => {
@@ -46,7 +78,7 @@ import poll from "./poll";
           if (items.length) {
             items.forEach((item, idx) => {
               console.log(item, "itemWithIndx")
-              const included = item.querySelector('.MuiChip-outlined.MuiChip-sizeSmall.MuiChip-colorSuccess')
+              const included = item.querySelector('.MuiChip-outlined.MuiChip-sizeSmall.MuiChip-colorSuccess') || item.querySelector('[data-testid="checkout-ancillaries-item-included"]')
               console.log(included, "included")
               if (included) {
                 const mainItemCard = included.closest('[data-testid="ancillary-item-card"]');
@@ -63,6 +95,7 @@ import poll from "./poll";
                 }
               } else {
                 item.classList.remove('mvt-included-item-wrapper')
+                itemPriceDesign()
               }
             })
           }
@@ -100,22 +133,39 @@ import poll from "./poll";
     )
     // protection item design
     includeItemDesign()
-    poll(
-      () => document.querySelector('.mvt-decline-protection-card'),
-      () => {
-        const declinetProtSection = document.querySelector('.mvt-decline-protection-card')
 
-        if (declinetProtSection) {
-          const declinetProtCheckbox = declinetProtSection.querySelector('.mvt-decline-protection-checkbox')
-          if (declinetProtCheckbox) {
-            const thankMsg = document.querySelector('[data-mvt-testid="protection-thanks-message"]');
-            if (thankMsg.classList.contains('show-thanks-msg')) {
-              declinetProtCheckbox.checked = false;
-            }
-          }
-        }
-      }
-)
+    //no protection 
+    // poll(
+    //   () => document.querySelector('.mvt-decline-protection-card'),
+    //   () => {
+    //     const sessionData = getSessionData();
+    //     const selectedBundle = sessionData && sessionData.protectionBundleCode || "";
+    //     const isNoProt = selectedBundle && selectedBundle.includes("No");
+    //     const protBundle = document.querySelector('[data-mvt-bundlename="Essential Protection"]') || document.querySelector('[data-mvt-bundlename="Basic Cover"]');
+    //     const declinetProtSection = document.querySelector('.mvt-decline-protection-card')
+    //     const mvtDeclineProtectionWarning = document.querySelector('.mvt-decline-protection-warning');
+    //     const declincePriceEl = document.querySelector('.mvt-decline-price');
+    //     if (declinetProtSection) {
+    //       const declinetProtCheckbox = declinetProtSection.querySelector('.mvt-decline-protection-checkbox')
+    //       if (declinetProtCheckbox) {
+    //         if (isNoProt) {
+    //           declinetProtCheckbox.checked = true;
+    //           protBundle.querySelector('input[type="radio"]').checked = false;
+    //           protBundle.querySelector('input[type="checkbox"]').checked = false;
+    //         } else {
+    //           declinetProtCheckbox.checked = false;
+    //         }
+    //       }
+    //       if (isNoProt && mvtDeclineProtectionWarning) {
+    //         mvtDeclineProtectionWarning.classList.add('show-warning')
+    //         declincePriceEl.classList.add('show-price')
+    //       } else {
+    //         mvtDeclineProtectionWarning.classList.remove('show-warning')
+    //         declincePriceEl.classList.remove('show-price')
+    //       }
+    //     }
+    //   }
+    // )
 
   }
 
@@ -146,8 +196,17 @@ import poll from "./poll";
   }
 
   const protectionBundleDesign = (mainControl) => {
+    const protBundleEl = mainControl.querySelector('[data-mvt-testid="protection-bundle-section-container"]');
     const protectionBundle = mainControl.querySelector('[data-mvt-bundlename="Basic Cover"]') || mainControl.querySelector('[data-mvt-bundlename="Essential Protection"]')
     if (protectionBundle) {
+      //bundle top heading
+      if (!mainControl.querySelector('[data-mvt-testid="protection-bundle-title"]')) {
+        const bundleTitle = document.createElement('p');
+        bundleTitle.setAttribute('data-mvt-testid', 'protection-bundle-title');
+        bundleTitle.textContent = 'Select a protection option or no protection to continue.';
+        protBundleEl.insertAdjacentElement('afterbegin', bundleTitle);
+      }
+      // bundle price 
       const priceEl = protectionBundle.querySelector('[data-testid="checkout-ancillaries-bundle-price"]');
       const priceParentEl = priceEl.closest('.MuiBox-root');
       console.log('===> index.js:80 ~ priceParentEl', priceParentEl);
@@ -168,10 +227,13 @@ import poll from "./poll";
         checkboxElFromDom.checked = true;
       }
       const protectionBundleSection = mainControl.querySelector('[data-mvt-testid="protection-bundle-section-container"]')
+      console.log('===> index.js:229 ~ protectionBundleSection', protectionBundleSection);
       if (!mainControl.querySelector('[data-mvt-testid="protection-thanks-message"]')) {
         var thankMsgHtml = '<div data-mvt-testid="protection-thanks-message">'
-          + '<p class="check-icon">' + thankSvg + '</p> '
-          + '<p class="bold-text">Your protection is selected.</p> '
+          + '<div class="message-header">'
+          + '<p class="check-icon">' + thankSvg + '</p>'
+          + '<p class="bold-text">Your protection is selected.</p>'
+          + '</div>'
           + '<p class="light-text">Thank you for protecting your trip.</p>'
           + '</div>';
         protectionBundleSection.insertAdjacentHTML('afterend', thankMsgHtml);
@@ -263,7 +325,7 @@ import poll from "./poll";
           featuresText = featuresText.replace(/\s*\([^)]*\)/g, '');
         }
         console.log('===> index.js:215 ~ featuresText', featuresText);
-        bundleElTopRow.insertAdjacentHTML('afterend', '<p class="features-text">' + featuresText + '</p>')
+        bundleElTopRow.insertAdjacentHTML('afterend', '<p class="features-text"> Includes ' + featuresText + '</p>')
 
         // body third row
         const bundleThirdRow = protectionBundle.querySelector('[data-mvt-testid="bundle-content"] > div:nth-child(4)')
@@ -332,6 +394,64 @@ import poll from "./poll";
   const protectionItemDesign = () => {
     const mainControl = document.querySelector('[data-mvt-injected="true"]');
     console.log('===> index.js:257 ~ mainControl', mainControl);
+    poll(
+      () => document.querySelector('[data-mvt-testid="protection-item-section"]'),
+      () => {
+        const protSubHeading = document.querySelector('[data-mvt-testid="protection-bundle-section-container"]') || document.querySelector('[data-mvt-testid="protection-sub-heading"]');
+        const protItemSection = document.querySelector('[data-mvt-testid="protection-item-section"]');
+        console.log('===> index.js:400 ~ protItemSection', protItemSection);
+        protItemSection.setAttribute('data-mvt-testid', 'protection-item-section');
+        //protection item header html
+        if(!document.querySelector('.mvt-prot-item-section-wrapper')){
+          var protItemHeaderHtml =
+            '<div class="mvt-prot-item-section-wrapper">' +
+              '<div class="mvt-prot-item-header collapse">' +
+                '<div class="mvt-prot-item-header-left">' +
+                  '<p class="mvt-prot-item-header-title">More protection options</p>' +
+                  '<p class="mvt-prot-item-header-subtitle">Add additional coverage for extra peace of mind.</p>' +
+                '</div>' +
+                '<div class="mvt-prot-item-header-right">' +
+                  '<span>' + chevronSvg + '</span>' +
+                '</div>' +
+              '</div>' +
+            '</div>';
+          protSubHeading.insertAdjacentHTML('afterend', protItemHeaderHtml)
+          // add click listener
+          const mvtProtItemHeader = document.querySelector('.mvt-prot-item-header');
+          mvtProtItemHeader.insertAdjacentElement("afterend", protItemSection)
+          // protItemSection.classList.add('show-section');
+          if (mvtProtItemHeader) {
+            mvtProtItemHeader.addEventListener("click", () => {
+              console.log('===> index.js:482 ~ ', protItemSection);
+              if (protItemSection.classList.contains("show-section")) {
+                protItemSection.classList.remove("show-section");
+                mvtProtItemHeader.classList.add('collapse')
+              } else {
+                protItemSection.classList.add("show-section");
+                mvtProtItemHeader.classList.remove('collapse')
+              }
+            })
+          }
+
+          const itemImgElements = protItemSection.querySelectorAll('[data-testid="image-component"]');
+          console.log('===> index.js:344 ~ itemImgElements', itemImgElements);
+          if (itemImgElements.length) {
+            itemImgElements.forEach(item => {
+              const protItemHeader = item.closest('.MuiBox-root.mui-19idom');
+              console.log('===> index.js:348 ~ protItemHeader', protItemHeader);
+              protItemHeader.classList.add('prot-item-header')
+              item.nextElementSibling.textContent = item.nextElementSibling.textContent.replace(/\s*\([^)]*\)/g, '')
+              protItemHeader.nextElementSibling?.tagName === 'P' &&
+                protItemHeader.nextElementSibling.setAttribute(
+                  'data-mvt-testid',
+                  'protection-item-description'
+                );
+            })
+          }
+        }
+        includeItemDesign()
+      }
+    )
     // description
     poll(
       () => mainControl.querySelectorAll('[data-mvt-testid="protection-item-description"]') && mainControl.querySelectorAll('[data-mvt-testid="protection-item-description"]').length,
@@ -369,32 +489,7 @@ import poll from "./poll";
             })
           }
           // price ui adjustment
-          const protectionPriceEls = mainControl.querySelectorAll('[data-testid="checkout-ancillaries-item-price"]')
-          console.log('===> index.js:296 ~ protectionPriceEls', protectionPriceEls);
-          if (protectionPriceEls.length) {
-            protectionPriceEls.forEach((el, idx) => {
-              console.log('===> index.js:300 ~ ',);
-              const oldPrice = el.querySelector('span');
-              if (oldPrice && /\d/.test(oldPrice.textContent)) {
-                oldPrice.style.display = 'none';
-              }
-              const priceParenEl = el.closest('.MuiStack-root');
-              priceParenEl.setAttribute('data-mvt-testid', 'protection-price-wrapper');
-              console.log('===> index.js:301 ~ ', priceParenEl);
-              const pTag = el.querySelector('p');
-              console.log('===> index.js:303 ~ pTag', pTag);
-              if (pTag) {
-                const text = pTag.textContent.trim();
-                const match = text.match(/^(.*?)\s*\/\s*(.*?)$/);
-                if (match) {
-                  const [, price, period] = match;
-                  pTag.innerHTML = '<span class="mvt-price">' + price + '/</span>'
-                    + '<span class="mvt-period">' + period + '</span>';
-                }
-              }
-            })
-          }
-
+          itemPriceDesign()
         }
       }
     )
@@ -447,46 +542,64 @@ import poll from "./poll";
         if (mainControl && bundleToClick && !mainControl.querySelector('.mvt-decline-protection-card')) {
           var declineProtectionCardHtml =
             '<div class="mvt-decline-protection-card">' +
-              '<div class="mvt-decline-protection-icon">' +
-                '<span>' + declinetProtSvg + '</span>' +
-                '<span class="decline-prot-text">Decline Protection</span>' +
-              '</div>' +
-              '<div class="mvt-decline-protection-text">' +
-                '<p>You won’t have any coverage for damage, theft, liability or personal belongings. ​</p>' +
-              '</div>' +
-              '<div class="mvt-decline-protection-link">' +
-                '<div>' +
-                  '<span>No Additional Cost</span>' +
-                  '<span><input class="mvt-decline-protection-checkbox" type="checkbox"></span>' +
-                '</div>' +
-              '</div>' +
+            '<div class="mvt-decline-protection-icon">' +
+            '<span>' + declinetProtSvg + '</span>' +
+            '<span class="decline-prot-text">Decline Protection</span>' +
+            '</div>' +
+            '<div class="mvt-decline-protection-text">' +
+            '<p>You won’t have any coverage for damage, theft, liability or personal belongings. ​</p>' +
+            '</div>' +
+            '<div class="mvt-decline-protection-link">' +
+            '<div>' +
+            '<div class="mvt-no-add-cost-wrapper">' +
+            '<p class="mvt-decline-price"><span class="price-amount">$0.00 /</span><span class="per-day">day</span></p>' +
+            '<p class="no-additional-cost-text">No Additional Cost</p>' +
+            '</div>' +
+            '<span><input class="mvt-decline-protection-checkbox" type="checkbox"></span>' +
+            '</div>' +
+            '</div>' +
             '</div>' +
             '<div class="mvt-decline-protection-warning">' +
-              '<span>' + declineProWarningSvg + '</span>' +
-              '<span>Without protection you will be responsible for damage, theft, liability, medical expenses, or loss - up to the full value of the vehicle.</span>' +
+            '<p>' + declineProWarningSvg + '</p>' +
+            '<p>Without protection you will be responsible for damage, theft, liability, medical expenses, or loss - up to the full value of the vehicle.</p>' +
             '</div>';
-          const protItemSectionEl = document.querySelector('[data-mvt-testid="protection-item-section"]');
+          const protItemSectionEl = document.querySelector('.mvt-prot-item-section-wrapper');
           console.log('===> index.js:434 ~ protItemSectionEl', protItemSectionEl);
           if (protItemSectionEl) {
             protItemSectionEl.insertAdjacentHTML('afterend', declineProtectionCardHtml)
           }
         }
+
         const declinetProtCheckbox = document.querySelector('.mvt-decline-protection-checkbox');
-        console.log('===> index.js:464 ~ declinetProtCheckbox', declinetProtCheckbox);
+        const mvtDeclineProtectionWarning = document.querySelector('.mvt-decline-protection-warning');
+        const declincePriceEl = document.querySelector('.mvt-decline-price');
         if (declinetProtCheckbox) {
           declinetProtCheckbox.addEventListener('change', () => {
             console.log('===> index.js:458 ~ declinetProtCheckbox.checked', declinetProtCheckbox.checked);
             if (declinetProtCheckbox.checked) {
+              console.log('===> index.js:495 ~ bundleClick', bundleToClick);
               const radioInput = bundleToClick.querySelector('input[type="radio"]');
               if (radioInput) {
+                console.log('===> index.js:497 ~ ',);
                 const inputSpan = radioInput.closest('span');
 
                 // Click the span if it exists, otherwise click the input itself as a fallback
                 if (inputSpan) {
+                  console.log('===> index.js:502 ~ checkClick 1',);
                   inputSpan.click();
                 } else {
+                  console.log('===> index.js:505 ~ checkClick 2',);
                   radioInput.click();
                 }
+              }
+              if (mvtDeclineProtectionWarning) {
+                mvtDeclineProtectionWarning.classList.add('show-warning')
+                declincePriceEl.classList.add('show-price')
+              }
+            } else {
+              if (mvtDeclineProtectionWarning) {
+                mvtDeclineProtectionWarning.classList.remove('show-warning')
+                declincePriceEl.classList.remove('show-price')
               }
             }
           })
@@ -509,8 +622,8 @@ import poll from "./poll";
           var addOnSectionHeaderHtml = '<div class="mvt-add-on-section-wrap">'
             + '<div class="mvt-add-on-section-header">'
             + '<div class="mvt-add-on-section-header-left">'
-            + '<p class="mvt-add-on-section-header-title">Make Travel Easier</p>'
-            + '<p class="mvt-add-on-section-header-subtitle">Save time on the road with convenient rental extras.</p>'
+            + '<p class="mvt-add-on-section-header-title">Enhance your trip</p>'
+            + '<p class="mvt-add-on-section-header-subtitle">Customize your rental with helpful extras like fuel, tolls and additional drivers. </p>'
             + '</div>'
             + '<div class="mvt-add-on-section-header-right">'
             + '<span>' + chevronSvg + '</span>'
@@ -518,25 +631,28 @@ import poll from "./poll";
             + '</div>'
             + '</div>';
           addOnSectionHeading.insertAdjacentHTML('afterend', addOnSectionHeaderHtml)
+          const addOnSectionHeader = mainControl.querySelector('.mvt-add-on-section-header');
+          const addOnSectionWrapEl = mainControl.querySelector('.mvt-add-on-section-wrap');
+          console.log('===> index.js:422 ~ addOnSectionHeader', addOnSectionHeader);
+          if (addOnSectionHeader && addOnSectionContainer) {
+            addOnSectionHeader.insertAdjacentElement('afterend', addOnSectionContainer)
+
+            addOnSectionHeader.addEventListener('click', () => {
+              console.log('===> index.js:423 ~ ');
+              if (addOnSectionContainer.classList.contains("collapse")) {
+                console.log('===> index.js:572 ~ ',);
+                addOnSectionContainer.classList.remove('collapse')
+                addOnSectionHeader.classList.remove('chevron-up')
+                addOnSectionWrapEl.classList.remove('collapse')
+              } else {
+                addOnSectionContainer.classList.add('collapse')
+                addOnSectionHeader.classList.add('chevron-up')
+                addOnSectionWrapEl.classList.add('collapse')
+              }
+            })
+          }
         }
-        const addOnSectionHeader = mainControl.querySelector('.mvt-add-on-section-header');
-        const addOnSectionWrapEl = mainControl.querySelector('.mvt-add-on-section-wrap');
-        console.log('===> index.js:422 ~ addOnSectionHeader', addOnSectionHeader);
-        if (addOnSectionHeader && addOnSectionContainer) {
-          addOnSectionHeader.insertAdjacentElement('afterend', addOnSectionContainer)
-          addOnSectionHeader.addEventListener('click', () => {
-            console.log('===> index.js:423 ~ ');
-            if (addOnSectionContainer.classList.contains("collapse")) {
-              addOnSectionContainer.classList.remove('collapse')
-              addOnSectionHeader.classList.remove('chevron-up')
-              addOnSectionWrapEl.classList.remove('collapse')
-            } else {
-              addOnSectionContainer.classList.add('collapse')
-              addOnSectionHeader.classList.add('chevron-up')
-              addOnSectionWrapEl.classList.add('collapse')
-            }
-          })
-        }
+
         // CHANGE DESIGN
         const addOnCards = addOnSectionContainer.querySelectorAll('[data-testid="ancillary-item-card"]');
         console.log('===> index.js:432 ~ addOnCards', addOnCards);
@@ -558,10 +674,14 @@ import poll from "./poll";
               const detailsBtn = card.querySelector('.details-btn');
               console.log('===> index.js:450 ~ detailsBtn', detailsBtn);
               const cardDesc = detailsBtn.nextElementSibling;
+              console.log('===> index.js:675 ~ cardDesc', cardDesc);
               if (cardDesc) {
                 if (detailsBtn.nextElementSibling.tagName === 'P') {
                   cardDesc.classList.add('add-on-desc')
                   if (detailsBtn) {
+                    if (cardDesc.textContent.trim() === '') {
+                      detailsBtn.style.visibility = 'hidden'
+                    }
                     detailsBtn.addEventListener('click', (e) => {
                       e.stopPropagation();
                       console.log('===> index.js:454 ~ detailsBtn click');
@@ -583,18 +703,19 @@ import poll from "./poll";
               seeMoreDetailsBtn.closest('.MuiBox-root').style.display = 'none'
             }
 
-            const allCards = addOnSectionContainer.querySelectorAll('.MuiGrid2-root');
+            const allCards = addOnSectionContainer.querySelectorAll('.MuiGrid2-root:not(.MuiGrid2-container)');
             console.log('===> index.js:478 ~ allCards', allCards);
             if (allCards.length) {
               allCards.forEach((card, idx) => {
+                console.log('===> index.js:635 ~ idx', idx, card);
                 if (idx > 3) {
                   card.classList.add('mvt-extra-card')
                 }
               })
 
-              if (allCards.length > 3) {
+              if (allCards.length > 4) {
                 if (!mainControl.querySelector('.mvt-view-all-btn')) {
-                  var viewAllBtnHtml = '<div class="mvt-view-all-btn hide">View all add-on items</div>';
+                  var viewAllBtnHtml = '<div class="mvt-view-all-btn hide">View all add-ons</div>';
                   addOnSectionContainer.insertAdjacentHTML('afterend', viewAllBtnHtml);
                   const viewAllBtn = mainControl.querySelector('.mvt-view-all-btn');
                   console.log('===> index.js:495 ~ viewAllBtn', viewAllBtn);
@@ -629,6 +750,9 @@ import poll from "./poll";
         console.log('===> index.js:481 ~ itemWithQuantity', itemWithQuantity);
         if (itemWithQuantity.length) {
           itemWithQuantity.forEach(item => {
+            console.log('===> index.js:747 ~ itemPrice', item);
+            const oldPrice = item.querySelector('span');
+            if(oldPrice) oldPrice.style.display = 'none';
             const itemParent = item.closest('.MuiPaper-root.MuiPaper-outlined');
             console.log('===> index.js:485 ~ itemParent', itemParent);
             if (itemParent) {
@@ -648,6 +772,32 @@ import poll from "./poll";
               if (match) {
                 const [, price, period] = match;
                 pTag.innerHTML = '<span class="mvt-price">' + price + '/</span>'
+                  + '<span class="mvt-period">' + period + '</span>';
+              }
+            }
+          })
+        }
+      }
+    )
+    itemPriceDesign()
+  }
+
+  function itemPointDesign(){
+    poll(
+      () => document.querySelectorAll('[data-testid*="pay-with-points-section-"]'),
+      () => {
+        const pointSections = document.querySelectorAll('[data-testid*="pay-with-points-section-"]');
+        console.log('===> index.js:790 ~ pointSections', pointSections);
+        if (pointSections.length) {
+          pointSections.forEach(item => {
+            const label = item.querySelector('[data-testid*="pay-with-points-points-per-day-"]');
+            console.log('===> index.js:794 ~ label', label);
+            if(label){
+              const text = label.textContent.trim();
+              const match = text.match(/^(.*?)\s*\/\s*(.*?)$/);
+              if (match) {
+                const [, price, period] = match;
+                label.innerHTML = '<span class="mvt-price">' + price + '/</span>'
                   + '<span class="mvt-period">' + period + '</span>';
               }
             }
@@ -679,19 +829,24 @@ import poll from "./poll";
     })
     // heading title
     const mainHeadingEl = mainControl.querySelectorAll('h6');
-    mainHeadingEl.forEach((el, idx) => {
-      if (idx === 0) {
+    mainHeadingEl.forEach((el) => {
+      if (el.textContent === 'Choose your protection') {
         el.setAttribute('data-mvt-testid', 'protection-title-heading')
-        let protectionBundleSectin = el.nextElementSibling;
+        let protectionSection = el.nextElementSibling;
         if (
-          protectionBundleSectin &&
-          (protectionBundleSectin.tagName === 'P' ||
-            protectionBundleSectin.getAttribute('data-mvt-testid') === 'protection-sub-heading')
+          protectionSection &&
+          (protectionSection.tagName === 'P' ||
+            protectionSection.getAttribute('data-mvt-testid') === 'protection-sub-heading')
         ) {
-          protectionBundleSectin = protectionBundleSectin.nextElementSibling;
+          protectionSection = protectionSection.nextElementSibling;
+          console.log('===> index.js:739 ~ protectionBundleSection', protectionSection);
         }
-        if (protectionBundleSectin) protectionBundleSectin.setAttribute('data-mvt-testid', 'protection-bundle-section-container');
-      } else if (idx === 1) {
+        if (protectionSection.querySelector('[data-testid="ancillary-bundle-card"]')) {
+          protectionSection.setAttribute('data-mvt-testid', 'protection-bundle-section-container');
+        } else if (protectionSection.querySelector('[data-testid="ancillary-item-card"]')) {
+          protectionSection.setAttribute('data-mvt-testid', 'protection-item-section');
+        }
+      } else if (el.textContent === 'Customize with add-ons') {
         el.setAttribute('data-mvt-testid', 'add-on-title-heading')
         el.style.display = 'none';
         if (expendButtons.length > 1) {
@@ -728,67 +883,18 @@ import poll from "./poll";
     const protExpBtn = document.querySelector('[data-mvt-testid="protection-expand-button"]');
     const addOnExpBtn = document.querySelector('[data-mvt-testid="add-on-expand-button"]');
     console.log('===> index.js:645 ~ addOnExpBtn', addOnExpBtn);
+
     setTimeout(() => {
       console.log('===> index.js:315 ~ protExpBtn', protExpBtn);
       if (protExpBtn) {
-        const protItemSection = protExpBtn.nextElementSibling;
-        console.log('===> index.js:318 ~ protItemSection', protItemSection);
-        if (!protItemSection.hasAttribute('data-mvt-testid')) {
-          protItemSection.setAttribute('data-mvt-testid', 'protection-item-section');
-          //protection item header html
-          var protItemHeaderHtml = '<div class="mvt-prot-item-header">'
-            + '<div class="mvt-prot-item-header-left">'
-            + '<p class="mvt-prot-item-header-title">Customize Your Protection</p>'
-            + '<p class="mvt-prot-item-header-subtitle">Select coverage that is right for you.</p>'
-            + '</div>'
-            + '<div class="mvt-prot-item-header-right">'
-            + '<span>' + chevronSvg + '</span>'
-            + '</div>'
-            + '</div>';
-          protItemSection.insertAdjacentHTML('afterbegin', protItemHeaderHtml)
-
-          // add click listener
-          const mvtProtItemHeader = protItemSection.querySelector('.mvt-prot-item-header');
-          const protItemGridSec = protItemSection.querySelector('.MuiGrid2-container');
-          console.log('===> index.js:480 ~ ', protItemGridSec);
-          if (protItemGridSec) protItemGridSec.classList.add("show-section")
-          if (mvtProtItemHeader) {
-            mvtProtItemHeader.addEventListener("click", () => {
-              console.log('===> index.js:482 ~ ', protItemGridSec);
-              if (protItemGridSec.classList.contains("show-section")) {
-                protItemGridSec.classList.remove("show-section");
-                mvtProtItemHeader.classList.add('collapse')
-              } else {
-                protItemGridSec.classList.add("show-section");
-                mvtProtItemHeader.classList.remove('collapse')
-              }
-            })
-          }
-
-        }
-
-        const protItemGridContainer = protItemSection.querySelector('[data-mvt-testid="protection-item-section"] .MuiGrid2-container');
-        console.log('===> index.js:340 ~ protItemGridContainer', protItemGridContainer);
-        if (protItemGridContainer) {
-          protItemGridContainer.setAttribute('data-mvt-testid', 'protection-item-grid-container')
-          const itemImgElements = protItemGridContainer.querySelectorAll('[data-testid="image-component"]');
-          console.log('===> index.js:344 ~ itemImgElements', itemImgElements);
-          if (itemImgElements.length) {
-            itemImgElements.forEach(item => {
-              const protItemHeader = item.closest('.MuiBox-root.mui-19idom');
-              console.log('===> index.js:348 ~ protItemHeader', protItemHeader);
-              protItemHeader.classList.add('prot-item-header')
-              item.nextElementSibling.textContent = item.nextElementSibling.textContent.replace(/\s*\([^)]*\)/g, '')
-              protItemHeader.nextElementSibling?.tagName === 'P' &&
-                protItemHeader.nextElementSibling.setAttribute(
-                  'data-mvt-testid',
-                  'protection-item-description'
-                );
-            })
-          }
+        const protItemSectionParent = protExpBtn.nextElementSibling;
+        console.log('===> index.js:318 ~ protItemSection', protItemSectionParent);
+        if (protItemSectionParent) {
+          protItemSectionParent.setAttribute('data-mvt-testid', 'prot-item-section-outer')
+          protItemSectionParent.querySelector('.MuiGrid2-root').setAttribute('data-mvt-testid', 'protection-item-section');
         }
         // hide see more details button
-        const seeMoreDetailsBtns = protItemGridContainer.querySelectorAll('[data-testid="checkout-ancillaries-see-more-details"]');
+        const seeMoreDetailsBtns = protItemSectionParent.querySelectorAll('[data-testid="checkout-ancillaries-see-more-details"]');
         console.log('===> index.js:354 ~ seeMoreDetailsBtns', seeMoreDetailsBtns);
         if (seeMoreDetailsBtns && seeMoreDetailsBtns.length) {
           seeMoreDetailsBtns.forEach(el => {
@@ -804,7 +910,6 @@ import poll from "./poll";
         if (addOnItemSection) {
           addOnItemSection.setAttribute('data-mvt-testid', 'add-on-item-section-wrapper')
           addOnItemSection.querySelector('.MuiGrid2-root').setAttribute('data-mvt-testid', 'add-on-item-section');
-          // addOnItemsDesign();
         }
       }
     }, 1500)
@@ -817,20 +922,13 @@ import poll from "./poll";
     const protSectionTitle = mainControl.querySelector('[data-mvt-testid="protection-title-heading"]');
     console.log('===> index.js:141 ~ protSectionTitle', protSectionTitle);
     if (protSectionTitle) {
+      protSectionTitle.textContent = 'Choose your protection'
       if (!mainControl.querySelector('[data-mvt-testid="protection-sub-heading"]')) {
         const protSubHeading = document.createElement('p');
         protSubHeading.setAttribute('data-mvt-testid', 'protection-sub-heading')
         protSubHeading.textContent = 'Add a protection for peace of mind on your trip.';
         protSectionTitle.insertAdjacentElement('afterend', protSubHeading)
       }
-    }
-    const protBundleEl = mainControl.querySelector('[data-mvt-testid="protection-bundle-section-container"]');
-    console.log('===> index.js:149 ~ ', protBundleEl);
-    if (!mainControl.querySelector('[data-mvt-testid="protection-bundle-title"]')) {
-      const bundleTitle = document.createElement('p');
-      bundleTitle.setAttribute('data-mvt-testid', 'protection-bundle-title');
-      bundleTitle.textContent = 'Select a protection option or no protection to continue.';
-      protBundleEl.insertAdjacentElement('afterbegin', bundleTitle);
     }
 
     protectionBundleDesign(mainControl)
@@ -840,6 +938,8 @@ import poll from "./poll";
     // noProtectionDesign()
     // Add-on items design
     addOnItemsDesign()
+    //item point section design
+    itemPointDesign()
   }
 
 
@@ -856,12 +956,12 @@ import poll from "./poll";
     document.body.classList.add(CONFIG.injectedClass);
 
     poll(
-      () => document.querySelector(CONFIG.targetElement) && [...document.querySelectorAll('h6')].find(el => el.textContent === 'Choose your protection'),
+      () => document.querySelector(CONFIG.targetElement) && [...document.querySelectorAll('h6')].find(el => el.textContent === 'Choose your protection' || el.textContent === 'Customize with add-ons'),
       () => {
         try {
           const targetElement = document.querySelector(CONFIG.targetElement);
           if (targetElement) {
-            const protectionHeading = [...document.querySelectorAll('h6')].find(el => el.textContent === 'Choose your protection');
+            const protectionHeading = [...document.querySelectorAll('h6')].find(el => el.textContent === 'Choose your protection' || el.textContent === 'Customize with add-ons');
             if (!protectionHeading) throw new Error("protectionHeading not found")
             const mainContainer = protectionHeading.closest('div');
             if (!mainContainer) throw new Error("mainContainer not found")
@@ -899,7 +999,7 @@ import poll from "./poll";
     callback,
     minElements = 1,
     isVariable = false,
-    timer = 10000,
+    timer = 15000,
     frequency = 25
   ) {
     let elements = isVariable

@@ -1,5 +1,5 @@
 // poll function
-export default function poll(t, i, o = !1, e = 15000, a = 25) {
+export default function poll(t, i, o = !1, e = 10000, a = 25) {
     e < 0 ||
         (t()
             ? i()

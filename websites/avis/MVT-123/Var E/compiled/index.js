@@ -1,20 +1,6 @@
-const thankSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">\
-<path fill-rule="evenodd" clip-rule="evenodd" d="M18.6668 2.02236C16.6935 0.703788 14.3734 0 12 0C8.8174 0 5.76515 1.26428 3.51472 3.51472C1.26428 5.76515 0 8.8174 0 12C0 14.3734 0.703788 16.6935 2.02236 18.6668C3.34094 20.6402 5.21509 22.1783 7.4078 23.0866C9.60051 23.9948 12.0133 24.2324 14.3411 23.7694C16.6689 23.3064 18.807 22.1635 20.4853 20.4853C22.1635 18.807 23.3064 16.6689 23.7694 14.3411C24.2324 12.0133 23.9948 9.60051 23.0866 7.4078C22.1783 5.21509 20.6402 3.34094 18.6668 2.02236ZM5.8401 12.6082L9.60011 16.6014C9.66675 16.6722 9.74739 16.7281 9.83692 16.7659C9.92645 16.8038 10.0229 16.823 10.1201 16.8216C10.2997 16.822 10.4727 16.7528 10.6031 16.6292C10.6336 16.6008 10.6614 16.5699 10.6861 16.5364L14.3451 12.6527C14.3669 12.6346 14.3876 12.6151 14.4071 12.5946L18.1671 8.60139C18.231 8.53391 18.281 8.45434 18.3142 8.3675C18.3473 8.28067 18.363 8.18844 18.3603 8.09553C18.3576 8.00262 18.3365 7.91126 18.2984 7.82649C18.2603 7.74172 18.2058 7.66505 18.1381 7.60139C18.0705 7.53753 17.9911 7.48749 17.9042 7.45442C17.8173 7.42135 17.7248 7.40573 17.6318 7.40852C17.5389 7.41131 17.4475 7.4328 17.3627 7.47102C17.278 7.50924 17.2017 7.56387 17.1381 7.63166L13.4211 11.5784C13.4015 11.5951 13.3827 11.613 13.3651 11.6317L10.1141 15.0833L6.87006 11.6385C6.80691 11.57 6.73072 11.5146 6.64594 11.4759C6.56117 11.4372 6.46955 11.4162 6.37641 11.4134C6.28327 11.4106 6.19047 11.4263 6.10352 11.4598C6.01658 11.4933 5.93722 11.5436 5.87006 11.6082C5.80155 11.6714 5.74633 11.7476 5.70765 11.8323C5.66897 11.9171 5.64764 12.0087 5.64485 12.1019C5.64205 12.195 5.65789 12.2879 5.69141 12.3748C5.72494 12.4618 5.77549 12.5411 5.8401 12.6082Z" fill="#46791D"/>\
-</svg>';
-
-const bundleCarSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="25" height="26" viewBox="0 0 25 26" fill="none">\
-<path d="M16.3016 7.90797L16.8107 8.45508C16.8709 8.51995 16.9438 8.5717 17.0249 8.60712C17.106 8.64254 17.1935 8.66085 17.282 8.66092C17.3704 8.66047 17.4578 8.64198 17.5389 8.60659C17.6199 8.57119 17.6929 8.51964 17.7533 8.45508L18.2624 7.90811L21.3619 4.60379L21.363 4.60162C21.4226 4.54034 21.4695 4.46783 21.5009 4.3883C21.5322 4.30876 21.5475 4.22379 21.5458 4.13831C21.5441 4.05282 21.5254 3.96854 21.4908 3.89034C21.4562 3.81213 21.4065 3.74158 21.3444 3.68275C21.2824 3.62393 21.2093 3.57802 21.1293 3.54768C21.0494 3.51734 20.9642 3.50318 20.8788 3.50602C20.7933 3.50885 20.7093 3.52863 20.6316 3.56421C20.5538 3.59978 20.4839 3.65044 20.4259 3.71325L17.2841 7.06091L15.9569 5.64167C15.8986 5.57881 15.8284 5.52819 15.7503 5.49274C15.6722 5.4573 15.5879 5.43775 15.5022 5.43523C15.4165 5.43271 15.3311 5.44727 15.2511 5.47806C15.1711 5.50885 15.098 5.55526 15.0361 5.61459C14.9138 5.73393 14.8426 5.89607 14.8376 6.06685C14.8325 6.23762 14.894 6.40369 15.009 6.53005L16.3016 7.90797Z" fill="black"/>\
-<path d="M17.2852 20.532C17.406 20.4102 17.4737 20.2457 17.4737 20.0743C17.4745 19.9891 17.4584 19.9047 17.4264 19.8258C17.3943 19.747 17.3469 19.6752 17.287 19.6148C17.2271 19.5543 17.1557 19.5064 17.0771 19.4737C16.9985 19.441 16.9142 19.4241 16.8291 19.4242H7.97134C7.88598 19.4242 7.80145 19.441 7.72259 19.4737C7.64372 19.5064 7.57206 19.5543 7.5117 19.6146C7.45134 19.675 7.40346 19.7466 7.37079 19.8255C7.33813 19.9044 7.32131 19.9889 7.32131 20.0743C7.32131 20.1596 7.33813 20.2441 7.37079 20.323C7.40346 20.4019 7.45134 20.4735 7.5117 20.5339C7.57206 20.5943 7.64372 20.6421 7.72259 20.6748C7.80145 20.7075 7.88598 20.7243 7.97134 20.7243H16.8291C17.0006 20.7229 17.1645 20.6537 17.2852 20.532Z" fill="black"/>\
-<path fill-rule="evenodd" clip-rule="evenodd" d="M24.8861 18.1667L24.9132 17.6142V17.6088L24.9186 17.5113C24.9197 17.4823 24.9179 17.4532 24.9132 17.4246V17.3921C24.8902 16.7492 24.7304 16.1186 24.4446 15.5423C24.1588 14.966 23.7535 14.4572 23.2556 14.0499L23.7756 13.4594C23.8319 13.3958 23.875 13.3216 23.9026 13.2413C23.9302 13.161 23.9417 13.076 23.9364 12.9912C23.9312 12.9064 23.9093 12.8235 23.872 12.7472C23.8347 12.6708 23.7827 12.6026 23.719 12.5464C23.6554 12.4902 23.5813 12.447 23.5009 12.4194C23.4206 12.3918 23.3356 12.3803 23.2508 12.3856C23.166 12.3909 23.0831 12.4128 23.0068 12.4501C22.9305 12.4874 22.8622 12.5393 22.806 12.603L22.4377 13.0201L21.0726 10.4362C22.2509 9.30407 23.0847 7.86158 23.4777 6.27549C23.856 4.88252 24.0007 3.43643 23.9057 1.99612C23.8925 1.83835 23.8218 1.69093 23.7069 1.58201C23.592 1.4731 23.441 1.41033 23.2827 1.40568C22.3402 1.37318 19.5932 1.08608 18.2498 0.121867C18.1403 0.0426458 18.0086 0 17.8734 0C17.7382 0 17.6064 0.0426458 17.4969 0.121867C15.9716 1.21206 12.8645 1.3834 12.4991 1.40354C12.4778 1.40472 12.464 1.40568 12.464 1.40568C12.3058 1.41033 12.1548 1.4731 12.0399 1.58201C11.925 1.69093 11.8542 1.83835 11.8411 1.99612C11.7524 3.43632 11.8969 4.88137 12.269 6.27549C12.4183 6.83506 12.6158 7.38061 12.8595 7.90599H6.1311C5.83574 7.90964 5.54709 7.99452 5.29675 8.15131C5.04642 8.3081 4.84407 8.53076 4.71186 8.7949L2.48551 13.0201L2.11716 12.603C2.06174 12.5386 1.99404 12.4859 1.91801 12.448C1.84198 12.41 1.75915 12.3876 1.67437 12.3821C1.58959 12.3765 1.50455 12.3879 1.42422 12.4156C1.3439 12.4433 1.26991 12.4868 1.20657 12.5434C1.07893 12.658 1.00122 12.8181 0.990088 12.9893C0.978952 13.1605 1.03527 13.3292 1.14698 13.4594L1.67297 14.0553C1.17443 14.4613 0.76819 14.9689 0.481334 15.5443C0.194477 16.1197 0.0335995 16.7496 0.00943044 17.3921C0.00943044 17.3957 0.00882924 17.3993 0.00822771 17.4029C0.00702396 17.4102 0.00581919 17.4174 0.00943044 17.4246C0.00492366 17.4642 0.00311384 17.504 0.00401351 17.5438C0.00311968 17.5674 0.00493721 17.591 0.00943044 17.6142L0.0365151 18.1667C-0.044015 19.1932 0.00878814 20.2258 0.193606 21.2387V22.555C0.18991 23.0913 0.398228 23.6075 0.773217 23.991C0.914057 24.7981 1.2342 26.0007 2.61497 26.0007H5.6647C6.15222 26.0007 6.99185 26.0007 7.41437 25.3181H17.6069C18.0348 26.0007 18.8636 26.0007 19.3565 26.0007H22.3093C23.6906 26.0007 24.0102 24.7981 24.151 23.991C24.3385 23.8021 24.4867 23.5779 24.5871 23.3315C24.6875 23.085 24.7382 22.8211 24.7361 22.555V21.2387C24.911 20.2246 24.9619 19.1931 24.8877 18.1667H24.8861ZM17.8777 1.41597C19.3782 2.29351 21.5834 2.57519 22.6397 2.66728C22.6514 3.77916 22.5111 4.88743 22.2226 5.96131C21.9215 7.18987 21.3096 8.32042 20.4459 9.24451C20.1416 9.56626 19.7994 9.85 19.4269 10.0896C18.9471 10.4083 18.4258 10.6598 17.8777 10.8371C16.8843 10.5213 15.986 9.96121 15.2651 9.20822C14.8928 8.81887 14.574 8.38167 14.3172 7.90815C13.9732 7.29549 13.7074 6.64219 13.5257 5.96348C13.2388 4.88919 13.0967 3.78138 13.1032 2.66945C14.1655 2.57736 16.3648 2.29568 17.8761 1.41814L17.8777 1.41597ZM5.85483 9.4016C5.87895 9.34716 5.91738 9.30027 5.96603 9.26593C6.01467 9.23159 6.07172 9.21108 6.1311 9.20659H13.6021C14.5849 10.6263 16.0276 11.6633 17.6865 12.1426C17.7483 12.1595 17.812 12.1686 17.8761 12.1696C17.9384 12.1686 18.0003 12.1595 18.0602 12.1426C18.7577 11.9378 19.4219 11.6331 20.032 11.2379L21.2237 13.5028H3.6989L5.85483 9.4016ZM23.4452 21.0599C23.4408 21.0995 23.439 21.1393 23.4398 21.1791V22.555C23.4417 22.6653 23.4188 22.7746 23.3729 22.8749C23.327 22.9752 23.2591 23.064 23.1744 23.1346C23.1057 23.1835 23.0473 23.2456 23.0027 23.3172C22.9581 23.3888 22.9281 23.4685 22.9144 23.5517C22.7356 24.7006 22.5623 24.7006 22.3077 24.7006H19.3549C18.7049 24.7006 18.694 24.6573 18.6615 24.5219C18.6287 24.3795 18.5488 24.2523 18.4348 24.1609C18.3208 24.0695 18.1793 24.0192 18.0332 24.0181H6.98968C6.84356 24.0192 6.70209 24.0695 6.58808 24.1609C6.47407 24.2523 6.39419 24.3795 6.36132 24.5219C6.32881 24.6573 6.31798 24.7006 5.66795 24.7006H2.61551C2.36633 24.7006 2.19299 24.7006 2.00882 23.5517C1.99512 23.4685 1.96509 23.3888 1.92047 23.3172C1.87584 23.2456 1.8175 23.1835 1.7488 23.1346C1.66479 23.0636 1.5978 22.9747 1.55279 22.8744C1.50778 22.7741 1.48591 22.6649 1.48879 22.555V21.1796C1.48762 21.1397 1.48401 21.0999 1.47796 21.0604C1.3114 20.1768 1.25843 19.2756 1.32033 18.3785L4.40797 19.2566C4.46609 19.2735 4.52621 19.2827 4.58673 19.2837C4.74261 19.2825 4.89286 19.2253 5.0101 19.1226C5.12734 19.0198 5.20375 18.8784 5.22542 18.724C5.24709 18.5697 5.21256 18.4127 5.12814 18.2816C5.04371 18.1506 4.91501 18.0543 4.76549 18.0102L1.33604 17.0351C1.42121 16.5846 1.59485 16.1553 1.84691 15.7723C2.09898 15.3892 2.42446 15.0599 2.80456 14.8034H22.1235C22.5036 15.0593 22.8287 15.3885 23.0799 15.7717C23.331 16.155 23.5031 16.5845 23.5861 17.0351L20.162 18.0102C20.0129 18.0541 19.8844 18.15 19.7999 18.2806C19.7154 18.4111 19.6805 18.5676 19.7016 18.7217C19.7226 18.8757 19.7982 19.0172 19.9146 19.1203C20.0309 19.2234 20.1804 19.2814 20.3359 19.2837C20.3964 19.2827 20.4565 19.2735 20.5147 19.2566L23.6077 18.3731C23.6624 19.2722 23.6078 20.174 23.4452 21.0599Z" fill="black"/>\
-</svg>';
-
 const mostPopularSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="9" height="9" viewBox="0 0 9 9" fill="none">\
 <path d="M4.25212 5.26674L6.39619 2.99031L6.39693 2.98881C6.43818 2.94659 6.4706 2.89664 6.49231 2.84185C6.51401 2.78705 6.52457 2.72851 6.52338 2.66962C6.52218 2.61073 6.50925 2.55266 6.48534 2.49879C6.46143 2.44491 6.42701 2.3963 6.38408 2.35578C6.34115 2.31526 6.29057 2.28363 6.23527 2.26273C6.17996 2.24182 6.12104 2.23207 6.06192 2.23402C6.0028 2.23598 5.94466 2.2496 5.89087 2.27411C5.83708 2.29862 5.78872 2.33352 5.74858 2.37679L3.57491 4.68308L2.65673 3.70533C2.61638 3.66202 2.56778 3.62715 2.51377 3.60273C2.45975 3.57831 2.40139 3.56484 2.3421 3.5631C2.2828 3.56137 2.22375 3.5714 2.16839 3.59261C2.11302 3.61383 2.06245 3.6458 2.01962 3.68667C1.93503 3.76889 1.8858 3.88059 1.88231 3.99824C1.87881 4.11589 1.92132 4.2303 2.00088 4.31735L2.89546 5.26674L3.24744 5.64428C3.28908 5.68897 3.33952 5.72463 3.39562 5.74903C3.45172 5.77343 3.51227 5.78605 3.57349 5.78609C3.63467 5.78578 3.69514 5.77305 3.7512 5.74866C3.80726 5.72428 3.85774 5.68876 3.89954 5.64428L4.25212 5.26674Z" fill="white"/>\
 <path fill-rule="evenodd" clip-rule="evenodd" d="M0.314476 4.33562C0.766086 6.02173 2.37865 7.90162 4.0732 8.38907C4.11608 8.40079 4.16028 8.40708 4.20474 8.40778C4.24797 8.40707 4.29092 8.40078 4.33252 8.38907C6.06322 7.88322 7.66384 6.05327 8.09124 4.33562C8.35374 3.37324 8.45407 2.37417 8.38815 1.37908C8.37905 1.27008 8.32995 1.16823 8.25023 1.09298C8.1705 1.01774 8.06574 0.974369 7.95594 0.971157C7.30199 0.948702 5.39613 0.750352 4.46406 0.0841954C4.38806 0.0294632 4.29665 0 4.20286 0C4.10906 0 4.01766 0.0294632 3.94165 0.0841954C2.88341 0.837393 0.727622 0.955763 0.474124 0.969682L0.449776 0.971157C0.339977 0.974369 0.235213 1.01774 0.155489 1.09298C0.0757642 1.16823 0.0266652 1.27008 0.017567 1.37908C-0.0439414 2.37409 0.0563182 3.37245 0.314476 4.33562ZM7.22056 4.10014L7.21572 4.1196C7.04404 4.80953 6.62083 5.56747 6.03252 6.21332C5.47932 6.82061 4.83094 7.27346 4.20223 7.48803C3.59849 7.28222 2.95708 6.82837 2.39771 6.21046C1.80355 5.55412 1.36851 4.78553 1.18601 4.10416C0.987969 3.36527 0.892791 2.60329 0.902704 1.83987L0.926244 1.83784C1.18381 1.81533 1.53886 1.77674 1.933 1.71108C2.59322 1.6011 3.49142 1.39618 4.20286 0.983826C4.79687 1.32732 5.52948 1.52758 6.13577 1.64948C6.64202 1.75128 7.1297 1.81139 7.50474 1.84286C7.51695 2.60418 7.42133 3.36405 7.22056 4.10014Z" fill="white"/>\
-</svg>';
-
-const greenCheck = '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" fill="none">\
-<path fill-rule="evenodd" clip-rule="evenodd" d="M14.0001 1.51677C12.5201 0.527841 10.78 0 9 0C6.61305 0 4.32387 0.948211 2.63604 2.63604C0.948211 4.32387 0 6.61305 0 9C0 10.78 0.527841 12.5201 1.51677 14.0001C2.50571 15.4802 3.91131 16.6337 5.55585 17.3149C7.20038 17.9961 9.00998 18.1743 10.7558 17.8271C12.5016 17.4798 14.1053 16.6226 15.364 15.364C16.6226 14.1053 17.4798 12.5016 17.8271 10.7558C18.1743 9.00998 17.9961 7.20038 17.3149 5.55585C16.6337 3.91131 15.4802 2.50571 14.0001 1.51677ZM4.38007 9.45617L7.20008 12.451C7.25007 12.5041 7.31054 12.546 7.37769 12.5745C7.44484 12.6029 7.51715 12.6173 7.59005 12.6162C7.7248 12.6165 7.85453 12.5646 7.95232 12.4719C7.97518 12.4506 7.99602 12.4275 8.01458 12.4023L10.7588 9.48949C10.7752 9.47594 10.7907 9.46133 10.8053 9.44591L13.6253 6.45104C13.6732 6.40044 13.7108 6.34075 13.7356 6.27563C13.7605 6.2105 13.7722 6.14133 13.7702 6.07165C13.7682 6.00196 13.7524 5.93344 13.7238 5.86987C13.6952 5.80629 13.6543 5.74879 13.6036 5.70104C13.5529 5.65314 13.4933 5.61561 13.4281 5.59081C13.363 5.56601 13.2936 5.5543 13.2239 5.55639C13.1542 5.55848 13.0856 5.5746 13.0221 5.60326C12.9585 5.63193 12.9012 5.6729 12.8536 5.72375L10.0658 8.68383C10.0511 8.69629 10.037 8.70973 10.0238 8.72375L7.58556 11.3125L5.15255 8.72887C5.10518 8.67749 5.04804 8.63593 4.98446 8.60693C4.92088 8.57792 4.85216 8.56215 4.78231 8.56005C4.71245 8.55795 4.64285 8.5697 4.57764 8.59484C4.51244 8.61998 4.45291 8.65772 4.40255 8.70617C4.35116 8.75354 4.30975 8.81068 4.28074 8.87426C4.25173 8.93784 4.23573 9.00655 4.23363 9.07641C4.23154 9.14626 4.24342 9.21591 4.26856 9.28112C4.29371 9.34633 4.33162 9.40581 4.38007 9.45617Z" fill="#46791D"/>\
 </svg>';
 
 const chevronSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="8" viewBox="0 0 16 8" fill="none">\
@@ -23,6 +9,10 @@ const chevronSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="8
 
 const whicheCheckSvg = '<svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 8 8" fill="none">\
 <path fill-rule="evenodd" clip-rule="evenodd" d="M6.22228 0.674121C5.56448 0.234596 4.79112 0 4 0C2.93913 0 1.92172 0.421427 1.17157 1.17157C0.421427 1.92172 0 2.93913 0 4C0 4.79112 0.234596 5.56448 0.674121 6.22228C1.11365 6.88008 1.73836 7.39277 2.46927 7.69552C3.20017 7.99827 4.00444 8.07748 4.78036 7.92314C5.55628 7.7688 6.26902 7.38784 6.82843 6.82843C7.38784 6.26902 7.7688 5.55628 7.92314 4.78036C8.07748 4.00444 7.99827 3.20017 7.69552 2.46927C7.39277 1.73836 6.88008 1.11365 6.22228 0.674121ZM1.9467 4.20274L3.20004 5.5338C3.22225 5.55738 3.24913 5.57602 3.27897 5.58865C3.30882 5.60127 3.34095 5.60768 3.37335 5.6072C3.43325 5.60732 3.4909 5.58428 3.53437 5.54307C3.54452 5.53362 3.55379 5.52331 3.56203 5.51215L4.7817 4.21755C4.78897 4.21153 4.79586 4.20504 4.80235 4.19818L6.05569 2.86713C6.077 2.84464 6.09367 2.81811 6.10472 2.78917C6.11577 2.76022 6.121 2.72948 6.1201 2.69851C6.1192 2.66754 6.11218 2.63709 6.09947 2.60883C6.08676 2.58057 6.0686 2.55502 6.04602 2.5338C6.02351 2.51251 5.99702 2.49583 5.96806 2.48481C5.9391 2.47378 5.90825 2.46858 5.87728 2.46951C5.84631 2.47044 5.81582 2.4776 5.78758 2.49034C5.75934 2.50308 5.73389 2.52129 5.71269 2.54389L4.4737 3.85948C4.46715 3.86502 4.46091 3.87099 4.45502 3.87722L3.37136 5.02777L2.29002 3.8795C2.26897 3.85666 2.24357 3.83819 2.21531 3.8253C2.18706 3.81241 2.15652 3.8054 2.12547 3.80447C2.09442 3.80354 2.06349 3.80875 2.03451 3.81993C2.00553 3.8311 1.97907 3.84787 1.95669 3.86941C1.93385 3.89046 1.91544 3.91586 1.90255 3.94412C1.88966 3.97237 1.88255 4.00291 1.88162 4.03396C1.88068 4.06501 1.88596 4.09596 1.89714 4.12494C1.90831 4.15392 1.92516 4.18036 1.9467 4.20274Z" fill="white"/>\
+</svg>';
+
+const featureInfoSvg = '<svg class="feature_info-svg" xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 12 12" fill="none">\
+<path d="M0 6C0.00172054 4.40923 0.634401 2.88409 1.75925 1.75925C2.88409 0.634401 4.40923 0.00172054 6 0C7.59073 0.00185261 9.11578 0.634583 10.2406 1.7594C11.3654 2.88422 11.9981 4.40927 12 6C11.998 7.59069 11.3652 9.11566 10.2404 10.2404C9.11566 11.3652 7.59069 11.998 6 12C4.40923 11.9983 2.88409 11.3656 1.75925 10.2408C0.634401 9.11591 0.00172054 7.59077 0 6ZM0.705994 6C0.707582 7.40357 1.26586 8.7492 2.25833 9.74167C3.2508 10.7341 4.59643 11.2924 6 11.294C7.40348 11.2923 8.74897 10.7339 9.74133 9.74149C10.7337 8.74903 11.2919 7.40348 11.2935 6C11.2919 4.59652 10.7337 3.25097 9.74133 2.25851C8.74897 1.26606 7.40348 0.707714 6 0.705994C4.59643 0.707582 3.2508 1.26586 2.25833 2.25833C1.26586 3.2508 0.707582 4.59643 0.705994 6ZM5.64651 8.54001V4.86551C5.64638 4.77237 5.68311 4.68293 5.74869 4.61679C5.81427 4.55065 5.90335 4.51317 5.99649 4.51251C6.09016 4.51251 6.18 4.54969 6.24628 4.61588C6.31256 4.68206 6.34987 4.77184 6.35001 4.86551V8.54001C6.34987 8.63368 6.31256 8.72346 6.24628 8.78964C6.18 8.85583 6.09016 8.89301 5.99649 8.89301C5.90326 8.89234 5.8141 8.85476 5.7485 8.78851C5.68291 8.72226 5.64625 8.63272 5.64651 8.53949V8.54001ZM5.47 3.27301C5.47072 3.20418 5.48502 3.13615 5.51205 3.07285C5.53909 3.00954 5.57833 2.9522 5.62756 2.90408C5.67679 2.85597 5.73504 2.81803 5.79895 2.79245C5.86286 2.76687 5.93117 2.75415 6 2.755C6.06875 2.75421 6.13699 2.76696 6.20081 2.79254C6.26462 2.81812 6.32278 2.85603 6.37195 2.90408C6.42112 2.95214 6.46033 3.00939 6.48737 3.0726C6.5144 3.13582 6.52873 3.20374 6.52951 3.27249C6.52873 3.34124 6.5144 3.40917 6.48737 3.47238C6.46033 3.5356 6.42112 3.59288 6.37195 3.64093C6.32278 3.68899 6.26462 3.72686 6.20081 3.75244C6.13699 3.77802 6.06875 3.7908 6 3.79001C5.93119 3.79093 5.86289 3.77827 5.79898 3.75275C5.73508 3.72722 5.67683 3.68931 5.62759 3.64124C5.57836 3.59316 5.5391 3.53584 5.51205 3.47256C5.48501 3.40929 5.47072 3.3413 5.47 3.27249V3.27301Z" fill="#736D6D"/>\
 </svg>';
 
 // poll function
@@ -40,10 +30,16 @@ function poll(t, i, o = false, e = 10000, a = 25) {
   const CONFIG = {
     targetElement: '[data-testid="rc-title"]',
     targetPathname: '/en/reservation/review-and-book',
-    injectedClass: 'MVT-123-Var_B',
+    injectedClass: 'MVT-123-Var_E',
     testId: 'MVT-123',
-    variationId: 'Var_B',
+    variationId: 'Var_E',
   };
+
+  //getSession data
+  function getSessionData() {
+    const sessionData = sessionStorage.getItem("reservation.store");
+    return sessionData ? JSON.parse(sessionData).state : {};
+  }
 
   // 0. API Interceptor for /calculate API
   if (!window.mvtFetchInterceptorSetup) {
@@ -94,7 +90,7 @@ function poll(t, i, o = false, e = 10000, a = 25) {
 
   // Placeholder readDom function
   const includeItemDesign = () => {
-    console.log('===> index.js:69 ~ test', );
+    console.log('===> index.js:69 ~ test',);
     poll(
       () => document.querySelectorAll('[data-mvt-injected="true"] [data-testid="ancillary-item-card"]'),
       () => {
@@ -161,40 +157,6 @@ function poll(t, i, o = false, e = 10000, a = 25) {
     );
     // protection item design
     includeItemDesign();
-
-    //no protection 
-    // poll(
-    //   () => document.querySelector('.mvt-decline-protection-card'),
-    //   () => {
-    //     const sessionData = getSessionData();
-    //     const selectedBundle = sessionData && sessionData.protectionBundleCode || "";
-    //     const isNoProt = selectedBundle && selectedBundle.includes("No");
-    //     const protBundle = document.querySelector('[data-mvt-bundlename="Essential Protection"]') || document.querySelector('[data-mvt-bundlename="Basic Cover"]');
-    //     const declinetProtSection = document.querySelector('.mvt-decline-protection-card')
-    //     const mvtDeclineProtectionWarning = document.querySelector('.mvt-decline-protection-warning');
-    //     const declincePriceEl = document.querySelector('.mvt-decline-price');
-    //     if (declinetProtSection) {
-    //       const declinetProtCheckbox = declinetProtSection.querySelector('.mvt-decline-protection-checkbox')
-    //       if (declinetProtCheckbox) {
-    //         if (isNoProt) {
-    //           declinetProtCheckbox.checked = true;
-    //           protBundle.querySelector('input[type="radio"]').checked = false;
-    //           protBundle.querySelector('input[type="checkbox"]').checked = false;
-    //         } else {
-    //           declinetProtCheckbox.checked = false;
-    //         }
-    //       }
-    //       if (isNoProt && mvtDeclineProtectionWarning) {
-    //         mvtDeclineProtectionWarning.classList.add('show-warning')
-    //         declincePriceEl.classList.add('show-price')
-    //       } else {
-    //         mvtDeclineProtectionWarning.classList.remove('show-warning')
-    //         declincePriceEl.classList.remove('show-price')
-    //       }
-    //     }
-    //   }
-    // )
-
   }
 
   // Global listener to debounce readDom() calls after /calculate API resolves
@@ -209,12 +171,6 @@ function poll(t, i, o = false, e = 10000, a = 25) {
       }
     }, 1000);
   });
-  // extract price
-  function extractPrice(text) {
-    return parseFloat(
-      text.replace(/[^0-9.,]/g, '').replace(/,/g, '')
-    );
-  }
 
   // 1. Pathname Validator
   function isTargetPage() {
@@ -222,200 +178,177 @@ function poll(t, i, o = false, e = 10000, a = 25) {
     return currentPath.includes(CONFIG.targetPathname);
   }
 
-  const protectionBundleDesign = (mainControl) => {
-    const protBundleEl = mainControl.querySelector('[data-mvt-testid="protection-bundle-section-container"]');
-    const protectionBundle = mainControl.querySelector('[data-mvt-bundlename="Basic Cover"]') || mainControl.querySelector('[data-mvt-bundlename="Essential Protection"]');
-    if (protectionBundle) {
-      //bundle top heading
-      if (!mainControl.querySelector('[data-mvt-testid="protection-bundle-title"]')) {
-        const bundleTitle = document.createElement('p');
-        bundleTitle.setAttribute('data-mvt-testid', 'protection-bundle-title');
-        bundleTitle.textContent = 'Select a protection option or no protection to continue.';
-        protBundleEl.insertAdjacentElement('afterbegin', bundleTitle);
-      }
-      // bundle price 
-      const priceEl = protectionBundle.querySelector('[data-testid="checkout-ancillaries-bundle-price"]');
-      const priceParentEl = priceEl.closest('.MuiBox-root');
-      console.log('===> index.js:80 ~ priceParentEl', priceParentEl);
+  const protectionBundleDesign = () => {
+    poll(
+      () => document.querySelector('[data-mvt-testid="protection-bundle-section-container"]'),
+      () => {
+        //session data
+        const sessionData = getSessionData();
+        const storeBundles = sessionData && sessionData.protectionsConfig.data.protectionBundleList.items || [];
+        console.log('===> index.js:204 ~ storeBundles', storeBundles);
+        //bundles wrapper
+        const bundlesWrapper = document.querySelector('[data-mvt-testid="protection-bundle-section-container"]');
+        if (bundlesWrapper) {
+          console.log('===> index.js:202 ~ bundlesWrapper', bundlesWrapper);
+          //bundles
+          const bundles = bundlesWrapper.querySelectorAll('[data-testid="ancillary-bundle-card"]');
+          console.log('===> index.js:205 ~ bundles', bundles);
 
-      // inject checkbox
-      if (!mainControl.querySelector('.mvt-bundle-checkbox')) {
-        const checkboxEl = document.createElement('input');
-        checkboxEl.classList.add('mvt-bundle-checkbox');
-        checkboxEl.type = 'checkbox';
-        priceParentEl.prepend(checkboxEl);
-      }
+          let noProtBundleBtn = null;
 
-      //is control radio checked or not
-      const controlRadioChecked = protectionBundle.querySelector('input[type="radio"]').checked;
-      console.log('===> index.js:88 ~ controlRadioChecked', controlRadioChecked);
-      const checkboxElFromDom = mainControl.querySelector('.mvt-bundle-checkbox');
-      if (controlRadioChecked) {
-        checkboxElFromDom.checked = true;
-      }
-      const protectionBundleSection = mainControl.querySelector('[data-mvt-testid="protection-bundle-section-container"]');
-      console.log('===> index.js:229 ~ protectionBundleSection', protectionBundleSection);
-      if (!mainControl.querySelector('[data-mvt-testid="protection-thanks-message"]')) {
-        var thankMsgHtml = '<div data-mvt-testid="protection-thanks-message">'
-          + '<div class="message-header">'
-          + '<p class="check-icon">' + thankSvg + '</p>'
-          + '<p class="bold-text">Your protection is selected.</p>'
-          + '</div>'
-          + '<p class="light-text">Thank you for protecting your trip.</p>'
-          + '</div>';
-        protectionBundleSection.insertAdjacentHTML('afterend', thankMsgHtml);
-      }
-
-      const thankMsg = mainControl.querySelector('[data-mvt-testid="protection-thanks-message"]');
-      if (controlRadioChecked) {
-        thankMsg.classList.remove('hide-thanks-msg');
-        thankMsg.classList.add('show-thanks-msg');
-      } else {
-        thankMsg.classList.remove('show-thanks-msg');
-        thankMsg.classList.add('hide-thanks-msg');
-      }
-
-      const allProtBundles = mainControl.querySelectorAll('[data-mvt-testid="protection-bundle"]');
-      console.log('===> index.js:105 ~ allProtBundles', allProtBundles);
-      const bundleToClick = [...allProtBundles].find((bundle) => {
-        const priceText = bundle.querySelector(
-          '[data-testid="checkout-ancillaries-bundle-price"] p'
-        );
-
-        console.log('===> index.js:111 ~ ', extractPrice(priceText.textContent.trim()));
-
-        return priceText && extractPrice(priceText.textContent.trim()) < 1;
-      });
-      console.log('===> index.js:113 ~ bundleToClick', bundleToClick);
-
-      // event lister to checkbox
-      checkboxElFromDom.addEventListener('change', (e) => {
-        const isChecked = e.target.checked;
-        console.log('===> index.js:91 ~ isChecked', isChecked);
-        const radioInput = protectionBundle.querySelector('input[type="radio"]');
-        const inputSpan = radioInput.closest('span');
-        if (isChecked) {
-          inputSpan.click();
-        } else {
-          if (bundleToClick) {
-            const radioInput = bundleToClick.querySelector('input[type="radio"]');
-            if (radioInput) {
-              const inputSpan = radioInput.closest('span');
-
-              // Click the span if it exists, otherwise click the input itself as a fallback
-              if (inputSpan) {
-                inputSpan.click();
-              } else {
-                radioInput.click();
+          if (bundles.length) {
+            bundles.forEach((bundle, idx) => {
+              console.log('===> index.js:213 ~ bundle', bundle);
+              const bundleParentDiv = bundle.closest('.MuiGrid2-root');
+              const bundleOutlineDiv = bundle.querySelector('.MuiPaper-outlined');
+              console.log('===> index.js:218 ~ bundleOutlineDiv', bundleOutlineDiv);
+              if (bundleOutlineDiv) {
+                bundleOutlineDiv.addEventListener('click', (e) => {
+                  console.log('===> index.js:221 ~ ', e.target.closest('.MuiRadio-root'));
+                  if (e.target.closest('.MuiRadio-root') || e.target.closest('button')) return;
+                  e.preventDefault();
+                  e.stopPropagation();
+                });
               }
-            }
-          }
-        }
-      });
-      // change design of the protection bundle card
-      const bundleElTopRow = protectionBundle.querySelector('[data-mvt-testid="bundle-content"] > div');
-      console.log('===> index.js:175 ~ bundleElTopRow', bundleElTopRow);
-      if (bundleElTopRow && !bundleElTopRow.querySelector('.mvt-bundle-icon-wrapper')) {
-        var bundleIconHtml = '<div class="mvt-bundle-icon-wrapper">'
-          + '<span>' + bundleCarSvg + '</span>'
-          + '</div>';
-        bundleElTopRow.insertAdjacentHTML('afterbegin', bundleIconHtml);
-      }
-      const bundleNameWrapper = bundleElTopRow ? bundleElTopRow.querySelector('div:not(.mvt-bundle-icon-wrapper)') : null;
-      if (bundleNameWrapper && !bundleNameWrapper.querySelector('.mvt-bundle-name-wrapper')) {
-        bundleNameWrapper.classList.add('mvt-bundle-name-wrapper');
-        if (!bundleNameWrapper.querySelector('.mvt-most-popular-bundle')) {
-          var popularBundleHtml = '<p class="mvt-most-popular-bundle">'
-            + '<span class="svg-span">' + mostPopularSvg + '</span>'
-            + '<span>Most Popular Bundle</span>'
-            + '</p>';
-          bundleNameWrapper.insertAdjacentHTML('afterbegin', popularBundleHtml);
-        }
-      }
-
-      const bundleSecondRaw = protectionBundle.querySelector('[data-mvt-testid="bundle-content"] > div:nth-child(2)');
-      console.log('===> index.js:214 ~ bundleSecondRaw', bundleSecondRaw);
-      if (bundleSecondRaw) {
-        const featuresTextEl = bundleSecondRaw.querySelectorAll('[data-testid="CheckIcon"]');
-        console.log('===> index.js:201 ~ featuresText', featuresTextEl);
-        let featuresText = "";
-        if (featuresTextEl.length) {
-          featuresTextEl.forEach((el, idx) => {
-            if (idx === 0) {
-              featuresText = featuresText + el.nextElementSibling.textContent;
-            } else {
-              featuresText = featuresText + ' and ' + el.nextElementSibling.textContent;
-            }
-          });
-        }
-        if (featuresText) {
-          featuresText = featuresText.replace(/\s*\([^)]*\)/g, '');
-        }
-        console.log('===> index.js:215 ~ featuresText', featuresText);
-        bundleElTopRow.insertAdjacentHTML('afterend', '<p class="features-text"> Includes ' + featuresText + '</p>');
-
-        // body third row
-        const bundleThirdRow = protectionBundle.querySelector('[data-mvt-testid="bundle-content"] > div:nth-child(4)');
-        console.log('===> index.js:220 ~ bundleThirdRow', bundleThirdRow);
-        var checkedItem1 = '<p><span class="icon-span">' + greenCheck + '</span><span>Coverage for vehicle damage and theft\u200b</span></p>';
-        var checkedItem2 = '<p><span class="icon-span">' + greenCheck + '</span><span>No deductible, no out of pocket costs, no insurance claims for vehicle damage\u200b</span></p>';
-        var checkedItem3 = '<p><span class="icon-span">' + greenCheck + '</span><span>24/7 towing, fuel and lockout support\u200b</span></p>';
-        var checkedItemWrapper = '<div class="checked-item-wrapper">'
-          + checkedItem1 + checkedItem2 + checkedItem3
-          + '</div>';
-        if (bundleThirdRow) {
-          bundleThirdRow.insertAdjacentHTML('afterbegin', checkedItemWrapper);
-          const priceSection = bundleThirdRow.querySelector('[data-testid="checkout-ancillaries-bundle-price"]');
-          console.log('===> index.js:228 ~ priceSection', priceSection);
-          if (priceSection) {
-            const controlNewPrice = priceSection.querySelector('.MuiTypography-root.MuiTypography-body1');
-            const contorlOldPrice = priceSection.querySelector('.MuiTypography-root.MuiTypography-bodySmallRegular');
-            console.log('===> index.js:272 ~ controlOldPrice', contorlOldPrice);
-
-            if (!priceSection.querySelector(".new-price-wrapper")) {
-              var newPriceVal = controlNewPrice ? extractPrice(controlNewPrice.textContent.trim()) : NaN;
-              var oldPriceVal = contorlOldPrice ? extractPrice(contorlOldPrice.textContent.trim()) : NaN;
-              var discountTag = '';
-              if (!isNaN(newPriceVal) && !isNaN(oldPriceVal) && oldPriceVal > 0) {
-                var discountPct = Math.round((oldPriceVal - newPriceVal) / oldPriceVal * 100);
-                console.log("discounct price ", discountPct);
-                if (discountPct > 0) {
-                  discountTag = '<span class="discount-tag">' + discountPct + '% Off</span>';
+              const bundleNameEl = bundle.querySelector('[data-testid="ancillary-card-title"] p');
+              console.log('===> index.js:214 ~ bundleNameEl', bundleNameEl);
+              const bundleName = bundleNameEl.textContent.trim() || '';
+              console.log('===> index.js:216 ~ bundleName', bundleName);
+              const bundleDetails = storeBundles.find((s) => s.bundleName === bundleName);
+              console.log('===> index.js:219 ~ bundleDetails', bundleDetails);
+              const coverageRating = bundleDetails.coverageRating || "";
+              console.log('===> index.js:220 ~ coverageRating', coverageRating);
+              if (coverageRating === 'none') {
+                bundleParentDiv.classList.add('hide-bundle');
+              }
+              bundleParentDiv.classList.add(coverageRating);
+              // HEADER
+              const bundleTitleWrapper = bundle.querySelector('[data-testid="ancillary-card-title"]');
+              console.log('===> index.js:227 ~ bundleTitleWrapper', bundleTitleWrapper);
+              if (bundleTitleWrapper) {
+                bundleTitleWrapper.closest('.MuiStack-root.mui-ozm0df').classList.add('bundle-header');
+                if (!bundle.querySelector('.bundle-header-content')) {
+                  const bundleHeaderContentHtml = `
+                  <div class="bundle-header-content">
+                    <div class="bundle-coverage-rating ${coverageRating}">
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </div>
+                    <div class="bundle-desc">Lorem ipsum doller sit amit.</div>
+                  </div>
+                  `;
+                  bundleTitleWrapper.insertAdjacentHTML('afterend', bundleHeaderContentHtml);
                 }
               }
-              console.log("discuontTagPrice", discountTag);
-              var newPriceWrapHtml = '<div class="new-price-wrapper">'
-                + '</div>'
-                + '<div class="old-price-wrapper">'
-                + '<p class="old-price-text"> ' + discountTag + '</p>'
-                + '</div>';
-              priceSection.insertAdjacentHTML('afterbegin', newPriceWrapHtml);
-              const bundleCheckbox = priceSection.querySelector('input[type="checkbox"]');
-              const priceWrap = priceSection.querySelector('.new-price-wrapper');
-              if (priceWrap) {
-                priceWrap.insertAdjacentElement('afterbegin', bundleCheckbox);
-                if (controlNewPrice) {
-                  const text = controlNewPrice.textContent.trim();
+
+              // FEATURE ITEMS DESIGN
+              const featureFirstItem = bundle.querySelector('[data-testid="bundle-included-item-0"]');
+              const controlFeatureList = bundle.querySelectorAll('[data-testid*="bundle-included-item-"]');
+              console.log('===> index.js:231 ~ controlFeatureList', controlFeatureList);
+              console.log('===> index.js:230 ~ featureFirstItem', featureFirstItem);
+              if(featureFirstItem){
+                const featureListWrapper = featureFirstItem.parentElement;
+                console.log('===> index.js:233 ~ featureListWrapper', featureListWrapper);
+                if (featureListWrapper) {
+                  featureListWrapper.classList.add('feature-list-wrapper');
+                }
+              }
+
+              if(controlFeatureList.length){
+                controlFeatureList.forEach((feature)=>{
+                  const featureListIcon = feature.querySelector('button [data-testid="InfoOutlinedIcon"]');
+                  if (!feature.querySelector('.feature_info-svg')) {
+                    featureListIcon.insertAdjacentHTML('afterend', `${featureInfoSvg}`);
+                  }
+                });
+              }
+
+              //PRICE AND SELECT BTN
+              const priceSection = bundle.querySelector('[data-testid="checkout-ancillaries-bundle-price"]');
+              console.log('===> index.js:250 ~ priceSection', priceSection);
+              if (priceSection) {
+                //price design
+                const pTag = priceSection.querySelector('p');
+                console.log('===> index.js:252 ~ pTag', pTag);
+                if (pTag) {
+                  const text = pTag.textContent.trim();
                   const match = text.match(/^(.*?)\s*\/\s*(.*?)$/);
                   if (match) {
                     const [, price, period] = match;
-                    controlNewPrice.innerHTML = '<span class="mvt-price">' + price + '/</span>'
+                    pTag.innerHTML = '<span class="mvt-price">' + price + '/</span>'
                       + '<span class="mvt-period">' + period + '</span>';
                   }
-                  priceWrap.insertAdjacentElement('afterbegin', controlNewPrice);
+                }
+
+                //select btn design
+                const priceSecParent = priceSection.parentElement;
+                console.log('===> index.js:253 ~ priceSecParent', priceSecParent);
+                if (!bundle.querySelector('.select-btn-wrapper')) {
+                  const selectBtnWrapperHtml = `
+                  <div class="select-btn-wrapper">
+                    <div class="select-btn">Switch to this option</div>
+                  </div>
+                  `;
+                  priceSection.insertAdjacentHTML('afterend', selectBtnWrapperHtml);
+
+                  if (coverageRating === 'none') {
+                    noProtBundleBtn = bundle.querySelector('.select-btn');
+                  }
+
+                  const bundlerHeaderEl = bundle.querySelector('.bundle-header');
+                  const bundleRadioBtn = bundlerHeaderEl.querySelector('span.MuiRadio-root');
+                  console.log('===> index.js:284 ~ bundleRadioBtn', bundleRadioBtn);
+                  const isSelected = bundleRadioBtn.classList.contains('Mui-checked');
+                  const selectBtn = bundle.querySelector('.select-btn');
+                  console.log('===> index.js:261 ~ selectBtn', selectBtn);
+                  if (isSelected) {
+                    selectBtn.classList.add('active');
+                    selectBtn.textContent = 'Selected';
+                    bundleOutlineDiv.classList.add('active');
+                  }
+
+                  selectBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const allSelectBtns = document.querySelectorAll('.select-btn');
+                    const allActiveBundles = document.querySelectorAll('[data-mvt-testid="protection-bundle-section-container"] [data-testid="ancillary-bundle-card"] .active');
+                    console.log('===> index.js:288 ~ allActiveBundles', allActiveBundles);
+                    console.log('===> index.js:263 ~ noProtBundleBtn', noProtBundleBtn);
+                    const bundlerHeaderEl = bundle.querySelector('.bundle-header');
+                    const bundleRadioBtn = bundlerHeaderEl.querySelector('span.MuiRadio-root');
+                    console.log('===> index.js:284 ~ bundleRadioBtn', bundleRadioBtn);
+                    const isSelected = bundleRadioBtn.classList.contains('Mui-checked');
+                    console.log('===> index.js:285 ~ isSelected', isSelected);
+                    allSelectBtns.forEach((btn) => {
+                      btn.textContent = 'Switch to this option';
+                      btn.classList.remove('active');
+                    });
+                    if (allActiveBundles) {
+                      allActiveBundles.forEach((activeBundle) => {
+                        activeBundle.classList.remove('active');
+                      });
+                    }
+                    if (isSelected) {
+                      noProtBundleBtn.click();
+                      allSelectBtns[idx].classList.remove('active');
+                      allSelectBtns[idx].textContent = 'Switch to this option';
+                      bundleOutlineDiv.classList.remove('active');
+                      return;
+                    } else {
+                      bundleRadioBtn.click();
+                      allSelectBtns[idx].classList.add('active');
+                      allSelectBtns[idx].textContent = 'Selected';
+                      bundleOutlineDiv.classList.add('active');
+                    }
+                  });
                 }
               }
-              if (contorlOldPrice) {
-                const oldPriceBase = priceSection.querySelector('.old-price-text');
-                console.log('===> index.js:301 ~ oldPriceBase', oldPriceBase);
-                oldPriceBase.insertAdjacentElement('afterbegin', contorlOldPrice);
-              }
-            }
+            });
           }
         }
       }
-
-    }
+    );
   };
 
   const protectionItemDesign = () => {
@@ -429,24 +362,24 @@ function poll(t, i, o = false, e = 10000, a = 25) {
         console.log('===> index.js:400 ~ protItemSection', protItemSection);
         protItemSection.setAttribute('data-mvt-testid', 'protection-item-section');
         //protection item header html
-        if(!document.querySelector('.mvt-prot-item-section-wrapper')){
+        if (!document.querySelector('.mvt-prot-item-section-wrapper')) {
           var protItemHeaderHtml =
             '<div class="mvt-prot-item-section-wrapper">' +
-              '<div class="mvt-prot-item-header collapse">' +
-                '<div class="mvt-prot-item-header-left">' +
-                  '<p class="mvt-prot-item-header-title">More protection options</p>' +
-                  '<p class="mvt-prot-item-header-subtitle">Add additional coverage for extra peace of mind.</p>' +
-                '</div>' +
-                '<div class="mvt-prot-item-header-right">' +
-                  '<span>' + chevronSvg + '</span>' +
-                '</div>' +
-              '</div>' +
+            '<div class="mvt-prot-item-header">' +
+            '<div class="mvt-prot-item-header-left">' +
+            '<p class="mvt-prot-item-header-title">More protection options</p>' +
+            '<p class="mvt-prot-item-header-subtitle">Add additional coverage for extra peace of mind.</p>' +
+            '</div>' +
+            '<div class="mvt-prot-item-header-right">' +
+            '<span>' + chevronSvg + '</span>' +
+            '</div>' +
+            '</div>' +
             '</div>';
           protSubHeading.insertAdjacentHTML('afterend', protItemHeaderHtml);
           // add click listener
           const mvtProtItemHeader = document.querySelector('.mvt-prot-item-header');
           mvtProtItemHeader.insertAdjacentElement("afterend", protItemSection);
-          // protItemSection.classList.add('show-section');
+          protItemSection.classList.add('show-section');
           if (mvtProtItemHeader) {
             mvtProtItemHeader.addEventListener("click", () => {
               console.log('===> index.js:482 ~ ', protItemSection);
@@ -693,7 +626,7 @@ function poll(t, i, o = false, e = 10000, a = 25) {
           itemWithQuantity.forEach(item => {
             console.log('===> index.js:747 ~ itemPrice', item);
             const oldPrice = item.querySelector('span');
-            if(oldPrice) oldPrice.style.display = 'none';
+            if (oldPrice) oldPrice.style.display = 'none';
             const itemParent = item.closest('.MuiPaper-root.MuiPaper-outlined');
             console.log('===> index.js:485 ~ itemParent', itemParent);
             if (itemParent) {
@@ -723,7 +656,7 @@ function poll(t, i, o = false, e = 10000, a = 25) {
     itemPriceDesign();
   }
 
-  function itemPointDesign(){
+  function itemPointDesign() {
     poll(
       () => document.querySelectorAll('[data-testid*="pay-with-points-section-"]'),
       () => {
@@ -733,7 +666,7 @@ function poll(t, i, o = false, e = 10000, a = 25) {
           pointSections.forEach(item => {
             const label = item.querySelector('[data-testid*="pay-with-points-points-per-day-"]');
             console.log('===> index.js:794 ~ label', label);
-            if(label){
+            if (label) {
               const text = label.textContent.trim();
               const match = text.match(/^(.*?)\s*\/\s*(.*?)$/);
               if (match) {
@@ -830,7 +763,9 @@ function poll(t, i, o = false, e = 10000, a = 25) {
         console.log('===> index.js:318 ~ protItemSection', protItemSectionParent);
         if (protItemSectionParent) {
           protItemSectionParent.setAttribute('data-mvt-testid', 'prot-item-section-outer');
-          protItemSectionParent.querySelector('.MuiGrid2-root').setAttribute('data-mvt-testid', 'protection-item-section');
+          if (protItemSectionParent.querySelector('.MuiGrid2-root')) {
+            protItemSectionParent.querySelector('.MuiGrid2-root').setAttribute('data-mvt-testid', 'protection-item-section');
+          }
         }
         // hide see more details button
         const seeMoreDetailsBtns = protItemSectionParent.querySelectorAll('[data-testid="checkout-ancillaries-see-more-details"]');
@@ -870,7 +805,7 @@ function poll(t, i, o = false, e = 10000, a = 25) {
       }
     }
 
-    protectionBundleDesign(mainControl);
+    protectionBundleDesign();
     //protection item design
     protectionItemDesign();
     // no protection design

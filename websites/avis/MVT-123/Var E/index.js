@@ -1,4 +1,4 @@
-import { bundleCarSvg, chevronSvg, declineProWarningSvg, declinetProtSvg, greenCheck, mostPopularSvg, thankSvg, whicheCheckSvg } from "./allSvg";
+import { bundleCarSvg, chevronSvg, declineProWarningSvg, declinetProtSvg, featureInfoSvg, greenCheck, mostPopularSvg, thankSvg, whicheCheckSvg } from "./allSvg";
 import poll from "./poll";
 
 (() => {
@@ -6,9 +6,9 @@ import poll from "./poll";
   const CONFIG = {
     targetElement: '[data-testid="rc-title"]',
     targetPathname: '/en/reservation/review-and-book',
-    injectedClass: 'MVT-123-Var_B',
+    injectedClass: 'MVT-123-Var_E',
     testId: 'MVT-123',
-    variationId: 'Var_B',
+    variationId: 'Var_E',
   };
 
   //getSession data
@@ -66,7 +66,7 @@ import poll from "./poll";
 
   // Placeholder readDom function
   const includeItemDesign = () => {
-    console.log('===> index.js:69 ~ test', );
+    console.log('===> index.js:69 ~ test',);
     poll(
       () => document.querySelectorAll('[data-mvt-injected="true"] [data-testid="ancillary-item-card"]'),
       () => {
@@ -133,40 +133,6 @@ import poll from "./poll";
     )
     // protection item design
     includeItemDesign()
-
-    //no protection 
-    // poll(
-    //   () => document.querySelector('.mvt-decline-protection-card'),
-    //   () => {
-    //     const sessionData = getSessionData();
-    //     const selectedBundle = sessionData && sessionData.protectionBundleCode || "";
-    //     const isNoProt = selectedBundle && selectedBundle.includes("No");
-    //     const protBundle = document.querySelector('[data-mvt-bundlename="Essential Protection"]') || document.querySelector('[data-mvt-bundlename="Basic Cover"]');
-    //     const declinetProtSection = document.querySelector('.mvt-decline-protection-card')
-    //     const mvtDeclineProtectionWarning = document.querySelector('.mvt-decline-protection-warning');
-    //     const declincePriceEl = document.querySelector('.mvt-decline-price');
-    //     if (declinetProtSection) {
-    //       const declinetProtCheckbox = declinetProtSection.querySelector('.mvt-decline-protection-checkbox')
-    //       if (declinetProtCheckbox) {
-    //         if (isNoProt) {
-    //           declinetProtCheckbox.checked = true;
-    //           protBundle.querySelector('input[type="radio"]').checked = false;
-    //           protBundle.querySelector('input[type="checkbox"]').checked = false;
-    //         } else {
-    //           declinetProtCheckbox.checked = false;
-    //         }
-    //       }
-    //       if (isNoProt && mvtDeclineProtectionWarning) {
-    //         mvtDeclineProtectionWarning.classList.add('show-warning')
-    //         declincePriceEl.classList.add('show-price')
-    //       } else {
-    //         mvtDeclineProtectionWarning.classList.remove('show-warning')
-    //         declincePriceEl.classList.remove('show-price')
-    //       }
-    //     }
-    //   }
-    // )
-
   }
 
   // Global listener to debounce readDom() calls after /calculate API resolves
@@ -195,200 +161,177 @@ import poll from "./poll";
     return currentPath.includes(CONFIG.targetPathname);
   }
 
-  const protectionBundleDesign = (mainControl) => {
-    const protBundleEl = mainControl.querySelector('[data-mvt-testid="protection-bundle-section-container"]');
-    const protectionBundle = mainControl.querySelector('[data-mvt-bundlename="Basic Cover"]') || mainControl.querySelector('[data-mvt-bundlename="Essential Protection"]')
-    if (protectionBundle) {
-      //bundle top heading
-      if (!mainControl.querySelector('[data-mvt-testid="protection-bundle-title"]')) {
-        const bundleTitle = document.createElement('p');
-        bundleTitle.setAttribute('data-mvt-testid', 'protection-bundle-title');
-        bundleTitle.textContent = 'Select a protection option or no protection to continue.';
-        protBundleEl.insertAdjacentElement('afterbegin', bundleTitle);
-      }
-      // bundle price 
-      const priceEl = protectionBundle.querySelector('[data-testid="checkout-ancillaries-bundle-price"]');
-      const priceParentEl = priceEl.closest('.MuiBox-root');
-      console.log('===> index.js:80 ~ priceParentEl', priceParentEl);
+  const protectionBundleDesign = () => {
+    poll(
+      () => document.querySelector('[data-mvt-testid="protection-bundle-section-container"]'),
+      () => {
+        //session data
+        const sessionData = getSessionData();
+        const storeBundles = sessionData && sessionData.protectionsConfig.data.protectionBundleList.items || [];
+        console.log('===> index.js:204 ~ storeBundles', storeBundles);
+        //bundles wrapper
+        const bundlesWrapper = document.querySelector('[data-mvt-testid="protection-bundle-section-container"]')
+        if (bundlesWrapper) {
+          console.log('===> index.js:202 ~ bundlesWrapper', bundlesWrapper);
+          //bundles
+          const bundles = bundlesWrapper.querySelectorAll('[data-testid="ancillary-bundle-card"]');
+          console.log('===> index.js:205 ~ bundles', bundles);
 
-      // inject checkbox
-      if (!mainControl.querySelector('.mvt-bundle-checkbox')) {
-        const checkboxEl = document.createElement('input');
-        checkboxEl.classList.add('mvt-bundle-checkbox');
-        checkboxEl.type = 'checkbox';
-        priceParentEl.prepend(checkboxEl)
-      }
+          let noProtBundleBtn = null;
 
-      //is control radio checked or not
-      const controlRadioChecked = protectionBundle.querySelector('input[type="radio"]').checked;
-      console.log('===> index.js:88 ~ controlRadioChecked', controlRadioChecked);
-      const checkboxElFromDom = mainControl.querySelector('.mvt-bundle-checkbox');
-      if (controlRadioChecked) {
-        checkboxElFromDom.checked = true;
-      }
-      const protectionBundleSection = mainControl.querySelector('[data-mvt-testid="protection-bundle-section-container"]')
-      console.log('===> index.js:229 ~ protectionBundleSection', protectionBundleSection);
-      if (!mainControl.querySelector('[data-mvt-testid="protection-thanks-message"]')) {
-        var thankMsgHtml = '<div data-mvt-testid="protection-thanks-message">'
-          + '<div class="message-header">'
-          + '<p class="check-icon">' + thankSvg + '</p>'
-          + '<p class="bold-text">Your protection is selected.</p>'
-          + '</div>'
-          + '<p class="light-text">Thank you for protecting your trip.</p>'
-          + '</div>';
-        protectionBundleSection.insertAdjacentHTML('afterend', thankMsgHtml);
-      }
-
-      const thankMsg = mainControl.querySelector('[data-mvt-testid="protection-thanks-message"]')
-      if (controlRadioChecked) {
-        thankMsg.classList.remove('hide-thanks-msg');
-        thankMsg.classList.add('show-thanks-msg');
-      } else {
-        thankMsg.classList.remove('show-thanks-msg');
-        thankMsg.classList.add('hide-thanks-msg');
-      }
-
-      const allProtBundles = mainControl.querySelectorAll('[data-mvt-testid="protection-bundle"]');
-      console.log('===> index.js:105 ~ allProtBundles', allProtBundles);
-      const bundleToClick = [...allProtBundles].find((bundle) => {
-        const priceText = bundle.querySelector(
-          '[data-testid="checkout-ancillaries-bundle-price"] p'
-        );
-
-        console.log('===> index.js:111 ~ ', extractPrice(priceText.textContent.trim()));
-
-        return priceText && extractPrice(priceText.textContent.trim()) < 1;
-      });
-      console.log('===> index.js:113 ~ bundleToClick', bundleToClick);
-
-      // event lister to checkbox
-      checkboxElFromDom.addEventListener('change', (e) => {
-        const isChecked = e.target.checked;
-        console.log('===> index.js:91 ~ isChecked', isChecked);
-        const radioInput = protectionBundle.querySelector('input[type="radio"]');
-        const inputSpan = radioInput.closest('span')
-        if (isChecked) {
-          inputSpan.click();
-        } else {
-          if (bundleToClick) {
-            const radioInput = bundleToClick.querySelector('input[type="radio"]');
-            if (radioInput) {
-              const inputSpan = radioInput.closest('span');
-
-              // Click the span if it exists, otherwise click the input itself as a fallback
-              if (inputSpan) {
-                inputSpan.click();
-              } else {
-                radioInput.click();
+          if (bundles.length) {
+            bundles.forEach((bundle, idx) => {
+              console.log('===> index.js:213 ~ bundle', bundle);
+              const bundleParentDiv = bundle.closest('.MuiGrid2-root');
+              const bundleOutlineDiv = bundle.querySelector('.MuiPaper-outlined');
+              console.log('===> index.js:218 ~ bundleOutlineDiv', bundleOutlineDiv);
+              if (bundleOutlineDiv) {
+                bundleOutlineDiv.addEventListener('click', (e) => {
+                  console.log('===> index.js:221 ~ ', e.target.closest('.MuiRadio-root'));
+                  if (e.target.closest('.MuiRadio-root') || e.target.closest('button')) return;
+                  e.preventDefault();
+                  e.stopPropagation();
+                })
               }
-            }
-          }
-        }
-      })
-      // change design of the protection bundle card
-      const bundleElTopRow = protectionBundle.querySelector('[data-mvt-testid="bundle-content"] > div');
-      console.log('===> index.js:175 ~ bundleElTopRow', bundleElTopRow);
-      if (bundleElTopRow && !bundleElTopRow.querySelector('.mvt-bundle-icon-wrapper')) {
-        var bundleIconHtml = '<div class="mvt-bundle-icon-wrapper">'
-          + '<span>' + bundleCarSvg + '</span>'
-          + '</div>';
-        bundleElTopRow.insertAdjacentHTML('afterbegin', bundleIconHtml)
-      }
-      const bundleNameWrapper = bundleElTopRow ? bundleElTopRow.querySelector('div:not(.mvt-bundle-icon-wrapper)') : null;
-      if (bundleNameWrapper && !bundleNameWrapper.querySelector('.mvt-bundle-name-wrapper')) {
-        bundleNameWrapper.classList.add('mvt-bundle-name-wrapper')
-        if (!bundleNameWrapper.querySelector('.mvt-most-popular-bundle')) {
-          var popularBundleHtml = '<p class="mvt-most-popular-bundle">'
-            + '<span class="svg-span">' + mostPopularSvg + '</span>'
-            + '<span>Most Popular Bundle</span>'
-            + '</p>';
-          bundleNameWrapper.insertAdjacentHTML('afterbegin', popularBundleHtml);
-        }
-      }
-
-      const bundleSecondRaw = protectionBundle.querySelector('[data-mvt-testid="bundle-content"] > div:nth-child(2)')
-      console.log('===> index.js:214 ~ bundleSecondRaw', bundleSecondRaw);
-      if (bundleSecondRaw) {
-        const featuresTextEl = bundleSecondRaw.querySelectorAll('[data-testid="CheckIcon"]');
-        console.log('===> index.js:201 ~ featuresText', featuresTextEl);
-        let featuresText = "";
-        if (featuresTextEl.length) {
-          featuresTextEl.forEach((el, idx) => {
-            if (idx === 0) {
-              featuresText = featuresText + el.nextElementSibling.textContent;
-            } else {
-              featuresText = featuresText + ' and ' + el.nextElementSibling.textContent;
-            }
-          })
-        }
-        if (featuresText) {
-          featuresText = featuresText.replace(/\s*\([^)]*\)/g, '');
-        }
-        console.log('===> index.js:215 ~ featuresText', featuresText);
-        bundleElTopRow.insertAdjacentHTML('afterend', '<p class="features-text"> Includes ' + featuresText + '</p>')
-
-        // body third row
-        const bundleThirdRow = protectionBundle.querySelector('[data-mvt-testid="bundle-content"] > div:nth-child(4)')
-        console.log('===> index.js:220 ~ bundleThirdRow', bundleThirdRow);
-        var checkedItem1 = '<p><span class="icon-span">' + greenCheck + '</span><span>Coverage for vehicle damage and theft\u200b</span></p>';
-        var checkedItem2 = '<p><span class="icon-span">' + greenCheck + '</span><span>No deductible, no out of pocket costs, no insurance claims for vehicle damage\u200b</span></p>';
-        var checkedItem3 = '<p><span class="icon-span">' + greenCheck + '</span><span>24/7 towing, fuel and lockout support\u200b</span></p>';
-        var checkedItemWrapper = '<div class="checked-item-wrapper">'
-          + checkedItem1 + checkedItem2 + checkedItem3
-          + '</div>';
-        if (bundleThirdRow) {
-          bundleThirdRow.insertAdjacentHTML('afterbegin', checkedItemWrapper);
-          const priceSection = bundleThirdRow.querySelector('[data-testid="checkout-ancillaries-bundle-price"]');
-          console.log('===> index.js:228 ~ priceSection', priceSection);
-          if (priceSection) {
-            const controlNewPrice = priceSection.querySelector('.MuiTypography-root.MuiTypography-body1');
-            const contorlOldPrice = priceSection.querySelector('.MuiTypography-root.MuiTypography-bodySmallRegular');
-            console.log('===> index.js:272 ~ controlOldPrice', contorlOldPrice);
-
-            if (!priceSection.querySelector(".new-price-wrapper")) {
-              var newPriceVal = controlNewPrice ? extractPrice(controlNewPrice.textContent.trim()) : NaN;
-              var oldPriceVal = contorlOldPrice ? extractPrice(contorlOldPrice.textContent.trim()) : NaN;
-              var discountTag = '';
-              if (!isNaN(newPriceVal) && !isNaN(oldPriceVal) && oldPriceVal > 0) {
-                var discountPct = Math.round((oldPriceVal - newPriceVal) / oldPriceVal * 100);
-                console.log("discounct price ", discountPct)
-                if (discountPct > 0) {
-                  discountTag = '<span class="discount-tag">' + discountPct + '% Off</span>';
+              const bundleNameEl = bundle.querySelector('[data-testid="ancillary-card-title"] p');
+              console.log('===> index.js:214 ~ bundleNameEl', bundleNameEl);
+              const bundleName = bundleNameEl.textContent.trim() || '';
+              console.log('===> index.js:216 ~ bundleName', bundleName);
+              const bundleDetails = storeBundles.find((s) => s.bundleName === bundleName);
+              console.log('===> index.js:219 ~ bundleDetails', bundleDetails);
+              const coverageRating = bundleDetails.coverageRating || "";
+              console.log('===> index.js:220 ~ coverageRating', coverageRating);
+              if (coverageRating === 'none') {
+                bundleParentDiv.classList.add('hide-bundle')
+              }
+              bundleParentDiv.classList.add(coverageRating)
+              // HEADER
+              const bundleTitleWrapper = bundle.querySelector('[data-testid="ancillary-card-title"]');
+              console.log('===> index.js:227 ~ bundleTitleWrapper', bundleTitleWrapper);
+              if (bundleTitleWrapper) {
+                bundleTitleWrapper.closest('.MuiStack-root.mui-ozm0df').classList.add('bundle-header')
+                if (!bundle.querySelector('.bundle-header-content')) {
+                  const bundleHeaderContentHtml = `
+                  <div class="bundle-header-content">
+                    <div class="bundle-coverage-rating ${coverageRating}">
+                      <span></span>
+                      <span></span>
+                      <span></span>
+                    </div>
+                    <div class="bundle-desc">Lorem ipsum doller sit amit.</div>
+                  </div>
+                  `;
+                  bundleTitleWrapper.insertAdjacentHTML('afterend', bundleHeaderContentHtml)
                 }
               }
-              console.log("discuontTagPrice", discountTag)
-              var newPriceWrapHtml = '<div class="new-price-wrapper">'
-                + '</div>'
-                + '<div class="old-price-wrapper">'
-                + '<p class="old-price-text"> ' + discountTag + '</p>'
-                + '</div>';
-              priceSection.insertAdjacentHTML('afterbegin', newPriceWrapHtml);
-              const bundleCheckbox = priceSection.querySelector('input[type="checkbox"]');
-              const priceWrap = priceSection.querySelector('.new-price-wrapper');
-              if (priceWrap) {
-                priceWrap.insertAdjacentElement('afterbegin', bundleCheckbox);
-                if (controlNewPrice) {
-                  const text = controlNewPrice.textContent.trim();
+
+              // FEATURE ITEMS DESIGN
+              const featureFirstItem = bundle.querySelector('[data-testid="bundle-included-item-0"]');
+              const controlFeatureList = bundle.querySelectorAll('[data-testid*="bundle-included-item-"]');
+              console.log('===> index.js:231 ~ controlFeatureList', controlFeatureList);
+              console.log('===> index.js:230 ~ featureFirstItem', featureFirstItem);
+              if(featureFirstItem){
+                const featureListWrapper = featureFirstItem.parentElement;
+                console.log('===> index.js:233 ~ featureListWrapper', featureListWrapper);
+                if (featureListWrapper) {
+                  featureListWrapper.classList.add('feature-list-wrapper')
+                }
+              }
+
+              if(controlFeatureList.length){
+                controlFeatureList.forEach((feature)=>{
+                  const featureListIcon = feature.querySelector('button [data-testid="InfoOutlinedIcon"]');
+                  if (!feature.querySelector('.feature_info-svg')) {
+                    featureListIcon.insertAdjacentHTML('afterend', `${featureInfoSvg}`)
+                  }
+                })
+              }
+
+              //PRICE AND SELECT BTN
+              const priceSection = bundle.querySelector('[data-testid="checkout-ancillaries-bundle-price"]');
+              console.log('===> index.js:250 ~ priceSection', priceSection);
+              if (priceSection) {
+                //price design
+                const pTag = priceSection.querySelector('p');
+                console.log('===> index.js:252 ~ pTag', pTag);
+                if (pTag) {
+                  const text = pTag.textContent.trim();
                   const match = text.match(/^(.*?)\s*\/\s*(.*?)$/);
                   if (match) {
                     const [, price, period] = match;
-                    controlNewPrice.innerHTML = '<span class="mvt-price">' + price + '/</span>'
+                    pTag.innerHTML = '<span class="mvt-price">' + price + '/</span>'
                       + '<span class="mvt-period">' + period + '</span>';
                   }
-                  priceWrap.insertAdjacentElement('afterbegin', controlNewPrice)
+                }
+
+                //select btn design
+                const priceSecParent = priceSection.parentElement;
+                console.log('===> index.js:253 ~ priceSecParent', priceSecParent);
+                if (!bundle.querySelector('.select-btn-wrapper')) {
+                  const selectBtnWrapperHtml = `
+                  <div class="select-btn-wrapper">
+                    <div class="select-btn">Switch to this option</div>
+                  </div>
+                  `;
+                  priceSection.insertAdjacentHTML('afterend', selectBtnWrapperHtml)
+
+                  if (coverageRating === 'none') {
+                    noProtBundleBtn = bundle.querySelector('.select-btn');
+                  }
+
+                  const bundlerHeaderEl = bundle.querySelector('.bundle-header');
+                  const bundleRadioBtn = bundlerHeaderEl.querySelector('span.MuiRadio-root');
+                  console.log('===> index.js:284 ~ bundleRadioBtn', bundleRadioBtn);
+                  const isSelected = bundleRadioBtn.classList.contains('Mui-checked');
+                  const selectBtn = bundle.querySelector('.select-btn');
+                  console.log('===> index.js:261 ~ selectBtn', selectBtn);
+                  if (isSelected) {
+                    selectBtn.classList.add('active');
+                    selectBtn.textContent = 'Selected'
+                    bundleOutlineDiv.classList.add('active')
+                  }
+
+                  selectBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const allSelectBtns = document.querySelectorAll('.select-btn');
+                    const allActiveBundles = document.querySelectorAll('[data-mvt-testid="protection-bundle-section-container"] [data-testid="ancillary-bundle-card"] .active');
+                    console.log('===> index.js:288 ~ allActiveBundles', allActiveBundles);
+                    console.log('===> index.js:263 ~ noProtBundleBtn', noProtBundleBtn);
+                    const bundlerHeaderEl = bundle.querySelector('.bundle-header');
+                    const bundleRadioBtn = bundlerHeaderEl.querySelector('span.MuiRadio-root');
+                    console.log('===> index.js:284 ~ bundleRadioBtn', bundleRadioBtn);
+                    const isSelected = bundleRadioBtn.classList.contains('Mui-checked');
+                    console.log('===> index.js:285 ~ isSelected', isSelected);
+                    allSelectBtns.forEach((btn) => {
+                      btn.textContent = 'Switch to this option'
+                      btn.classList.remove('active');
+                    })
+                    if (allActiveBundles) {
+                      allActiveBundles.forEach((activeBundle) => {
+                        activeBundle.classList.remove('active');
+                      })
+                    }
+                    if (isSelected) {
+                      noProtBundleBtn.click();
+                      allSelectBtns[idx].classList.remove('active');
+                      allSelectBtns[idx].textContent = 'Switch to this option'
+                      bundleOutlineDiv.classList.remove('active')
+                      return;
+                    } else {
+                      bundleRadioBtn.click();
+                      allSelectBtns[idx].classList.add('active');
+                      allSelectBtns[idx].textContent = 'Selected';
+                      bundleOutlineDiv.classList.add('active')
+                    }
+                  })
                 }
               }
-              if (contorlOldPrice) {
-                const oldPriceBase = priceSection.querySelector('.old-price-text');
-                console.log('===> index.js:301 ~ oldPriceBase', oldPriceBase);
-                oldPriceBase.insertAdjacentElement('afterbegin', contorlOldPrice);
-              }
-            }
+            })
           }
         }
       }
-
-    }
+    )
   }
 
   const protectionItemDesign = () => {
@@ -402,18 +345,18 @@ import poll from "./poll";
         console.log('===> index.js:400 ~ protItemSection', protItemSection);
         protItemSection.setAttribute('data-mvt-testid', 'protection-item-section');
         //protection item header html
-        if(!document.querySelector('.mvt-prot-item-section-wrapper')){
+        if (!document.querySelector('.mvt-prot-item-section-wrapper')) {
           var protItemHeaderHtml =
             '<div class="mvt-prot-item-section-wrapper">' +
-              '<div class="mvt-prot-item-header">' +
-                '<div class="mvt-prot-item-header-left">' +
-                  '<p class="mvt-prot-item-header-title">More protection options</p>' +
-                  '<p class="mvt-prot-item-header-subtitle">Add additional coverage for extra peace of mind.</p>' +
-                '</div>' +
-                '<div class="mvt-prot-item-header-right">' +
-                  '<span>' + chevronSvg + '</span>' +
-                '</div>' +
-              '</div>' +
+            '<div class="mvt-prot-item-header">' +
+            '<div class="mvt-prot-item-header-left">' +
+            '<p class="mvt-prot-item-header-title">More protection options</p>' +
+            '<p class="mvt-prot-item-header-subtitle">Add additional coverage for extra peace of mind.</p>' +
+            '</div>' +
+            '<div class="mvt-prot-item-header-right">' +
+            '<span>' + chevronSvg + '</span>' +
+            '</div>' +
+            '</div>' +
             '</div>';
           protSubHeading.insertAdjacentHTML('afterend', protItemHeaderHtml)
           // add click listener
@@ -515,92 +458,6 @@ import poll from "./poll";
               + '</p>';
             if (cardImageSection && !cardImageSection.querySelector('.mvt-recommended-tag')) {
               cardImageSection.insertAdjacentHTML('beforeend', recommendedTagHtml)
-            }
-          })
-        }
-      }
-    )
-  }
-  function noProtectionDesign() {
-    poll(
-      () => document.querySelector('[data-mvt-testid="protection-item-section"]'),
-      () => {
-        const mainControl = document.querySelector('[data-mvt-injected="true"]');
-        console.log('===> index.js:397 ~ mainControl', mainControl);
-        const allProtBundles = mainControl.querySelectorAll('[data-mvt-testid="protection-bundle"]');
-        console.log('===> index.js:105 ~ allProtBundles', allProtBundles);
-        const bundleToClick = [...allProtBundles].find((bundle) => {
-          const priceText = bundle.querySelector(
-            '[data-testid="checkout-ancillaries-bundle-price"] p'
-          );
-
-          console.log('===> index.js:111 ~ ', extractPrice(priceText.textContent.trim()));
-
-          return priceText && extractPrice(priceText.textContent.trim()) < 1;
-        });
-        console.log('===> index.js:113 ~ bundleToClick', bundleToClick);
-        if (mainControl && bundleToClick && !mainControl.querySelector('.mvt-decline-protection-card')) {
-          var declineProtectionCardHtml =
-            '<div class="mvt-decline-protection-card">' +
-            '<div class="mvt-decline-protection-icon">' +
-            '<span>' + declinetProtSvg + '</span>' +
-            '<span class="decline-prot-text">Decline Protection</span>' +
-            '</div>' +
-            '<div class="mvt-decline-protection-text">' +
-            '<p>You won’t have any coverage for damage, theft, liability or personal belongings. ​</p>' +
-            '</div>' +
-            '<div class="mvt-decline-protection-link">' +
-            '<div>' +
-            '<div class="mvt-no-add-cost-wrapper">' +
-            '<p class="mvt-decline-price"><span class="price-amount">$0.00 /</span><span class="per-day">day</span></p>' +
-            '<p class="no-additional-cost-text">No Additional Cost</p>' +
-            '</div>' +
-            '<span><input class="mvt-decline-protection-checkbox" type="checkbox"></span>' +
-            '</div>' +
-            '</div>' +
-            '</div>' +
-            '<div class="mvt-decline-protection-warning">' +
-            '<p>' + declineProWarningSvg + '</p>' +
-            '<p>Without protection you will be responsible for damage, theft, liability, medical expenses, or loss - up to the full value of the vehicle.</p>' +
-            '</div>';
-          const protItemSectionEl = document.querySelector('.mvt-prot-item-section-wrapper');
-          console.log('===> index.js:434 ~ protItemSectionEl', protItemSectionEl);
-          if (protItemSectionEl) {
-            protItemSectionEl.insertAdjacentHTML('afterend', declineProtectionCardHtml)
-          }
-        }
-
-        const declinetProtCheckbox = document.querySelector('.mvt-decline-protection-checkbox');
-        const mvtDeclineProtectionWarning = document.querySelector('.mvt-decline-protection-warning');
-        const declincePriceEl = document.querySelector('.mvt-decline-price');
-        if (declinetProtCheckbox) {
-          declinetProtCheckbox.addEventListener('change', () => {
-            console.log('===> index.js:458 ~ declinetProtCheckbox.checked', declinetProtCheckbox.checked);
-            if (declinetProtCheckbox.checked) {
-              console.log('===> index.js:495 ~ bundleClick', bundleToClick);
-              const radioInput = bundleToClick.querySelector('input[type="radio"]');
-              if (radioInput) {
-                console.log('===> index.js:497 ~ ',);
-                const inputSpan = radioInput.closest('span');
-
-                // Click the span if it exists, otherwise click the input itself as a fallback
-                if (inputSpan) {
-                  console.log('===> index.js:502 ~ checkClick 1',);
-                  inputSpan.click();
-                } else {
-                  console.log('===> index.js:505 ~ checkClick 2',);
-                  radioInput.click();
-                }
-              }
-              if (mvtDeclineProtectionWarning) {
-                mvtDeclineProtectionWarning.classList.add('show-warning')
-                declincePriceEl.classList.add('show-price')
-              }
-            } else {
-              if (mvtDeclineProtectionWarning) {
-                mvtDeclineProtectionWarning.classList.remove('show-warning')
-                declincePriceEl.classList.remove('show-price')
-              }
             }
           })
         }
@@ -752,7 +609,7 @@ import poll from "./poll";
           itemWithQuantity.forEach(item => {
             console.log('===> index.js:747 ~ itemPrice', item);
             const oldPrice = item.querySelector('span');
-            if(oldPrice) oldPrice.style.display = 'none';
+            if (oldPrice) oldPrice.style.display = 'none';
             const itemParent = item.closest('.MuiPaper-root.MuiPaper-outlined');
             console.log('===> index.js:485 ~ itemParent', itemParent);
             if (itemParent) {
@@ -782,7 +639,7 @@ import poll from "./poll";
     itemPriceDesign()
   }
 
-  function itemPointDesign(){
+  function itemPointDesign() {
     poll(
       () => document.querySelectorAll('[data-testid*="pay-with-points-section-"]'),
       () => {
@@ -792,7 +649,7 @@ import poll from "./poll";
           pointSections.forEach(item => {
             const label = item.querySelector('[data-testid*="pay-with-points-points-per-day-"]');
             console.log('===> index.js:794 ~ label', label);
-            if(label){
+            if (label) {
               const text = label.textContent.trim();
               const match = text.match(/^(.*?)\s*\/\s*(.*?)$/);
               if (match) {
@@ -891,7 +748,9 @@ import poll from "./poll";
         console.log('===> index.js:318 ~ protItemSection', protItemSectionParent);
         if (protItemSectionParent) {
           protItemSectionParent.setAttribute('data-mvt-testid', 'prot-item-section-outer')
-          protItemSectionParent.querySelector('.MuiGrid2-root').setAttribute('data-mvt-testid', 'protection-item-section');
+          if (protItemSectionParent.querySelector('.MuiGrid2-root')) {
+            protItemSectionParent.querySelector('.MuiGrid2-root').setAttribute('data-mvt-testid', 'protection-item-section');
+          }
         }
         // hide see more details button
         const seeMoreDetailsBtns = protItemSectionParent.querySelectorAll('[data-testid="checkout-ancillaries-see-more-details"]');
@@ -931,7 +790,7 @@ import poll from "./poll";
       }
     }
 
-    protectionBundleDesign(mainControl)
+    protectionBundleDesign()
     //protection item design
     protectionItemDesign()
     // no protection design

@@ -1,59 +1,59 @@
-.MVT-123-Var_B {
+.MVT-123-Var_E {
   [data-mvt-injected="true"] {
     display: flex;
     flex-direction: column;
     padding: 16px;
     // display: none;
 
-    [data-mvt-testid="protection-title-heading"] {
-      order: 1;
-    }
+    // [data-mvt-testid="protection-title-heading"] {
+    //   order: 1;
+    // }
 
-    [data-mvt-testid="protection-sub-heading"] {
-      order: 2;
-    }
+    // [data-mvt-testid="protection-sub-heading"] {
+    //   order: 2;
+    // }
 
-    [data-mvt-testid="protection-bundle-section-container"] {
-      order: 3;
-    }
+    // [data-mvt-testid="protection-bundle-section-container"] {
+    //   order: 3;
+    // }
 
-    [data-mvt-testid="protection-thanks-message"] {
-      order: 4;
-    }
+    // [data-mvt-testid="protection-thanks-message"] {
+    //   order: 4;
+    // }
 
-    .mvt-prot-item-section-wrapper {
-      order: 5;
-    }
+    // .mvt-prot-item-section-wrapper {
+    //   order: 5;
+    // }
 
-    .mvt-decline-protection-card {
-      order: 6;
-    }
+    // .mvt-decline-protection-card {
+    //   order: 6;
+    // }
 
-    .mvt-decline-protection-warning {
-      order: 7;
-    }
+    // .mvt-decline-protection-warning {
+    //   order: 7;
+    // }
 
-    [data-mvt-testid="protection-expand-button"] {
-      order: 8;
-    }
+    // [data-mvt-testid="protection-expand-button"] {
+    //   order: 8;
+    // }
 
-    [data-mvt-testid="add-on-title-heading"] {
-      order: 10;
-    }
+    // [data-mvt-testid="add-on-title-heading"] {
+    //   order: 10;
+    // }
 
-    .mvt-add-on-section-wrap {
-      order: 11;
-    }
+    // .mvt-add-on-section-wrap {
+    //   order: 11;
+    // }
 
     [data-mvt-testid="add-on-item-section-wrapper"] {
-      order: 12;
+      // order: 12;
       display: none;
     }
 
-    [data-mvt-testid="prot-item-section-outer"] {
-      order: 13;
-      display: none;
-    }
+    // [data-mvt-testid="prot-item-section-outer"] {
+    //   order: 13;
+    //   display: none;
+    // }
   }
 
   [data-mvt-testid="protection-title-heading"] {
@@ -72,282 +72,190 @@
     margin-bottom: 16px;
   }
 
-  [data-mvt-testid="protection-bundle-title"] {
-    margin: 0;
-    font-size: 12px;
-    font-weight: 500;
-    line-height: 14.4px;
-    letter-spacing: .036px;
-    margin-bottom: 6px;
-  }
-
   [data-mvt-testid="protection-bundle-section-container"] {
-    gap: 0;
-  }
-
-  //thank msg styles
-  [data-mvt-testid="protection-thanks-message"] {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    border: 1px solid #26480A1A;
-    background-color: #46791D1A;
-    padding: 16px;
-    border-radius: 8px;
-    color: #26480A;
     margin-bottom: 16px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 34px;
 
     @media (max-width: 768px) {
-      flex-direction: column;
-      align-items: start;
+      gap: 0;
     }
 
-
-    p {
-      margin: 0;
+    .none{
+      order: 1;
     }
 
-    .message-header {
-      display: flex;
-      align-items: center;
-      gap: 4px;
-
-      p.check-icon {
-        height: 24px;
-      }
-
-      p.bold-text {
-        font-size: 16px;
-        font-weight: 500;
-        line-height: 19.2px;
-        letter-spacing: 0.048px;
-      }
+    .low{
+      order: 2
     }
 
-    .light-text {
-      font-size: 14px;
+    .medium{
+      order: 3
     }
-  }
 
-  .hide-thanks-msg {
-    display: none;
-  }
+    .high{
+      order: 4
+    }
 
-  .show-thanks-msg {
-    display: flex;
-  }
+    [data-mvt-testid="protection-bundle"] {
+      flex: 0 0 calc((100% - (34px * 2)) / 3);
+      box-sizing: border-box;
 
-  [data-mvt-testid="protection-bundle"] {
-    width: 100%;
-    cursor: default !important;
-    // pointer-events: none;
-  }
-
-  [data-mvt-testid="protection-bundle"]:not([data-mvt-bundlename="Essential Protection"]):not([data-mvt-bundlename="Basic Cover"]) {
-    display: none;
-  }
-
-  [data-mvt-testid="protection-bundle-section-container"] {
-    margin-bottom: 16px;
-  }
-
-  [data-mvt-bundlename="Essential Protection"]>div>div,
-  [data-mvt-bundlename="Basic Cover"]>div>div {
-    border: 1px solid #C7D7E7;
-    border-radius: 8px;
-    background-color: #F0F5FA;
-
-    [data-mvt-testid="bundle-content"] {
-      span.MuiButtonBase-root {
-        display: none;
+      @media (max-width: 768px) {
+        flex: 100%;
       }
 
-      div.mui-ozm0df {
-        margin-bottom: 19px;
-      }
+      [data-testid="ancillary-bundle-card"] {
 
-      div.MuiStack-root.mui-3vqca1 {
-        display: none;
-      }
+        .MuiPaper-outlined {
+          padding: 0;
+          border-radius: 8px;
+          border-color: #D7D8D9;
+          cursor: default !important;
+          transition: border-color 0.3s ease-in-out;
 
-      // BUNDLE CAR ICON STYLE
-      .mvt-bundle-icon-wrapper {
-        height: 46px;
-        width: 44.92px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background-color: #2C62931A;
-        border-radius: 50%;
-
-        span {
-          height: 26px;
-          object-fit: cover;
-        }
-      }
-
-      // BUNDLE MOST POPULAR STYLE
-      .mvt-bundle-name-wrapper {
-        flex-direction: column;
-        align-items: start;
-        gap: 4px;
-
-        p {
-          margin: 0;
-        }
-
-        .mvt-most-popular-bundle {
-          display: flex;
-          align-items: center;
-          gap: 4px;
-          background-color: #2C6293;
-          color: #fff;
-          font-size: 8.41px;
-          line-height: 9.6px;
-          letter-spacing: 0.168px;
-          padding: 6px 9px;
-          border-radius: 55.38px;
-          width: fit-content;
-
-          .svg-span {
-            height: 9px;
+          &:hover{
+            border-color: #000;
           }
-        }
-      }
 
-      [data-mvt-testid="protection-bundle-name"] {
-        font-size: 24px;
-        font-weight: 700;
-        line-height: 28.8px;
-        letter-spacing: 0.072px;
-      }
+          &.active{
+            border-color: #000;
+          }
 
-      .features-text {
-        margin: 0;
-        font-size: 16px;
-        font-weight: 500;
-        line-height: 19.2px;
-        letter-spacing: 0.048px;
-      }
+          .bundle-header {
+            background-color: #F4F4F4;
+            flex-direction: column;
+            padding: 16px;
+            gap: 0;
+            margin-bottom: 0;
 
-      div.MuiBox-root.mui-12t1ysd {
-        display: flex;
-        justify-content: space-between;
-        align-items: end;
+            [data-mvt-testid="protection-bundle-name"]{
+              font-size: 18px;
+              font-weight: 700;
+              line-height: 28px;
+            }
 
-        @media (max-width: 576px) {
-          flex-direction: column;
-        }
+            .bundle-header-content {
+              margin-top: 8px;
 
-        .checked-item-wrapper {
-          display: flex;
-          flex-direction: column;
-          gap: 8px;
+              .bundle-coverage-rating {
+                display: flex;
+                gap: 2px;
+                align-items: center;
+                margin-bottom: 4px;
 
-          p {
+                span {
+                  width: 15px;
+                  height: 6px;
+                  background-color: #1F1D1D66;
+                  border-radius: 2px;
+                }
+              }
+
+              .bundle-coverage-rating.low {
+                span:first-child {
+                  background-color: #B31534;
+                }
+              }
+
+              .bundle-coverage-rating.medium {
+                span:nth-child(-n+2) {
+                  background-color: #A55900;
+                }
+              }
+
+              .bundle-coverage-rating.high {
+                span {
+                  background-color: #46791D;
+                }
+              }
+
+              .bundle-desc{
+                font-size: 14px;
+                line-height: 20px;
+                color: #524D4D;
+              }
+            }
+
+            .MuiRadio-root {
+              display: none;
+            }
+          }
+
+          // bundle feature style
+          .feature-list-wrapper{
+            padding: 0 16px;
             margin: 0;
-            display: flex;
-            align-items: center;
-            gap: 7px;
-            font-size: 14px;
-            line-height: 20px;
-            ;
 
-            span.icon-span {
-              height: 18px;
+            [data-testid*="bundle-included-item-"]{
+              svg.MuiSvgIcon-colorSuccess{
+                color: #D4002A;
+              }
+
+              button [data-testid="InfoOutlinedIcon"]{
+                display: none;
+              }
+            }
+          }
+
+          //bundle price style
+          [data-testid="checkout-ancillaries-bundle-price"]{
+            padding: 0px 16px;
+            margin-bottom: 7px;
+            
+            span.mui-1y9wehi{
+              text-decoration: none;
+              color: #1F1D1D66;
+            }
+
+            p{
+              .mvt-price{
+                font-size: 28px;
+                font-weight: 500;
+                line-height: 30px;
+              }
+              .mvt-period{
+                font-size: 16px;
+                font-weight: 500;
+                line-height: 20px;
+              }
+            }
+          }
+
+          .select-btn-wrapper{
+            padding: 16px;
+
+            .select-btn{
+              pointer-events: all;
+              border: 1px solid #000;
+              border-radius: 4px;
+              color: #000;
+              font-size: 14px;
+              font-weight: 500;
+              line-height: 14px;
+              padding: 15px 16px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              cursor: pointer;
+
+              &.active{
+                background-color: #000;
+                color: #fff;
+              }
             }
           }
         }
       }
     }
-  }
 
-  // checkbox and price of bundle
-  [data-testid="checkout-ancillaries-bundle-price"] {
-
-    .new-price-wrapper {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-
-      p {
-        margin: 0;
-
-        .mvt-price {
-          font-weight: 700;
-          font-size: 18px;
-          line-height: 28px;
-        }
-
-        .mvt-period {
-          font-size: 14px;
-          margin-left: -2px;
-          font-weight: 400;
-        }
-      }
-    }
-
-    input[type="checkbox"] {
-      pointer-events: auto !important;
-      margin: 0;
-      cursor: pointer;
-      appearance: none;
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      -ms-appearance: none;
-      -o-appearance: none;
-      border: 1px solid #656565;
-      // border-radius: 4px;
-      width: 24px;
-      height: 24px;
-      position: relative;
-
-      &:checked {
-        background-color: #000;
-        border: 1px solid #000;
-
-        &:after {
-          content: "";
-          position: absolute;
-          left: 8px;
-          top: 1px;
-          width: 7px;
-          height: 15px;
-          border: solid #fff;
-          border-width: 0 1.5px 1.5px 0;
-          transform: rotate(45deg);
-        }
-      }
-
-    }
-
-    .old-price-wrapper {
-      margin-top: 8px;
-
-      p {
-        margin: 0;
-        font-size: 12px;
-
-        span {
-          text-decoration: line-through;
-          font-size: 12px;
-        }
-
-        span.MuiTypography-root {
-          color: #000;
-        }
-
-        span.discount-tag {
-          font-weight: 700;
-          color: #46791D;
-          margin-left: 8px;
-          text-decoration: none;
-        }
-      }
+    .hide-bundle {
+      display: none;
     }
   }
 
-  // protection bundle expand and collapse buttons
+  // protection expand and collapse buttons
   [data-mvt-testid="protection-expand-button"] {
     display: none;
   }
@@ -506,7 +414,7 @@
 
         // Included item BG
         .mvt-included-item-wrapper .MuiPaper-outlined {
-          background-color: #ECF2E8;
+          background-color: #ECF2E8 !important;
           border: 1px solid #2C62931A;
         }
 
@@ -623,7 +531,7 @@
           -ms-appearance: none;
           -o-appearance: none;
           border: 1px solid #656565;
-          // border-radius: 4px;
+          border-radius: 4px;
           width: 24px;
           height: 24px;
           position: relative;
@@ -723,7 +631,7 @@
 
       div {
         border: 1px solid #656565;
-        // border-radius: 4px;
+        border-radius: 4px;
         height: 24px;
         width: 24px;
         margin-top: -2px;
@@ -939,7 +847,7 @@
               span.MuiButtonBase-root {
                 div {
                   border: 1px solid #656565;
-                  // border-radius: 4px;
+                  border-radius: 4px;
                   height: 24px;
                   width: 24px;
                   margin-top: -2px;

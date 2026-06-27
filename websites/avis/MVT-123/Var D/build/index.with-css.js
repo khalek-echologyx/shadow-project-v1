@@ -4,10 +4,75 @@
       // Check if <head> exists
       clearInterval(interval); // Stop checking once found
       var style = document.createElement("style");
-      style.innerHTML = `.MVT-123-Var_D [data-mvt-testid="protection-title-heading"] {
-  margin: 0;
+      style.innerHTML = `.MVT-123-Var_B [data-mvt-injected="true"] {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
 }
-.MVT-123-Var_D [data-mvt-testid="protection-sub-heading"] {
+.MVT-123-Var_B
+  [data-mvt-injected="true"]
+  [data-mvt-testid="protection-title-heading"] {
+  order: 1;
+  display: none;
+}
+.MVT-123-Var_B
+  [data-mvt-injected="true"]
+  [data-mvt-testid="protection-sub-heading"] {
+  order: 2;
+  display: none;
+}
+.MVT-123-Var_B
+  [data-mvt-injected="true"]
+  [data-mvt-testid="protection-bundle-section-container"] {
+  order: 3;
+  display: none;
+}
+.MVT-123-Var_B
+  [data-mvt-injected="true"]
+  [data-mvt-testid="protection-thanks-message"] {
+  order: 4;
+}
+.MVT-123-Var_B [data-mvt-injected="true"] .mvt-prot-item-section-wrapper {
+  order: 5;
+}
+.MVT-123-Var_B [data-mvt-injected="true"] .mvt-decline-protection-card {
+  order: 6;
+}
+.MVT-123-Var_B [data-mvt-injected="true"] .mvt-decline-protection-warning {
+  order: 7;
+}
+.MVT-123-Var_B
+  [data-mvt-injected="true"]
+  [data-mvt-testid="protection-expand-button"] {
+  order: 8;
+}
+.MVT-123-Var_B
+  [data-mvt-injected="true"]
+  [data-mvt-testid="add-on-title-heading"] {
+  order: 10;
+}
+.MVT-123-Var_B [data-mvt-injected="true"] .mvt-add-on-section-wrap {
+  order: 11;
+}
+.MVT-123-Var_B
+  [data-mvt-injected="true"]
+  [data-mvt-testid="add-on-item-section-wrapper"] {
+  order: 12;
+  display: none;
+}
+.MVT-123-Var_B
+  [data-mvt-injected="true"]
+  [data-mvt-testid="prot-item-section-outer"] {
+  order: 13;
+  display: none;
+}
+.MVT-123-Var_B [data-mvt-testid="protection-title-heading"] {
+  margin: 0;
+  text-transform: none;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.MVT-123-Var_B [data-mvt-testid="protection-sub-heading"] {
   margin: 0;
   font-size: 16px;
   font-weight: 500;
@@ -15,7 +80,7 @@
   letter-spacing: 0.048px;
   margin-bottom: 16px;
 }
-.MVT-123-Var_D [data-mvt-testid="protection-bundle-title"] {
+.MVT-123-Var_B [data-mvt-testid="protection-bundle-title"] {
   margin: 0;
   font-size: 12px;
   font-weight: 500;
@@ -23,62 +88,84 @@
   letter-spacing: 0.036px;
   margin-bottom: 6px;
 }
-.MVT-123-Var_D [data-mvt-testid="protection-bundle-section-container"] {
+.MVT-123-Var_B [data-mvt-testid="protection-bundle-section-container"] {
   gap: 0;
 }
-.MVT-123-Var_D [data-mvt-testid="protection-thanks-message"] {
+.MVT-123-Var_B [data-mvt-testid="protection-thanks-message"] {
   display: flex;
   align-items: center;
+  gap: 16px;
   border: 1px solid rgba(38, 72, 10, 0.1019607843);
   background-color: rgba(70, 121, 29, 0.1019607843);
   padding: 16px;
   border-radius: 8px;
   color: #26480a;
-  margin-top: 16px;
+  margin-bottom: 16px;
 }
-.MVT-123-Var_D [data-mvt-testid="protection-thanks-message"] p {
+@media (max-width: 768px) {
+  .MVT-123-Var_B [data-mvt-testid="protection-thanks-message"] {
+    flex-direction: column;
+    align-items: start;
+  }
+}
+.MVT-123-Var_B [data-mvt-testid="protection-thanks-message"] p {
   margin: 0;
 }
-.MVT-123-Var_D [data-mvt-testid="protection-thanks-message"] p.check-icon {
+.MVT-123-Var_B [data-mvt-testid="protection-thanks-message"] .message-header {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.MVT-123-Var_B
+  [data-mvt-testid="protection-thanks-message"]
+  .message-header
+  p.check-icon {
   height: 24px;
 }
-.MVT-123-Var_D [data-mvt-testid="protection-thanks-message"] p.bold-text {
+.MVT-123-Var_B
+  [data-mvt-testid="protection-thanks-message"]
+  .message-header
+  p.bold-text {
   font-size: 16px;
   font-weight: 500;
   line-height: 19.2px;
   letter-spacing: 0.048px;
-  margin-left: 4px;
-  margin-right: 16px;
 }
-.MVT-123-Var_D .hide-thanks-msg {
+.MVT-123-Var_B [data-mvt-testid="protection-thanks-message"] .light-text {
+  font-size: 14px;
+}
+.MVT-123-Var_B .hide-thanks-msg {
   display: none;
 }
-.MVT-123-Var_D .show-thanks-msg {
+.MVT-123-Var_B .show-thanks-msg {
   display: flex;
 }
-.MVT-123-Var_D [data-mvt-testid="protection-bundle"] {
+.MVT-123-Var_B [data-mvt-testid="protection-bundle"] {
   width: 100%;
   cursor: default !important;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-mvt-testid="protection-bundle"]:not(
     [data-mvt-bundlename="Essential Protection"]
   ):not([data-mvt-bundlename="Basic Cover"]) {
   display: none;
 }
-.MVT-123-Var_D [data-mvt-bundlename="Essential Protection"] > div > div,
-.MVT-123-Var_D [data-mvt-bundlename="Basic Cover"] > div > div {
+.MVT-123-Var_B [data-mvt-testid="protection-bundle-section-container"] {
+  margin-bottom: 16px;
+}
+.MVT-123-Var_B [data-mvt-bundlename="Essential Protection"] > div > div,
+.MVT-123-Var_B [data-mvt-bundlename="Basic Cover"] > div > div {
   border: 1px solid #c7d7e7;
   border-radius: 8px;
   background-color: #f0f5fa;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-mvt-bundlename="Essential Protection"]
   > div
   > div
   [data-mvt-testid="bundle-content"]
   span.MuiButtonBase-root,
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-mvt-bundlename="Basic Cover"]
   > div
   > div
@@ -86,13 +173,13 @@
   span.MuiButtonBase-root {
   display: none;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-mvt-bundlename="Essential Protection"]
   > div
   > div
   [data-mvt-testid="bundle-content"]
   div.mui-ozm0df,
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-mvt-bundlename="Basic Cover"]
   > div
   > div
@@ -100,13 +187,13 @@
   div.mui-ozm0df {
   margin-bottom: 19px;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-mvt-bundlename="Essential Protection"]
   > div
   > div
   [data-mvt-testid="bundle-content"]
   div.MuiStack-root.mui-3vqca1,
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-mvt-bundlename="Basic Cover"]
   > div
   > div
@@ -114,13 +201,13 @@
   div.MuiStack-root.mui-3vqca1 {
   display: none;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-mvt-bundlename="Essential Protection"]
   > div
   > div
   [data-mvt-testid="bundle-content"]
   .mvt-bundle-icon-wrapper,
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-mvt-bundlename="Basic Cover"]
   > div
   > div
@@ -134,14 +221,14 @@
   background-color: rgba(44, 98, 147, 0.1019607843);
   border-radius: 50%;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-mvt-bundlename="Essential Protection"]
   > div
   > div
   [data-mvt-testid="bundle-content"]
   .mvt-bundle-icon-wrapper
   span,
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-mvt-bundlename="Basic Cover"]
   > div
   > div
@@ -151,13 +238,13 @@
   height: 26px;
   object-fit: cover;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-mvt-bundlename="Essential Protection"]
   > div
   > div
   [data-mvt-testid="bundle-content"]
   .mvt-bundle-name-wrapper,
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-mvt-bundlename="Basic Cover"]
   > div
   > div
@@ -167,14 +254,14 @@
   align-items: start;
   gap: 4px;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-mvt-bundlename="Essential Protection"]
   > div
   > div
   [data-mvt-testid="bundle-content"]
   .mvt-bundle-name-wrapper
   p,
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-mvt-bundlename="Basic Cover"]
   > div
   > div
@@ -183,14 +270,14 @@
   p {
   margin: 0;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-mvt-bundlename="Essential Protection"]
   > div
   > div
   [data-mvt-testid="bundle-content"]
   .mvt-bundle-name-wrapper
   .mvt-most-popular-bundle,
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-mvt-bundlename="Basic Cover"]
   > div
   > div
@@ -209,7 +296,7 @@
   border-radius: 55.38px;
   width: fit-content;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-mvt-bundlename="Essential Protection"]
   > div
   > div
@@ -217,7 +304,7 @@
   .mvt-bundle-name-wrapper
   .mvt-most-popular-bundle
   .svg-span,
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-mvt-bundlename="Basic Cover"]
   > div
   > div
@@ -227,13 +314,13 @@
   .svg-span {
   height: 9px;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-mvt-bundlename="Essential Protection"]
   > div
   > div
   [data-mvt-testid="bundle-content"]
   [data-mvt-testid="protection-bundle-name"],
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-mvt-bundlename="Basic Cover"]
   > div
   > div
@@ -244,13 +331,13 @@
   line-height: 28.8px;
   letter-spacing: 0.072px;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-mvt-bundlename="Essential Protection"]
   > div
   > div
   [data-mvt-testid="bundle-content"]
   .features-text,
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-mvt-bundlename="Basic Cover"]
   > div
   > div
@@ -262,13 +349,13 @@
   line-height: 19.2px;
   letter-spacing: 0.048px;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-mvt-bundlename="Essential Protection"]
   > div
   > div
   [data-mvt-testid="bundle-content"]
   div.MuiBox-root.mui-12t1ysd,
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-mvt-bundlename="Basic Cover"]
   > div
   > div
@@ -278,14 +365,30 @@
   justify-content: space-between;
   align-items: end;
 }
-.MVT-123-Var_D
+@media (max-width: 576px) {
+  .MVT-123-Var_B
+    [data-mvt-bundlename="Essential Protection"]
+    > div
+    > div
+    [data-mvt-testid="bundle-content"]
+    div.MuiBox-root.mui-12t1ysd,
+  .MVT-123-Var_B
+    [data-mvt-bundlename="Basic Cover"]
+    > div
+    > div
+    [data-mvt-testid="bundle-content"]
+    div.MuiBox-root.mui-12t1ysd {
+    flex-direction: column;
+  }
+}
+.MVT-123-Var_B
   [data-mvt-bundlename="Essential Protection"]
   > div
   > div
   [data-mvt-testid="bundle-content"]
   div.MuiBox-root.mui-12t1ysd
   .checked-item-wrapper,
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-mvt-bundlename="Basic Cover"]
   > div
   > div
@@ -296,7 +399,7 @@
   flex-direction: column;
   gap: 8px;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-mvt-bundlename="Essential Protection"]
   > div
   > div
@@ -304,7 +407,7 @@
   div.MuiBox-root.mui-12t1ysd
   .checked-item-wrapper
   p,
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-mvt-bundlename="Basic Cover"]
   > div
   > div
@@ -315,11 +418,11 @@
   margin: 0;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
   font-size: 14px;
   line-height: 20px;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-mvt-bundlename="Essential Protection"]
   > div
   > div
@@ -328,7 +431,7 @@
   .checked-item-wrapper
   p
   span.icon-span,
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-mvt-bundlename="Basic Cover"]
   > div
   > div
@@ -339,20 +442,20 @@
   span.icon-span {
   height: 18px;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-testid="checkout-ancillaries-bundle-price"]
   .new-price-wrapper {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 8px;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-testid="checkout-ancillaries-bundle-price"]
   .new-price-wrapper
   p {
   margin: 0;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-testid="checkout-ancillaries-bundle-price"]
   .new-price-wrapper
   p
@@ -361,7 +464,7 @@
   font-size: 18px;
   line-height: 28px;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-testid="checkout-ancillaries-bundle-price"]
   .new-price-wrapper
   p
@@ -370,7 +473,7 @@
   margin-left: -2px;
   font-weight: 400;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-testid="checkout-ancillaries-bundle-price"]
   input[type="checkbox"] {
   pointer-events: auto !important;
@@ -387,13 +490,13 @@
   height: 24px;
   position: relative;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-testid="checkout-ancillaries-bundle-price"]
   input[type="checkbox"]:checked {
   background-color: #000;
   border: 1px solid #000;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-testid="checkout-ancillaries-bundle-price"]
   input[type="checkbox"]:checked:after {
   content: "";
@@ -406,19 +509,19 @@
   border-width: 0 1.5px 1.5px 0;
   transform: rotate(45deg);
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-testid="checkout-ancillaries-bundle-price"]
   .old-price-wrapper {
   margin-top: 8px;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-testid="checkout-ancillaries-bundle-price"]
   .old-price-wrapper
   p {
   margin: 0;
   font-size: 12px;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-testid="checkout-ancillaries-bundle-price"]
   .old-price-wrapper
   p
@@ -426,7 +529,14 @@
   text-decoration: line-through;
   font-size: 12px;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
+  [data-testid="checkout-ancillaries-bundle-price"]
+  .old-price-wrapper
+  p
+  span.MuiTypography-root {
+  color: #000;
+}
+.MVT-123-Var_B
   [data-testid="checkout-ancillaries-bundle-price"]
   .old-price-wrapper
   p
@@ -436,37 +546,34 @@
   margin-left: 8px;
   text-decoration: none;
 }
-.MVT-123-Var_D [data-mvt-testid="protection-expand-button"] {
+.MVT-123-Var_B [data-mvt-testid="protection-expand-button"] {
   display: none;
 }
-.MVT-123-Var_D [data-mvt-testid="protection-item-section"] {
+.MVT-123-Var_B .mvt-prot-item-section-wrapper {
   border: 1px solid #d4d4d4;
   border-radius: 8px;
   padding: 16px;
-  margin-top: 16px;
 }
-.MVT-123-Var_D
-  [data-mvt-testid="protection-item-section"]
-  .mvt-prot-item-header {
+.MVT-123-Var_B .mvt-prot-item-section-wrapper .mvt-prot-item-header {
   display: flex;
   justify-content: space-between;
   cursor: pointer;
 }
-.MVT-123-Var_D
-  [data-mvt-testid="protection-item-section"]
+.MVT-123-Var_B
+  .mvt-prot-item-section-wrapper
   .mvt-prot-item-header
   .mvt-prot-item-header-left {
   flex: 1;
 }
-.MVT-123-Var_D
-  [data-mvt-testid="protection-item-section"]
+.MVT-123-Var_B
+  .mvt-prot-item-section-wrapper
   .mvt-prot-item-header
   .mvt-prot-item-header-left
   p {
   margin: 0;
 }
-.MVT-123-Var_D
-  [data-mvt-testid="protection-item-section"]
+.MVT-123-Var_B
+  .mvt-prot-item-section-wrapper
   .mvt-prot-item-header
   .mvt-prot-item-header-left
   p.mvt-prot-item-header-title {
@@ -477,8 +584,8 @@
   letter-spacing: 0.072px;
   margin-bottom: 8px;
 }
-.MVT-123-Var_D
-  [data-mvt-testid="protection-item-section"]
+.MVT-123-Var_B
+  .mvt-prot-item-section-wrapper
   .mvt-prot-item-header
   .mvt-prot-item-header-left
   p.mvt-prot-item-header-subtitle {
@@ -486,8 +593,8 @@
   font-weight: 500;
   line-height: 20px;
 }
-.MVT-123-Var_D
-  [data-mvt-testid="protection-item-section"]
+.MVT-123-Var_B
+  .mvt-prot-item-section-wrapper
   .mvt-prot-item-header
   .mvt-prot-item-header-right
   span {
@@ -496,25 +603,25 @@
   justify-content: center;
   align-items: center;
 }
-.MVT-123-Var_D
-  [data-mvt-testid="protection-item-section"]
+.MVT-123-Var_B
+  .mvt-prot-item-section-wrapper
   .mvt-prot-item-header
   .mvt-prot-item-header-right
   span
   svg {
   transition: all 0.3s ease-in-out;
 }
-.MVT-123-Var_D
-  [data-mvt-testid="protection-item-section"]
+.MVT-123-Var_B
+  .mvt-prot-item-section-wrapper
   .mvt-prot-item-header.collapse
   .mvt-prot-item-header-right
   span
   svg {
   transform: rotate(180deg);
 }
-.MVT-123-Var_D
-  [data-mvt-testid="protection-item-section"]
-  [data-mvt-testid="protection-item-grid-container"] {
+.MVT-123-Var_B
+  .mvt-prot-item-section-wrapper
+  [data-mvt-testid="protection-item-section"] {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   align-items: start;
@@ -522,16 +629,38 @@
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.5s ease-in-out;
+  gap: 7px;
 }
-.MVT-123-Var_D
+@media (min-width: 1000px) and (max-width: 1300px) {
+  .MVT-123-Var_B
+    .mvt-prot-item-section-wrapper
+    [data-mvt-testid="protection-item-section"] {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 768px) {
+  .MVT-123-Var_B
+    .mvt-prot-item-section-wrapper
+    [data-mvt-testid="protection-item-section"] {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 576px) {
+  .MVT-123-Var_B
+    .mvt-prot-item-section-wrapper
+    [data-mvt-testid="protection-item-section"] {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+.MVT-123-Var_B
+  .mvt-prot-item-section-wrapper
   [data-mvt-testid="protection-item-section"]
-  [data-mvt-testid="protection-item-grid-container"]
   div.MuiGrid2-root {
   width: 100%;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
+  .mvt-prot-item-section-wrapper
   [data-mvt-testid="protection-item-section"]
-  [data-mvt-testid="protection-item-grid-container"]
   div.MuiGrid2-root
   .MuiPaper-outlined {
   border: none;
@@ -539,9 +668,9 @@
   border: 1px solid rgba(70, 121, 29, 0.1019607843);
   border-radius: 8px;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
+  .mvt-prot-item-section-wrapper
   [data-mvt-testid="protection-item-section"]
-  [data-mvt-testid="protection-item-grid-container"]
   div.MuiGrid2-root
   .MuiPaper-outlined
   .prot-item-header
@@ -549,9 +678,9 @@
   flex-direction: column;
   align-items: flex-start;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
+  .mvt-prot-item-section-wrapper
   [data-mvt-testid="protection-item-section"]
-  [data-mvt-testid="protection-item-grid-container"]
   div.MuiGrid2-root
   .MuiPaper-outlined
   .prot-item-header
@@ -560,31 +689,20 @@
   width: 26px;
   height: 26px;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
+  .mvt-prot-item-section-wrapper
   [data-mvt-testid="protection-item-section"]
-  [data-mvt-testid="protection-item-grid-container"]
   div.MuiGrid2-root
   .MuiPaper-outlined
   .prot-item-header
   [data-testid="ancillary-card-title"]
   p.MuiTypography-root {
   font-weight: 500;
+  min-height: 48px;
 }
-@media (max-width: 1435px) {
-  .MVT-123-Var_D
-    [data-mvt-testid="protection-item-section"]
-    [data-mvt-testid="protection-item-grid-container"]
-    div.MuiGrid2-root
-    .MuiPaper-outlined
-    .prot-item-header
-    [data-testid="ancillary-card-title"]
-    p.MuiTypography-root {
-    min-height: 48px;
-  }
-}
-.MVT-123-Var_D
+.MVT-123-Var_B
+  .mvt-prot-item-section-wrapper
   [data-mvt-testid="protection-item-section"]
-  [data-mvt-testid="protection-item-grid-container"]
   div.MuiGrid2-root
   .MuiPaper-outlined
   [data-mvt-testid="protection-item-description"] {
@@ -594,17 +712,17 @@
   font-size: 10px;
   line-height: 12px;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
+  .mvt-prot-item-section-wrapper
   [data-mvt-testid="protection-item-section"]
-  [data-mvt-testid="protection-item-grid-container"]
   div.MuiGrid2-root
   .MuiPaper-outlined
   [data-mvt-testid="protection-item-description"].show-desc {
   max-height: 500px;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
+  .mvt-prot-item-section-wrapper
   [data-mvt-testid="protection-item-section"]
-  [data-mvt-testid="protection-item-grid-container"]
   div.MuiGrid2-root
   .MuiPaper-outlined
   .details-btn {
@@ -615,17 +733,17 @@
   letter-spacing: 0.25px;
   width: fit-content;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
+  .mvt-prot-item-section-wrapper
   [data-mvt-testid="protection-item-section"]
-  [data-mvt-testid="protection-item-grid-container"]
   div.MuiGrid2-root
   .MuiPaper-outlined
   .mvt-recommended-tag-wrapper {
   position: relative;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
+  .mvt-prot-item-section-wrapper
   [data-mvt-testid="protection-item-section"]
-  [data-mvt-testid="protection-item-grid-container"]
   div.MuiGrid2-root
   .MuiPaper-outlined
   .mvt-recommended-tag-wrapper
@@ -647,9 +765,9 @@
   width: fit-content;
   height: 18px;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
+  .mvt-prot-item-section-wrapper
   [data-mvt-testid="protection-item-section"]
-  [data-mvt-testid="protection-item-grid-container"]
   div.MuiGrid2-root
   .MuiPaper-outlined
   .mvt-recommended-tag-wrapper
@@ -657,70 +775,248 @@
   .svg-span {
   height: 9px;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
+  .mvt-prot-item-section-wrapper
   [data-mvt-testid="protection-item-section"]
-  [data-mvt-testid="protection-item-grid-container"]
   div.MuiGrid2-root
   .mvt-included-item-wrapper
   .MuiPaper-outlined {
   background-color: #ecf2e8;
   border: 1px solid rgba(44, 98, 147, 0.1019607843);
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
+  .mvt-prot-item-section-wrapper
   [data-mvt-testid="protection-item-section"]
-  [data-mvt-testid="protection-item-grid-container"]
   div.MuiGrid2-root
   .mvt-recommended-item-wrapper
   .MuiPaper-outlined {
   background-color: #f0f5fa;
   border: 1px solid rgba(44, 98, 147, 0.1019607843);
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
+  .mvt-prot-item-section-wrapper
   [data-mvt-testid="protection-item-section"]
-  [data-mvt-testid="protection-item-grid-container"]
   div.MuiGrid2-root
   [data-testid="checkout-ancillaries-item-recommendation"] {
   display: none;
 }
-.MVT-123-Var_D
-  [data-mvt-testid="protection-item-section"]
-  [data-mvt-testid="protection-item-grid-container"].show-section {
+.MVT-123-Var_B
+  .mvt-prot-item-section-wrapper
+  [data-mvt-testid="protection-item-section"].show-section {
   max-height: 1000px;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B .mvt-decline-protection-card {
+  border: 1px solid #d4d4d4;
+  background-color: #f4f4f4;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  margin-top: 16px;
+}
+@media (max-width: 768px) {
+  .MVT-123-Var_B .mvt-decline-protection-card {
+    flex-direction: column;
+    align-items: start;
+  }
+}
+.MVT-123-Var_B .mvt-decline-protection-card .mvt-decline-protection-icon {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.MVT-123-Var_B
+  .mvt-decline-protection-card
+  .mvt-decline-protection-icon
+  .decline-prot-text {
+  font-weight: 500;
+  text-wrap: nowrap;
+}
+.MVT-123-Var_B .mvt-decline-protection-card .mvt-decline-protection-text p {
+  font-size: 14px;
+  margin: 0;
+}
+.MVT-123-Var_B .mvt-decline-protection-card .mvt-decline-protection-link {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+@media (max-width: 768px) {
+  .MVT-123-Var_B .mvt-decline-protection-card .mvt-decline-protection-link {
+    width: 100%;
+    justify-content: end;
+  }
+}
+.MVT-123-Var_B
+  .mvt-decline-protection-card
+  .mvt-decline-protection-link
+  .mvt-no-add-cost-wrapper
+  p.mvt-decline-price {
+  margin: 0;
+  display: none;
+  text-align: right;
+}
+.MVT-123-Var_B
+  .mvt-decline-protection-card
+  .mvt-decline-protection-link
+  .mvt-no-add-cost-wrapper
+  p.mvt-decline-price
+  .price-amount {
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 28px;
+}
+.MVT-123-Var_B
+  .mvt-decline-protection-card
+  .mvt-decline-protection-link
+  .mvt-no-add-cost-wrapper
+  p.mvt-decline-price
+  .per-day {
+  font-size: 14px;
+}
+.MVT-123-Var_B
+  .mvt-decline-protection-card
+  .mvt-decline-protection-link
+  .mvt-no-add-cost-wrapper
+  p.mvt-decline-price.show-price {
+  display: block;
+}
+.MVT-123-Var_B
+  .mvt-decline-protection-card
+  .mvt-decline-protection-link
+  .mvt-no-add-cost-wrapper
+  p.no-additional-cost-text {
+  font-size: 14px;
+  text-wrap: nowrap;
+  white-space: nowrap;
+  margin: 0;
+  text-align: right;
+}
+.MVT-123-Var_B
+  .mvt-decline-protection-card
+  .mvt-decline-protection-link
+  div:not(.mvt-no-add-cost-wrapper) {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.MVT-123-Var_B
+  .mvt-decline-protection-card
+  .mvt-decline-protection-link
+  div:not(.mvt-no-add-cost-wrapper)
+  span {
+  font-size: 14px;
+  text-wrap: nowrap;
+}
+.MVT-123-Var_B
+  .mvt-decline-protection-card
+  .mvt-decline-protection-link
+  div:not(.mvt-no-add-cost-wrapper)
+  span
+  input {
+  pointer-events: auto !important;
+  margin: 0;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  -o-appearance: none;
+  border: 1px solid #656565;
+  border-radius: 4px;
+  width: 24px;
+  height: 24px;
+  position: relative;
+  margin-top: 4px;
+}
+.MVT-123-Var_B
+  .mvt-decline-protection-card
+  .mvt-decline-protection-link
+  div:not(.mvt-no-add-cost-wrapper)
+  span
+  input:checked {
+  background-color: #000;
+  border: 1px solid #000;
+}
+.MVT-123-Var_B
+  .mvt-decline-protection-card
+  .mvt-decline-protection-link
+  div:not(.mvt-no-add-cost-wrapper)
+  span
+  input:checked:after {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 1px;
+  width: 7px;
+  height: 15px;
+  border: solid #fff;
+  border-width: 0 1.5px 1.5px 0;
+  transform: rotate(45deg);
+}
+.MVT-123-Var_B .mvt-decline-protection-warning {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background-color: rgba(212, 0, 42, 0.1019607843);
+  border-radius: 8px;
+  padding: 16px;
+  color: #41000d;
+  overflow: hidden;
+  transition: all 0.2s ease-in-out;
+  height: 0;
+  padding: 0;
+  max-height: 0;
+}
+.MVT-123-Var_B .mvt-decline-protection-warning.show-warning {
+  height: auto;
+  max-height: 100px;
+  padding: 16px;
+  margin-top: 16px;
+  border: 1px solid rgba(212, 0, 42, 0.4);
+}
+.MVT-123-Var_B .mvt-decline-protection-warning p {
+  margin: 0;
+  font-size: 14px;
+}
+.MVT-123-Var_B [data-mvt-testid="protection-price-wrapper"] {
+  justify-content: space-between;
+}
+.MVT-123-Var_B
   [data-mvt-testid="protection-price-wrapper"]
   .mui-7l3h09:hover
   .ancillary-item-card-checkbox
   .MuiBox-root {
   border-color: #656565 !important;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-mvt-testid="protection-price-wrapper"]
   .ancillary-item-card-checkbox.Mui-checked
   .MuiBox-root {
   border-color: #000;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-mvt-testid="protection-price-wrapper"]
   [data-testid="checkout-ancillaries-item-price"] {
   display: flex;
   gap: 4px;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-mvt-testid="protection-price-wrapper"]
   [data-testid="checkout-ancillaries-item-price"]
   > span:last-child {
   border: 1px solid red;
   display: none;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-mvt-testid="protection-price-wrapper"]
   [data-testid="checkout-ancillaries-item-price"]
   p
   .mvt-price {
   font-weight: 500;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-mvt-testid="protection-price-wrapper"]
   [data-testid="checkout-ancillaries-item-price"]
   p
@@ -730,13 +1026,13 @@
   margin-left: -2px;
   line-height: 20px;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-mvt-testid="protection-price-wrapper"]
   div.ancillary-item-card-toggle
   span.ancillary-item-card-add-label {
   display: none;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-mvt-testid="protection-price-wrapper"]
   div.ancillary-item-card-toggle
   div {
@@ -746,7 +1042,7 @@
   width: 24px;
   margin-top: -2px;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-mvt-testid="protection-price-wrapper"]
   div.ancillary-item-card-toggle
   div
@@ -754,7 +1050,7 @@
   width: 18px;
   height: 14px;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-mvt-testid="protection-price-wrapper"]
   div.ancillary-item-card-toggle
   div
@@ -762,13 +1058,13 @@
   path {
   stroke-width: 0.7px;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-testid="checkout-ancillaries-child-seats-price"]
   p
   .mvt-price {
   font-weight: 500;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   [data-testid="checkout-ancillaries-child-seats-price"]
   p
   .mvt-period {
@@ -777,17 +1073,17 @@
   margin-left: -2px;
   line-height: 20px;
 }
-.MVT-123-Var_D .mvt-included-parent .MuiBox-root.mui-1rr4qq7 {
+.MVT-123-Var_B .mvt-included-parent .MuiBox-root.mui-1rr4qq7 {
   display: none;
 }
-.MVT-123-Var_D .mvt-included-parent .mvt-included-style {
+.MVT-123-Var_B .mvt-included-parent .mvt-included-style {
   background-color: #46791d;
   border-color: rgba(38, 72, 10, 0.1019607843);
   color: #fff;
   font-size: 9px;
   gap: 4px;
 }
-.MVT-123-Var_D .mvt-add-on-section-wrap {
+.MVT-123-Var_B .mvt-add-on-section-wrap {
   border: 1px solid #d4d4d4;
   border-radius: 8px;
   padding: 16px;
@@ -795,25 +1091,25 @@
   overflow: hidden;
   margin-top: 16px;
 }
-.MVT-123-Var_D .mvt-add-on-section-wrap .mvt-add-on-section-header {
+.MVT-123-Var_B .mvt-add-on-section-wrap .mvt-add-on-section-header {
   display: flex;
   justify-content: space-between;
   cursor: pointer;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   .mvt-add-on-section-wrap
   .mvt-add-on-section-header
   .mvt-add-on-section-header-left {
   flex: 1;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   .mvt-add-on-section-wrap
   .mvt-add-on-section-header
   .mvt-add-on-section-header-left
   p {
   margin: 0;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   .mvt-add-on-section-wrap
   .mvt-add-on-section-header
   .mvt-add-on-section-header-left
@@ -825,7 +1121,7 @@
   letter-spacing: 0.072px;
   margin-bottom: 8px;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   .mvt-add-on-section-wrap
   .mvt-add-on-section-header
   .mvt-add-on-section-header-left
@@ -834,7 +1130,7 @@
   font-weight: 500;
   line-height: 20px;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   .mvt-add-on-section-wrap
   .mvt-add-on-section-header
   .mvt-add-on-section-header-right
@@ -844,7 +1140,7 @@
   justify-content: center;
   align-items: center;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   .mvt-add-on-section-wrap
   .mvt-add-on-section-header
   .mvt-add-on-section-header-right
@@ -852,7 +1148,7 @@
   svg {
   transition: all 0.3s ease-in-out;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   .mvt-add-on-section-wrap
   .mvt-add-on-section-header.chevron-up
   .mvt-add-on-section-header-right
@@ -860,35 +1156,65 @@
   svg {
   transform: rotate(180deg);
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   .mvt-add-on-section-wrap
   [data-mvt-testid="add-on-item-section"] {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   align-items: start;
   margin-top: 8px;
-  max-height: 2000px;
+  max-height: 3000px;
   transition: max-height 0.5s ease-in-out;
+  gap: 7px;
 }
-.MVT-123-Var_D
+@media (min-width: 1000px) and (max-width: 1300px) {
+  .MVT-123-Var_B
+    .mvt-add-on-section-wrap
+    [data-mvt-testid="add-on-item-section"] {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 768px) {
+  .MVT-123-Var_B
+    .mvt-add-on-section-wrap
+    [data-mvt-testid="add-on-item-section"] {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 576px) {
+  .MVT-123-Var_B
+    .mvt-add-on-section-wrap
+    [data-mvt-testid="add-on-item-section"] {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+.MVT-123-Var_B
   .mvt-add-on-section-wrap
   [data-mvt-testid="add-on-item-section"].collapse {
   max-height: 0;
   overflow: hidden;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   .mvt-add-on-section-wrap
   [data-mvt-testid="add-on-item-section"]
   div.MuiGrid2-root {
   width: 100%;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
+  .mvt-add-on-section-wrap
+  [data-mvt-testid="add-on-item-section"]
+  div.MuiGrid2-root
+  [data-testid="ancillary-item-card"]
+  [data-testid="checkout-ancillaries-item-avis-first"] {
+  display: none;
+}
+.MVT-123-Var_B
   .mvt-add-on-section-wrap
   [data-mvt-testid="add-on-item-section"]
   div.MuiGrid2-root
   [data-testid="ancillary-item-card"]
   .MuiPaper-outlined,
-.MVT-123-Var_D
+.MVT-123-Var_B
   .mvt-add-on-section-wrap
   [data-mvt-testid="add-on-item-section"]
   div.MuiGrid2-root
@@ -897,14 +1223,14 @@
   border-radius: 8px;
   background-color: #f4f4f4;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   .mvt-add-on-section-wrap
   [data-mvt-testid="add-on-item-section"]
   div.MuiGrid2-root
   [data-testid="ancillary-item-card"]
   .MuiPaper-outlined
   [data-testid="ancillary-card-title"],
-.MVT-123-Var_D
+.MVT-123-Var_B
   .mvt-add-on-section-wrap
   [data-mvt-testid="add-on-item-section"]
   div.MuiGrid2-root
@@ -913,7 +1239,7 @@
   flex-direction: column;
   align-items: flex-start;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   .mvt-add-on-section-wrap
   [data-mvt-testid="add-on-item-section"]
   div.MuiGrid2-root
@@ -921,7 +1247,7 @@
   .MuiPaper-outlined
   [data-testid="ancillary-card-title"]
   img,
-.MVT-123-Var_D
+.MVT-123-Var_B
   .mvt-add-on-section-wrap
   [data-mvt-testid="add-on-item-section"]
   div.MuiGrid2-root
@@ -931,7 +1257,7 @@
   width: 26px;
   height: 26px;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   .mvt-add-on-section-wrap
   [data-mvt-testid="add-on-item-section"]
   div.MuiGrid2-root
@@ -939,7 +1265,7 @@
   .MuiPaper-outlined
   [data-testid="ancillary-card-title"]
   p,
-.MVT-123-Var_D
+.MVT-123-Var_B
   .mvt-add-on-section-wrap
   [data-mvt-testid="add-on-item-section"]
   div.MuiGrid2-root
@@ -949,14 +1275,14 @@
   font-weight: 500;
   min-height: 48px;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   .mvt-add-on-section-wrap
   [data-mvt-testid="add-on-item-section"]
   div.MuiGrid2-root
   [data-testid="ancillary-item-card"]
   .MuiPaper-outlined
   .details-btn,
-.MVT-123-Var_D
+.MVT-123-Var_B
   .mvt-add-on-section-wrap
   [data-mvt-testid="add-on-item-section"]
   div.MuiGrid2-root
@@ -969,14 +1295,14 @@
   letter-spacing: 0.25px;
   width: fit-content;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   .mvt-add-on-section-wrap
   [data-mvt-testid="add-on-item-section"]
   div.MuiGrid2-root
   [data-testid="ancillary-item-card"]
   .MuiPaper-outlined
   .add-on-desc,
-.MVT-123-Var_D
+.MVT-123-Var_B
   .mvt-add-on-section-wrap
   [data-mvt-testid="add-on-item-section"]
   div.MuiGrid2-root
@@ -988,14 +1314,14 @@
   font-size: 10px;
   line-height: 12px;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   .mvt-add-on-section-wrap
   [data-mvt-testid="add-on-item-section"]
   div.MuiGrid2-root
   [data-testid="ancillary-item-card"]
   .MuiPaper-outlined
   .add-on-desc.show-desc,
-.MVT-123-Var_D
+.MVT-123-Var_B
   .mvt-add-on-section-wrap
   [data-mvt-testid="add-on-item-section"]
   div.MuiGrid2-root
@@ -1003,7 +1329,7 @@
   .add-on-desc.show-desc {
   max-height: 500px;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   .mvt-add-on-section-wrap
   [data-mvt-testid="add-on-item-section"]
   div.MuiGrid2-root
@@ -1011,7 +1337,7 @@
   .MuiPaper-outlined
   [data-testid*="checkout-ancillaries-child-seat-"]
   p,
-.MVT-123-Var_D
+.MVT-123-Var_B
   .mvt-add-on-section-wrap
   [data-mvt-testid="add-on-item-section"]
   div.MuiGrid2-root
@@ -1021,7 +1347,7 @@
   font-size: 14px;
 }
 @media (min-width: 1000px) and (max-width: 1423px) {
-  .MVT-123-Var_D
+  .MVT-123-Var_B
     .mvt-add-on-section-wrap
     [data-mvt-testid="add-on-item-section"]
     div.MuiGrid2-root
@@ -1029,17 +1355,151 @@
     .MuiPaper-outlined
     [data-testid*="checkout-ancillaries-child-seat-"]
     p,
-  .MVT-123-Var_D
+  .MVT-123-Var_B
     .mvt-add-on-section-wrap
     [data-mvt-testid="add-on-item-section"]
     div.MuiGrid2-root
     .MuiPaper-outlined
     [data-testid*="checkout-ancillaries-child-seat-"]
     p {
-    font-size: 12px;
+    font-size: 14px;
   }
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
+  .mvt-add-on-section-wrap
+  [data-mvt-testid="add-on-item-section"]
+  div.MuiGrid2-root
+  [data-testid="ancillary-item-card"]
+  .MuiPaper-outlined
+  [data-testid*="pay-with-points-section-"]
+  [data-testid*="pay-with-points-points-per-day-"]
+  .mvt-price,
+.MVT-123-Var_B
+  .mvt-add-on-section-wrap
+  [data-mvt-testid="add-on-item-section"]
+  div.MuiGrid2-root
+  .MuiPaper-outlined
+  [data-testid*="pay-with-points-section-"]
+  [data-testid*="pay-with-points-points-per-day-"]
+  .mvt-price {
+  font-weight: 500;
+}
+.MVT-123-Var_B
+  .mvt-add-on-section-wrap
+  [data-mvt-testid="add-on-item-section"]
+  div.MuiGrid2-root
+  [data-testid="ancillary-item-card"]
+  .MuiPaper-outlined
+  [data-testid*="pay-with-points-section-"]
+  [data-testid*="pay-with-points-points-per-day-"]
+  .mvt-period,
+.MVT-123-Var_B
+  .mvt-add-on-section-wrap
+  [data-mvt-testid="add-on-item-section"]
+  div.MuiGrid2-root
+  .MuiPaper-outlined
+  [data-testid*="pay-with-points-section-"]
+  [data-testid*="pay-with-points-points-per-day-"]
+  .mvt-period {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  text-transform: lowercase;
+}
+.MVT-123-Var_B
+  .mvt-add-on-section-wrap
+  [data-mvt-testid="add-on-item-section"]
+  div.MuiGrid2-root
+  [data-testid="ancillary-item-card"]
+  .MuiPaper-outlined
+  [data-testid*="pay-with-points-section-"]
+  [data-testid*="pay-with-points-checkbox-stack-"]
+  span.MuiTypography-root,
+.MVT-123-Var_B
+  .mvt-add-on-section-wrap
+  [data-mvt-testid="add-on-item-section"]
+  div.MuiGrid2-root
+  .MuiPaper-outlined
+  [data-testid*="pay-with-points-section-"]
+  [data-testid*="pay-with-points-checkbox-stack-"]
+  span.MuiTypography-root {
+  display: none;
+}
+.MVT-123-Var_B
+  .mvt-add-on-section-wrap
+  [data-mvt-testid="add-on-item-section"]
+  div.MuiGrid2-root
+  [data-testid="ancillary-item-card"]
+  .MuiPaper-outlined
+  [data-testid*="pay-with-points-section-"]
+  [data-testid*="pay-with-points-checkbox-stack-"]
+  span.MuiButtonBase-root
+  div,
+.MVT-123-Var_B
+  .mvt-add-on-section-wrap
+  [data-mvt-testid="add-on-item-section"]
+  div.MuiGrid2-root
+  .MuiPaper-outlined
+  [data-testid*="pay-with-points-section-"]
+  [data-testid*="pay-with-points-checkbox-stack-"]
+  span.MuiButtonBase-root
+  div {
+  border: 1px solid #656565;
+  border-radius: 4px;
+  height: 24px;
+  width: 24px;
+  margin-top: -2px;
+}
+.MVT-123-Var_B
+  .mvt-add-on-section-wrap
+  [data-mvt-testid="add-on-item-section"]
+  div.MuiGrid2-root
+  [data-testid="ancillary-item-card"]
+  .MuiPaper-outlined
+  [data-testid*="pay-with-points-section-"]
+  [data-testid*="pay-with-points-checkbox-stack-"]
+  span.MuiButtonBase-root
+  div
+  svg,
+.MVT-123-Var_B
+  .mvt-add-on-section-wrap
+  [data-mvt-testid="add-on-item-section"]
+  div.MuiGrid2-root
+  .MuiPaper-outlined
+  [data-testid*="pay-with-points-section-"]
+  [data-testid*="pay-with-points-checkbox-stack-"]
+  span.MuiButtonBase-root
+  div
+  svg {
+  width: 18px;
+  height: 14px;
+}
+.MVT-123-Var_B
+  .mvt-add-on-section-wrap
+  [data-mvt-testid="add-on-item-section"]
+  div.MuiGrid2-root
+  [data-testid="ancillary-item-card"]
+  .MuiPaper-outlined
+  [data-testid*="pay-with-points-section-"]
+  [data-testid*="pay-with-points-checkbox-stack-"]
+  span.MuiButtonBase-root
+  div
+  svg
+  path,
+.MVT-123-Var_B
+  .mvt-add-on-section-wrap
+  [data-mvt-testid="add-on-item-section"]
+  div.MuiGrid2-root
+  .MuiPaper-outlined
+  [data-testid*="pay-with-points-section-"]
+  [data-testid*="pay-with-points-checkbox-stack-"]
+  span.MuiButtonBase-root
+  div
+  svg
+  path {
+  stroke-width: 0.7px;
+}
+.MVT-123-Var_B
   .mvt-add-on-section-wrap
   [data-mvt-testid="add-on-item-section"]
   div.MuiGrid2-root
@@ -1048,14 +1508,14 @@
   border: 1px solid rgba(44, 98, 147, 0.1019607843);
   background-color: #ecf2e8;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   .mvt-add-on-section-wrap
   [data-mvt-testid="add-on-item-section"]
   div.MuiGrid2-root
   [data-testid="single-addons-details-dialog-counter-buttons"] {
   gap: 2px;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   .mvt-add-on-section-wrap
   [data-mvt-testid="add-on-item-section"]
   div.MuiGrid2-root
@@ -1067,7 +1527,7 @@
   border-color: #000;
   color: #000;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   .mvt-add-on-section-wrap
   [data-mvt-testid="add-on-item-section"]
   div.MuiGrid2-root
@@ -1076,7 +1536,7 @@
   border-color: #656565;
   color: #656565;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   .mvt-add-on-section-wrap
   [data-mvt-testid="add-on-item-section"]
   div.MuiGrid2-root
@@ -1087,7 +1547,7 @@
   font-size: 14px;
   border: 1px solid #000;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   .mvt-add-on-section-wrap
   [data-mvt-testid="add-on-item-section"]
   div.MuiGrid2-root
@@ -1096,7 +1556,7 @@
   input {
   color: #000;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   .mvt-add-on-section-wrap
   [data-mvt-testid="add-on-item-section"]
   div.MuiGrid2-root
@@ -1105,7 +1565,7 @@
   input.Mui-disabled {
   color: #656565;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   .mvt-add-on-section-wrap
   [data-mvt-testid="add-on-item-section"]
   div.MuiGrid2-root
@@ -1113,7 +1573,7 @@
   div.Mui-disabled {
   border: 1px solid #656565;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   .mvt-add-on-section-wrap
   [data-mvt-testid="add-on-item-section"]
   div.MuiGrid2-root.mvt-extra-card {
@@ -1124,7 +1584,7 @@
     max-height 0.4s ease,
     opacity 0.4s ease;
 }
-.MVT-123-Var_D
+.MVT-123-Var_B
   .mvt-add-on-section-wrap
   [data-mvt-testid="add-on-item-section"]
   div.MuiGrid2-root.mvt-extra-card.show-extra-card {
@@ -1134,7 +1594,7 @@
     max-height 0.4s ease,
     opacity 0.4s ease;
 }
-.MVT-123-Var_D .mvt-add-on-section-wrap .mvt-view-all-btn {
+.MVT-123-Var_B .mvt-add-on-section-wrap .mvt-view-all-btn {
   width: fit-content;
   text-decoration: underline;
   font-size: 14px;
@@ -1143,7 +1603,15 @@
   letter-spacing: 0.25px;
   cursor: pointer;
 }
-.MVT-123-Var_D .mvt-add-on-section-wrap.collapse .mvt-view-all-btn {
+.MVT-123-Var_B .mvt-add-on-section-wrap .mvt-view-all-btn.hide {
+  margin-top: -10px;
+}
+@media (max-width: 576px) {
+  .MVT-123-Var_B .mvt-add-on-section-wrap .mvt-view-all-btn.hide {
+    margin-top: -43px;
+  }
+}
+.MVT-123-Var_B .mvt-add-on-section-wrap.collapse .mvt-view-all-btn {
   display: none;
 }
 `;
@@ -1188,7 +1656,7 @@ const whicheCheckSvg =
 </svg>';
 
 // poll function
-function poll(t, i, o = false, e = 10000, a = 25) {
+function poll(t, i, o = false, e = 15000, a = 25) {
   e < 0 ||
     (t()
       ? i()
@@ -1202,9 +1670,9 @@ function poll(t, i, o = false, e = 10000, a = 25) {
   const CONFIG = {
     targetElement: '[data-testid="rc-title"]',
     targetPathname: "/en/reservation/review-and-book",
-    injectedClass: "MVT-123-Var_D",
+    injectedClass: "MVT-123-Var_B",
     testId: "MVT-123",
-    variationId: "Var_D",
+    variationId: "Var_B",
   };
 
   // 0. API Interceptor for /calculate API
@@ -1232,9 +1700,45 @@ function poll(t, i, o = false, e = 10000, a = 25) {
         });
     };
   }
+  //  item price design
+  const itemPriceDesign = () => {
+    const mainControl = document.querySelector('[data-mvt-injected="true"]');
+    const protectionPriceEls = mainControl.querySelectorAll(
+      '[data-testid="checkout-ancillaries-item-price"]',
+    );
+    if (protectionPriceEls.length) {
+      protectionPriceEls.forEach((el, idx) => {
+        const oldPrice = el.querySelector("span");
+        if (oldPrice && /\d/.test(oldPrice.textContent)) {
+          oldPrice.style.display = "none";
+        }
+        const priceParenEl = el.closest(".MuiStack-root");
+        priceParenEl.setAttribute(
+          "data-mvt-testid",
+          "protection-price-wrapper",
+        );
+        const pTag = el.querySelector("p");
+        if (pTag) {
+          const text = pTag.textContent.trim();
+          const match = text.match(/^(.*?)\s*\/\s*(.*?)$/);
+          if (match) {
+            const [, price, period] = match;
+            pTag.innerHTML =
+              '<span class="mvt-price">' +
+              price +
+              "/</span>" +
+              '<span class="mvt-period">' +
+              period +
+              "</span>";
+          }
+        }
+      });
+    }
+  };
 
   // Placeholder readDom function
   const includeItemDesign = () => {
+    console.log("===> index.js:69 ~ test");
     poll(
       () =>
         document.querySelectorAll(
@@ -1251,9 +1755,13 @@ function poll(t, i, o = false, e = 10000, a = 25) {
           if (items.length) {
             items.forEach((item, idx) => {
               console.log(item, "itemWithIndx");
-              const included = item.querySelector(
-                ".MuiChip-outlined.MuiChip-sizeSmall.MuiChip-colorSuccess",
-              );
+              const included =
+                item.querySelector(
+                  ".MuiChip-outlined.MuiChip-sizeSmall.MuiChip-colorSuccess",
+                ) ||
+                item.querySelector(
+                  '[data-testid="checkout-ancillaries-item-included"]',
+                );
               console.log(included, "included");
               if (included) {
                 const mainItemCard = included.closest(
@@ -1276,6 +1784,7 @@ function poll(t, i, o = false, e = 10000, a = 25) {
                 }
               } else {
                 item.classList.remove("mvt-included-item-wrapper");
+                itemPriceDesign();
               }
             });
           }
@@ -1329,6 +1838,39 @@ function poll(t, i, o = false, e = 10000, a = 25) {
     );
     // protection item design
     includeItemDesign();
+
+    //no protection
+    // poll(
+    //   () => document.querySelector('.mvt-decline-protection-card'),
+    //   () => {
+    //     const sessionData = getSessionData();
+    //     const selectedBundle = sessionData && sessionData.protectionBundleCode || "";
+    //     const isNoProt = selectedBundle && selectedBundle.includes("No");
+    //     const protBundle = document.querySelector('[data-mvt-bundlename="Essential Protection"]') || document.querySelector('[data-mvt-bundlename="Basic Cover"]');
+    //     const declinetProtSection = document.querySelector('.mvt-decline-protection-card')
+    //     const mvtDeclineProtectionWarning = document.querySelector('.mvt-decline-protection-warning');
+    //     const declincePriceEl = document.querySelector('.mvt-decline-price');
+    //     if (declinetProtSection) {
+    //       const declinetProtCheckbox = declinetProtSection.querySelector('.mvt-decline-protection-checkbox')
+    //       if (declinetProtCheckbox) {
+    //         if (isNoProt) {
+    //           declinetProtCheckbox.checked = true;
+    //           protBundle.querySelector('input[type="radio"]').checked = false;
+    //           protBundle.querySelector('input[type="checkbox"]').checked = false;
+    //         } else {
+    //           declinetProtCheckbox.checked = false;
+    //         }
+    //       }
+    //       if (isNoProt && mvtDeclineProtectionWarning) {
+    //         mvtDeclineProtectionWarning.classList.add('show-warning')
+    //         declincePriceEl.classList.add('show-price')
+    //       } else {
+    //         mvtDeclineProtectionWarning.classList.remove('show-warning')
+    //         declincePriceEl.classList.remove('show-price')
+    //       }
+    //     }
+    //   }
+    // )
   }
 
   // Global listener to debounce readDom() calls after /calculate API resolves
@@ -1355,10 +1897,26 @@ function poll(t, i, o = false, e = 10000, a = 25) {
   }
 
   const protectionBundleDesign = (mainControl) => {
+    const protBundleEl = mainControl.querySelector(
+      '[data-mvt-testid="protection-bundle-section-container"]',
+    );
     const protectionBundle =
       mainControl.querySelector('[data-mvt-bundlename="Basic Cover"]') ||
       mainControl.querySelector('[data-mvt-bundlename="Essential Protection"]');
     if (protectionBundle) {
+      //bundle top heading
+      if (
+        !mainControl.querySelector(
+          '[data-mvt-testid="protection-bundle-title"]',
+        )
+      ) {
+        const bundleTitle = document.createElement("p");
+        bundleTitle.setAttribute("data-mvt-testid", "protection-bundle-title");
+        bundleTitle.textContent =
+          "Select a protection option or no protection to continue.";
+        protBundleEl.insertAdjacentElement("afterbegin", bundleTitle);
+      }
+      // bundle price
       const priceEl = protectionBundle.querySelector(
         '[data-testid="checkout-ancillaries-bundle-price"]',
       );
@@ -1390,6 +1948,10 @@ function poll(t, i, o = false, e = 10000, a = 25) {
       const protectionBundleSection = mainControl.querySelector(
         '[data-mvt-testid="protection-bundle-section-container"]',
       );
+      console.log(
+        "===> index.js:229 ~ protectionBundleSection",
+        protectionBundleSection,
+      );
       if (
         !mainControl.querySelector(
           '[data-mvt-testid="protection-thanks-message"]',
@@ -1397,10 +1959,12 @@ function poll(t, i, o = false, e = 10000, a = 25) {
       ) {
         var thankMsgHtml =
           '<div data-mvt-testid="protection-thanks-message">' +
+          '<div class="message-header">' +
           '<p class="check-icon">' +
           thankSvg +
-          "</p> " +
-          '<p class="bold-text">Your protection is selected.</p> ' +
+          "</p>" +
+          '<p class="bold-text">Your protection is selected.</p>' +
+          "</div>" +
           '<p class="light-text">Thank you for protecting your trip.</p>' +
           "</div>";
         protectionBundleSection.insertAdjacentHTML("afterend", thankMsgHtml);
@@ -1417,6 +1981,24 @@ function poll(t, i, o = false, e = 10000, a = 25) {
         thankMsg.classList.add("hide-thanks-msg");
       }
 
+      const allProtBundles = mainControl.querySelectorAll(
+        '[data-mvt-testid="protection-bundle"]',
+      );
+      console.log("===> index.js:105 ~ allProtBundles", allProtBundles);
+      const bundleToClick = [...allProtBundles].find((bundle) => {
+        const priceText = bundle.querySelector(
+          '[data-testid="checkout-ancillaries-bundle-price"] p',
+        );
+
+        console.log(
+          "===> index.js:111 ~ ",
+          extractPrice(priceText.textContent.trim()),
+        );
+
+        return priceText && extractPrice(priceText.textContent.trim()) < 1;
+      });
+      console.log("===> index.js:113 ~ bundleToClick", bundleToClick);
+
       // event lister to checkbox
       checkboxElFromDom.addEventListener("change", (e) => {
         const isChecked = e.target.checked;
@@ -1425,30 +2007,10 @@ function poll(t, i, o = false, e = 10000, a = 25) {
           'input[type="radio"]',
         );
         const inputSpan = radioInput.closest("span");
-
         if (isChecked) {
           inputSpan.click();
         } else {
-          const allProtBundles = mainControl.querySelectorAll(
-            '[data-mvt-testid="protection-bundle"]',
-          );
-          console.log("===> index.js:105 ~ allProtBundles", allProtBundles);
-          const bundleToClick = [...allProtBundles].find((bundle) => {
-            const priceText = bundle.querySelector(
-              '[data-testid="checkout-ancillaries-bundle-price"] p',
-            );
-
-            console.log(
-              "===> index.js:111 ~ ",
-              extractPrice(priceText.textContent.trim()),
-            );
-
-            return priceText && extractPrice(priceText.textContent.trim()) < 1;
-          });
-          console.log("===> index.js:113 ~ bundleToClick", bundleToClick);
-
           if (bundleToClick) {
-            console.log("===> index.js:118 ~ ");
             const radioInput = bundleToClick.querySelector(
               'input[type="radio"]',
             );
@@ -1465,7 +2027,6 @@ function poll(t, i, o = false, e = 10000, a = 25) {
           }
         }
       });
-
       // change design of the protection bundle card
       const bundleElTopRow = protectionBundle.querySelector(
         '[data-mvt-testid="bundle-content"] > div',
@@ -1529,7 +2090,7 @@ function poll(t, i, o = false, e = 10000, a = 25) {
         console.log("===> index.js:215 ~ featuresText", featuresText);
         bundleElTopRow.insertAdjacentHTML(
           "afterend",
-          '<p class="features-text">' + featuresText + "</p>",
+          '<p class="features-text"> Includes ' + featuresText + "</p>",
         );
 
         // body third row
@@ -1571,11 +2132,37 @@ function poll(t, i, o = false, e = 10000, a = 25) {
             console.log("===> index.js:272 ~ controlOldPrice", contorlOldPrice);
 
             if (!priceSection.querySelector(".new-price-wrapper")) {
+              var newPriceVal = controlNewPrice
+                ? extractPrice(controlNewPrice.textContent.trim())
+                : NaN;
+              var oldPriceVal = contorlOldPrice
+                ? extractPrice(contorlOldPrice.textContent.trim())
+                : NaN;
+              var discountTag = "";
+              if (
+                !isNaN(newPriceVal) &&
+                !isNaN(oldPriceVal) &&
+                oldPriceVal > 0
+              ) {
+                var discountPct = Math.round(
+                  ((oldPriceVal - newPriceVal) / oldPriceVal) * 100,
+                );
+                console.log("discounct price ", discountPct);
+                if (discountPct > 0) {
+                  discountTag =
+                    '<span class="discount-tag">' +
+                    discountPct +
+                    "% Off</span>";
+                }
+              }
+              console.log("discuontTagPrice", discountTag);
               var newPriceWrapHtml =
                 '<div class="new-price-wrapper">' +
                 "</div>" +
                 '<div class="old-price-wrapper">' +
-                '<p class="old-price-text"> <span class="discount-tag">10% Off</span></p>' +
+                '<p class="old-price-text"> ' +
+                discountTag +
+                "</p>" +
                 "</div>";
               priceSection.insertAdjacentHTML("afterbegin", newPriceWrapHtml);
               const bundleCheckbox = priceSection.querySelector(
@@ -1623,6 +2210,84 @@ function poll(t, i, o = false, e = 10000, a = 25) {
   const protectionItemDesign = () => {
     const mainControl = document.querySelector('[data-mvt-injected="true"]');
     console.log("===> index.js:257 ~ mainControl", mainControl);
+    poll(
+      () =>
+        document.querySelector('[data-mvt-testid="protection-item-section"]'),
+      () => {
+        const protSubHeading =
+          document.querySelector(
+            '[data-mvt-testid="protection-bundle-section-container"]',
+          ) ||
+          document.querySelector('[data-mvt-testid="protection-sub-heading"]');
+        const protItemSection = document.querySelector(
+          '[data-mvt-testid="protection-item-section"]',
+        );
+        console.log("===> index.js:400 ~ protItemSection", protItemSection);
+        protItemSection.setAttribute(
+          "data-mvt-testid",
+          "protection-item-section",
+        );
+        //protection item header html
+        if (!document.querySelector(".mvt-prot-item-section-wrapper")) {
+          var protItemHeaderHtml =
+            '<div class="mvt-prot-item-section-wrapper">' +
+            '<div class="mvt-prot-item-header">' +
+            '<div class="mvt-prot-item-header-left">' +
+            '<p class="mvt-prot-item-header-title">More protection options</p>' +
+            '<p class="mvt-prot-item-header-subtitle">Add additional coverage for extra peace of mind.</p>' +
+            "</div>" +
+            '<div class="mvt-prot-item-header-right">' +
+            "<span>" +
+            chevronSvg +
+            "</span>" +
+            "</div>" +
+            "</div>" +
+            "</div>";
+          protSubHeading.insertAdjacentHTML("afterend", protItemHeaderHtml);
+          // add click listener
+          const mvtProtItemHeader = document.querySelector(
+            ".mvt-prot-item-header",
+          );
+          mvtProtItemHeader.insertAdjacentElement("afterend", protItemSection);
+          protItemSection.classList.add("show-section");
+          if (mvtProtItemHeader) {
+            mvtProtItemHeader.addEventListener("click", () => {
+              console.log("===> index.js:482 ~ ", protItemSection);
+              if (protItemSection.classList.contains("show-section")) {
+                protItemSection.classList.remove("show-section");
+                mvtProtItemHeader.classList.add("collapse");
+              } else {
+                protItemSection.classList.add("show-section");
+                mvtProtItemHeader.classList.remove("collapse");
+              }
+            });
+          }
+
+          const itemImgElements = protItemSection.querySelectorAll(
+            '[data-testid="image-component"]',
+          );
+          console.log("===> index.js:344 ~ itemImgElements", itemImgElements);
+          if (itemImgElements.length) {
+            itemImgElements.forEach((item) => {
+              const protItemHeader = item.closest(".MuiBox-root.mui-19idom");
+              console.log("===> index.js:348 ~ protItemHeader", protItemHeader);
+              protItemHeader.classList.add("prot-item-header");
+              item.nextElementSibling.textContent =
+                item.nextElementSibling.textContent.replace(
+                  /\s*\([^)]*\)/g,
+                  "",
+                );
+              protItemHeader.nextElementSibling?.tagName === "P" &&
+                protItemHeader.nextElementSibling.setAttribute(
+                  "data-mvt-testid",
+                  "protection-item-description",
+                );
+            });
+          }
+        }
+        includeItemDesign();
+      },
+    );
     // description
     poll(
       () =>
@@ -1674,44 +2339,7 @@ function poll(t, i, o = false, e = 10000, a = 25) {
             });
           }
           // price ui adjustment
-          const protectionPriceEls = mainControl.querySelectorAll(
-            '[data-testid="checkout-ancillaries-item-price"]',
-          );
-          console.log(
-            "===> index.js:296 ~ protectionPriceEls",
-            protectionPriceEls,
-          );
-          if (protectionPriceEls.length) {
-            protectionPriceEls.forEach((el, idx) => {
-              console.log("===> index.js:300 ~ ");
-              const oldPrice = el.querySelector("span");
-              if (oldPrice && /\d/.test(oldPrice.textContent)) {
-                oldPrice.style.display = "none";
-              }
-              const priceParenEl = el.closest(".MuiStack-root");
-              priceParenEl.setAttribute(
-                "data-mvt-testid",
-                "protection-price-wrapper",
-              );
-              console.log("===> index.js:301 ~ ", priceParenEl);
-              const pTag = el.querySelector("p");
-              console.log("===> index.js:303 ~ pTag", pTag);
-              if (pTag) {
-                const text = pTag.textContent.trim();
-                const match = text.match(/^(.*?)\s*\/\s*(.*?)$/);
-                if (match) {
-                  const [, price, period] = match;
-                  pTag.innerHTML =
-                    '<span class="mvt-price">' +
-                    price +
-                    "/</span>" +
-                    '<span class="mvt-period">' +
-                    period +
-                    "</span>";
-                }
-              }
-            });
-          }
+          itemPriceDesign();
         }
       },
     );
@@ -1764,18 +2392,6 @@ function poll(t, i, o = false, e = 10000, a = 25) {
       },
     );
   };
-  function noProtectionDesign() {
-    poll(
-      () =>
-        document.querySelector('[data-mvt-testid="protection-item-section"]'),
-      () => {
-        const mainControl = document.querySelector(
-          '[data-mvt-injected="true"]',
-        );
-        console.log("===> index.js:397 ~ mainControl", mainControl);
-      },
-    );
-  }
 
   function addOnItemsDesign() {
     poll(
@@ -1813,8 +2429,8 @@ function poll(t, i, o = false, e = 10000, a = 25) {
             '<div class="mvt-add-on-section-wrap">' +
             '<div class="mvt-add-on-section-header">' +
             '<div class="mvt-add-on-section-header-left">' +
-            '<p class="mvt-add-on-section-header-title">Make Travel Easier</p>' +
-            '<p class="mvt-add-on-section-header-subtitle">Save time on the road with convenient rental extras.</p>' +
+            '<p class="mvt-add-on-section-header-title">Enhance your trip</p>' +
+            '<p class="mvt-add-on-section-header-subtitle">Customize your rental with helpful extras like fuel, tolls and additional drivers. </p>' +
             "</div>" +
             '<div class="mvt-add-on-section-header-right">' +
             "<span>" +
@@ -1827,35 +2443,38 @@ function poll(t, i, o = false, e = 10000, a = 25) {
             "afterend",
             addOnSectionHeaderHtml,
           );
-        }
-        const addOnSectionHeader = mainControl.querySelector(
-          ".mvt-add-on-section-header",
-        );
-        const addOnSectionWrapEl = mainControl.querySelector(
-          ".mvt-add-on-section-wrap",
-        );
-        console.log(
-          "===> index.js:422 ~ addOnSectionHeader",
-          addOnSectionHeader,
-        );
-        if (addOnSectionHeader && addOnSectionContainer) {
-          addOnSectionHeader.insertAdjacentElement(
-            "afterend",
-            addOnSectionContainer,
+          const addOnSectionHeader = mainControl.querySelector(
+            ".mvt-add-on-section-header",
           );
-          addOnSectionHeader.addEventListener("click", () => {
-            console.log("===> index.js:423 ~ ");
-            if (addOnSectionContainer.classList.contains("collapse")) {
-              addOnSectionContainer.classList.remove("collapse");
-              addOnSectionHeader.classList.remove("chevron-up");
-              addOnSectionWrapEl.classList.remove("collapse");
-            } else {
-              addOnSectionContainer.classList.add("collapse");
-              addOnSectionHeader.classList.add("chevron-up");
-              addOnSectionWrapEl.classList.add("collapse");
-            }
-          });
+          const addOnSectionWrapEl = mainControl.querySelector(
+            ".mvt-add-on-section-wrap",
+          );
+          console.log(
+            "===> index.js:422 ~ addOnSectionHeader",
+            addOnSectionHeader,
+          );
+          if (addOnSectionHeader && addOnSectionContainer) {
+            addOnSectionHeader.insertAdjacentElement(
+              "afterend",
+              addOnSectionContainer,
+            );
+
+            addOnSectionHeader.addEventListener("click", () => {
+              console.log("===> index.js:423 ~ ");
+              if (addOnSectionContainer.classList.contains("collapse")) {
+                console.log("===> index.js:572 ~ ");
+                addOnSectionContainer.classList.remove("collapse");
+                addOnSectionHeader.classList.remove("chevron-up");
+                addOnSectionWrapEl.classList.remove("collapse");
+              } else {
+                addOnSectionContainer.classList.add("collapse");
+                addOnSectionHeader.classList.add("chevron-up");
+                addOnSectionWrapEl.classList.add("collapse");
+              }
+            });
+          }
         }
+
         // CHANGE DESIGN
         const addOnCards = addOnSectionContainer.querySelectorAll(
           '[data-testid="ancillary-item-card"]',
@@ -1894,10 +2513,14 @@ function poll(t, i, o = false, e = 10000, a = 25) {
               const detailsBtn = card.querySelector(".details-btn");
               console.log("===> index.js:450 ~ detailsBtn", detailsBtn);
               const cardDesc = detailsBtn.nextElementSibling;
+              console.log("===> index.js:675 ~ cardDesc", cardDesc);
               if (cardDesc) {
                 if (detailsBtn.nextElementSibling.tagName === "P") {
                   cardDesc.classList.add("add-on-desc");
                   if (detailsBtn) {
+                    if (cardDesc.textContent.trim() === "") {
+                      detailsBtn.style.visibility = "hidden";
+                    }
                     detailsBtn.addEventListener("click", (e) => {
                       e.stopPropagation();
                       console.log("===> index.js:454 ~ detailsBtn click");
@@ -1921,20 +2544,22 @@ function poll(t, i, o = false, e = 10000, a = 25) {
               seeMoreDetailsBtn.closest(".MuiBox-root").style.display = "none";
             }
 
-            const allCards =
-              addOnSectionContainer.querySelectorAll(".MuiGrid2-root");
+            const allCards = addOnSectionContainer.querySelectorAll(
+              ".MuiGrid2-root:not(.MuiGrid2-container)",
+            );
             console.log("===> index.js:478 ~ allCards", allCards);
             if (allCards.length) {
               allCards.forEach((card, idx) => {
+                console.log("===> index.js:635 ~ idx", idx, card);
                 if (idx > 3) {
                   card.classList.add("mvt-extra-card");
                 }
               });
 
-              if (allCards.length > 3) {
+              if (allCards.length > 4) {
                 if (!mainControl.querySelector(".mvt-view-all-btn")) {
                   var viewAllBtnHtml =
-                    '<div class="mvt-view-all-btn hide">View all add-on items</div>';
+                    '<div class="mvt-view-all-btn hide">View all add-ons</div>';
                   addOnSectionContainer.insertAdjacentHTML(
                     "afterend",
                     viewAllBtnHtml,
@@ -1979,6 +2604,9 @@ function poll(t, i, o = false, e = 10000, a = 25) {
         console.log("===> index.js:481 ~ itemWithQuantity", itemWithQuantity);
         if (itemWithQuantity.length) {
           itemWithQuantity.forEach((item) => {
+            console.log("===> index.js:747 ~ itemPrice", item);
+            const oldPrice = item.querySelector("span");
+            if (oldPrice) oldPrice.style.display = "none";
             const itemParent = item.closest(".MuiPaper-root.MuiPaper-outlined");
             console.log("===> index.js:485 ~ itemParent", itemParent);
             if (itemParent) {
@@ -2003,6 +2631,42 @@ function poll(t, i, o = false, e = 10000, a = 25) {
               if (match) {
                 const [, price, period] = match;
                 pTag.innerHTML =
+                  '<span class="mvt-price">' +
+                  price +
+                  "/</span>" +
+                  '<span class="mvt-period">' +
+                  period +
+                  "</span>";
+              }
+            }
+          });
+        }
+      },
+    );
+    itemPriceDesign();
+  }
+
+  function itemPointDesign() {
+    poll(
+      () =>
+        document.querySelectorAll('[data-testid*="pay-with-points-section-"]'),
+      () => {
+        const pointSections = document.querySelectorAll(
+          '[data-testid*="pay-with-points-section-"]',
+        );
+        console.log("===> index.js:790 ~ pointSections", pointSections);
+        if (pointSections.length) {
+          pointSections.forEach((item) => {
+            const label = item.querySelector(
+              '[data-testid*="pay-with-points-points-per-day-"]',
+            );
+            console.log("===> index.js:794 ~ label", label);
+            if (label) {
+              const text = label.textContent.trim();
+              const match = text.match(/^(.*?)\s*\/\s*(.*?)$/);
+              if (match) {
+                const [, price, period] = match;
+                label.innerHTML =
                   '<span class="mvt-price">' +
                   price +
                   "/</span>" +
@@ -2041,24 +2705,40 @@ function poll(t, i, o = false, e = 10000, a = 25) {
     });
     // heading title
     const mainHeadingEl = mainControl.querySelectorAll("h6");
-    mainHeadingEl.forEach((el, idx) => {
-      if (idx === 0) {
+    mainHeadingEl.forEach((el) => {
+      if (el.textContent === "Choose your protection") {
         el.setAttribute("data-mvt-testid", "protection-title-heading");
-        let protectionBundleSectin = el.nextElementSibling;
+        let protectionSection = el.nextElementSibling;
         if (
-          protectionBundleSectin &&
-          (protectionBundleSectin.tagName === "P" ||
-            protectionBundleSectin.getAttribute("data-mvt-testid") ===
+          protectionSection &&
+          (protectionSection.tagName === "P" ||
+            protectionSection.getAttribute("data-mvt-testid") ===
               "protection-sub-heading")
         ) {
-          protectionBundleSectin = protectionBundleSectin.nextElementSibling;
+          protectionSection = protectionSection.nextElementSibling;
+          console.log(
+            "===> index.js:739 ~ protectionBundleSection",
+            protectionSection,
+          );
         }
-        if (protectionBundleSectin)
-          protectionBundleSectin.setAttribute(
+        if (
+          protectionSection.querySelector(
+            '[data-testid="ancillary-bundle-card"]',
+          )
+        ) {
+          protectionSection.setAttribute(
             "data-mvt-testid",
             "protection-bundle-section-container",
           );
-      } else if (idx === 1) {
+        } else if (
+          protectionSection.querySelector('[data-testid="ancillary-item-card"]')
+        ) {
+          protectionSection.setAttribute(
+            "data-mvt-testid",
+            "protection-item-section",
+          );
+        }
+      } else if (el.textContent === "Customize with add-ons") {
         el.setAttribute("data-mvt-testid", "add-on-title-heading");
         el.style.display = "none";
         if (expendButtons.length > 1) {
@@ -2111,90 +2791,26 @@ function poll(t, i, o = false, e = 10000, a = 25) {
       '[data-mvt-testid="add-on-expand-button"]',
     );
     console.log("===> index.js:645 ~ addOnExpBtn", addOnExpBtn);
+
     setTimeout(() => {
       console.log("===> index.js:315 ~ protExpBtn", protExpBtn);
       if (protExpBtn) {
-        const protItemSection = protExpBtn.nextElementSibling;
-        console.log("===> index.js:318 ~ protItemSection", protItemSection);
-        if (!protItemSection.hasAttribute("data-mvt-testid")) {
-          protItemSection.setAttribute(
-            "data-mvt-testid",
-            "protection-item-section",
-          );
-          //protection item header html
-          var protItemHeaderHtml =
-            '<div class="mvt-prot-item-header">' +
-            '<div class="mvt-prot-item-header-left">' +
-            '<p class="mvt-prot-item-header-title">Customize Your Protection</p>' +
-            '<p class="mvt-prot-item-header-subtitle">Select coverage that is right for you.</p>' +
-            "</div>" +
-            '<div class="mvt-prot-item-header-right">' +
-            "<span>" +
-            chevronSvg +
-            "</span>" +
-            "</div>" +
-            "</div>";
-          protItemSection.insertAdjacentHTML("afterbegin", protItemHeaderHtml);
-
-          // add click listener
-          const mvtProtItemHeader = protItemSection.querySelector(
-            ".mvt-prot-item-header",
-          );
-          const protItemGridSec = protItemSection.querySelector(
-            ".MuiGrid2-container",
-          );
-          console.log("===> index.js:480 ~ ", protItemGridSec);
-          if (protItemGridSec) protItemGridSec.classList.add("show-section");
-          if (mvtProtItemHeader) {
-            mvtProtItemHeader.addEventListener("click", () => {
-              console.log("===> index.js:482 ~ ", protItemGridSec);
-              if (protItemGridSec.classList.contains("show-section")) {
-                protItemGridSec.classList.remove("show-section");
-                mvtProtItemHeader.classList.add("collapse");
-              } else {
-                protItemGridSec.classList.add("show-section");
-                mvtProtItemHeader.classList.remove("collapse");
-              }
-            });
-          }
-        }
-
-        const protItemGridContainer = protItemSection.querySelector(
-          '[data-mvt-testid="protection-item-section"] .MuiGrid2-container',
-        );
+        const protItemSectionParent = protExpBtn.nextElementSibling;
         console.log(
-          "===> index.js:340 ~ protItemGridContainer",
-          protItemGridContainer,
+          "===> index.js:318 ~ protItemSection",
+          protItemSectionParent,
         );
-        if (protItemGridContainer) {
-          protItemGridContainer.setAttribute(
+        if (protItemSectionParent) {
+          protItemSectionParent.setAttribute(
             "data-mvt-testid",
-            "protection-item-grid-container",
+            "prot-item-section-outer",
           );
-          const itemImgElements = protItemGridContainer.querySelectorAll(
-            '[data-testid="image-component"]',
-          );
-          console.log("===> index.js:344 ~ itemImgElements", itemImgElements);
-          if (itemImgElements.length) {
-            itemImgElements.forEach((item) => {
-              const protItemHeader = item.closest(".MuiBox-root.mui-19idom");
-              console.log("===> index.js:348 ~ protItemHeader", protItemHeader);
-              protItemHeader.classList.add("prot-item-header");
-              item.nextElementSibling.textContent =
-                item.nextElementSibling.textContent.replace(
-                  /\s*\([^)]*\)/g,
-                  "",
-                );
-              protItemHeader.nextElementSibling?.tagName === "P" &&
-                protItemHeader.nextElementSibling.setAttribute(
-                  "data-mvt-testid",
-                  "protection-item-description",
-                );
-            });
-          }
+          protItemSectionParent
+            .querySelector(".MuiGrid2-root")
+            .setAttribute("data-mvt-testid", "protection-item-section");
         }
         // hide see more details button
-        const seeMoreDetailsBtns = protItemGridContainer.querySelectorAll(
+        const seeMoreDetailsBtns = protItemSectionParent.querySelectorAll(
           '[data-testid="checkout-ancillaries-see-more-details"]',
         );
         console.log(
@@ -2220,7 +2836,6 @@ function poll(t, i, o = false, e = 10000, a = 25) {
           addOnItemSection
             .querySelector(".MuiGrid2-root")
             .setAttribute("data-mvt-testid", "add-on-item-section");
-          // addOnItemsDesign();
         }
       }
     }, 1500);
@@ -2235,6 +2850,7 @@ function poll(t, i, o = false, e = 10000, a = 25) {
     );
     console.log("===> index.js:141 ~ protSectionTitle", protSectionTitle);
     if (protSectionTitle) {
+      protSectionTitle.textContent = "Choose your protection";
       if (
         !mainControl.querySelector('[data-mvt-testid="protection-sub-heading"]')
       ) {
@@ -2248,27 +2864,16 @@ function poll(t, i, o = false, e = 10000, a = 25) {
         protSectionTitle.insertAdjacentElement("afterend", protSubHeading);
       }
     }
-    const protBundleEl = mainControl.querySelector(
-      '[data-mvt-testid="protection-bundle-section-container"]',
-    );
-    console.log("===> index.js:149 ~ ", protBundleEl);
-    if (
-      !mainControl.querySelector('[data-mvt-testid="protection-bundle-title"]')
-    ) {
-      const bundleTitle = document.createElement("p");
-      bundleTitle.setAttribute("data-mvt-testid", "protection-bundle-title");
-      bundleTitle.textContent =
-        "Select a protection option or no protection to continue.";
-      protBundleEl.insertAdjacentElement("afterbegin", bundleTitle);
-    }
 
     protectionBundleDesign(mainControl);
     //protection item design
     protectionItemDesign();
     // no protection design
-    noProtectionDesign();
+    // noProtectionDesign()
     // Add-on items design
     addOnItemsDesign();
+    //item point section design
+    itemPointDesign();
   }
 
   // 2. Main Injection Logic
@@ -2287,14 +2892,18 @@ function poll(t, i, o = false, e = 10000, a = 25) {
       () =>
         document.querySelector(CONFIG.targetElement) &&
         [...document.querySelectorAll("h6")].find(
-          (el) => el.textContent === "Choose your protection",
+          (el) =>
+            el.textContent === "Choose your protection" ||
+            el.textContent === "Customize with add-ons",
         ),
       () => {
         try {
           const targetElement = document.querySelector(CONFIG.targetElement);
           if (targetElement) {
             const protectionHeading = [...document.querySelectorAll("h6")].find(
-              (el) => el.textContent === "Choose your protection",
+              (el) =>
+                el.textContent === "Choose your protection" ||
+                el.textContent === "Customize with add-ons",
             );
             if (!protectionHeading)
               throw new Error("protectionHeading not found");
@@ -2334,7 +2943,7 @@ function poll(t, i, o = false, e = 10000, a = 25) {
     callback,
     minElements = 1,
     isVariable = false,
-    timer = 10000,
+    timer = 15000,
     frequency = 25,
   ) {
     let elements = isVariable
