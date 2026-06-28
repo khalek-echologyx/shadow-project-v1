@@ -1,4 +1,4 @@
-import { bundleCarSvg, chevronSvg, declineProWarningSvg, declinetProtSvg, featureInfoSvg, greenCheck, mostPopularSvg, thankSvg, whicheCheckSvg } from "./allSvg";
+import { bundleCarSvg, chevronSvg, declineProWarningSvg, declinetProtSvg, featureCrossSvg, featureInfoSvg, greenCheck, mostPopularSvg, redCheckSvg, thankSvg, whicheCheckSvg, whiteStarSvg } from "./allSvg";
 import poll from "./poll";
 
 (() => {
@@ -169,6 +169,20 @@ import poll from "./poll";
         const sessionData = getSessionData();
         const storeBundles = sessionData && sessionData.protectionsConfig.data.protectionBundleList.items || [];
         console.log('===> index.js:204 ~ storeBundles', storeBundles);
+        if (!window.totalExcludeItems) {
+          window.totalExcludeItems = [];
+
+          storeBundles.forEach(function (bundle) {
+            (bundle.excludedProtections || []).forEach(function (item) {
+              window.totalExcludeItems.push({
+                code: item.code,
+                html: item.description && item.description.html ? item.description.html : null
+              });
+            });
+          });
+        }
+
+        console.log(window.totalExcludeItems, "window.totalExcludeItems");
         //bundles wrapper
         const bundlesWrapper = document.querySelector('[data-mvt-testid="protection-bundle-section-container"]')
         if (bundlesWrapper) {
@@ -186,11 +200,51 @@ import poll from "./poll";
               const bundleOutlineDiv = bundle.querySelector('.MuiPaper-outlined');
               console.log('===> index.js:218 ~ bundleOutlineDiv', bundleOutlineDiv);
               if (bundleOutlineDiv) {
+                let activeIcon = null; // track which icon's tooltip is open
                 bundleOutlineDiv.addEventListener('click', (e) => {
-                  console.log('===> index.js:221 ~ ', e.target.closest('.MuiRadio-root'));
                   if (e.target.closest('.MuiRadio-root') || e.target.closest('button')) return;
                   e.preventDefault();
                   e.stopPropagation();
+                  //tooltip functionality
+                  const icon = e.target.closest('.feature-info-icon');
+                  const tooltip = document.querySelector('.feature-tooltip-text');
+                  const controlPopover = document.querySelector('.MuiPopper-root.MuiTooltip-popper')
+                  if (icon) {
+                    // clicking the same icon again — toggle off
+                    if (activeIcon === icon) {
+                      tooltip.classList.remove('show');
+                      activeIcon = null;
+                      return;
+                    }
+                    activeIcon = icon;
+                    const code = icon.getAttribute('data-code');
+                    if (tooltip) {
+                      tooltip.innerHTML = window.totalExcludeItems.find((item) => item.code === code).html;
+                      tooltip.classList.add('show');
+                      requestAnimationFrame(() => {
+                        const iconRect = icon.getBoundingClientRect();
+                        const tooltipRect = tooltip.getBoundingClientRect();
+
+                        const x = iconRect.left + (iconRect.width / 2) - (tooltipRect.width / 2);
+                        const yAbove = iconRect.top - tooltipRect.height - 10;
+                        const yBelow = iconRect.bottom + 10;
+
+                        // not enough space above → flip to below
+                        const showBelow = yAbove < 0;
+                        tooltip.classList.toggle('tooltip-bottom', showBelow);
+
+                        const y = showBelow ? yBelow : yAbove;
+                        tooltip.style.transform = `translate(${x}px, ${y}px)`;
+                      });
+                    }
+                    if (controlPopover) {
+                      controlPopover.style.display = 'none';
+                    }
+                  } else {
+                    // clicked outside any icon — hide tooltip
+                    if (tooltip) tooltip.classList.remove('show');
+                    activeIcon = null;
+                  }
                 })
               }
               const bundleNameEl = bundle.querySelector('[data-testid="ancillary-card-title"] p');
@@ -199,6 +253,8 @@ import poll from "./poll";
               console.log('===> index.js:216 ~ bundleName', bundleName);
               const bundleDetails = storeBundles.find((s) => s.bundleName === bundleName);
               console.log('===> index.js:219 ~ bundleDetails', bundleDetails);
+              const bundleExcudeItems = bundleDetails.excludedProtections || [];
+              console.log('===> index.js:203 ~ bundleExcudeItems', bundleExcudeItems);
               const coverageRating = bundleDetails.coverageRating || "";
               console.log('===> index.js:220 ~ coverageRating', coverageRating);
               if (coverageRating === 'none') {
@@ -213,13 +269,17 @@ import poll from "./poll";
                 if (!bundle.querySelector('.bundle-header-content')) {
                   const bundleHeaderContentHtml = `
                   <div class="bundle-header-content">
-                    <div class="bundle-coverage-rating ${coverageRating}">
-                      <span></span>
-                      <span></span>
-                      <span></span>
+                    <div class="bundle-coverage-rating ${coverageRating}" >
+                      <span title="${coverageRating}"></span>
+                      <span title="${coverageRating}"></span>
+                      <span title="${coverageRating}"></span>
                     </div>
                     <div class="bundle-desc">Lorem ipsum doller sit amit.</div>
                   </div>
+                  ${coverageRating === 'high' ? `<div class="coverage-rating-badge" >
+                    <span class="star-icon">${whiteStarSvg}</span>
+                    <span class="text">BEST COVERAGE</span>
+                  </div>` : ''}
                   `;
                   bundleTitleWrapper.insertAdjacentHTML('afterend', bundleHeaderContentHtml)
                 }
@@ -230,22 +290,70 @@ import poll from "./poll";
               const controlFeatureList = bundle.querySelectorAll('[data-testid*="bundle-included-item-"]');
               console.log('===> index.js:231 ~ controlFeatureList', controlFeatureList);
               console.log('===> index.js:230 ~ featureFirstItem', featureFirstItem);
-              if(featureFirstItem){
+              if (featureFirstItem) {
                 const featureListWrapper = featureFirstItem.parentElement;
                 console.log('===> index.js:233 ~ featureListWrapper', featureListWrapper);
                 if (featureListWrapper) {
                   featureListWrapper.classList.add('feature-list-wrapper')
                 }
+                // add exclude items
+                if (!featureListWrapper.classList.contains('excluded-item-added')) {
+                  bundleExcudeItems.forEach((item, idx) => {
+                    console.log('===> index.js:244 ~ item', idx);
+                    const excludeItemHtml = `
+                      <div class="bundle-feature-item">
+                        <span class="feature-cross-icon">${featureCrossSvg}</span>
+                        <p class="feature-name">${item.name || ''}</p>
+                        <div class="feature-info">
+                          <span class="feature-info-icon" data-code="${item.code}">${featureInfoSvg}</span>
+                        </div>
+                      </div>
+                      `;
+                    featureListWrapper.insertAdjacentHTML('beforeend', excludeItemHtml);
+                    if (bundleExcudeItems.length === idx + 1) {
+                      featureListWrapper.classList.add('excluded-item-added')
+                    }
+                  })
+
+                  if (!document.body.querySelector('.feature-tooltip-text')) {
+                    const toolTipHtml = `<div class="feature-tooltip-text"></div>`;
+                    document.body.insertAdjacentHTML('beforeend', toolTipHtml)
+
+                    document.addEventListener('click', (e) => {
+                      console.log('===> index.js:278 ~ featureInfoIcon', e.target.closest('.feature-info-icon'));
+                      const tooltip = document.querySelector('.feature-tooltip-text');
+                      if (!e.target.closest('.feature-info-icon')) {
+                        tooltip.classList.remove('show');
+                      }
+                    })
+                  }
+                }
+
               }
 
-              if(controlFeatureList.length){
-                controlFeatureList.forEach((feature)=>{
+              if (controlFeatureList.length) {
+                console.log('===> index.js:331 ~ controlFeatureList', controlFeatureList);
+                controlFeatureList.forEach((feature) => {
+                  console.log('===> index.js:332 ~ feature', feature);
                   const featureListIcon = feature.querySelector('button [data-testid="InfoOutlinedIcon"]');
                   if (!feature.querySelector('.feature_info-svg')) {
                     featureListIcon.insertAdjacentHTML('afterend', `${featureInfoSvg}`)
                   }
+                  const featureCheckSvg = feature.querySelector('svg.MuiSvgIcon-colorSuccess');
+                  console.log('===> index.js:337 ~ featureCheckSvg', featureCheckSvg);
+                  if (featureCheckSvg) {
+                    featureCheckSvg.style.display = "none";
+                    if(!feature.querySelector('.red-check-svg-wrapper')) {
+                      const redCheckSvgWrapper = document.createElement('span');
+                      redCheckSvgWrapper.classList.add('red-check-svg-wrapper');
+                      redCheckSvgWrapper.insertAdjacentHTML('beforeend', `${redCheckSvg}`)
+                      featureCheckSvg.insertAdjacentElement('afterend', redCheckSvgWrapper);
+                    }
+                  }
                 })
               }
+
+
 
               //PRICE AND SELECT BTN
               const priceSection = bundle.querySelector('[data-testid="checkout-ancillaries-bundle-price"]');
@@ -768,7 +876,9 @@ import poll from "./poll";
         console.log('===> index.js:722 ~ addOnItemSection', addOnItemSection);
         if (addOnItemSection) {
           addOnItemSection.setAttribute('data-mvt-testid', 'add-on-item-section-wrapper')
-          addOnItemSection.querySelector('.MuiGrid2-root').setAttribute('data-mvt-testid', 'add-on-item-section');
+          if (addOnItemSection.querySelector('.MuiGrid2-root')) {
+            addOnItemSection.querySelector('.MuiGrid2-root').setAttribute('data-mvt-testid', 'add-on-item-section');
+          }
         }
       }
     }, 1500)
